@@ -290,3 +290,4 @@ For n=1,000,000:
     
 
 ---
+Next: [[Chapter 2 - Asymptotic Notation]]

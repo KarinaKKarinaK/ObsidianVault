@@ -347,3 +347,5 @@ def dnc(Px, Py):
 - Strassen inspired a long line of matrix multiplication improvements; asymptotic exponents < 2.4 exist but are **impractical** for most real `n`.
     
 - Closest pair’s strip idea is a classic example of **geometric packing** leading to a constant bound on local comparisons.
+
+Next: [[Chapter 4 - The Master Method]]

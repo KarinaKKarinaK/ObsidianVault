@@ -267,3 +267,4 @@ Example: If `f(n) = n^2 / log n`, then it’s not “regular enough” for Case 
     
 
 ---
+Next: [[Chapter 5 - The Fast Fourier Transform]]

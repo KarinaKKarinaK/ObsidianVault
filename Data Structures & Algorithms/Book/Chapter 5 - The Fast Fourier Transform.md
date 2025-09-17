@@ -245,3 +245,4 @@ This reduces computation dramatically compared to direct evaluation.
     
 
 ---
+Next: [[Chapter 6 - Linear-Time Selection]]
