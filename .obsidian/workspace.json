@@ -97,7 +97,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Core Concepts For Problem Solving.md",
+                "file": "Data Structures & Algorithms/Core Concepts For Problem Solving.md",
                 "mode": "source",
                 "source": false
               },
@@ -269,10 +269,10 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "a976f1c0050813d6",
+  "active": "77837552dc6fb3a9",
   "lastOpenFiles": [
     "Data Structures & Algorithms/Step-By-Step Sorting Algorithms.md",
-    "Core Concepts For Problem Solving.md",
+    "Data Structures & Algorithms/Core Concepts For Problem Solving.md",
     "Data Structures & Algorithms/Lectures/Lecture 5 - Heaps, HeapSort, and BucketSort.md",
     "Data Structures & Algorithms/Lectures/Lecture 4 - Faster Sorting - MergeSort & Divide-and-Conquer.md",
     "Data Structures & Algorithms/Lectures/Lecture 3 - More Data Structures - Linked Lists, Rooted Trees, Hash Tables.md",
