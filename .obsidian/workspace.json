@@ -8,91 +8,34 @@
         "type": "tabs",
         "children": [
           {
-            "id": "f071ca707d742121",
+            "id": "60b9e8eb318e4f04",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Business/AI Startups.md",
+                "file": "Data Structures & Algorithms/Chapter 6 - Linear-Time Selection.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "AI Startups"
+              "title": "Chapter 6 - Linear-Time Selection"
             }
           },
           {
-            "id": "e528a90065350df7",
+            "id": "2f0fabb16de7db70",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Data Structures & Algorithms/Step-By-Step Sorting Algorithms.md",
+                "file": "Data Structures & Algorithms/Chapter 4 - The Master Method.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Step-By-Step Sorting Algorithms"
-            }
-          },
-          {
-            "id": "a56aafc4fd8e532c",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Data Structures & Algorithms/Chapter 1.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Chapter 1"
-            }
-          },
-          {
-            "id": "906e8816a0bf13ed",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Data Structures & Algorithms/Chapter 2.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Chapter 2"
-            }
-          },
-          {
-            "id": "43fb2f57dd06fd36",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Data Structures & Algorithms/Chapter 3.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Chapter 3"
-            }
-          },
-          {
-            "id": "59c006903b123410",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Chapter 4.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Chapter 4"
+              "title": "Chapter 4 - The Master Method"
             }
           }
-        ],
-        "currentTab": 5
+        ]
       }
     ],
     "direction": "vertical"
@@ -241,15 +184,19 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "59c006903b123410",
+  "active": "60b9e8eb318e4f04",
   "lastOpenFiles": [
-    "Screenshot 2025-09-17 at 17.00.50.jpeg",
-    "Data Structures & Algorithms/Chapter 3.md",
-    "Chapter 4.md",
-    "Data Structures & Algorithms/Chapter 2.md",
-    "Users/karina/Documents/Period 1.base",
-    "Data Structures & Algorithms/Chapter 1.md",
+    "Data Structures & Algorithms/Chapter 5 - The Fast Fourier Transform.md",
+    "Data Structures & Algorithms/Chapter 4 - The Master Method.md",
+    "Data Structures & Algorithms/Base - Algorithms Illuminated.md",
+    "Business/AI Startups.md",
     "Data Structures & Algorithms/Step-By-Step Sorting Algorithms.md",
+    "Data Structures & Algorithms/Chapter 3 - Divide-and-Conquer Algorithms.md",
+    "Data Structures & Algorithms/Chapter 1 - Introduction.md",
+    "Data Structures & Algorithms/Chapter 2 - Asymptotic Notation.md",
+    "Data Structures & Algorithms/Chapter 6 - Linear-Time Selection.md",
+    "Screenshot 2025-09-17 at 17.00.50.jpeg",
+    "Users/karina/Documents/Period 1.base",
     "Data Structures & Algorithms/Basic Algorithms.md",
     "Psychology/T2.2 - Nervous system and neurons.md",
     "Psychology/Topic 2 - Brain and development.md",
@@ -260,7 +207,6 @@
     "Psychology/T1.2 - The science of psychology.md",
     "Psychology/T1.1 - Psychology and genes.md",
     "Artificial Intelligence/Prompt Engineering.md",
-    "Business/AI Startups.md",
     "Artificial Intelligence/Index - Artificial Intelligence.md",
     "gence.md",
     "Data Structures & Algorithms/Basic Data Structures.md",
@@ -275,8 +221,6 @@
     "Artificial Intelligence",
     "Business",
     "Notes - AISO Event.md",
-    "Psychology/T10.2 - Validity in psychological research.md",
-    "Psychology/Topic 1 - Genes and evolution.md",
     "Data Structures & Algorithms",
     "Knowledge & Data",
     "Psychology"
