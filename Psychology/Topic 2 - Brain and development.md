@@ -1,0 +1,5 @@
+1. [[T2.1 - Phrenology and methods of studying the brain]]
+2. [[T2.2 - Nervous system and neurons]]
+3. [[T2.3 - Brain plasticity and hemispheric functions]]
+4. [[T2.4 - The brain and its structure]]
+5. [[T2.5 - Neurotransmitters and the effects of drugs]]

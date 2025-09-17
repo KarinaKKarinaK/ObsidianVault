@@ -1,0 +1,6 @@
+[[T9.1 - Scientific reasoning and the logic of science]]
+[[T9.2 - Scientific method, empirical cycle, and types of research]]
+[[T9.3 - Fixation of belief, pseudoscience, and psychological science]]
+[[T9.4 - Experimental design, variables, and ethical considerations in research]]
+[[T9.5 - Validity, reliability, and bias in research]]
+[[T9.6 - The role of theories, hypotheses and scientific process]]

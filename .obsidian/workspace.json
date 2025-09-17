@@ -1,0 +1,284 @@
+{
+  "main": {
+    "id": "582c26e1df06edd9",
+    "type": "split",
+    "children": [
+      {
+        "id": "fcbd403fa8841fff",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "f071ca707d742121",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Business/AI Startups.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "AI Startups"
+            }
+          },
+          {
+            "id": "e528a90065350df7",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Data Structures & Algorithms/Step-By-Step Sorting Algorithms.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Step-By-Step Sorting Algorithms"
+            }
+          },
+          {
+            "id": "a56aafc4fd8e532c",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Data Structures & Algorithms/Chapter 1.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Chapter 1"
+            }
+          },
+          {
+            "id": "906e8816a0bf13ed",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Data Structures & Algorithms/Chapter 2.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Chapter 2"
+            }
+          },
+          {
+            "id": "43fb2f57dd06fd36",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Data Structures & Algorithms/Chapter 3.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Chapter 3"
+            }
+          },
+          {
+            "id": "59c006903b123410",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Chapter 4.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Chapter 4"
+            }
+          }
+        ],
+        "currentTab": 5
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "eb46956910547ebd",
+    "type": "split",
+    "children": [
+      {
+        "id": "fb1eeeaba1d1d92c",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "77837552dc6fb3a9",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "c58dc1be1322c219",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "a7f2668d608da584",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "99bcb3fc9cbeeafd",
+    "type": "split",
+    "children": [
+      {
+        "id": "196e19301283b6bd",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "7c229a8038326759",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Welcome.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for Welcome"
+            }
+          },
+          {
+            "id": "471e634360781e04",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Welcome.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from Welcome"
+            }
+          },
+          {
+            "id": "64c37b60882d8af4",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "86c9ec1ebd4f982e",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Welcome.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of Welcome"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "obsidian-git:Open Git source control": false,
+      "bases:Create new base": false,
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false
+    }
+  },
+  "active": "59c006903b123410",
+  "lastOpenFiles": [
+    "Screenshot 2025-09-17 at 17.00.50.jpeg",
+    "Data Structures & Algorithms/Chapter 3.md",
+    "Chapter 4.md",
+    "Data Structures & Algorithms/Chapter 2.md",
+    "Users/karina/Documents/Period 1.base",
+    "Data Structures & Algorithms/Chapter 1.md",
+    "Data Structures & Algorithms/Step-By-Step Sorting Algorithms.md",
+    "Data Structures & Algorithms/Basic Algorithms.md",
+    "Psychology/T2.2 - Nervous system and neurons.md",
+    "Psychology/Topic 2 - Brain and development.md",
+    "Psychology/00 — Introduction to psychology — Home.md",
+    "Pasted image 20250913145553.png",
+    "Psychology/T1.3 - Research methods in psychological science.md",
+    "Psychology/T2.1 - Phrenology and methods of studying the brain.md",
+    "Psychology/T1.2 - The science of psychology.md",
+    "Psychology/T1.1 - Psychology and genes.md",
+    "Artificial Intelligence/Prompt Engineering.md",
+    "Business/AI Startups.md",
+    "Artificial Intelligence/Index - Artificial Intelligence.md",
+    "gence.md",
+    "Data Structures & Algorithms/Basic Data Structures.md",
+    "Knowledge & Data/K&D Notes.md",
+    "Data Structures & Algorithms/Exam Prep.md",
+    "Artificial Intelligence/Personal AI Notes.md",
+    "Users/karina/Documents/Obsidian.md",
+    "Users/karina/Documents",
+    "Users/karina",
+    "Users",
+    "Investing",
+    "Artificial Intelligence",
+    "Business",
+    "Notes - AISO Event.md",
+    "Psychology/T10.2 - Validity in psychological research.md",
+    "Psychology/Topic 1 - Genes and evolution.md",
+    "Data Structures & Algorithms",
+    "Knowledge & Data",
+    "Psychology"
+  ]
+}
