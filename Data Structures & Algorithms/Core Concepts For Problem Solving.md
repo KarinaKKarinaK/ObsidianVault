@@ -1,3 +1,15 @@
+- Insertion Sort
+- Bucket Sort
+- Merge Sort
+- Counting sort
+- Selection Sort
+- Quick Sort
+- Heap Sort
+- Bubble Sort
+- hash maps/tables - Lecture 3
+- heaps
+Chapter 1, 10, 2, 11, 7, 8, 6
+
 
 Exhaustive guide covering **all concepts, formulas, facts, strategies, and problem-solving methods** needed for assignments and exams (midterms).
 

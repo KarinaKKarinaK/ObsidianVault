@@ -92,9 +92,18 @@ A property that is true **before and after each iteration** of a loop.
 
 ✅ Correctness proven.
 
----
+#### From The Lecture:
 
-## 2.4 Running Time Analysis
+**To prove a statement is a loop invariant, we must show:** 
+
+- it holds true prior to the first iteration of the loop
+- if it is true before an iteration, it remains true before the next iteration
+- upon termination of the loop, the invariant (along with the condition which caused the loop to terminate) help to determine the algorithm is correct
+
+*We refer to the three properties as Initialization, Maintenance and Termination respectively.*
+![[Screenshot 2025-09-19 at 10.19.05.png]]
+
+![[Screenshot 2025-09-19 at 10.20.20.png]]## 2.4 Running Time Analysis
 
 We measure running time as a function of **input size n**.
 

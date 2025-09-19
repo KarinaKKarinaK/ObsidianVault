@@ -11,74 +11,16 @@
             "id": "60b9e8eb318e4f04",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "image",
               "state": {
-                "file": "Data Structures & Algorithms/Base- Data Structures & Algorithms.md",
-                "mode": "source",
-                "source": false
+                "file": "Data Structures & Algorithms/Assets/Pasted image 20250913145553.png"
               },
-              "icon": "lucide-file",
-              "title": "Base- Data Structures & Algorithms"
+              "icon": "lucide-image",
+              "title": "Pasted image 20250913145553"
             }
           },
           {
-            "id": "2510816ede789226",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Data Structures & Algorithms/Base- Data Structures & Algorithms.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Base- Data Structures & Algorithms"
-            }
-          },
-          {
-            "id": "4b2deb6eb596a052",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Data Structures & Algorithms/Base- Data Structures & Algorithms.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Base- Data Structures & Algorithms"
-            }
-          },
-          {
-            "id": "3f92ee7ed1864eb2",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Data Structures & Algorithms/Lectures/Lecture 3 - More Data Structures - Linked Lists, Rooted Trees, Hash Tables.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Lecture 3 - More Data Structures - Linked Lists, Rooted Trees, Hash Tables"
-            }
-          },
-          {
-            "id": "97714606585bd90d",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Data Structures & Algorithms/Lectures/Lecture 4 - Faster Sorting - MergeSort & Divide-and-Conquer.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Lecture 4 - Faster Sorting - MergeSort & Divide-and-Conquer"
-            }
-          },
-          {
-            "id": "f90e4f465e583b45",
+            "id": "a976f1c0050813d6",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -92,35 +34,49 @@
             }
           },
           {
-            "id": "a976f1c0050813d6",
+            "id": "ab306ded6fdea968",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Data Structures & Algorithms/Core Concepts For Problem Solving.md",
+                "file": "Data Structures & Algorithms/DSA - Main Notes.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Core Concepts For Problem Solving"
+              "title": "DSA - Main Notes"
             }
           },
           {
-            "id": "2f0fabb16de7db70",
+            "id": "a4aa0fedf88bcd53",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Data Structures & Algorithms/Book/Chapter 4 - The Master Method.md",
+                "file": "Data Structures & Algorithms/Lectures/Lecture 2 - Sorting 101 - Insertion Sort, Loop Invariants, Algorithm Analysis.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Chapter 4 - The Master Method"
+              "title": "Lecture 2 - Sorting 101 - Insertion Sort, Loop Invariants, Algorithm Analysis"
+            }
+          },
+          {
+            "id": "f816346ed719f554",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Data Structures & Algorithms/DSA - Pseudocode.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "DSA - Pseudocode"
             }
           }
         ],
-        "currentTab": 6
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -271,38 +227,40 @@
   },
   "active": "77837552dc6fb3a9",
   "lastOpenFiles": [
-    "Data Structures & Algorithms/Step-By-Step Sorting Algorithms.md",
+    "Data Structures & Algorithms/Assets/Screenshot 2025-09-19 at 10.20.20.png",
+    "Data Structures & Algorithms/Assets/Screenshot 2025-09-19 at 10.19.31.png",
+    "Data Structures & Algorithms/Assets/Screenshot 2025-09-19 at 10.19.05.png",
+    "Data Structures & Algorithms/Lectures/Lecture 1 - Introduction & Queues with Two Stacks.md",
+    "Data Structures & Algorithms/Heaps - DSA.md",
+    "Data Structures & Algorithms/DSA - Main Notes.md",
     "Data Structures & Algorithms/Core Concepts For Problem Solving.md",
+    "Data Structures & Algorithms/DSA - Pseudocode.md",
+    "Data Structures & Algorithms/Lectures/Lecture 2 - Sorting 101 - Insertion Sort, Loop Invariants, Algorithm Analysis.md",
+    "Data Structures & Algorithms/Base- Data Structures & Algorithms.md",
+    "Data Structures & Algorithms/Step-By-Step Sorting Algorithms.md",
+    "Data Structures & Algorithms/Assets/Pasted image 20250913145553.png",
+    "Data Structures & Algorithms/Basic Algorithms.md",
+    "Data Structures & Algorithms/Book/Chapter 4 - The Master Method.md",
+    "Data Structures & Algorithms/Book/Chapter 2 - Asymptotic Notation.md",
     "Data Structures & Algorithms/Lectures/Lecture 5 - Heaps, HeapSort, and BucketSort.md",
     "Data Structures & Algorithms/Lectures/Lecture 4 - Faster Sorting - MergeSort & Divide-and-Conquer.md",
     "Data Structures & Algorithms/Lectures/Lecture 3 - More Data Structures - Linked Lists, Rooted Trees, Hash Tables.md",
-    "Data Structures & Algorithms/Lectures/Lecture 2 - Sorting 101 - Insertion Sort, Loop Invariants, Algorithm Analysis.md",
-    "Data Structures & Algorithms/Lectures/Lecture 1 - Introduction & Queues with Two Stacks.md",
     "Data Structures & Algorithms/Book/Chapter 5 - The Fast Fourier Transform.md",
-    "Data Structures & Algorithms/Book/Chapter 4 - The Master Method.md",
     "Data Structures & Algorithms/Book/Chapter 3 - Divide-and-Conquer Algorithms.md",
-    "Data Structures & Algorithms/Book/Chapter 2 - Asymptotic Notation.md",
     "Data Structures & Algorithms/Book/Chapter 1 - Introduction.md",
-    "Data Structures & Algorithms/Base- Data Structures & Algorithms.md",
     "Data Structures & Algorithms/Assets/Screenshot 2025-09-17 at 17.00.50.jpeg",
     "Data Structures & Algorithms/Assets",
     "Data Structures & Algorithms/Lectures",
     "Data Structures & Algorithms/Basic Data Structures.md",
     "Data Structures & Algorithms/Book",
-    "Data Structures & Algorithms/Assets/Pasted image 20250913145553.png",
     "Data Structures & Algorithms/Book/Chapter 6 - Linear-Time Selection.md",
     "Business/AI Startups.md",
     "Users/karina/Documents/Period 1.base",
-    "Data Structures & Algorithms/Basic Algorithms.md",
     "Psychology/T2.2 - Nervous system and neurons.md",
     "Psychology/Topic 2 - Brain and development.md",
     "Psychology/00 — Introduction to psychology — Home.md",
     "Psychology/T1.3 - Research methods in psychological science.md",
     "Psychology/T2.1 - Phrenology and methods of studying the brain.md",
-    "Psychology/T1.2 - The science of psychology.md",
-    "Psychology/T1.1 - Psychology and genes.md",
-    "Artificial Intelligence/Prompt Engineering.md",
-    "Artificial Intelligence/Index - Artificial Intelligence.md",
     "Users/karina/Documents",
     "Users/karina",
     "Users",

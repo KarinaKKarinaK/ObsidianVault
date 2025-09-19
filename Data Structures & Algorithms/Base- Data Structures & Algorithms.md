@@ -18,3 +18,5 @@
 [[Basic Data Structures]]
 [[Exam Prep]]
 [[Step-By-Step Sorting Algorithms]]
+[[DSA - Pseudocode]]
+[[DSA - Main Notes]]
