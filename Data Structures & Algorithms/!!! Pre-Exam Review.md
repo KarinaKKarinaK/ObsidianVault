@@ -281,6 +281,39 @@ Use recurrence relation.
 - Method 2: Push O(n), Pop O(1).
     
 
+### Queue using Two Stacks (S1, S2)
+```text
+ENQUEUE(Q, x):
+    PUSH(S1, x)
+    
+DEQUEUE(Q):
+    if S2 is empty:
+        while S1 is not empty:
+            y = POP(S1)
+            PUSH(S2, y)
+    if S2 is empty:
+        error "queue underflow"
+    return POP(S2)
+
+```
+
+
+### Stack using Two Queues (Q1, Q2)
+```text
+PUSH(S, x):
+    ENQUEUE(Q1, x)
+
+POP(S):
+    if Q1 is empty:
+        error "stack underflow"
+    while size(Q1) > 1:
+        y = DEQUEUE(Q1)
+        ENQUEUE(Q2, y)
+    popped = DEQUEUE(Q1)     // last element
+    swap(Q1, Q2)             // make Q1 the main queue again
+    return popped
+
+```
 ---
 
 ## 6. Iterative vs Recursive Algorithms
