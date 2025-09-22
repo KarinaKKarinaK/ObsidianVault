@@ -52,7 +52,8 @@ Use for proving correctness:
 
 _Example:_ In Insertion Sort, invariant: subarray A[0..i-1] is sorted.
 
-###### More examples - to memorize:
+#### More examples - to memorize:
+
 **Selection Sort**
 
 - Invariant: _At the start of each iteration `i`, the subarray `A[0..i-1]` contains the `i-1` smallest elements in sorted order._
@@ -152,6 +153,114 @@ _Example:_ In Insertion Sort, invariant: subarray A[0..i-1] is sorted.
     - Hashing: O(1) expected.
         
 
+# Running Time Analysis Cheat Sheet
+
+## Structure of an Algorithm’s Time
+
+Every algorithm has 3 parts:
+
+1. **Base case:** cost for trivial/small input (`n=1` or constant size). Usually Θ(1).
+    
+2. **Recursive/iterative part:** how many recursive calls, and on what fraction of `n`.
+    
+3. **Combine step:** the extra work (e.g., scanning, merging, partitioning).
+    
+![[Screenshot 2025-09-22 at 14.54.34.png]]
+
+## General Patterns
+
+### Iterative algorithms
+
+- Usually: **loop through array** → O(n).
+    
+- Sometimes: **nested loops** → O(n²).
+    
+- Rarely: add log factors if loop halves data each time (e.g., Binary Search = O(log n)).
+    
+
+**Example:** Linear search
+
+- Base: none (no recursion).
+    
+- Loop: check each element.
+    
+- Cost = Θ(n).
+    
+
+**Example:** Binary search (iterative form)
+
+- Each iteration halves the range.
+    
+- Cost = Θ(log n).
+
+### Recursive algorithms
+
+Use recurrence relation.
+
+#### a) Divide and Conquer (common!)
+
+- **Merge Sort:**
+    
+    - Base = Θ(1).
+        
+    - Recursive = 2 subproblems, size n/2.
+        
+    - Combine = Θ(n) (merge).
+        
+    - Recurrence: T(n) = 2T(n/2) + Θ(n).
+        
+    - Solution: Θ(n log n).
+        
+- **Binary Search (recursive):**
+    
+    - Base = Θ(1).
+        
+    - Recursive = 1 subproblem, size n/2.
+        
+    - Combine = Θ(1).
+        
+    - T(n) = T(n/2) + Θ(1) ⇒ Θ(log n).
+        
+
+#### b) Decreasing-size recursion
+
+- **Insertion Sort recursive form:**
+    
+    - Base = Θ(1).
+        
+    - Recursive = T(n-1).
+        
+    - Combine = Θ(n) (insert last element).
+        
+    - T(n) = T(n-1) + Θ(n) ⇒ Θ(n²).
+        
+- **QuickSort:**
+    
+    - Base = Θ(1).
+        
+    - Recursive = 2 subproblems of size ~n/2 (best/avg).
+        
+    - Combine = Θ(n) (partition).
+        
+    - Best/Avg: T(n) = 2T(n/2) + Θ(n) = Θ(n log n).
+        
+    - Worst: T(n) = T(n-1) + Θ(n) = Θ(n²).
+
+## How to Answer Exam-Style
+
+- Identify:
+    
+    1. Base case (what happens when n=1).
+        
+    2. Recursive step (how many subproblems, what size).
+        
+    3. Combine cost (how much extra work).
+        
+- Write recurrence.
+    
+- Solve (or state known solution).
+
+![[Screenshot 2025-09-22 at 14.55.53.png]]
 ---
 
 ## 5. Stack & Queue Implementations
