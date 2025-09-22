@@ -52,6 +52,60 @@ Use for proving correctness:
 
 _Example:_ In Insertion Sort, invariant: subarray A[0..i-1] is sorted.
 
+###### More examples - to memorize:
+**Selection Sort**
+
+- Invariant: _At the start of each iteration `i`, the subarray `A[0..i-1]` contains the `i-1` smallest elements in sorted order._
+    
+- **Init:** Empty prefix is trivially sorted.
+    
+- **Maint:** Find smallest in remainder, swap into position `i`.
+    
+- **Term:** Array is fully sorted.
+
+**Linear Search**
+
+- Invariant: _Before each step `i`, no element in subarray `A[0..i-1]` is equal to `x`
+    
+- **Maint:** If found, stop. Else continue.
+    
+- **Term:** Either found `x`, or scanned all and return NIL.
+
+ **Binary Search**
+
+- Invariant: _At the start of each iteration, if `x` is in `A`, it must be between indices `low` and `high`._
+    
+- **Maint:** Update interval by halving.
+    
+- **Term:** If `low > high`, `x` not in array.
+    
+
+
+ **Merge (in Merge Sort)**
+
+- Invariant: _At each step of merging, the output array contains the smallest elements from left+right subarrays in sorted order._
+    
+- **Maint:** Compare front elements, pick smaller.
+    
+- **Term:** All elements merged, output sorted.
+    
+
+ **Heapify (Max-Heapify)**
+
+- Invariant: _Before each recursive step, the subtrees of `i` are max-heaps, but node `i` may violate the heap property._
+    
+- **Maint:** Swap with larger child, recurse.
+    
+- **Term:** Property restored at `i`, heap valid.
+    
+
+**Partition (QuickSort)**
+
+- Invariant: _At any time: all elements ≤ pivot are before index `i`, all elements ≥ pivot are after index `j`, and elements between `i` and `j` are unexamined._
+    
+- **Maint:** Move pointers until done.
+    
+- **Term:** Pivot in correct position.
 ---
 
 ## 3. Hash Tables
