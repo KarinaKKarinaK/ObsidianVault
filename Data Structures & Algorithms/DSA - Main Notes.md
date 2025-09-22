@@ -258,7 +258,7 @@ Invariant: `A[1..i-1]` is sorted at start of iteration i.
         👉 Tip: **Know the array indexing formulas**:
         
 - Left(i) = 2i
-    
+    l
 - Right(i) = 2i+1
     
 - Parent(i) = floor(i/2)
@@ -369,22 +369,22 @@ Invariant: `A[1..i-1]` is sorted at start of iteration i.
 ---
 # Algorithm Overview Cheat Sheet
 
-|Algorithm|Key Properties|Best / Avg / Worst Time|Space|Mechanism (short)|When to Use|
-|---|---|---|---|---|---|
-|**Insertion Sort**|Stable ✅, In-place ✅, Iterative|Best: O(n) Avg: O(n²) Worst: O(n²)|O(1)|Insert each new element into correct position (like card sorting).|Small or nearly sorted arrays.|
-|**Selection Sort**|Not stable ❌, In-place ✅, Iterative|Best/Avg/Worst: O(n²)|O(1)|Repeatedly select min and place at front. Few swaps.|When swaps are costly but comparisons are cheap.|
-|**Bubble Sort**|Stable ✅, In-place ✅, Iterative|Best: O(n) Avg/Worst: O(n²)|O(1)|Repeatedly swap adjacent out-of-order pairs.|Teaching/simple cases, rarely in practice.|
-|**Merge Sort**|Stable ✅, Not in-place ❌ (needs O(n)), Recursive|Best/Avg/Worst: O(n log n)|O(n)|Divide array in halves, sort recursively, merge.|Large datasets, when stability is needed.|
-|**Quick Sort**|Not stable ❌, In-place ✅, Recursive|Best: O(n log n) Avg: O(n log n) Worst: O(n²)|O(log n) (recursion)|Partition around pivot, recurse on subarrays.|General-purpose sort, very fast in practice.|
-|**Heap Sort**|Not stable ❌, In-place ✅, Iterative|Best/Avg/Worst: O(n log n)|O(1)|Build max-heap, repeatedly extract max.|In-place guaranteed O(n log n) sort.|
-|**Counting Sort**|Stable ✅, Not in-place ❌, Iterative|O(n + k) (all cases)|O(n + k)|Count occurrences, compute prefix sums, output in order.|Integers in small range.|
-|**Bucket Sort**|Stable ✅ (if inner sort stable), Not in-place ❌|Avg: O(n) Worst: O(n²)|O(n)|Divide into buckets, sort each, concatenate.|Uniformly distributed input.|
-|**Linear Search**|Iterative, works on unsorted data|Best: O(1) Avg/Worst: O(n)|O(1)|Scan elements one by one.|Very small or unsorted datasets.|
-|**Binary Search**|Iterative or Recursive, requires sorted input|Best: O(1) Avg/Worst: O(log n)|O(1)|Halve the search interval each step.|Searching in sorted arrays.|
-|**Heaps (priority queue)**|Max-heap: parent ≥ children; array-based|Insert: O(log n) Extract-Max: O(log n) Build: O(n)|O(1) extra|Tree structure maintained via heapify.|Priority queues, scheduling, heap sort.|
-|**Hash Tables**|Avg O(1), Worst O(n), Not ordered|Insert/Search/Delete: Avg O(1), Worst O(n)|O(m) buckets|Hash function maps keys → buckets; collisions via chaining or probing.|Fast lookups, dictionaries, symbol tables.|
-|**Stack**|LIFO, In-place|Push/Pop: O(1)|O(1) extra|Use array or linked list, top pointer tracks end.|Undo, recursion simulation.|
-|**Queue**|FIFO, In-place (circular array)|Enqueue/Dequeue: O(1)|O(1) extra|Head/tail indices wrap with modulo.|Scheduling, BFS traversal.|
+| Algorithm                  | Key Properties                                   | Best / Avg / Worst Time                            | Space                | Mechanism (short)                                                      | When to Use                                      |
+| -------------------------- | ------------------------------------------------ | -------------------------------------------------- | -------------------- | ---------------------------------------------------------------------- | ------------------------------------------------ |
+| **Insertion Sort**         | Stable ✅, In-place ✅, Iterative                  | Best: O(n) Avg: O(n²) Worst: O(n²)                 | O(1)                 | Insert each new element into correct position (like card sorting).     | Small or nearly sorted arrays.                   |
+| **Selection Sort**         | Not stable ❌, In-place ✅, Iterative              | Best/Avg/Worst: O(n²)                              | O(1)                 | Repeatedly select min and place at front. Few swaps.                   | When swaps are costly but comparisons are cheap. |
+| **Bubble Sort**            | Stable ✅, In-place ✅, Iterative                  | Best: O(n) Avg/Worst: O(n²)                        | O(1)                 | Repeatedly swap adjacent out-of-order pairs.                           | Teaching/simple cases, rarely in practice.       |
+| **Merge Sort**             | Stable ✅, Not in-place ❌ (needs O(n)), Recursive | Best/Avg/Worst: O(n log n)                         | O(n)                 | Divide array in halves, sort recursively, merge.                       | Large datasets, when stability is needed.        |
+| **Quick Sort**             | Not stable ❌, In-place ✅, Recursive              | Best: O(n log n) Avg: O(n log n) Worst: O(n²)      | O(log n) (recursion) | Partition around pivot, recurse on subarrays.                          | General-purpose sort, very fast in practice.     |
+| **Heap Sort**              | Not stable ❌, In-place ✅, Iterative              | Best/Avg/Worst: O(n log n)                         | O(1)                 | Build max-heap, repeatedly extract max.                                | In-place guaranteed O(n log n) sort.             |
+| **Counting Sort**          | Stable ✅, Not in-place ❌, Iterative              | O(n + k) (all cases)                               | O(n + k)             | Count occurrences, compute prefix sums, output in order.               | Integers in small range.                         |
+| **Bucket Sort**            | Stable ✅ (if inner sort stable), Not in-place ❌  | Avg: O(n) Worst: O(n²)                             | O(n)                 | Divide into buckets, sort each, concatenate.                           | Uniformly distributed input.                     |
+| **Linear Search**          | Iterative, works on unsorted data                | Best: O(1) Avg/Worst: O(n)                         | O(1)                 | Scan elements one by one.                                              | Very small or unsorted datasets.                 |
+| **Binary Search**          | Iterative or Recursive, requires sorted input    | Best: O(1) Avg/Worst: O(log n)                     | O(1)                 | Halve the search interval each step.                                   | Searching in sorted arrays.                      |
+| **Heaps (priority queue)** | Max-heap: parent ≥ children; array-based         | Insert: O(log n) Extract-Max: O(log n) Build: O(n) | O(1) extra           | Tree structure maintained via heapify.                                 | Priority queues, scheduling, heap sort.          |
+| **Hash Tables**            | Avg O(1), Worst O(n), Not ordered                | Insert/Search/Delete: Avg O(1), Worst O(n)         | O(m) buckets         | Hash function maps keys → buckets; collisions via chaining or probing. | Fast lookups, dictionaries, symbol tables.       |
+| **Stack**                  | LIFO, In-place                                   | Push/Pop: O(1)                                     | O(1) extra           | Use array or linked list, top pointer tracks end.                      | Undo, recursion simulation.                      |
+| **Queue**                  | FIFO, In-place (circular array)                  | Enqueue/Dequeue: O(1)                              | O(1) extra           | Head/tail indices wrap with modulo.                                    | Scheduling, BFS traversal.                       |
 
 ---
 

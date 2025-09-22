@@ -102,8 +102,11 @@ A property that is true **before and after each iteration** of a loop.
 
 *We refer to the three properties as Initialization, Maintenance and Termination respectively.*
 ![[Screenshot 2025-09-19 at 10.19.05.png]]
+![[Screenshot 2025-09-19 at 10.24.19.png]]
 
-![[Screenshot 2025-09-19 at 10.20.20.png]]## 2.4 Running Time Analysis
+
+---
+## 2.4 Running Time Analysis
 
 We measure running time as a function of **input size n**.
 
