@@ -34,9 +34,23 @@
               "icon": "lucide-file",
               "title": "Psychology - Study Notes"
             }
+          },
+          {
+            "id": "120ff61491093977",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Knowledge & Data/K&D Notes.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "K&D Notes"
+            }
           }
         ],
-        "currentTab": 1
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -185,11 +199,14 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "3cbb1db61c84722b",
+  "active": "120ff61491093977",
   "lastOpenFiles": [
+    "Psychology/Topic 4 - Sensation and Perception.md",
+    "Psychology/Topic 1 - Genes and evolution.md",
+    "Psychology/T1.2 - The science of psychology.md",
+    "Psychology/Psychology - Study Notes.md",
     "Psychology/T2.2 - Nervous system and neurons.md",
     "Psychology/T1.1 - Psychology and genes.md",
-    "Psychology/Psychology - Study Notes.md",
     "Mini Essays/The Fermi Paradox.md",
     "Mini Essays/Mini Essays - Table Of Contents.md",
     "Mini Essays/Transhumanism.md",
@@ -218,9 +235,6 @@
     "Data Structures & Algorithms/Assets/Screenshot 2025-09-19 at 10.19.05.png",
     "Data Structures & Algorithms/Lectures/Lecture 1 - Introduction & Queues with Two Stacks.md",
     "Data Structures & Algorithms/Book/Chapter 4 - The Master Method.md",
-    "Data Structures & Algorithms/Book/Chapter 2 - Asymptotic Notation.md",
-    "Data Structures & Algorithms/Lectures/Lecture 4 - Faster Sorting - MergeSort & Divide-and-Conquer.md",
-    "Data Structures & Algorithms/Lectures/Lecture 3 - More Data Structures - Linked Lists, Rooted Trees, Hash Tables.md",
     "Data Structures & Algorithms/Assets/Screenshot 2025-09-17 at 17.00.50.jpeg",
     "Data Structures & Algorithms/Assets",
     "Data Structures & Algorithms/Lectures",
