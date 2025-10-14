@@ -24,7 +24,7 @@ The Projection component in SPARQL defines the type of result produced by the qu
 
 The SPARQL Query Language specifies six types of queries, including the four retrieval types listed below: `SELECT`, `CONSTRUCT`, `ASK`, and `DESCRIBE`,.
 
-Here is the breakdown of the Projection keywords and their corresponding function and output:
+##### Projection keywords and their corresponding function and output:
 
 | Component      | Keyword         | Purpose                                                                                                                                                                                            | Example                                                                                                               |
 | :------------- | :-------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------- |
@@ -32,8 +32,20 @@ Here is the breakdown of the Projection keywords and their corresponding functio
 | **Projection** | **`CONSTRUCT`** | Returns an **RDF graph** (a set of triples),. It uses the triple patterns found in the `WHERE` clause to generate new triples, often saved as TTL or RDF/XML.                                      | `CONSTRUCT { ?y ex:kengetal "020". } WHERE { ?y dbo:areaCode "020". }`,.                                              |
 | **Projection** | **`ASK`**       | Returns **true or false**, indicating whether a solution matching the graph pattern in the `WHERE` clause exists.                                                                                  | `ASK WHERE { der:Amsterdam dbo:areaCode "020". }`.                                                                    |
 | **Projection** | **`DESCRIBE`**  | Returns an **RDF graph** that provides descriptive information about the specified resource(s).                                                                                                    | `DESCRIBE dbr:Amsterdam`.                                                                                             |
-|                |                 |                                                                                                                                                                                                    |                                                                                                                       |
 
+##### SPARQL Query Modifiers: Detailed Breakdown
+
+SPARQL query modifiers are optional clauses that follow the main query pattern (`WHERE` clause) and are used to process, refine, sort, group, or restrict the solution bindings before they are returned as the final result set.
+
+| Component    | Keyword      | Purpose                                                                  | Details/Inference                                                                                                                                                                                         | Example                                                                                      |
+| ------------ | ------------ | ------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| **Modifier** | **ORDER BY** | **Sorts the results** based on the values of specified variables.        | Sorting can be done in ascending (`ASC`) or descending (`DESC`) order.                                                                                                                                    | `ORDER BY DESC(?label)`, or `ORDER BY ?release_date`.                                        |
+| **Modifier** | **LIMIT**    | **Restricts the number of results** (solutions) returned by the query.   | Specifies the maximum number of solutions to include in the result set.                                                                                                                                   | `... } LIMIT 10`.                                                                            |
+| **Modifier** | **DISTINCT** | **Removes duplicate solution bindings** from the result set.             | Often used in `SELECT` queries to ensure unique values are returned.                                                                                                                                      | `SELECT DISTINCT ?album ?title ?release_date`.                                               |
+| **Modifier** | **GROUP BY** | **Groups solutions** that have the same values for the listed variables. | This clause is typically used in conjunction with aggregate functions (like `COUNT`, `SUM`, `AVG`).                                                                                                       | `... } GROUP BY ?country ORDER BY DESC(?numUnofficialLanguages)` [Example 3 in user prompt]. |
+| **Modifier** | **FILTER**   | **Restricts results** based on specific conditions or expressions.       | Conditions within `FILTER` must evaluate to `true` for the matching subgraph to be included. Supports functions like `year()`, `month()`, comparison operators (`=`, `>`), and logical operators (`&&`, ` |                                                                                              |
+
+Detailed Notes on Key Modifiers and Related Concepts
 The remaining two primary query types (`INSERT` and `DELETE`) are used to modify the triple store by inserting or deleting triples, using the same triple patterns as `SELECT`,.
 
 ---

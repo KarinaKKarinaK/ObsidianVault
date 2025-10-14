@@ -4,7 +4,7 @@ RDF graphs are just sets of triples
 
 Punning ⇒ allows one to define a concept as both a class and an instance
 
-In OWL, the **unique naming assumption (UNA)** is the idea that distinct names refer to distinct entities, but OWL does not make this assumption. Instead, OWL follows the open world assumption, which means different names could potentially refer to the same individual unless explicitly stated otherwise.
+The **unique naming assumption (UNA)** is the idea that distinct names refer to distinct entities, but OWL does not make this assumption. Instead, OWL follows the open world assumption, which means different names could potentially refer to the same individual unless explicitly stated otherwise.
 
 ---
 ## I. Knowledge Fundamentals and Formal Systems (Modules 1 & 2 Overview)
