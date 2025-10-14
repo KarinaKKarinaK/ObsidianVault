@@ -11,14 +11,12 @@
             "id": "3cbb1db61c84722b",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "pdf",
               "state": {
-                "file": "Knowledge & Data/Queries.md",
-                "mode": "source",
-                "source": false
+                "file": "Artificial Intelligence/LLMs/LLMs in 2025 crash-course (1).pdf"
               },
-              "icon": "lucide-file",
-              "title": "Queries"
+              "icon": "lucide-file-text",
+              "title": "LLMs in 2025 crash-course (1)"
             }
           },
           {
@@ -27,7 +25,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Main Review Resources.md",
+                "file": "Data Structures & Algorithms/Main Review Resources.md",
                 "mode": "source",
                 "source": false
               },
@@ -197,12 +195,21 @@
   },
   "active": "3cbb1db61c84722b",
   "lastOpenFiles": [
-    "Knowledge & Data/K&D Notes.md",
+    "Data Structures & Algorithms/DSA Midterm/Data Structures & Algorithms.md",
+    "Psychology/Psychology.md",
+    "Data Structures & Algorithms/DSA Final Exam/Algorithm Creation/Longest Common Subsequence.md",
+    "AI.base",
+    "Data Structures & Algorithms.base",
+    "Knowledge & Data.base",
+    "Psychology.base",
+    "Artificial Intelligence/LLMs/LLMs in 2025 crash-course (1).pdf",
+    "Data Structures & Algorithms/Main Review Resources.md",
     "Knowledge & Data/Queries.md",
+    "Artificial Intelligence/LLMs",
+    "Knowledge & Data/K&D Notes.md",
     "Psychology/Psychology - Study Notes.md",
     "Mini Essays/The Fermi Paradox.md",
     "Data Structures & Algorithms/DSA Final Exam/Algorithm Creation/Max-Subarray.md",
-    "Main Review Resources.md",
     "Data Structures & Algorithms/DSA Final Exam/Algorithm Creation/Greedy Algorithms.md",
     "Data Structures & Algorithms/DSA Final Exam/Algorithm Creation/Dynamic Programming General.md",
     "Data Structures & Algorithms/DSA Final Exam/Data Structures 2/Trees.md",
@@ -220,28 +227,19 @@
     "Data Structures & Algorithms/DSA Final Exam/Algorithms 2/Quicksort.md",
     "Data Structures & Algorithms/DSA Final Exam/Algorithms 2/Proof of Asymptotic Optimality.md",
     "Data Structures & Algorithms/DSA Final Exam/Algorithms 2/Priority Queues.md",
-    "Data Structures & Algorithms/DSA Final Exam/Algorithms 2/Merge Sort..md",
-    "Data Structures & Algorithms/DSA Final Exam/Algorithms 2/Logarithm recurrence equation..md",
-    "Data Structures & Algorithms/DSA Final Exam/Algorithms 2/Insertion Sort..md",
     "Data Structures & Algorithms/DSA Final Exam/Data Structures 2",
     "Data Structures & Algorithms/DSA Final Exam/Algorithms 2",
-    "Untitled",
+    "Artificial Intelligence/Untitled",
     "Data Structures & Algorithms/DSA Final Exam/Algorithm Creation",
-    "Untitled.base",
     "Untitled.canvas",
     "Untitled 1.canvas",
-    "Data Structures & Algorithms/DSA Midterm",
-    "Data Structures & Algorithms/DSA Final Exam",
     "Data Structures & Algorithms/Assets/Pasted image 20250913145553.png",
-    "Mini Essays",
     "Data Structures & Algorithms/Assets/Screenshot 2025-09-22 at 14.55.53.png",
     "Data Structures & Algorithms/Assets/Screenshot 2025-09-22 at 14.54.34.png",
     "Data Structures & Algorithms/Assets/Screenshot 2025-09-19 at 10.19.31.png",
     "Data Structures & Algorithms/Assets/Screenshot 2025-09-19 at 10.20.20.png",
     "Data Structures & Algorithms/Assets/Screenshot 2025-09-19 at 10.24.19.png",
     "Data Structures & Algorithms/Assets/Screenshot 2025-09-19 at 10.19.05.png",
-    "Data Structures & Algorithms/Assets/Screenshot 2025-09-17 at 17.00.50.jpeg",
-    "Data Structures & Algorithms/Assets",
-    "Data Structures & Algorithms/Lectures"
+    "Data Structures & Algorithms/Assets/Screenshot 2025-09-17 at 17.00.50.jpeg"
   ]
 }
