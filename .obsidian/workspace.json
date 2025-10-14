@@ -8,20 +8,6 @@
         "type": "tabs",
         "children": [
           {
-            "id": "47e7d5a81f56896d",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Knowledge & Data/Ontology Basics.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Ontology Basics"
-            }
-          },
-          {
             "id": "7bb1482d3be0f2aa",
             "type": "leaf",
             "state": {
@@ -41,44 +27,16 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Exhaustive Psych Notes.md",
+                "file": "Psychology/Exhaustive Psych Notes.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
               "title": "Exhaustive Psych Notes"
             }
-          },
-          {
-            "id": "cf51a7eca93cb126",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Psychology/Complete Exam Study Guide – Psychology.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Complete Exam Study Guide – Psychology"
-            }
-          },
-          {
-            "id": "68c8bd7a0867a8cf",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Knowledge & Data/Queries.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Queries"
-            }
           }
         ],
-        "currentTab": 2
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -238,10 +196,11 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "156dd341e93d927a",
+  "active": "77837552dc6fb3a9",
   "lastOpenFiles": [
+    "Psychology/Pasted image 20251014150259.png",
     "Psychology/Complete Exam Study Guide – Psychology.md",
-    "Exhaustive Psych Notes.md",
+    "Psychology/Exhaustive Psych Notes.md",
     "Psychology/Psychology.md",
     "AI.base",
     "Knowledge & Data/K&D Knowledge Gaps Notes.md",
@@ -271,7 +230,6 @@
     "Data Structures & Algorithms/DSA Final Exam/Data Structures 2/Direct Address Tables (hashmaps).md",
     "Data Structures & Algorithms/DSA Final Exam/Data Structures 2/BSTs.md",
     "Data Structures & Algorithms/DSA Final Exam/Data Structures 2/AVL Trees.md",
-    "Data Structures & Algorithms/DSA Final Exam/Algorithms 2/Sleepsort.md",
     "Data Structures & Algorithms/DSA Final Exam/Data Structures 2",
     "Data Structures & Algorithms/DSA Final Exam/Algorithms 2",
     "Artificial Intelligence/Untitled",

@@ -13,6 +13,7 @@ The course is divided into two sections: Genetic/Biological Basis of Behaviour (
 - **Nature vs. Nurture:** Both genetics (nature) and environment (nurture) **continuously interact** to shape behaviour.
 - **Genome:** The entire set of genes in an organism, acting as the blueprint.
 - **Genotype:** The **genetic makeup** of an individual, determined at conception and constant throughout life.
+	- *A **genome** is an organism's complete set of DNA, including all of its genes and other non-coding regions. In contrast, **genotype** is the term used for the specific set of alleles (variant forms of a gene) an organism carries, either for a single trait or for all its genes, and is often used more narrowly than genome*
 - **Phenotype:** The **observable traits and behaviours** resulting from the interaction between genotype and environment.
     - _Example:_ Height is determined by genetics (genotype) but influenced by nutrition (environment).
 - **Polygenic Traits:** Most human traits (e.g., intelligence) are influenced by **multiple genes and environmental factors**.
@@ -26,7 +27,7 @@ The course is divided into two sections: Genetic/Biological Basis of Behaviour (
 #### **3. Behavioural Genetics and Heritability**
 
 - **Behavioural Genetics:** Studies the interaction between genetics and environment to explain behaviour.
-- **Heritability Estimate:** A statistical measure (ranging from 0 to 1) of how much of the **variation in a trait within a population** is due to genetics.
+- **Heritability Estimate:** A statistical measure (ranging from 0 to 1, or 0% to 100%, so 0.9 would be very likely due to genetics) of how much of the **variation in a trait within a population** is due to genetics.
     - _**Important:**_ Heritability applies to **populations**, not individuals.
 - **Research Methods (Approach):**
     - **Twin Studies:** Compares monozygotic (100% genes shared) and dizygotic (50% genes shared) twins. If identical twins are more similar, it suggests a strong genetic influence.
@@ -58,6 +59,7 @@ The course is divided into two sections: Genetic/Biological Basis of Behaviour (
     - **Motor (Efferent) Neurons:** Send directions **towards the muscles**.
     - **Interneurons:** Communicate between sensory and motor neurons within the CNS.
 - **Neural Structure:** **Dendrites** (receive signals), **Cell Body** (integrates info), **Axon** (transmits impulse), **Myelin Sheath** (increases speed), **Terminal Buttons** (release NTs).
+![[Pasted image 20251014150259.png]]
 - **Action Potential:** The electrical impulse traveling down the axon. Governed by the **All-or-None Law** (it either fires or it doesn't; strength is constant).
 - **Synapse:** The gap between neurons where communication occurs via **neurotransmitters (NTs)**.
     - NTs generate either an **excitatory** (increases firing likelihood) or **inhibitory** (decreases firing likelihood) signal.
