@@ -229,6 +229,7 @@ The course is divided into two sections: Genetic/Biological Basis of Behaviour (
 #### **5. Cognitive and Social Learning**
 
 - **Latent Learning:** Learning that occurs **without reinforcement** and is only demonstrated once reinforcement becomes available.
+	- *This type of "hidden" learning occurs without any immediate reinforcement or reward, such as when a child learns a route to school by observation, but only uses that knowledge when they need to bike there themselves.*
 - **Cognitive Maps (Tolman):** Mental representations of spatial layouts, formed via latent learning.
 - **Learned Helplessness:** Passive behaviour learned after experiencing uncontrollable negative events, leading to the belief that outcomes cannot be influenced.
 - **Observational Learning (Bandura):** Learning by watching others (modeling).
@@ -246,7 +247,11 @@ The course is divided into two sections: Genetic/Biological Basis of Behaviour (
 - **Short-Term Memory (STM) / Working Memory:** Holds limited information (about 7 items) for 20-30 seconds. **Chunking** improves capacity.
 - **Long-Term Memory (LTM):** Unlimited capacity, long duration.
     - **Explicit (Declarative):** Conscious recall. **Episodic** (events) and **Semantic** (facts/knowledge).
+	    - **Episodic Memory:** This component stores memories of **specific personal experiences and events**, along with the context in which they occurred (e.g., what you ate for breakfast or details of a specific birthday party).
+	    - **Semantic Memory:** This component stores **facts, general knowledge**, and concepts independent of personal experience (e.g., knowing the capital of France or what a bicycle is).
     - **Implicit (Nondeclarative):** Unconscious recall. **Procedural** (skills, e.g., riding a bike) and **Priming**.
+	    - **Procedural Memory:** This covers **motor skills and habits** (e.g., knowing how to ride a bike, tie a shoelace, or play an instrument). This form of memory can be retained even if the ability to form new explicit memories is lost, as famously demonstrated by patient H.M., who, despite having **anterograde amnesia**, could still learn new motor tasks.
+	    - **Priming:** This is a type of unconscious influence where exposure to one stimulus affects the response to a subsequent stimulus. For instance, exposure to the word "chair" makes it easier to recognize a related word like "table" later on. Priming is a demonstration of how prior exposure can influence behaviour without reaching conscious awareness.
 
 #### **2. Encoding and Processing (Most Important)**
 
@@ -363,7 +368,7 @@ The course is divided into two sections: Genetic/Biological Basis of Behaviour (
 
 #### **2. Theories and Hypotheses (Most Important)**
 
-- **Theory:** A broad set of statements explaining how variables relate. Must be **supported by data, falsifiable, and parsimonious**.
+- **Theory:** A broad set of statements explaining how variables relate. Must be **supported by data, falsifiable, and parsimonious** *(parsimonious = as simple as possible while still explaining the phenomena in question)*.
 - **Hypothesis:** A **specific, testable prediction** derived from a theory.
     - **Falsifiability Criterion:** A hypothesis must be phrased such that some possible outcome could prove it false. If not falsifiable, it is not scientific.
     - **Null Hypothesis (H0):** States there is **no effect** or relationship.
@@ -414,6 +419,7 @@ The course is divided into two sections: Genetic/Biological Basis of Behaviour (
     - **Third-Variable Problem:** An unmeasured factor influences both variables, creating a **spurious correlation**.
 - **Advanced Techniques (Attempting Causality):**
     - **Longitudinal Designs:** Measure variables over time to establish **temporal precedence** (using cross-lag correlations).
+	    - Cross-lag correlations = Cross-lag correlations test whether one variable measured at an **earlier time point** predicts another variable measured at a **later time**
     - **Multiple Regression:** Statistically controls for potential third variables, strengthening the causal argument.
 
 #### **2. Experimental Research (Causal Claims - Approach)**
@@ -462,6 +468,15 @@ The course is divided into two sections: Genetic/Biological Basis of Behaviour (
 - **Characteristics:** Involve **in-depth analysis** of a very small number of participants (sometimes just one).
 - **Approach:** Focus on individual-level data, common in clinical settings or studies of rare populations.
 - **Examples:** Stable-baseline designs, Multiple-baseline designs, Reversal designs (ABA design).
+	- **Reversal Designs (ABA Design)**: This design involves studying a behaviour across three phases:
+		- **Phase A (Baseline):** The researcher establishes a stable baseline for the behaviour without any intervention.
+		- **Phase B (Treatment):** The intervention (treatment) is introduced, and the researcher measures changes in the behaviour.
+		- **Phase A (Reversal):** The intervention is withdrawn, and the researcher observes whether the behaviour reverts to the original baseline state.
+		
+	- **Stable-Baseline Designs:** In this design, researchers observe the behaviour for an extended **stable baseline period** before introducing the intervention.
+		- *The extended baseline period rules out the possibility that the behaviour would have changed naturally without the intervention, thereby strengthening the argument for a causal relationship*
+	
+	- **Multiple-Baseline Designs:** This design avoids the ethical complications of reversal designs (where treatment is removed). Instead of withdrawing the treatment, the intervention is introduced at **different times** for different behaviours, settings, or individuals.
 
 ---
 
@@ -474,6 +489,7 @@ The course is divided into two sections: Genetic/Biological Basis of Behaviour (
     3. **Dunning-Kruger Effect:** People with limited knowledge overestimate their competence.
     4. **Mental Shortcuts (Heuristics):** Quick rules that often lead to errors (e.g., Availability, Representativeness).
     5. **Experimenter Bias/Observer Bias:** Researcher expectations unintentionally influencing results (Controlled via **Double-Blind Procedures**).
+	    - *A **Double-Blind Design** is a method where **both the participants and the experimenters** are unaware of who is receiving the treatment (the independent variable manipulation) and who is receiving the control or placebo condition*
     6. **Demand Characteristics:** Participants guess the study's purpose and change their behaviour (Controlled via **Blinding**).
     7. **Placebo Effect:** Participants improve simply because they believe they are receiving treatment (Controlled via **Placebo Control Groups**).
 
