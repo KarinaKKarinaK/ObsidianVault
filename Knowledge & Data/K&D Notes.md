@@ -6,10 +6,7 @@ Punning ⇒ allows one to define a concept as both a class and an instance
 
 In OWL, the **unique naming assumption (UNA)** is the idea that distinct names refer to distinct entities, but OWL does not make this assumption. Instead, OWL follows the open world assumption, which means different names could potentially refer to the same individual unless explicitly stated otherwise.
 
-This comprehensive set of notes is designed to prepare you for your final examination by detailing the core concepts, theories, and practical technologies covered in the course lectures and highlighted in the quizzes.
-
 ---
-
 ## I. Knowledge Fundamentals and Formal Systems (Modules 1 & 2 Overview)
 
 The course begins by establishing foundational concepts regarding data, information, and knowledge, and introduces the formal structure necessary for predictable computing.
@@ -93,7 +90,7 @@ The vision for the Semantic Web is to move from a Web of Documents to a **Web of
 
 **SPARQL** (SPARQL Protocol and RDF Query Language) is the W3C standard query language for RDF graphs, often called "The SQL for the Web of Data".
 
-- **Access:** Queries are sent to **SPARQL endpoints** (the standard HTTP REST API for querying triple stores) over HTTP.
+- **Access:** [[Queries]] are sent to **SPARQL endpoints** (the standard HTTP REST API for querying triple stores) over HTTP.
 - **Query Structure:** Queries describe **graph patterns** using triple patterns, which contain variables.
 
 |SPARQL Query Type|Purpose|Output|
