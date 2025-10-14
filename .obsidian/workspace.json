@@ -48,23 +48,9 @@
               "icon": "lucide-file",
               "title": "K&D Notes"
             }
-          },
-          {
-            "id": "af2f1c5d0956278f",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Data Structures & Algorithms/DSA Midterm/!!! Pre-Exam Review.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "!!! Pre-Exam Review"
-            }
           }
         ],
-        "currentTab": 3
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -193,8 +179,19 @@
               "icon": "lucide-list",
               "title": "Outline of Welcome"
             }
+          },
+          {
+            "id": "49be6601ca555d88",
+            "type": "leaf",
+            "state": {
+              "type": "git-view",
+              "state": {},
+              "icon": "git-pull-request",
+              "title": "Source Control"
+            }
           }
-        ]
+        ],
+        "currentTab": 4
       }
     ],
     "direction": "horizontal",
@@ -213,50 +210,53 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "77837552dc6fb3a9",
+  "active": "120ff61491093977",
   "lastOpenFiles": [
-    "Knowledge & Data/Queries.md",
+    "Data Structures & Algorithms/DSA Final Exam/Data Structures 2/Trees.md",
+    "Data Structures & Algorithms/DSA Final Exam/Data Structures 2/Stack.md",
+    "Data Structures & Algorithms/DSA Final Exam/Data Structures 2/Queue.md",
+    "Data Structures & Algorithms/DSA Final Exam/Data Structures 2/Max-Heap.md",
+    "Data Structures & Algorithms/DSA Final Exam/Data Structures 2/Look-Up Table.md",
+    "Data Structures & Algorithms/DSA Final Exam/Data Structures 2/Linked Lists.md",
+    "Data Structures & Algorithms/DSA Final Exam/Data Structures 2/General.md",
+    "Data Structures & Algorithms/DSA Final Exam/Data Structures 2/Direct Address Tables (hashmaps).md",
+    "Data Structures & Algorithms/DSA Final Exam/Data Structures 2/BSTs.md",
+    "Data Structures & Algorithms/DSA Final Exam/Data Structures 2/AVL Trees.md",
+    "Data Structures & Algorithms/DSA Final Exam/Algorithms 2/Sleepsort.md",
+    "Data Structures & Algorithms/DSA Final Exam/Algorithms 2/Radix Sort.md",
+    "Data Structures & Algorithms/DSA Final Exam/Algorithms 2/Quicksort.md",
+    "Data Structures & Algorithms/DSA Final Exam/Algorithms 2/Proof of Asymptotic Optimality.md",
+    "Data Structures & Algorithms/DSA Final Exam/Algorithms 2/Priority Queues.md",
+    "Data Structures & Algorithms/DSA Final Exam/Algorithms 2/Merge Sort..md",
+    "Data Structures & Algorithms/DSA Final Exam/Algorithms 2/Logarithm recurrence equation..md",
+    "Data Structures & Algorithms/DSA Final Exam/Algorithms 2/Insertion Sort..md",
+    "Data Structures & Algorithms/DSA Final Exam/Algorithms 2/Heapsort.md",
+    "Data Structures & Algorithms/DSA Final Exam/Algorithms 2/Fibonacci Numbers.md",
+    "Data Structures & Algorithms/DSA Final Exam/Algorithms 2/Dijkstra's Algorithm.md",
+    "Data Structures & Algorithms/DSA Final Exam/Algorithms 2/Counting Sort.md",
+    "Data Structures & Algorithms/DSA Final Exam/Algorithms 2/Bucket Sort.md",
+    "Data Structures & Algorithms/DSA Final Exam/Algorithms 2/Binary Search.md",
+    "Data Structures & Algorithms/DSA Final Exam/Algorithms 2/Asymptotic Notation.md",
+    "Data Structures & Algorithms/DSA Final Exam/Algorithms 2/Algorithms in general..md",
+    "Data Structures & Algorithms/DSA Final Exam/Data Structures 2",
+    "Data Structures & Algorithms/DSA Final Exam/Algorithms 2",
+    "Untitled",
+    "Data Structures & Algorithms/DSA Final Exam/Algorithm Creation",
+    "Untitled.base",
+    "Untitled.canvas",
+    "Untitled 1.canvas",
     "Data Structures & Algorithms/DSA Midterm",
     "Data Structures & Algorithms/DSA Final Exam",
-    "Knowledge & Data/K&D Notes.md",
-    "Walkthrough.md",
-    "Psychology/Topic 4 - Sensation and Perception.md",
-    "Psychology/Topic 1 - Genes and evolution.md",
-    "Psychology/T1.2 - The science of psychology.md",
-    "Psychology/Psychology - Study Notes.md",
-    "Psychology/T2.2 - Nervous system and neurons.md",
-    "Psychology/T1.1 - Psychology and genes.md",
-    "Mini Essays/The Fermi Paradox.md",
-    "Mini Essays/Mini Essays - Table Of Contents.md",
-    "Mini Essays/Transhumanism.md",
-    "Data Structures & Algorithms/DSA Midterm/Loop Invariant.md",
-    "Data Structures & Algorithms/DSA Midterm/DSA - Main Notes.md",
-    "Data Structures & Algorithms/DSA Midterm/Step-By-Step Sorting Algorithms.md",
     "Data Structures & Algorithms/Assets/Pasted image 20250913145553.png",
-    "Mini Essays/Metacognition.md",
     "Mini Essays",
-    "Data Structures & Algorithms/DSA Midterm/Min-Heaps.md",
-    "Data Structures & Algorithms/DSA Midterm/!!! Pre-Exam Review.md",
-    "Data Structures & Algorithms/DSA Midterm/Heaps - DSA.md",
-    "Data Structures & Algorithms/DSA Midterm/Basic Algorithms.md",
     "Data Structures & Algorithms/Assets/Screenshot 2025-09-22 at 14.55.53.png",
     "Data Structures & Algorithms/Assets/Screenshot 2025-09-22 at 14.54.34.png",
-    "Data Structures & Algorithms/DSA Midterm/Core Concepts For Problem Solving.md",
-    "Data Structures & Algorithms/DSA Midterm/Base- Data Structures & Algorithms.md",
     "Data Structures & Algorithms/Assets/Screenshot 2025-09-19 at 10.19.31.png",
     "Data Structures & Algorithms/Assets/Screenshot 2025-09-19 at 10.20.20.png",
     "Data Structures & Algorithms/Assets/Screenshot 2025-09-19 at 10.24.19.png",
-    "Data Structures & Algorithms/DSA Midterm/DSA - Pseudocode.md",
-    "Data Structures & Algorithms/Lectures/Lecture 5 - Heaps, HeapSort, and BucketSort.md",
-    "Data Structures & Algorithms/DSA Midterm/Final Midterm Prep.md",
     "Data Structures & Algorithms/Assets/Screenshot 2025-09-19 at 10.19.05.png",
     "Data Structures & Algorithms/Assets/Screenshot 2025-09-17 at 17.00.50.jpeg",
     "Data Structures & Algorithms/Assets",
-    "Data Structures & Algorithms/Lectures",
-    "Data Structures & Algorithms/Book",
-    "Users/karina/Documents/Period 1.base",
-    "Users/karina/Documents",
-    "Users/karina",
-    "Users"
+    "Data Structures & Algorithms/Lectures"
   ]
 }
