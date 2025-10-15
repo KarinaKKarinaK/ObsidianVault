@@ -4,53 +4,24 @@
     "type": "split",
     "children": [
       {
-        "id": "ecfa1d16365303b7",
+        "id": "16f71ee197415eac",
         "type": "tabs",
         "children": [
           {
-            "id": "7bb1482d3be0f2aa",
+            "id": "56bc742bdba5fdeb",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Psychology/Complete Exam Study Guide – Psychology.md",
+                "file": "Psychology/T9.2 - Scientific method, empirical cycle, and types of research.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Complete Exam Study Guide – Psychology"
-            }
-          },
-          {
-            "id": "156dd341e93d927a",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Psychology/Exhaustive Psych Notes.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Exhaustive Psych Notes"
-            }
-          },
-          {
-            "id": "4ac0f0102e3e346d",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Exam-Specific, Extended Notes.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Exam-Specific, Extended Notes"
+              "title": "T9.2 - Scientific method, empirical cycle, and types of research"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -210,22 +181,29 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "156dd341e93d927a",
+  "active": "56bc742bdba5fdeb",
   "lastOpenFiles": [
-    "Exam-Specific, Extended Notes.md",
-    "Pasted image 20251014192142.png",
-    "Pasted image 20251014192036.png",
-    "Psychology/Exhaustive Psych Notes.md",
-    "Psychology/Complete Exam Study Guide – Psychology.md",
-    "Psychology/NotebookLM Mind Map.png",
+    "Psychology/T2.1 - Phrenology and methods of studying the brain.md",
+    "Psychology/T2.2 - Nervous system and neurons.md",
+    "Psychology/T1.2 - The science of psychology.md",
+    "Psychology/T1.1 - Psychology and genes.md",
+    "Psychology/Assets/Screenshot 2025-10-15 at 14.47.31.png",
+    "Psychology/Assets/Pasted image 20251014150259.png",
     "Psychology/NotebookLM Mind Map (1).png",
-    "Psychology/Pasted image 20251014150259.png",
+    "Psychology/NotebookLM Mind Map.png",
+    "Psychology/Exhaustive Psych Notes.md",
+    "Psychology/Assets",
+    "Exam-Specific, Extended Notes.md",
+    "Psychology/Assets/Screenshot 2025-10-15 at 14.47.10.png",
+    "Psychology/Assets/Screenshot 2025-10-15 at 14.46.54.png",
+    "Knowledge & Data/K&D Knowledge Gaps Notes.md",
+    "Psychology/Complete Exam Study Guide – Psychology.md",
+    "Knowledge & Data/K&D Notes.md",
+    "Psychology/Assets/Pasted image 20251014192142.png",
+    "Psychology/Assets/Pasted image 20251014192036.png",
     "Psychology/Psychology.md",
     "AI.base",
-    "Knowledge & Data/K&D Knowledge Gaps Notes.md",
     "Knowledge & Data/Ontology Basics.md",
-    "Knowledge & Data/K&D Notes.md",
-    "Psychology/T1.1 - Psychology and genes.md",
     "Knowledge & Data/Queries.md",
     "Data Structures & Algorithms/Main Review Resources.md",
     "Artificial Intelligence/LLMs/LLMs in 2025 crash-course (1).pdf",
@@ -246,18 +224,12 @@
     "Data Structures & Algorithms/DSA Final Exam/Data Structures 2/Look-Up Table.md",
     "Data Structures & Algorithms/DSA Final Exam/Data Structures 2/Linked Lists.md",
     "Data Structures & Algorithms/DSA Final Exam/Data Structures 2/General.md",
-    "Data Structures & Algorithms/DSA Final Exam/Data Structures 2/Direct Address Tables (hashmaps).md",
-    "Data Structures & Algorithms/DSA Final Exam/Data Structures 2/BSTs.md",
     "Data Structures & Algorithms/DSA Final Exam/Data Structures 2",
     "Data Structures & Algorithms/DSA Final Exam/Algorithms 2",
     "Artificial Intelligence/Untitled",
-    "Data Structures & Algorithms/DSA Final Exam/Algorithm Creation",
     "Untitled.canvas",
     "Untitled 1.canvas",
     "Data Structures & Algorithms/Assets/Pasted image 20250913145553.png",
-    "Data Structures & Algorithms/Assets/Screenshot 2025-09-22 at 14.55.53.png",
-    "Data Structures & Algorithms/Assets/Screenshot 2025-09-22 at 14.54.34.png",
-    "Data Structures & Algorithms/Assets/Screenshot 2025-09-19 at 10.19.31.png",
-    "Data Structures & Algorithms/Assets/Screenshot 2025-09-19 at 10.20.20.png"
+    "Data Structures & Algorithms/Assets/Screenshot 2025-09-22 at 14.55.53.png"
   ]
 }
