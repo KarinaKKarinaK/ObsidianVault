@@ -245,6 +245,8 @@ The course is divided into two sections: Genetic/Biological Basis of Behaviour (
 - **Shaping:** Reinforcing **successive approximations** of a complex behaviour.
 - **Superstitious Behaviour:** Occurs when a behaviour is accidentally reinforced (Skinner’s pigeons).
 
+##### How To Distinguish Between Operant and Classical Conditioning
+===Classical conditioning associates two stimuli to elicit an involuntary response, while operant conditioning links a voluntary behavior to its consequence, which either increases or decreases the likelihood of the behavior repeating==. In classical conditioning, the stimulus comes before the behavior (e.g., a bell paired with food). In operant conditioning, the consequence comes after the behavior (e.g., getting a treat for an action).
 #### **4. Schedules of Reinforcement (Crucial for Resistance to Extinction)**
 
 - **Continuous Reinforcement:** Every instance is rewarded (fast learning, fast extinction).
@@ -253,6 +255,7 @@ The course is divided into two sections: Genetic/Biological Basis of Behaviour (
     - **Variable Ratio (VR):** Reward after varying number of responses (highest response rate, e.g., slot machines).
     - **Fixed Interval (FI):** Reward after set time period.
     - **Variable Interval (VI):** Reward after varying time period.
+- Continuous reinforcement = fastest extinction
 
 #### **5. Cognitive and Social Learning**
 

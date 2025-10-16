@@ -293,3 +293,7 @@ Ontology population involves filling the ontology with instances. Data sources (
     - Transform external information into RDF if necessary.
     - Try to maintain the original schema as much as possible.
     - Use inferencing to derive mappings where possible.
+
+#### Turtle Format
+
+#### Caveat Notes (from Quiz)
