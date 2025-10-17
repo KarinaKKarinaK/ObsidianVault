@@ -56,7 +56,7 @@
 - C. The sodium channels open, causing the inside to become more positive.
 - D. The neuron enters a brief resting state and cannot fire.
 
-**9. What is the primary function of the **Thalamus** in the brain?**
+9. **What is the primary function of the Thalamus in the brain?**
 
 - A. Coordinating voluntary movement (Basal Ganglia).
 - B. Controlling the endocrine system via the pituitary gland (Hypothalamus).
@@ -445,68 +445,68 @@
 
 ## Answer Key
 
-|Question|Answer|Source Citation|
-|---|---|---|
-|1|B||
-|2|D||
-|3|B||
-|4|B||
-|5|B||
-|6|B||
-|7|D||
-|8|B||
-|9|C||
-|10|C||
-|11|C||
-|12|C||
-|13|D||
-|14|B||
-|15|B||
-|16|D||
-|17|C||
-|18|B||
-|19|D||
-|20|B||
-|21|C||
-|22|C||
-|23|B||
-|24|B||
-|25|B||
-|26|B||
-|27|B||
-|28|C||
-|29|C||
-|30|C||
-|31|C||
-|32|B||
-|33|B||
-|34|D||
-|35|C||
-|36|B||
-|37|C||
-|38|B||
-|39|D||
-|40|B||
-|41|D||
-|42|B||
-|43|B||
-|44|D||
-|45|B||
-|46|C||
-|47|B||
-|48|C||
-|49|C||
-|50|C||
-|51|B||
-|52|B||
-|53|D||
-|54|C||
-|55|D||
-|56|C||
-|57|C||
-|58|C||
-|59|C||
-|60|C||
-|61|B||
-|62|B||
-|63|A||
+| Question | Answer | Source Citation |
+| -------- | ------ | --------------- |
+| 1        | B      |                 |
+| 2        | D      |                 |
+| 3        | B      |                 |
+| 4        | B      |                 |
+| 5        | B      |                 |
+| 6        | B      |                 |
+| 7        | D      |                 |
+| 8        | B      |                 |
+| 9        | C      |                 |
+| 10       | C      |                 |
+| 11       | C      |                 |
+| 12       | C      |                 |
+| 13       | D      |                 |
+| 14       | B      |                 |
+| 15       | B      |                 |
+| 16       | D      |                 |
+| 17       | C      |                 |
+| 18       | B      |                 |
+| 19       | D      |                 |
+| 20       | B      |                 |
+| 21       | C      |                 |
+| 22       | C      |                 |
+| 23       | B      |                 |
+| 24       | B      |                 |
+| 25       | B      |                 |
+| 26       | B      |                 |
+| 27       | B      |                 |
+| 28       | C      |                 |
+| 29       | C      |                 |
+| 30       | C      |                 |
+| 31       | C      |                 |
+| 32       | B      |                 |
+| 33       | B      |                 |
+| 34       | D      |                 |
+| 35       | C      |                 |
+| 36       | B      |                 |
+| 37       | C      |                 |
+| 38       | B      |                 |
+| 39       | D      |                 |
+| 40       | B      |                 |
+| 41       | D      |                 |
+| 42       | B      |                 |
+| 43       | B      |                 |
+| 44       | D      |                 |
+| 45       | B      |                 |
+| 46       | C      |                 |
+| 47       | B      |                 |
+| 48       | C      |                 |
+| 49       | C      |                 |
+| 50       | C      |                 |
+| 51       | B      |                 |
+| 52       | B      |                 |
+| 53       | D      |                 |
+| 54       | C      |                 |
+| 55       | D      |                 |
+| 56       | C      |                 |
+| 57       | C      |                 |
+| 58       | C      |                 |
+| 59       | C      |                 |
+| 60       | C      |                 |
+| 61       | B      |                 |
+| 62       | B      |                 |
+| 63       | A      |                 |

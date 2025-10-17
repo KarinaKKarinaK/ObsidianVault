@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Psychology/T8.1 - Introduction to intelligence.md",
+                "file": "Psychology/T2.4 - The brain and its structure.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "T8.1 - Introduction to intelligence"
+              "title": "T2.4 - The brain and its structure"
             }
           },
           {
@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Psychology/T2.5 - Neurotransmitters and the effects of drugs.md",
+                "file": "Psychology/Exhaustive Psych Notes.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "T2.5 - Neurotransmitters and the effects of drugs"
+              "title": "Exhaustive Psych Notes"
             }
           },
           {
@@ -55,12 +55,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Psychology/Psychology - Quiz 2.md",
+                "file": "Knowledge & Data/K&D Notes.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Psychology - Quiz 2"
+              "title": "K&D Notes"
             }
           }
         ],
@@ -96,7 +96,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "irreflex",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -117,7 +117,8 @@
               "title": "Bookmarks"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
@@ -224,21 +225,32 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "77837552dc6fb3a9",
+  "active": "0f9b3fde5e1d647c",
   "lastOpenFiles": [
-    "Psychology/Psychology - Quiz 1.md",
+    "Knowledge & Data/K&D Knowledge Gaps Notes.md",
+    "Knowledge & Data/K&D Notes.md",
+    "Screenshot 2025-10-17 at 14.03.37.png",
+    "AI.base",
+    "Untitled.base",
+    "Untitled 1.base",
+    "Untitled.canvas",
+    "Knowledge & Data/Screenshot 2025-10-17 at 13.57.26.png",
+    "Knowledge & Data/Ontology Basics.md",
+    "Knowledge & Data/Summary Knowledge and Data.pdf",
     "Psychology/Psychology - Quiz 2.md",
-    "Psychology/T2.5 - Neurotransmitters and the effects of drugs.md",
-    "Psychology/T2.2 - Nervous system and neurons.md",
+    "Psychology/Topic 11 - Measurement, reliability, and descriptive research.md",
     "Psychology/Exhaustive Psych Notes.md",
+    "Psychology/T12.2 - Advanced correlational techniques and experiments.md",
+    "Psychology/T2.5 - Neurotransmitters and the effects of drugs.md",
+    "Psychology/T2.4 - The brain and its structure.md",
+    "Psychology/T2.3 - Brain plasticity and hemispheric functions.md",
+    "Psychology/T8.1 - Introduction to intelligence.md",
+    "Psychology/Psychology - Quiz 1.md",
+    "Psychology/T2.2 - Nervous system and neurons.md",
     "Psychology/T3.2 - Variations in consciousness, brain Injury, and drug influence.md",
     "Psychology/Pasted image 20251016155738.png",
     "Psychology/T5.1 - Learning.md",
-    "Psychology/T2.4 - The brain and its structure.md",
-    "Psychology/T2.3 - Brain plasticity and hemispheric functions.md",
     "Psychology/T2.1 - Phrenology and methods of studying the brain.md",
-    "Knowledge & Data/K&D Notes.md",
-    "Psychology/T8.1 - Introduction to intelligence.md",
     "Psychology/T7.4 - Language.md",
     "Psychology/T7.3 - Problem solving.md",
     "Psychology/Topic 3 - Consciousness.md",
@@ -248,20 +260,10 @@
     "Psychology/T5.2 - Operant conditioning and reinforcement.md",
     "Psychology/T4.4 - Non-visual sensory systems.md",
     "Psychology/T4.3 - Perception.md",
-    "Psychology/T4.2 - Vision - process and components.md",
-    "Psychology/T4.1 - Sensation and perception.md",
-    "Psychology/T3.3 - Subliminal perception, automatic processing, and the hard problem of consciousness.md",
-    "Psychology/T3.1 - Consciousness, brain activity, and drug influence.md",
-    "Untitled.base",
-    "AI.base",
-    "Untitled.canvas",
-    "Untitled 1.base",
-    "2025-10-16.md",
     "Psychology/NotebookLM Mind Map.png",
     "Psychology/NotebookLM Mind Map (1).png",
     "Knowledge & Data/Knowledge & Data exam training p2.pdf",
     "Knowledge & Data/Knowledge & Data exam training P1.pdf",
-    "Knowledge & Data/Summary Knowledge and Data.pdf",
     "Data Structures & Algorithms/Course-evaluation-Mock-exam.pdf",
     "Knowledge & Data/KnowledgeData.pdf",
     "Knowledge & Data/NotebookLM Mind Map (2).png",
@@ -270,8 +272,6 @@
     "Psychology/Assets/Pasted image 20251014150259.png",
     "Psychology/Assets",
     "Psychology/Assets/Screenshot 2025-10-15 at 14.47.10.png",
-    "Psychology/Assets/Screenshot 2025-10-15 at 14.46.54.png",
-    "Psychology/Assets/Pasted image 20251014192142.png",
     "Artificial Intelligence/LLMs/LLMs in 2025 crash-course (1).pdf",
     "Untitled 1.canvas"
   ]

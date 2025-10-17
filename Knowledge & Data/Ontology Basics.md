@@ -21,3 +21,4 @@ In the context of ontologies and knowledge representation languages like RDF (Re
     - **Object Properties:** Relate two resources (non-literals).
     - **Datatype Properties:** Relate a resource to a literal value.
     - **Annotation Properties:** Used for metadata (like `rdfs:label` or `rdfs:comment`) and cannot be used in restrictions.
+

@@ -6,7 +6,29 @@ Punning ⇒ allows one to define a concept as both a class and an instance
 
 The **unique naming assumption (UNA)** is the idea that distinct names refer to distinct entities, but OWL does not make this assumption. Instead, OWL follows the open world assumption, which means different names could potentially refer to the same individual unless explicitly stated otherwise.
 
+**`owl:InverseFunctionalProperty`** is a property that is **inverse-functional** — meaning:  
+if **two different subjects** share the **same object** for this property, then those subjects **must be the same individual**.
+
+In logical terms:
+
+> For a property `P`, if  
+> `P(x, y₁)` and `P(x₂, y₁)` hold,  
+> then `x = x₂`.
+
+So the **object uniquely identifies the subject**.
+
+![[Screenshot 2025-10-17 at 13.57.26.png]]
 ---
+![[Screenshot 2025-10-17 at 14.03.37.png]]
+
+
+| Property type                 | Meaning                                                     | Example                   |
+| ----------------------------- | ----------------------------------------------------------- | ------------------------- |
+| **`owl:ReflexiveProperty`**   | Every individual is related to itself                       | `equals`, `isIdenticalTo` |
+| **`owl:IrreflexiveProperty`** | No individual can be related to itself                      | `isParentOf`, `isBossOf`  |
+| **`owl:SymmetricProperty`**   | If `a` is related to `b`, then `b` is related to `a`        | `isMarriedTo`             |
+| **`owl:AsymmetricProperty`**  | If `a` is related to `b`, then `b` cannot be related to `a` | `isParentOf`              |
+
 ## I. Knowledge Fundamentals and Formal Systems (Modules 1 & 2 Overview)
 
 The course begins by establishing foundational concepts regarding data, information, and knowledge, and introduces the formal structure necessary for predictable computing.
@@ -201,15 +223,15 @@ OWL properties are classified into three disjoint categories and can have variou
 
 #### Property Characteristics [182–186]
 
-|Characteristic|Definition/Inference|Example Application|
-|:--|:--|:--|
-|**`owl:SymmetricProperty`**|If $p(x, y)$ then $p(y, x)$.|`hasFamilyMember`, `siblingOf`.|
-|**`owl:AsymmetricProperty`**|If $p(x, y)$ then $p(y, x)$ is inconsistent.|-|
-|**`owl:TransitiveProperty`**|If $p(x, y)$ and $p(y, z)$ then $p(x, z)$.|`isLocatedIn` (or structural relations like `partOf`).|
-|**`owl:FunctionalProperty`**|A property has only one value for a subject (If $p(x, y)$ and $p(x, z)$, then $y = z$).|`hasBirthPlace` (assuming one birthplace). **Entails** $y$ `owl:sameAs` $z$.|
-|**`owl:InverseFunctionalProperty`**|A property value uniquely identifies an instance (If $p(x, y)$ and $p(z, y)$, then $x = z$).|`isCapitalOf`. **Entails** $x$ `owl:sameAs` $z$.|
-|**`owl:ReflexiveProperty`**|Every individual is related to itself via that property.|`knows` (if defined as reflexive).|
-|**`owl:IrreflexiveProperty`**|No individual is ever related to itself.|`isParentOf`.|
+| Characteristic                      | Definition/Inference                                                                         | Example Application                                                          |
+| :---------------------------------- | :------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------- |
+| **`owl:SymmetricProperty`**         | If $p(x, y)$ then $p(y, x)$.                                                                 | `hasFamilyMember`, `siblingOf`.                                              |
+| **`owl:AsymmetricProperty`**        | If $p(x, y)$ then $p(y, x)$ is inconsistent.                                                 | -                                                                            |
+| **`owl:TransitiveProperty`**        | If $p(x, y)$ and $p(y, z)$ then $p(x, z)$.                                                   | `isLocatedIn` (or structural relations like `partOf`).                       |
+| **`owl:FunctionalProperty`**        | A property has only one value for a subject (If $p(x, y)$ and $p(x, z)$, then $y = z$).      | `hasBirthPlace` (assuming one birthplace). **Entails** $y$ `owl:sameAs` $z$. |
+| **`owl:InverseFunctionalProperty`** | A property value uniquely identifies an instance (If $p(x, y)$ and $p(z, y)$, then $x = z$). | `isCapitalOf`. **Entails** $x$ `owl:sameAs` $z$.                             |
+| **`owl:ReflexiveProperty`**         | Every individual is related to itself via that property.                                     | `knows` (if defined as reflexive).                                           |
+| **`owl:IrreflexiveProperty`**       | No individual is ever related to itself.                                                     | `isParentOf`.                                                                |
 
 - **Property Axioms:** Relations between properties include `owl:inverseOf`, `owl:equivalentProperty`, `owl:disjointProperty`, and `owl:propertyChainAxiom`.
 
