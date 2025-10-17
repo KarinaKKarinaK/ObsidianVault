@@ -21,6 +21,11 @@ So the **object uniquely identifies the subject**.
 ---
 ![[Screenshot 2025-10-17 at 14.03.37.png]]
 
+![[Screenshot 2025-10-17 at 14.13.09.png]]
+![[Screenshot 2025-10-17 at 14.15.16.png]]
+![[Screenshot 2025-10-17 at 14.18.31.png]]
+
+![[Screenshot 2025-10-17 at 14.18.59.png]]
 
 | Property type                 | Meaning                                                     | Example                   |
 | ----------------------------- | ----------------------------------------------------------- | ------------------------- |

@@ -62,9 +62,21 @@
               "icon": "lucide-file",
               "title": "K&D Notes"
             }
+          },
+          {
+            "id": "8221cd5df05e7e8b",
+            "type": "leaf",
+            "state": {
+              "type": "image",
+              "state": {
+                "file": "Data Structures & Algorithms/DSA Final/NotebookLM Mind Map (5).png"
+              },
+              "icon": "lucide-image",
+              "title": "NotebookLM Mind Map (5)"
+            }
           }
         ],
-        "currentTab": 3
+        "currentTab": 4
       }
     ],
     "direction": "vertical"
@@ -117,8 +129,7 @@
               "title": "Bookmarks"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "horizontal",
@@ -225,11 +236,21 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "0f9b3fde5e1d647c",
+  "active": "8221cd5df05e7e8b",
   "lastOpenFiles": [
-    "Knowledge & Data/K&D Knowledge Gaps Notes.md",
+    "Data Structures & Algorithms/DSA Final/NotebookLM Mind Map (7).png",
+    "Data Structures & Algorithms/DSA Final/NotebookLM Mind Map (6).png",
+    "Data Structures & Algorithms/DSA Final/Exhaustive Final DSA Notes.md",
+    "Data Structures & Algorithms/DSA Final/NotebookLM Mind Map (5).png",
+    "Data Structures & Algorithms/DSA Final/NotebookLM Mind Map (4).png",
     "Knowledge & Data/K&D Notes.md",
-    "Screenshot 2025-10-17 at 14.03.37.png",
+    "Data Structures & Algorithms/DSA Final",
+    "Knowledge & Data/Screenshot 2025-10-17 at 14.18.59.png",
+    "Knowledge & Data/Screenshot 2025-10-17 at 14.18.31.png",
+    "Knowledge & Data/Screenshot 2025-10-17 at 14.15.16.png",
+    "Knowledge & Data/Screenshot 2025-10-17 at 14.13.09.png",
+    "Knowledge & Data/K&D Knowledge Gaps Notes.md",
+    "Knowledge & Data/Screenshot 2025-10-17 at 14.03.37.png",
     "AI.base",
     "Untitled.base",
     "Untitled 1.base",
@@ -259,20 +280,11 @@
     "Psychology/T6.1 - Introduction to memory.md",
     "Psychology/T5.2 - Operant conditioning and reinforcement.md",
     "Psychology/T4.4 - Non-visual sensory systems.md",
-    "Psychology/T4.3 - Perception.md",
-    "Psychology/NotebookLM Mind Map.png",
-    "Psychology/NotebookLM Mind Map (1).png",
     "Knowledge & Data/Knowledge & Data exam training p2.pdf",
     "Knowledge & Data/Knowledge & Data exam training P1.pdf",
     "Data Structures & Algorithms/Course-evaluation-Mock-exam.pdf",
     "Knowledge & Data/KnowledgeData.pdf",
-    "Knowledge & Data/NotebookLM Mind Map (2).png",
-    "Knowledge & Data/NotebookLM Mind Map (3).png",
-    "Psychology/Assets/Screenshot 2025-10-15 at 14.47.31.png",
-    "Psychology/Assets/Pasted image 20251014150259.png",
     "Psychology/Assets",
-    "Psychology/Assets/Screenshot 2025-10-15 at 14.47.10.png",
-    "Artificial Intelligence/LLMs/LLMs in 2025 crash-course (1).pdf",
     "Untitled 1.canvas"
   ]
 }
