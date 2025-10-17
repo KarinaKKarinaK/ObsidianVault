@@ -8,75 +8,18 @@
         "type": "tabs",
         "children": [
           {
-            "id": "56bc742bdba5fdeb",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Psychology/T2.4 - The brain and its structure.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "T2.4 - The brain and its structure"
-            }
-          },
-          {
-            "id": "37ad6a34f2fb039f",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Psychology/Exhaustive Psych Notes.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Exhaustive Psych Notes"
-            }
-          },
-          {
-            "id": "0e70d32bef9a8e6d",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Psychology/Psychology - Quiz 1.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Psychology - Quiz 1"
-            }
-          },
-          {
-            "id": "0f9b3fde5e1d647c",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Knowledge & Data/K&D Notes.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "K&D Notes"
-            }
-          },
-          {
             "id": "8221cd5df05e7e8b",
             "type": "leaf",
             "state": {
-              "type": "image",
+              "type": "pdf",
               "state": {
-                "file": "Data Structures & Algorithms/DSA Final/NotebookLM Mind Map (5).png"
+                "file": "Data Structures & Algorithms/DSA Final/Lectures DSA Final/10-AstarKnapsack-Tuma.pdf"
               },
-              "icon": "lucide-image",
-              "title": "NotebookLM Mind Map (5)"
+              "icon": "lucide-file-text",
+              "title": "10-AstarKnapsack-Tuma"
             }
           }
-        ],
-        "currentTab": 4
+        ]
       }
     ],
     "direction": "vertical"
@@ -236,28 +179,34 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "8221cd5df05e7e8b",
+  "active": "77837552dc6fb3a9",
   "lastOpenFiles": [
+    "Data Structures & Algorithms/DSA Final/Exhaustive Final DSA Notes.md",
+    "Data Structures & Algorithms/DSA Final/Lectures DSA Final",
+    "Data Structures & Algorithms/DSA Final/Lectures DSA Final/10-AstarKnapsack-Tuma.pdf",
+    "Data Structures & Algorithms/DSA Final/Lectures DSA Final/9-Topo Sort-Madeiral.pdf",
+    "Data Structures & Algorithms/DSA Final/Lectures DSA Final/9-Dijsktra-Tuma.pdf",
+    "Data Structures & Algorithms/DSA Final/Lectures DSA Final/8-Spanning-Madeiral.pdf",
+    "Data Structures & Algorithms/DSA Final/Lectures DSA Final/8-DFS-Madeiral.pdf",
+    "Data Structures & Algorithms/DSA Final/Lectures DSA Final/7-Distances.pdf",
+    "Data Structures & Algorithms/DSA Final/Lectures DSA Final/6-Trees.pdf",
+    "Data Structures & Algorithms/DSA Final/Lectures DSA Final/6-9-Graph Theo-Mulas.pdf",
+    "Data Structures & Algorithms/DSA Final/Lectures DSA Final/5-HeapsBis.pdf",
+    "Data Structures & Algorithms/Main Review Resources.md",
+    "Data Structures & Algorithms/DSA Final/NotebookLM Mind Map (5).png",
     "Data Structures & Algorithms/DSA Final/NotebookLM Mind Map (7).png",
     "Data Structures & Algorithms/DSA Final/NotebookLM Mind Map (6).png",
-    "Data Structures & Algorithms/DSA Final/Exhaustive Final DSA Notes.md",
-    "Data Structures & Algorithms/DSA Final/NotebookLM Mind Map (5).png",
     "Data Structures & Algorithms/DSA Final/NotebookLM Mind Map (4).png",
     "Knowledge & Data/K&D Notes.md",
-    "Data Structures & Algorithms/DSA Final",
     "Knowledge & Data/Screenshot 2025-10-17 at 14.18.59.png",
     "Knowledge & Data/Screenshot 2025-10-17 at 14.18.31.png",
     "Knowledge & Data/Screenshot 2025-10-17 at 14.15.16.png",
     "Knowledge & Data/Screenshot 2025-10-17 at 14.13.09.png",
     "Knowledge & Data/K&D Knowledge Gaps Notes.md",
     "Knowledge & Data/Screenshot 2025-10-17 at 14.03.37.png",
-    "AI.base",
-    "Untitled.base",
-    "Untitled 1.base",
     "Untitled.canvas",
     "Knowledge & Data/Screenshot 2025-10-17 at 13.57.26.png",
     "Knowledge & Data/Ontology Basics.md",
-    "Knowledge & Data/Summary Knowledge and Data.pdf",
     "Psychology/Psychology - Quiz 2.md",
     "Psychology/Topic 11 - Measurement, reliability, and descriptive research.md",
     "Psychology/Exhaustive Psych Notes.md",
@@ -269,7 +218,6 @@
     "Psychology/Psychology - Quiz 1.md",
     "Psychology/T2.2 - Nervous system and neurons.md",
     "Psychology/T3.2 - Variations in consciousness, brain Injury, and drug influence.md",
-    "Psychology/Pasted image 20251016155738.png",
     "Psychology/T5.1 - Learning.md",
     "Psychology/T2.1 - Phrenology and methods of studying the brain.md",
     "Psychology/T7.4 - Language.md",
@@ -279,12 +227,6 @@
     "Psychology/T5.3 - Cognitive aspects of learning and observational learning.md",
     "Psychology/T6.1 - Introduction to memory.md",
     "Psychology/T5.2 - Operant conditioning and reinforcement.md",
-    "Psychology/T4.4 - Non-visual sensory systems.md",
-    "Knowledge & Data/Knowledge & Data exam training p2.pdf",
-    "Knowledge & Data/Knowledge & Data exam training P1.pdf",
-    "Data Structures & Algorithms/Course-evaluation-Mock-exam.pdf",
-    "Knowledge & Data/KnowledgeData.pdf",
-    "Psychology/Assets",
     "Untitled 1.canvas"
   ]
 }

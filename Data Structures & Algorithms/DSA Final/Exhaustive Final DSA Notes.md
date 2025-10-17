@@ -1,7 +1,5 @@
 ## I. Course Overview and Examination Structure
 
-The course is coordinated and examined by Dr. Katja Tuma, with co-teachers Fernanda Madeiral, Alexia Muresan, and Lieuwe Rekker. The primary literature is _Algorithms Illuminated_ by Tim Roughgarden (selected chapters of Parts I, II, and III).
-
 ### Assessment Components
 
 The final grade components are:
@@ -10,8 +8,6 @@ The final grade components are:
 2. **Theory + Practicum Part A (Sept Exam):** 35% (Covers Assignments 1 & 2, lectures, and book chapters).
 3. **Theory + Practicum Part B (Oct Exam):** 35% (Covers Assignments 3 & 4, lectures, and book chapters).
 4. **Passing Requirement:** You must achieve a passing grade $(>5.5)$ in **both** the theoretical and practicum components of Part A and Part B.
-
-The Practicum examination focuses on assignments (A1, A2, A3, A4) and does not include pseudocode, requiring concrete knowledge of implementation. Student feedback indicates that exam preparation materials, including dedicated lectures and labs with step-by-step explanations, are prioritized.
 
 ## II. Foundational Concepts and Complexity Analysis
 
