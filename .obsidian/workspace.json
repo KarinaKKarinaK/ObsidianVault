@@ -46,21 +46,9 @@
               "icon": "lucide-file",
               "title": "My All  Notes"
             }
-          },
-          {
-            "id": "d65fc5e19d013868",
-            "type": "leaf",
-            "state": {
-              "type": "image",
-              "state": {
-                "file": "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-18 at 19.58.56.png"
-              },
-              "icon": "lucide-image",
-              "title": "Screenshot 2025-10-18 at 19.58.56"
-            }
           }
         ],
-        "currentTab": 3
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -220,21 +208,21 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "77837552dc6fb3a9",
+  "active": "2fd4367ac25a527d",
   "lastOpenFiles": [
-    "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-17 at 17.52.19.png",
-    "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-17 at 18.57.24.png",
-    "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-18 at 19.34.40.png",
+    "Screenshot 2025-10-18 at 20.19.25.png",
+    "Screenshot 2025-10-18 at 20.19.07.png",
+    "Screenshot 2025-10-18 at 20.18.23.png",
+    "Screenshot 2025-10-18 at 20.17.14.png",
+    "Screenshot 2025-10-18 at 20.16.09.png",
+    "Screenshot 2025-10-18 at 20.15.51.png",
+    "Screenshot 2025-10-18 at 20.15.29.png",
+    "Screenshot 2025-10-18 at 20.15.08.png",
+    "Screenshot 2025-10-18 at 20.11.01.png",
+    "Screenshot 2025-10-18 at 20.10.19.png",
+    "Screenshot 2025-10-18 at 20.10.07.png",
     "Data Structures & Algorithms/DSA Final/DSA Assets",
     "Data Structures & Algorithms/DSA Final/My All  Notes.md",
-    "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-18 at 19.58.56.png",
-    "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-18 at 19.57.14.png",
-    "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-18 at 19.56.54.png",
-    "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-18 at 19.56.34.png",
-    "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-18 at 19.54.32.png",
-    "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-18 at 19.54.20.png",
-    "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-18 at 19.53.11.png",
-    "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-18 at 19.52.33.png",
     "BFS Correctness.md",
     "Data Structures & Algorithms/DSA Final/Exhaustive Final DSA Notes.md",
     "Data Structures & Algorithms/DSA Final/All Algorithms - In Depth.md",

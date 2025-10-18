@@ -429,14 +429,37 @@ To efficiently find the least cost edge in each step, implementations often rely
 ![[Screenshot 2025-10-18 at 19.54.20.png]]
 
 
-
-
 ![[Screenshot 2025-10-18 at 19.56.34.png]]
 
 
 ![[Screenshot 2025-10-18 at 19.56.54.png]]
 
+Kruskal's algorithm is a greedy method, just like Prim's, that finds the **Minimum Spanning Tree (MST)** of a connected, weighted graph.
 
+The main difference is that instead of starting from one vertex and growing a single tree outward (like Prim's), Kruskal's algorithm looks at the entire graph simultaneously and builds many small fragments, often referred to as a **forest**.
+
+Here is the extremely simple process:
+
+### Kruskal's Algorithm: The Three Steps
+
+1. **List and Sort:** Take every edge in the entire graph and sort them all by cost, from the **cheapest to the most expensive**.
+2. **Greedy Selection:** Go through the list of edges in this sorted order, examining each one.
+3. **The Only Rule (Cycle Check):** Add the current edge to your resulting MST _unless_ adding it would **create a closed loop (a cycle)** with the edges you have already chosen.
+
+The algorithm keeps accepting edges this way until all the vertices in the graph are connected.
+
+---
+
+### How the Cycle Check Works Simply
+
+The key challenge is checking for cycles. Kruskal's efficiently handles this by keeping track of "connected groups" or **connected components**.
+
+- Initially, every single vertex is its own group.
+- When you pick an edge:
+    - If the edge connects two vertices that belong to **different groups**, you accept the edge, and the two groups permanently **merge** into one larger group.
+    - If the edge connects two vertices that are **already in the same group**, adding that edge would complete a circuit (a cycle), so you **skip** it.
+
+This mechanism ensures the resulting structure remains a tree (acyclic) while achieving the minimum total cost because the decisions are always made based on the cheapest available edge overall. This efficient checking is handled internally by a data structure often called **Union-Find**.
 
 #### Prim's vs Kruskal's 
 
@@ -452,4 +475,43 @@ Both are **greedy algorithms** for **minimum spanning tree (MST**):
 ![[Screenshot 2025-10-18 at 19.58.56.png]]
 
 
-# Lecture 9: Dijkstra's. Algoroithm
+# Lecture 9: Dijkstra's Algorithm
+
+![[Screenshot 2025-10-18 at 20.01.33.png]]![[Screenshot 2025-10-18 at 20.01.48.png]]![[Screenshot 2025-10-18 at 20.02.02.png]]
+
+![[Screenshot 2025-10-18 at 20.02.47.png]]![[Screenshot 2025-10-18 at 20.04.43.png]]
+
+
+#### Applications - BFS and DFS:
+
+**BFS:** 
+- Finding the shortest path (next lecture) 
+- Finding all neighboring locations 
+- Broadcasting tasks, such as with networks
+**DFS:** 
+- Solving puzzles, such as mazes 
+- Topological ordering (this lecture)
+
+![[Screenshot 2025-10-18 at 20.06.41.png]]![[Screenshot 2025-10-18 at 20.07.07.png]]![[Screenshot 2025-10-18 at 20.07.23.png]]
+
+# Lecture 10: A* Algorithm
+
+![[Screenshot 2025-10-18 at 20.08.18.png]]![[Screenshot 2025-10-18 at 20.08.55.png]]
+**Correctness of A***
+If the heuristic function is admissible (meaning that it never overestimates the actual cost to get to the goal), A* is guaranteed to return a least-cost path from start to goal.
+
+![[Screenshot 2025-10-18 at 20.09.49.png]]![[Screenshot 2025-10-18 at 20.10.07.png]]![[Screenshot 2025-10-18 at 20.10.19.png]]
+
+
+**Dynamic programming -->** At each step, we make use of our solutions to previous sub-problems
+
+![[Screenshot 2025-10-18 at 20.11.01.png]]
+
+
+# Lecture 11: DYNAMIC PROGRAMMING AND SEARCH TREES
+
+![[Screenshot 2025-10-18 at 20.15.29.png]]![[Screenshot 2025-10-18 at 20.15.51.png]]![[Screenshot 2025-10-18 at 20.16.09.png]]
+***We consider the vertices in reverse topological sort order.***
+
+
+![[Screenshot 2025-10-18 at 20.17.14.png]]![[Screenshot 2025-10-18 at 20.18.23.png]]![[Screenshot 2025-10-18 at 20.19.07.png]]![[Screenshot 2025-10-18 at 20.19.25.png]]
