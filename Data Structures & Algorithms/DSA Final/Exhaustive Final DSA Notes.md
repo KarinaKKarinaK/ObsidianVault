@@ -1,3 +1,14 @@
+### **Minimum Spanning Tree (MST)
+
+**Minimum Spanning tree (MST) =** A minimum spanning tree (MST) is ==a subset of edges from a connected, edge-weighted, and undirected graph that connects all vertices with the lowest possible total edge weight without creating any cycles==. 
+- fundamentally about **connecting a set of objects as cheaply as possible**
+
+- A **Spanning Tree** (T), meaning it is a subset of the graph's edges that **contains no cycles** (the "tree" part) and **includes a path between every pair of vertices** (the "spanning" part)
+
+- The input graph must be **connected, weighted, and undirected**
+
+- Two famous greedy algorithms—**Prim’s algorithm** and **Kruskal’s algorithm**—are used to find the MST
+
 ## I. Course Overview and Examination Structure
 
 ### Assessment Components
