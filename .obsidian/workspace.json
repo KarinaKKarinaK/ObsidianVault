@@ -39,6 +39,34 @@
             "state": {
               "type": "markdown",
               "state": {
+                "file": "Psychology/Practice Quizzes/Psychology - Quiz 2.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Psychology - Quiz 2"
+            }
+          },
+          {
+            "id": "0fbeda5853a0b1aa",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Psychology/Practice Quizzes/Psychology -  Quiz 3.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Psychology -  Quiz 3"
+            }
+          },
+          {
+            "id": "b777cdbc07ad9594",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
                 "file": "Data Structures & Algorithms/DSA Final/My All  Notes.md",
                 "mode": "source",
                 "source": false
@@ -48,7 +76,7 @@
             }
           }
         ],
-        "currentTab": 2
+        "currentTab": 4
       }
     ],
     "direction": "vertical"
@@ -208,55 +236,54 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "2fd4367ac25a527d",
+  "active": "b777cdbc07ad9594",
   "lastOpenFiles": [
-    "Screenshot 2025-10-18 at 20.19.25.png",
-    "Screenshot 2025-10-18 at 20.19.07.png",
-    "Screenshot 2025-10-18 at 20.18.23.png",
-    "Screenshot 2025-10-18 at 20.17.14.png",
-    "Screenshot 2025-10-18 at 20.16.09.png",
-    "Screenshot 2025-10-18 at 20.15.51.png",
-    "Screenshot 2025-10-18 at 20.15.29.png",
-    "Screenshot 2025-10-18 at 20.15.08.png",
-    "Screenshot 2025-10-18 at 20.11.01.png",
-    "Screenshot 2025-10-18 at 20.10.19.png",
-    "Screenshot 2025-10-18 at 20.10.07.png",
-    "Data Structures & Algorithms/DSA Final/DSA Assets",
+    "Psychology/Psychology Book Summary/Psychology.md",
+    "Untitled.base",
+    "Psychology/Assets/Pasted image 20251016155738.png",
+    "Psychology/NotebookLM Mind Map.png",
+    "Psychology/Psychology Book Summary/T1.1 - Psychology and genes.md",
+    "Psychology/Practice Quizzes",
+    "Psychology/Practice Quizzes/Psychology - Quiz 4.md",
+    "Psychology/Psychology Book Summary",
+    "Psychology/Practice Quizzes/Psychology -  Quiz 3.md",
+    "Psychology/Practice Quizzes/Psychology - Quiz 2.md",
+    "Psychology/Practice Quizzes/Psychology - Quiz 1.md",
+    "Data Structures & Algorithms/Course-evaluation-Mock-exam.pdf",
+    "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-18 at 20.01.33.png",
+    "Data Structures & Algorithms/DSA Final/BFS Correctness.md",
+    "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-18 at 20.01.48.png",
     "Data Structures & Algorithms/DSA Final/My All  Notes.md",
-    "BFS Correctness.md",
+    "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-18 at 20.19.25.png",
+    "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-18 at 20.19.07.png",
+    "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-18 at 20.18.23.png",
+    "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-18 at 20.17.14.png",
+    "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-18 at 20.16.09.png",
+    "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-18 at 20.15.51.png",
+    "Data Structures & Algorithms/DSA Final/DSA Assets",
     "Data Structures & Algorithms/DSA Final/Exhaustive Final DSA Notes.md",
     "Data Structures & Algorithms/DSA Final/All Algorithms - In Depth.md",
     "Data Structures & Algorithms/DSA Final/Practice Exam 1.md",
     "Data Structures & Algorithms/DSA Final/DSA_Solution_to_Theory_Past-Exams-2022.pdf",
-    "Data Structures & Algorithms/Course-evaluation-Mock-exam.pdf",
     "Data Structures & Algorithms/Main Review Resources.md",
     "Data Structures & Algorithms/DSA Final/Lectures DSA Final/10-AstarKnapsack-Tuma.pdf",
     "Data Structures & Algorithms/DSA Final/Lectures DSA Final",
     "Data Structures & Algorithms/DSA Final/Lectures DSA Final/9-Topo Sort-Madeiral.pdf",
     "Data Structures & Algorithms/DSA Final/Lectures DSA Final/9-Dijsktra-Tuma.pdf",
-    "Data Structures & Algorithms/DSA Final/Lectures DSA Final/8-Spanning-Madeiral.pdf",
-    "Data Structures & Algorithms/DSA Final/Lectures DSA Final/8-DFS-Madeiral.pdf",
-    "Data Structures & Algorithms/DSA Final/Lectures DSA Final/7-Distances.pdf",
     "Knowledge & Data/K&D Notes.md",
     "Knowledge & Data/K&D Knowledge Gaps Notes.md",
     "Untitled.canvas",
     "Knowledge & Data/Ontology Basics.md",
-    "Psychology/Psychology - Quiz 2.md",
-    "Psychology/Topic 11 - Measurement, reliability, and descriptive research.md",
+    "Psychology/Psychology Book Summary/Topic 11 - Measurement, reliability, and descriptive research.md",
     "Psychology/Exhaustive Psych Notes.md",
-    "Psychology/T12.2 - Advanced correlational techniques and experiments.md",
-    "Psychology/T2.5 - Neurotransmitters and the effects of drugs.md",
-    "Psychology/T2.4 - The brain and its structure.md",
-    "Psychology/T2.3 - Brain plasticity and hemispheric functions.md",
-    "Psychology/T8.1 - Introduction to intelligence.md",
-    "Psychology/Psychology - Quiz 1.md",
-    "Psychology/T2.2 - Nervous system and neurons.md",
-    "Psychology/T3.2 - Variations in consciousness, brain Injury, and drug influence.md",
-    "Psychology/T5.1 - Learning.md",
-    "Psychology/T2.1 - Phrenology and methods of studying the brain.md",
-    "Psychology/T7.4 - Language.md",
-    "Psychology/T7.3 - Problem solving.md",
-    "Psychology/Topic 3 - Consciousness.md",
+    "Psychology/Psychology Book Summary/T12.2 - Advanced correlational techniques and experiments.md",
+    "Psychology/Psychology Book Summary/T2.5 - Neurotransmitters and the effects of drugs.md",
+    "Psychology/Psychology Book Summary/T2.4 - The brain and its structure.md",
+    "Psychology/Psychology Book Summary/T2.3 - Brain plasticity and hemispheric functions.md",
+    "Psychology/Psychology Book Summary/T8.1 - Introduction to intelligence.md",
+    "Psychology/Psychology Book Summary/T2.2 - Nervous system and neurons.md",
+    "Psychology/Psychology Book Summary/T3.2 - Variations in consciousness, brain Injury, and drug influence.md",
+    "Psychology/Psychology Book Summary/T5.1 - Learning.md",
     "Untitled 1.canvas"
   ]
 }
