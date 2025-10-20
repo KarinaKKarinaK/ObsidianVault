@@ -1,7 +1,5 @@
 ## **Introduction to Psychology and its Methods AI: Comprehensive Exam Notes**
 
-The course is divided into two sections: Genetic/Biological Basis of Behaviour (Weeks 1-4, Topics 1-8) and Scientific Research Methods (Weeks 5-7, Topics 9-14). The final exam counts for **90% of your total grade**.
-
 ### **Part I: Genetic and Biological Basis of Behaviour (Topics 1–8)**
 
 ### **Topic 1: Genes and Evolution**
@@ -644,3 +642,81 @@ These principles must be applied to any research question involving participants
 - **Confidentiality:** Researchers must protect participants' privacy and data.
 - **Debriefing:** Required after the study is completed to explain the true purpose and address any deception used.
 - **Minimizing Harm:** Researchers must ensure participants are protected from physical or psychological harm (e.g., lessons from Stanford Prison Experiment, Milgram’s Obedience Experiment).
+
+
+## Genereal / Random Notes
+
+The course is divided into two sections: Genetic/Biological Basis of Behaviour (Weeks 1-4, Topics 1-8) and Scientific Research Methods (Weeks 5-7, Topics 9-14). The final exam counts for **90% of your total grade**.
+
+The conjunction fallacy is ==a cognitive bias where a person mistakenly judges that two events occurring together are more probable than a single event alone==
+
+What type of scale is a Likert scale?
+
+- Nominal: Categories with no order (e.g., male/female, apple/orange).
+    
+    ❌ Not applicable — Likert has an order.
+    
+- Ordinal: Ordered categories, but differences between ranks are not necessarily equal.
+    
+    ✅ This is what a Likert scale is — we can say 4 > 2 (more agreement), but we can’t say it’s “twice as much.”
+    
+- Interval: Equal intervals between points, but no true zero (e.g., temperature in °C).
+    
+    ❌ Some researchers treat Likert data as interval for statistical convenience, but technically it’s ordinal.
+    
+- Ratio: Equal intervals and a true zero (e.g., height, weight, reaction time).
+    
+    ❌ Definitely not applicable.
+
+
+==Photoreceptor density varies significantly across the retina, with the highest density in the fovea, which contains almost exclusively cones for sharp, detailed vision==. Rods are most abundant in a ring surrounding the fovea, with their density decreasing towards the periphery, while cone density is very low in the far periphery. The fovea itself has the highest concentration of photoreceptors, while the [optic disc](https://www.google.com/search?rlz=1C5CHFA_enCZ969CZ970&cs=0&sca_esv=b1f7e2cc7f09216f&sxsrf=AE3TifN0_q089eVH6_2IfCc18NgmUZB-dg%3A1760951101086&q=optic+disc&sa=X&ved=2ahUKEwjT8seGtrKQAxXsgf0HHSydGqYQxccNegQICBAB&mstk=AUtExfClqBFb5znzlftVJyF7jcWvbrQsc3aQwHRSU_Bb5iCLZdOT3FjZCSy8EXlOrDycWou6cnzeG8vHasR9aGP0c0Eaj0YH7ifJo6SzKdNW44V6Pu31lu3ugC1cQNVWqKWrLrq7ieOUckdQ37nvvK-B3O0evg3GGYZ8Obo9-MsSplydMmY&csui=3) has none, creating the [blind spot](https://www.google.com/search?rlz=1C5CHFA_enCZ969CZ970&cs=0&sca_esv=b1f7e2cc7f09216f&sxsrf=AE3TifN0_q089eVH6_2IfCc18NgmUZB-dg%3A1760951101086&q=blind+spot&sa=X&ved=2ahUKEwjT8seGtrKQAxXsgf0HHSydGqYQxccNegQICBAC&mstk=AUtExfClqBFb5znzlftVJyF7jcWvbrQsc3aQwHRSU_Bb5iCLZdOT3FjZCSy8EXlOrDycWou6cnzeG8vHasR9aGP0c0Eaj0YH7ifJo6SzKdNW44V6Pu31lu3ugC1cQNVWqKWrLrq7ieOUckdQ37nvvK-B3O0evg3GGYZ8Obo9-MsSplydMmY&csui=3).
+
+
+**Latent Learning** = learning involves the creation of a cognitive map (mental representation) that may not be demonstrated until motivation is introduced
+
+
+##### Overview of sleep stages (Non-REM and REM):
+
+- N1: Lightest stage of sleep — easy to wake up, drifting between wakefulness and sleep.
+    
+- N2: Deeper than N1 — sleep spindles and K-complexes appear, body temperature drops.
+    
+- N3: Deepest stage of Non-REM sleep, also called slow-wave sleep (SWS) or deep sleep.
+    
+- REM: Brain is highly active, vivid dreaming occurs, body is paralyzed.
+
+
+#### Latin & Balanced Latin Square Design
+In a within-subjects design, every participant experiences all levels of the independent variable — here, 4 levels (A, B, C, D).
+
+However, the order in which participants experience the conditions can cause order effects (like practice or fatigue).
+
+To control for these, researchers use counterbalancing techniques, one of which is the Balanced Latin Square design.
+
+---
+
+2. What is a Balanced Latin Square?
+
+A Latin Square ensures that:
+
+- Each condition appears once in each ordinal position (1st, 2nd, 3rd, 4th, etc.).
+    
+A Balanced Latin Square goes further — it ensures that:
+
+- Each condition precedes and follows every other condition equally often across participants.
+    
+---
+
+3. The rule for a Balanced Latin Square:
+
+- If the number of conditions (N) is even, you need 2N participants to balance the order of conditions completely.
+    
+- If N is odd, you only need N participants (since the reverse order balances it automatically).
+
+
+
+**The Hawthorne effect** is the tendency for individuals to change or improve their behavior when they know they are being observed.
+
+**Weber's law** is a psychological principle that states ==the smallest detectable difference between two stimuli is a constant proportion of the original stimulus intensity==.
+
+Non-equivalent control group design = groups that differ before manipulation  

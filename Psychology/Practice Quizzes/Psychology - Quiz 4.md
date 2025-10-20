@@ -178,68 +178,68 @@ This examination contains 63 multiple-choice questions designed to assess your c
 
 ## Answer Key
 
-|Question|Topic|Answer|Source Support|
-|:-:|:-:|:-:|:-:|
-|1|Genes & Evolution|B||
-|2|Genes & Evolution|C||
-|3|Genes & Evolution|B||
-|4|Genes & Evolution|C||
-|5|Genes & Evolution|B||
-|6|Brain & NS|C||
-|7|Brain & NS|D||
-|8|Brain & NS|C||
-|9|Brain & NS|C||
-|10|Brain & NS|D||
-|11|Consciousness|C||
-|12|Consciousness|C||
-|13|Consciousness|C||
-|14|Consciousness|D||
-|15|Sensation & Perception|C||
-|16|Sensation & Perception|B||
-|17|Sensation & Perception|C||
-|18|Sensation & Perception|C||
-|19|Sensation & Perception|C||
-|20|Learning|B||
-|21|Learning|C||
-|22|Learning|C||
-|23|Learning|B||
-|24|Learning|C||
-|25|Memory|B||
-|26|Memory|C||
-|27|Memory|C||
-|28|Memory|C||
-|29|Memory|B||
-|30|Thinking & Language|B||
-|31|Thinking & Language|C||
-|32|Thinking & Language|C||
-|33|Thinking & Language|B||
-|34|Thinking & Language|C||
-|35|Intelligence|C||
-|36|Intelligence|A||
-|37|Intelligence|C||
-|38|Intelligence|D||
-|39|Scientific Reasoning|C, D||
-|40|Scientific Reasoning|C||
-|41|Scientific Reasoning|D||
-|42|Scientific Reasoning|B||
-|43|Validity|C||
-|44|Validity|D||
-|45|Validity|B||
-|46|Validity|D||
-|47|Measurement, Reliability, & DR|C||
-|48|Measurement, Reliability, & DR|C||
-|49|Measurement, Reliability, & DR|C||
-|50|Measurement, Reliability, & DR|C||
-|51|Correlations & Experiments|C||
-|52|Correlations & Experiments|B||
-|53|Correlations & Experiments|B||
-|54|Correlations & Experiments|B||
-|55|Single-Factor & Factorial Designs|C||
-|56|Single-Factor & Factorial Designs|C||
-|57|Single-Factor & Factorial Designs|C||
-|58|Single-Factor & Factorial Designs|B||
-|59|Small-N & Quasi-Experimental Designs|B||
-|60|Small-N & Quasi-Experimental Designs|C||
-|61|Small-N & Quasi-Experimental Designs|B||
-|62|Small-N & Quasi-Experimental Designs|C||
-|63|General Course Content|C||
+| Question |                Topic                 | Answer | Source Support |
+| :------: | :----------------------------------: | :----: | :------------: |
+|    1     |          Genes & Evolution           |   B    |                |
+|    2     |          Genes & Evolution           |   C    |                |
+|    3     |          Genes & Evolution           |   B    |                |
+|    4     |          Genes & Evolution           |   C    |                |
+|    5     |          Genes & Evolution           |   B    |                |
+|    6     |              Brain & NS              |   C    |                |
+|    7     |              Brain & NS              |   D    |                |
+|    8     |              Brain & NS              |   C    |                |
+|    9     |              Brain & NS              |   C    |                |
+|    10    |              Brain & NS              |   D    |                |
+|    11    |            Consciousness             |   C    |                |
+|    12    |            Consciousness             |   C    |                |
+|    13    |            Consciousness             |   C    |                |
+|    14    |            Consciousness             |   D    |                |
+|    15    |        Sensation & Perception        |   C    |                |
+|    16    |        Sensation & Perception        |   B    |                |
+|    17    |        Sensation & Perception        |   C    |                |
+|    18    |        Sensation & Perception        |   C    |                |
+|    19    |        Sensation & Perception        |   C    |                |
+|    20    |               Learning               |   B    |                |
+|    21    |               Learning               |   C    |                |
+|    22    |               Learning               |   C    |                |
+|    23    |               Learning               |   B    |                |
+|    24    |               Learning               |   C    |                |
+|    25    |                Memory                |   B    |                |
+|    26    |                Memory                |   C    |                |
+|    27    |                Memory                |   C    |                |
+|    28    |                Memory                |   C    |                |
+|    29    |                Memory                |   B    |                |
+|    30    |         Thinking & Language          |   B    |                |
+|    31    |         Thinking & Language          |   C    |                |
+|    32    |         Thinking & Language          |   C    |                |
+|    33    |         Thinking & Language          |   B    |                |
+|    34    |         Thinking & Language          |   C    |                |
+|    35    |             Intelligence             |   C    |                |
+|    36    |             Intelligence             |   A    |                |
+|    37    |             Intelligence             |   C    |                |
+|    38    |             Intelligence             |   D    |                |
+|    39    |         Scientific Reasoning         |  C, D  |                |
+|    40    |         Scientific Reasoning         |   C    |                |
+|    41    |         Scientific Reasoning         |   D    |                |
+|    42    |         Scientific Reasoning         |   B    |                |
+|    43    |               Validity               |   C    |                |
+|    44    |               Validity               |   D    |                |
+|    45    |               Validity               |   B    |                |
+|    46    |               Validity               |   D    |                |
+|    47    |    Measurement, Reliability, & DR    |   C    |                |
+|    48    |    Measurement, Reliability, & DR    |   C    |                |
+|    49    |    Measurement, Reliability, & DR    |   C    |                |
+|    50    |    Measurement, Reliability, & DR    |   C    |                |
+|    51    |      Correlations & Experiments      |   C    |                |
+|    52    |      Correlations & Experiments      |   B    |                |
+|    53    |      Correlations & Experiments      |   B    |                |
+|    54    |      Correlations & Experiments      |   B    |                |
+|    55    |  Single-Factor & Factorial Designs   |   C    |                |
+|    56    |  Single-Factor & Factorial Designs   |   C    |                |
+|    57    |  Single-Factor & Factorial Designs   |   C    |                |
+|    58    |  Single-Factor & Factorial Designs   |   B    |                |
+|    59    | Small-N & Quasi-Experimental Designs |   B    |                |
+|    60    | Small-N & Quasi-Experimental Designs |   C    |                |
+|    61    | Small-N & Quasi-Experimental Designs |   B    |                |
+|    62    | Small-N & Quasi-Experimental Designs |   C    |                |
+|    63    |        General Course Content        |   C    |                |
