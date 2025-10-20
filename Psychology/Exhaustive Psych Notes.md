@@ -445,6 +445,10 @@ The course is divided into two sections: Genetic/Biological Basis of Behaviour (
 ---
 
 ### **Topic 10: Validity**
+- External validity (Generalization)
+- Statistical validity (Effect size)
+- Internal validity (Causation)
+- Construct validity (Measurement precision).
 
 **Validity** is the extent to which a test measures what it claims to measure. It is fundamental for evaluating research.
 
