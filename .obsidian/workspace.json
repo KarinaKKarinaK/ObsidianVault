@@ -20,18 +20,6 @@
             }
           },
           {
-            "id": "9ae7a7dbfa5d666b",
-            "type": "leaf",
-            "state": {
-              "type": "pdf",
-              "state": {
-                "file": "Knowledge & Data/Knowledge & Data exam training p2.pdf"
-              },
-              "icon": "lucide-file-text",
-              "title": "Knowledge & Data exam training p2"
-            }
-          },
-          {
             "id": "8b8d6d5d1e3161a0",
             "type": "leaf",
             "state": {
@@ -45,8 +33,7 @@
               "title": "K&D Cheatsheet"
             }
           }
-        ],
-        "currentTab": 2
+        ]
       }
     ],
     "direction": "vertical"
@@ -78,7 +65,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "parietal",
+                "query": "punning",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -99,7 +86,8 @@
               "title": "Bookmarks"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
@@ -206,13 +194,14 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "8b8d6d5d1e3161a0",
+  "active": "f818ad4cd8c73659",
   "lastOpenFiles": [
-    "Knowledge & Data/Knowledge & Data exam training p2.pdf",
     "Knowledge & Data/\"Cheatsheets\"/K&D Cheatsheet.md",
+    "Knowledge & Data/K&D Notes.md",
+    "Knowledge & Data/KnowledgeData.pdf",
+    "Knowledge & Data/Knowledge & Data exam training p2.pdf",
     "Knowledge & Data/Knowledge & Data exam training P1.pdf",
     "Knowledge & Data/\"Cheatsheets\"",
-    "Knowledge & Data/KnowledgeData.pdf",
     "K&D Quiz 2.md",
     "K&D Quiz 1.md",
     "Knowledge & Data/K&D Knowledge Gaps Notes.md",
@@ -252,7 +241,6 @@
     "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-18 at 20.17.14.png",
     "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-18 at 20.16.09.png",
     "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-18 at 20.15.51.png",
-    "Data Structures & Algorithms/DSA Final/Exhaustive Final DSA Notes.md",
     "Untitled.canvas",
     "Untitled 1.canvas"
   ]
