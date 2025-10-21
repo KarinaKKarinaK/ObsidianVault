@@ -11,12 +11,14 @@
             "id": "f818ad4cd8c73659",
             "type": "leaf",
             "state": {
-              "type": "pdf",
+              "type": "markdown",
               "state": {
-                "file": "Knowledge & Data/Summary Knowledge and Data.pdf"
+                "file": "Knowledge & Data/K&D Quiz 3.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "lucide-file-text",
-              "title": "Summary Knowledge and Data"
+              "icon": "lucide-file",
+              "title": "K&D Quiz 3"
             }
           },
           {
@@ -193,10 +195,11 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "f818ad4cd8c73659",
+  "active": "77837552dc6fb3a9",
   "lastOpenFiles": [
-    "Knowledge & Data/\"Cheatsheets\"/K&D Cheatsheet.md",
+    "Knowledge & Data/K&D Quiz 1.md",
     "Knowledge & Data/Summary Knowledge and Data.pdf",
+    "Knowledge & Data/\"Cheatsheets\"/K&D Cheatsheet.md",
     "Knowledge & Data/Summary Knowledge and Data 2.pdf",
     "Knowledge & Data/K&D Notes.md",
     "Knowledge & Data/K&D Knowledge Gaps Notes.md",
@@ -208,10 +211,9 @@
     "Knowledge & Data/Queries.md",
     "Knowledge & Data/Knowledge & Data exam training p2.pdf",
     "Knowledge & Data/\"Cheatsheets\"",
-    "K&D Quiz 2.md",
-    "K&D Quiz 1.md",
-    "K&D Quiz 3.md",
-    "Psychology - Quiz 9.md",
+    "Knowledge & Data/K&D Quiz 2.md",
+    "Knowledge & Data/K&D Quiz 3.md",
+    "Psychology/Psychology - Quiz 9.md",
     "Psychology/Exhaustive Psych Notes.md",
     "Psychology/Practice Quizzes/Psychology - Quiz 8.md",
     "Psychology -",
