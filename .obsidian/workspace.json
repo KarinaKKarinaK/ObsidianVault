@@ -13,10 +13,10 @@
             "state": {
               "type": "pdf",
               "state": {
-                "file": "Knowledge & Data/KnowledgeData.pdf"
+                "file": "Knowledge & Data/Summary Knowledge and Data.pdf"
               },
               "icon": "lucide-file-text",
-              "title": "KnowledgeData"
+              "title": "Summary Knowledge and Data"
             }
           },
           {
@@ -195,16 +195,18 @@
   },
   "active": "f818ad4cd8c73659",
   "lastOpenFiles": [
+    "Knowledge & Data/\"Cheatsheets\"/K&D Cheatsheet.md",
+    "Knowledge & Data/Summary Knowledge and Data.pdf",
     "Knowledge & Data/Summary Knowledge and Data 2.pdf",
+    "Knowledge & Data/K&D Notes.md",
+    "Knowledge & Data/K&D Knowledge Gaps Notes.md",
+    "Knowledge & Data/Knowledge & Data exam training P1.pdf",
+    "Knowledge & Data/NotebookLM Mind Map (2).png",
+    "Knowledge & Data/KnowledgeData.pdf",
     "Knowledge & Data/NotebookLM Mind Map (3).png",
     "Knowledge & Data/Ontology Basics.md",
     "Knowledge & Data/Queries.md",
-    "Knowledge & Data/Knowledge & Data exam training P1.pdf",
     "Knowledge & Data/Knowledge & Data exam training p2.pdf",
-    "Knowledge & Data/K&D Knowledge Gaps Notes.md",
-    "Knowledge & Data/KnowledgeData.pdf",
-    "Knowledge & Data/\"Cheatsheets\"/K&D Cheatsheet.md",
-    "Knowledge & Data/K&D Notes.md",
     "Knowledge & Data/\"Cheatsheets\"",
     "K&D Quiz 2.md",
     "K&D Quiz 1.md",
@@ -232,15 +234,12 @@
     "Psychology/Assets/Pasted image 20251016155738.png",
     "Psychology/NotebookLM Mind Map.png",
     "Psychology/Practice Quizzes",
-    "Psychology/Psychology Book Summary",
-    "Data Structures & Algorithms/Course-evaluation-Mock-exam.pdf",
     "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-18 at 20.01.33.png",
     "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-18 at 20.01.48.png",
     "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-18 at 20.19.25.png",
     "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-18 at 20.19.07.png",
     "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-18 at 20.18.23.png",
     "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-18 at 20.17.14.png",
-    "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-18 at 20.16.09.png",
     "Untitled.canvas",
     "Untitled 1.canvas"
   ]
