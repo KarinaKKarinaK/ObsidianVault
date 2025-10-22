@@ -4,38 +4,61 @@
     "type": "split",
     "children": [
       {
-        "id": "535c88bb641a1f77",
+        "id": "9b1baef20938f599",
         "type": "tabs",
         "children": [
           {
-            "id": "f818ad4cd8c73659",
+            "id": "43bc1b17bdc9feee",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "pdf",
               "state": {
-                "file": "Knowledge & Data/K&D Quiz 3.md",
-                "mode": "source",
-                "source": false
+                "file": "Data Structures & Algorithms/DSA Final/Resources/W6_ Handout-Kruskal-Prims.docx.pdf"
               },
-              "icon": "lucide-file",
-              "title": "K&D Quiz 3"
+              "icon": "lucide-file-text",
+              "title": "W6_ Handout-Kruskal-Prims.docx"
             }
           },
           {
-            "id": "8b8d6d5d1e3161a0",
+            "id": "6d6b46527fc46017",
+            "type": "leaf",
+            "state": {
+              "type": "pdf",
+              "state": {
+                "file": "Data Structures & Algorithms/DSA Final/Resources/W6_ Handout-Kruskal-Prims.docx.pdf"
+              },
+              "icon": "lucide-file-text",
+              "title": "W6_ Handout-Kruskal-Prims.docx"
+            }
+          },
+          {
+            "id": "d39c0e41111e768b",
+            "type": "leaf",
+            "state": {
+              "type": "image",
+              "state": {
+                "file": "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-21 at 19.42.35.png"
+              },
+              "icon": "lucide-image",
+              "title": "Screenshot 2025-10-21 at 19.42.35"
+            }
+          },
+          {
+            "id": "8f53061456381508",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Knowledge & Data/\"Cheatsheets\"/K&D Cheatsheet.md",
+                "file": "Final Exam Qs.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "K&D Cheatsheet"
+              "title": "Final Exam Qs"
             }
           }
-        ]
+        ],
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -195,53 +218,53 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "77837552dc6fb3a9",
+  "active": "8f53061456381508",
   "lastOpenFiles": [
-    "Knowledge & Data/K&D Quiz 1.md",
-    "Knowledge & Data/Summary Knowledge and Data.pdf",
+    "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-21 at 19.42.35.png",
+    "Final Exam Qs.md",
+    "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-21 at 19.42.22.png",
+    "Data Structures & Algorithms/DSA Final/Nice DSA Notes.md",
+    "Data Structures & Algorithms/DSA Final/Resources/W6_ Handout-Kruskal-Prims.docx.pdf",
+    "Data Structures & Algorithms/DSA Final/Practice Exam 1.md",
+    "Data Structures & Algorithms/DSA Final/NotebookLM Mind Map (7).png",
+    "Data Structures & Algorithms/DSA Final/NotebookLM Mind Map (6).png",
+    "Data Structures & Algorithms/DSA Final/NotebookLM Mind Map (4).png",
+    "Data Structures & Algorithms/DSA Final/My All  Notes.md",
+    "Data Structures & Algorithms/DSA Final/Exhaustive Final DSA Notes.md",
+    "Data Structures & Algorithms/DSA Final/BFS Correctness.md",
+    "Data Structures & Algorithms/DSA Final/All Algorithms - In Depth.md",
+    "Data Structures & Algorithms/Course-evaluation-Mock-exam.pdf",
+    "Data Structures & Algorithms/DSA Final/DSA Practice.md",
+    "Data Structures & Algorithms/DSA Final/Resources/W3_ DS-BFS-DFS-Exercises-Handout.docx.pdf",
+    "Data Structures & Algorithms/DSA Final/Resources/W5_ Handout-A_-and-Knapsack-with-solutions.docx.pdf",
+    "Data Structures & Algorithms/DSA Final/Resources/W4-Handout-with-solutions.docx.pdf",
+    "Data Structures & Algorithms/DSA Final/Resources/W4-Handout.docx.pdf",
+    "Data Structures & Algorithms/DSA Final/Resources/DSA_Solution_to_Theory_Past-Exams-2022.pdf",
+    "Data Structures & Algorithms/DSA Final/Resources/DSA Desk Checking A1-A3 wo solutions.pdf",
+    "Data Structures & Algorithms/DSA Final/Resources/DSA Desk Checking A1-A3 w solutions 3.pdf",
+    "Data Structures & Algorithms/DSA Final/Resources/W5_ Handout-A_-and-Knapsack.docx.pdf",
     "Knowledge & Data/\"Cheatsheets\"/K&D Cheatsheet.md",
-    "Knowledge & Data/Summary Knowledge and Data 2.pdf",
+    "Knowledge & Data/K&D Quiz 3.md",
+    "Knowledge & Data/K&D Quiz 1.md",
     "Knowledge & Data/K&D Notes.md",
     "Knowledge & Data/K&D Knowledge Gaps Notes.md",
-    "Knowledge & Data/Knowledge & Data exam training P1.pdf",
     "Knowledge & Data/NotebookLM Mind Map (2).png",
-    "Knowledge & Data/KnowledgeData.pdf",
     "Knowledge & Data/NotebookLM Mind Map (3).png",
     "Knowledge & Data/Ontology Basics.md",
     "Knowledge & Data/Queries.md",
-    "Knowledge & Data/Knowledge & Data exam training p2.pdf",
-    "Knowledge & Data/\"Cheatsheets\"",
     "Knowledge & Data/K&D Quiz 2.md",
-    "Knowledge & Data/K&D Quiz 3.md",
     "Psychology/Psychology - Quiz 9.md",
     "Psychology/Exhaustive Psych Notes.md",
     "Psychology/Practice Quizzes/Psychology - Quiz 8.md",
-    "Psychology -",
     "Psychology/Practice Quizzes/Psychology - Quiz 6.md",
     "Psychology/Practice Quizzes/Psychology - Quiz 7.md",
     "Psychology/Practice Quizzes/Psychology - Quiz 5.md",
     "Psychology/Complete Exam Study Guide – Psychology.md",
     "Psychology/Practice Quizzes/Psychology - Quiz 4.md",
-    "Data Structures & Algorithms/DSA Final/Practice Exam 1.md",
-    "Data Structures & Algorithms/DSA Final/DSA_Solution_to_Theory_Past-Exams-2022.pdf",
     "Psychology/Practice Quizzes/Psychology - Quiz 2.md",
-    "Psychology/Psychology Book Summary/T4.3 - Perception.md",
-    "Psychology/Psychology Book Summary/T2.4 - The brain and its structure.md",
-    "Psychology/Psychology Book Summary/T3.2 - Variations in consciousness, brain Injury, and drug influence.md",
-    "Psychology/Practice Quizzes/Psychology -  Quiz 3.md",
-    "Psychology/Practice Quizzes/Psychology - Quiz 1.md",
-    "Data Structures & Algorithms/DSA Final/My All  Notes.md",
-    "Psychology/Psychology Book Summary/Psychology.md",
-    "Untitled.base",
     "Psychology/Assets/Pasted image 20251016155738.png",
     "Psychology/NotebookLM Mind Map.png",
-    "Psychology/Practice Quizzes",
     "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-18 at 20.01.33.png",
-    "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-18 at 20.01.48.png",
-    "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-18 at 20.19.25.png",
-    "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-18 at 20.19.07.png",
-    "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-18 at 20.18.23.png",
-    "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-18 at 20.17.14.png",
     "Untitled.canvas",
     "Untitled 1.canvas"
   ]
