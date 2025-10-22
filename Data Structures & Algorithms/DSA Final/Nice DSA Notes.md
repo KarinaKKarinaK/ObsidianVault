@@ -204,5 +204,120 @@ Dijsktra(G, source):
 | -------------------------------- | -------------------- |
 | Adjacency matrix + linear search | **O(V²)**            |
 | Adjacency list + binary heap     | **O((V + E) log V)** |
-| Adjacency list + Fibonacci heap  | **O(E + V log V)**   |
 
+## A* Star (with Min-Heap)
+
+```php
+AStar(G, start, goal, h):
+    for each vertex v in G:
+        g[v] = ∞                 // cost from start to v
+        parent[v] = NIL
+    g[start] = 0
+
+    f_start = g[start] + h(start)
+    OPEN = empty min-heap ordered by f
+    OPEN.insert( (f_start, start) )
+    CLOSED = empty set
+
+    while OPEN is not empty:
+        (f_u, u) = OPEN.extract_min()
+
+        if u == goal:
+            return ReconstructPath(parent, goal), g[goal]
+
+        if u in CLOSED: 
+            continue
+        CLOSED.add(u)
+
+        for each (u, v, w) in G.adj[u]:   // edge u→v with cost w
+            tentative = g[u] + w
+            if tentative < g[v] and v not in CLOSED:
+                g[v] = tentative
+                parent[v] = u
+                f_v = g[v] + h(v)
+                OPEN.insert( (f_v, v) )   // works as decrease-key
+
+    return "no path", ∞
+
+
+ReconstructPath(parent, t):
+    path = []
+    while t ≠ NIL:
+        prepend t to path
+        t = parent[t]
+    return path
+
+```
+
+**What the symbols mean**
+
+- `g[v]`: best-known cost from `start` to `v`.
+    
+- `h(v)`: heuristic estimate from `v` to `goal`.
+    
+- `f[v] = g[v] + h(v)`: priority key (estimated total path cost).
+    
+- `OPEN`: frontier (min-heap by `f`).
+    
+- `CLOSED`: expanded nodes.
+    
+
+---
+
+### Requirements for optimality
+
+- Edge costs **non-negative**.
+    
+- **Admissible** heuristic: `0 ≤ h(v) ≤ true_cost(v→goal)` → never overestimates.
+    
+- **Consistent** (monotone) heuristic (stronger, preferred):  
+    `h(u) ≤ w(u,v) + h(v)` for every edge `u→v`.  
+    With consistency, A* never needs to re-expand a node (each node settled once).
+    
+
+_(If `h(v) ≡ 0`, A_ becomes Dijkstra.)*
+
+---
+
+### Complexity (high level)
+
+- Time: depends on heuristic quality; worst-case exponential in path length.  
+    With binary heap and adjacency lists: **O((V + E) log V)** for the explored region.
+    
+- Space: stores frontier and visited sets: up to **O(V)**.
+    
+
+---
+
+### Practical tips
+
+- **Tie-breaking:** when equal `f`, prefer larger `g` (deeper) or smaller `h` to reduce node blow-up on plateaus.
+    
+- **Weighted A***: use `f = g + w·h` (w>1) for faster, not guaranteed optimal paths.
+    
+- **Grid paths:** a common consistent `h` is Manhattan (4-neighbor) or Euclidean (8-neighbor).
+
+### A* Star - More Simply
+
+![[Screenshot 2025-10-22 at 13.20.10.png]]
+
+
+#### Or also...
+**A* with priority queue** 
+The priority queue will help in having the next best vertex always at the front. The numbers in blue are estimations of the actual distance between each node and the target node e.
+
+**Correctness of A*** 
+- If the heuristic function is admissible (meaning that it never overestimates the actual cost to get to the goal), A* is guaranteed to return a least-cost path from start to goal
+
+## The 0/1 Knapsack Problem
+
+- First, we create a table of n + 1 rows and w + 1 columns (n is the number of items and w is the weight units). A row number i represents the set of all the items from rows 1— i. 
+- For instance, the values in row 3 assumes that we only have items 1, 2, and 3. A column number j represents the weight capacity of our knapsack. 
+- Therefore, the values in column 5, for example, assumes that our knapsack can hold 5 weight units
+
+![[Screenshot 2025-10-22 at 13.24.59.png]]![[Screenshot 2025-10-22 at 13.25.31.png]]![[Screenshot 2025-10-22 at 13.25.49.png]]![[Screenshot 2025-10-22 at 13.26.21.png]]![[Screenshot 2025-10-22 at 13.26.43.png]]
+
+##### **Solution to the 0/1 Knapsack problem**
+
+- **Complexity:** A naive approach would be to list all possible combinations. If order doesn't matter, then 2^n.
+- Using **dynamic programming**, for every instance of the Knapsack problem, the Knapsack algorithm returns the total value of an optimal solution and runs in time O(n*w), where n is the number of items and w is the Knapsack capacity
