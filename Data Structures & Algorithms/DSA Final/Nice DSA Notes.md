@@ -427,3 +427,64 @@ Based on the topics emphasized (search, shortest paths, MST, and complexity theo
 
 # Union Find
 Union-find, also known as the [Disjoint Set Union (DSU)](https://www.google.com/search?rlz=1C5CHFA_enCZ969CZ970&cs=0&sca_esv=d915882ffb3cd600&q=Disjoint+Set+Union+%28DSU%29&sa=X&ved=2ahUKEwif5dGBgrqQAxVu_7sIHXSOBbcQxccNegQIAxAB&mstk=AUtExfDmLdKS5aqCtGaRgfFS-4cPgkHYrOdXF2A3tI0JmStJxxyYOG8uAoVYS4x6rBh_Cu5fblcuJiXlxpq7FqDGHLUQNdoK_4oj0sTPcQaz2xXiMAwY0ZF5VhlRrtcchXi1LWb9KzTKh31xnFtikoCBfHGdw3_8m6Vlpr0eewXhM8X0FDw-2pPdItpPfDqZ-dsKacLN&csui=3) data structure, is ==a way to efficiently manage a collection of non-overlapping sets and track which elements belong to which set==. It provides two main operations: `Find`, which determines the representative of the set an element belongs to, and `Union`, which merges the sets containing two given elements. It's commonly used to solve dynamic connectivity problems and is a key component in algorithms like [Kruskal's algorithm for finding a minimum spanning tree](https://www.google.com/search?rlz=1C5CHFA_enCZ969CZ970&cs=0&sca_esv=d915882ffb3cd600&q=Kruskal%27s+algorithm+for+finding+a+minimum+spanning+tree&sa=X&ved=2ahUKEwif5dGBgrqQAxVu_7sIHXSOBbcQxccNegQICRAB&mstk=AUtExfDmLdKS5aqCtGaRgfFS-4cPgkHYrOdXF2A3tI0JmStJxxyYOG8uAoVYS4x6rBh_Cu5fblcuJiXlxpq7FqDGHLUQNdoK_4oj0sTPcQaz2xXiMAwY0ZF5VhlRrtcchXi1LWb9KzTKh31xnFtikoCBfHGdw3_8m6Vlpr0eewXhM8X0FDw-2pPdItpPfDqZ-dsKacLN&csui=3).
+
+Union–Find is a **data structure** that keeps track of a collection of **disjoint (non-overlapping) sets**.
+
+It supports two main operations efficiently:
+
+1. **Find(x)** → tells you **which set** element `x` belongs to.  
+    (Usually returns the “representative” or “root” of that set.)
+    
+2. **Union(x, y)** → **merges** the two sets that contain `x` and `y`.
+
+
+## How it works
+
+Think of each set as a **tree**, where each element points to a “parent.”  
+The **root** of the tree is the **representative** of the set.
+
+### Initialization:
+
+Every element starts in its **own set**:
+
+```python
+parent[x] = x
+```
+
+### Find(x):
+
+Follow parent pointers until you reach a root:
+
+```python
+Find(x):
+    if parent[x] != x:
+        parent[x] = Find(parent[x])   // Path compression
+    return parent[x]
+```
+
+→ **Path compression** flattens the tree, so future lookups are faster.
+
+### Union(x, y):
+
+Join the two sets by connecting their roots:
+
+```python
+Union(x, y):
+    rootX = Find(x)
+    rootY = Find(y)
+    if rootX == rootY: return
+    if rank[rootX] < rank[rootY]:
+        parent[rootX] = rootY
+    else if rank[rootX] > rank[rootY]:
+        parent[rootY] = rootX
+    else:
+        parent[rootY] = rootX
+        rank[rootX] += 1
+
+```
+
+→ **Union by rank** attaches the smaller tree under the larger one, keeping trees shallow.
+
+
+
+**BFS(Breadth First Search) uses Queue data structure for finding the shortest path.** **DFS(Depth First Search) uses Stack data structure**
