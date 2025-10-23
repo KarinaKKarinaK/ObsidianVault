@@ -273,7 +273,10 @@ PQ = min-heap of (dist, v, fuel)
 // That’s the next best (shortest) known path to that `(node, fuel_left)` state.
 while PQ not empty:
 	(d, u, f) = extract-min(PQ)
-	if u == t: return d
+		// stopping condition:
+	// If we reach the target node `t`, we’ve found the shortest path considering all fuel constraints.
+	if u == t: 
+		return d
 	
 	// If the current node `u` is a gas station, refill your fuel to full capacity.
 	if u in G: 
@@ -292,6 +295,12 @@ while PQ not empty:
 
 ```
 
+Each node can appear in up to **F different fuel states**,  
+so it’s like running Dijkstra’s on a graph with **V × F** nodes and **E × F** edges.
+
+O((V×F+E×F)log(V×F))
+
+So total time complexity = O(F(V + E) log (VF))
 # New practice
 ### **Problem 1 — Building a Min-Heap Efficiently**
 
@@ -299,23 +308,38 @@ You are given an unsorted array of _n_ integers.
 Describe two ways to build a min-heap: (a) inserting elements one by one, and (b) using the bottom-up heapify method.  
 Which approach is faster, and what are the time complexities?
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 **Answer:**
 
 - (a) Inserting one by one → each insert costs O(log n), total O(n log n).
     
 - (b) Bottom-up heapify → start from middle index and sift down → O(n).  
     ✅ Bottom-up heapify is faster (linear time) and is the method used in practice.
+
+How bottom-up heapify works:
+**Bottom-up heapify works by starting at the lowest level of parent nodes and moving up the tree, ensuring that the heap property (e.g., parent is larger than or equal to children for a max-heap) is satisfied at each node.**
+
+The total time complexity is O(n), which is more efficient than inserting elements one by one (which would be O(nlogn) ).
+- The key to the efficiency is that while the process involves a potentially recursive "sinking" operation, most of the nodes are at the bottom of the tree.
+
+1. **Start at the last non-leaf node**: 
+    
+    Begin with the parent of the last element in the array. Since leaves are already valid heaps (they have no children), there's no need to check them.
+
+- We start from the **last non-leaf node**, which is at index `⌊n/2⌋ - 1`, and “sift down” each node to ensure the heap property holds below it.
+- Not all nodes need to move all the way to the bottom:
+	- Nodes near the **bottom** move **very little** (maybe 1 level).
+	- Only a few nodes near the **top** might move many levels (up to log n).
+## **Problem 2 — Heap vs Priority Queue Operations**
+
+Explain how heaps are used to implement priority queues.  
+What are the time complexities for `insert`, `getMin` (or `getMax`), and `extractMin` operations?
+
+**Answer:**  
+A binary heap stores elements such that the parent is always ≤ (or ≥) its children.
+
+- `insert` → O(log n)
+    
+- `getMin` → O(1)
+    
+- `extractMin` → O(log n)  
+    ✅ The heap ensures fast access to the smallest (or largest) element by maintaining partial order.
