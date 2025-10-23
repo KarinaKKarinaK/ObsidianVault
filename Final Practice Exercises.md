@@ -155,8 +155,167 @@ The idea:
 	- Else median = top of larger heap.  
 	    → O(1)
 
+**Since we're using heaps:** 
+**Total:** insert O(log n), median O(1).
 
-```python
-maintainMedianHeap():
+```php
+Add(x):
+    // 1) Place x in a heap
+    if Lower is empty OR x ≤ peekMax(Lower):
+        Lower.insert(x)
+    else:
+        Upper.insert(x)
+
+    // 2) Fix ordering invariant if crossed
+    if Lower not empty AND Upper not empty AND peekMax(Lower) > peekMin(Upper):
+        a = Lower.extractMax()
+        b = Upper.extractMin()
+        Lower.insert(b)
+        Upper.insert(a)
+
+    // 3) Rebalance sizes (keep size difference ≤ 1)
+    if size(Lower) > size(Upper) + 1:
+        Upper.insert( Lower.extractMax() )
+    else if size(Upper) > size(Lower) + 1:
+        Lower.insert( Upper.extractMin() )
+        
+        
+        
+GetMedian():
+    if size(Lower) == size(Upper):
+        return (peekMax(Lower) + peekMin(Upper)) / 2
+    else if size(Lower) > size(Upper):
+        return peekMax(Lower)
+    else:
+        return peekMin(Upper)
+
 
 ```
+
+### Problem 6:
+minimze wieght (cost) but no verticisen (node) can be more than D edges away from center vertice (node)
+
+Modify Prim's, to build an MST rooted at center node and every node is at most D edges away from that center node.
+
+Give pseudocode and time complexity
+
+Main idea: We run Prim’s but **stop expanding** beyond D edges from the center.
+
+```php
+// Input: graph G, start node, number of hops D (the linit of edges away from start node)
+
+//Output: MST
+modifiedPrims(G, start, D):
+	for each vertex v in G:
+		depth[v] = inf
+		dist[v]= inf
+	dist[start] = 0
+	depth[start] = 0
+
+	PQ = min-heap of (dist, vertex) //priority queue
+	 //whiel tehb queue is not yet emptied (still contains some un-added verticies) do:
+	while PQ not empty:
+		(d, u) = extractMin(PQ)
+		if depth[u] == D:
+			continue
+			
+			// basic Prim's
+			for each edge in (u, v, w):
+				if depth[u] + 1 ≤ D and w < dist[v]:
+	                dist[v] = w
+	                depth[v] = depth[u] + 1
+	                parent[v] = u
+	                insert(PQ, (dist[v], v))
+
+```
+
+Complexity = O(E log V) (same as Prim).  
+Some vertices may remain unreached if distance > D.
+
+
+### Problem 7
+- DIjkstra's (shortest path from s -->t)
+- only can pursue and edge if you have anough fuel F
+- Have to visit gas stations G, where you refuel to F units
+
+**Idea:** You can only traverse edge (u → v, w) **if w ≤ fuel_left**.  
+At gas stations G, refuel back to F units.
+
+- Each edge `(u → v)` has a **cost** `w` (how much fuel it consumes).
+- You can only travel along that edge if you have at least `w` fuel left.
+- You start with `F` fuel units.
+- Some nodes are **gas stations** (`G`) — when you reach one, you can **refuel back to full (F units)**.
+
+In standard Dijkstra’s algorithm, each state is just:
+
+> (current node, current distance)
+
+Here, each state becomes:
+
+> (current node, current fuel_left, current distance)
+
+So we’re essentially doing Dijkstra’s search in a **larger graph** where every node is duplicated for every possible fuel level.
+
+Example:  
+If there are 4 vertices and 5 fuel units, you’ll have 4 × 6 = 24 possible “states” (node + fuel).
+
+```php
+// → we initialize a 2D distance array: one distance per (node, fuel_left) combination.  
+// We start at the source `s` with a **full tank (F)**, so distance = 0 there.
+for each vertex v and fuel f:
+	dist[v][f] = ∞
+dist[s][F] = 0
+
+// We push states into a priority queue by **total distance so far**, just like in Dijkstra.
+PQ = min-heap of (dist, v, fuel)
+
+// Take the state with the smallest distance.  
+// That’s the next best (shortest) known path to that `(node, fuel_left)` state.
+while PQ not empty:
+	(d, u, f) = extract-min(PQ)
+	if u == t: return d
+	
+	// If the current node `u` is a gas station, refill your fuel to full capacity.
+	if u in G: 
+		f = F          // refuel
+		
+	// - You can only go along the edge if you have **enough fuel** (w ≤ f).
+    
+// - When you go from `u` to `v`, you spend `w` fuel, so your new state is `(v, f - w)`.
+    
+// - If this new path is shorter than the previously known one, update it and push it to the heap.
+	for each edge (u,v,w):
+		if w ≤ f:
+			if d + w < dist[v][f-w]:
+				dist[v][f-w] = d + w
+				insert(PQ, (dist[v][f-w], v, f-w))
+
+```
+
+# New practice
+### **Problem 1 — Building a Min-Heap Efficiently**
+
+You are given an unsorted array of _n_ integers.  
+Describe two ways to build a min-heap: (a) inserting elements one by one, and (b) using the bottom-up heapify method.  
+Which approach is faster, and what are the time complexities?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+**Answer:**
+
+- (a) Inserting one by one → each insert costs O(log n), total O(n log n).
+    
+- (b) Bottom-up heapify → start from middle index and sift down → O(n).  
+    ✅ Bottom-up heapify is faster (linear time) and is the method used in practice.
