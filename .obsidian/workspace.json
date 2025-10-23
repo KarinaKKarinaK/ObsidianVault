@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Data Structures & Algorithms/DSA Final/My All  Notes.md",
+                "file": "Data Structures & Algorithms/DSA Final/Exhaustive Final DSA Notes.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "My All  Notes"
+              "title": "Exhaustive Final DSA Notes"
             }
           },
           {
@@ -35,7 +35,8 @@
               "title": "Nice DSA Notes"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -67,7 +68,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "dijks",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -195,11 +196,12 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "43bc1b17bdc9feee",
+  "active": "6d6b46527fc46017",
   "lastOpenFiles": [
+    "Data Structures & Algorithms/DSA Final/Exhaustive Final DSA Notes.md",
+    "Data Structures & Algorithms/DSA Final/My All  Notes.md",
     "Data Structures & Algorithms/DSA Final/Nice DSA Notes.md",
     "Final Exam Qs.md",
-    "Data Structures & Algorithms/DSA Final/My All  Notes.md",
     "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-22 at 13.20.10.png",
     "Data Structures & Algorithms/DSA Final/Lectures DSA Final/10-AstarKnapsack-Tuma.pdf",
     "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-22 at 13.26.43.png",
@@ -217,7 +219,6 @@
     "Data Structures & Algorithms/DSA Final/Practice Exam 1.md",
     "Data Structures & Algorithms/DSA Final/NotebookLM Mind Map (7).png",
     "Data Structures & Algorithms/DSA Final/NotebookLM Mind Map (6).png",
-    "Data Structures & Algorithms/DSA Final/Exhaustive Final DSA Notes.md",
     "Data Structures & Algorithms/DSA Final/BFS Correctness.md",
     "Data Structures & Algorithms/DSA Final/All Algorithms - In Depth.md",
     "Data Structures & Algorithms/Course-evaluation-Mock-exam.pdf",

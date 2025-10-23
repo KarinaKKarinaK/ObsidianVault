@@ -321,3 +321,109 @@ The priority queue will help in having the next best vertex always at the front.
 
 - **Complexity:** A naive approach would be to list all possible combinations. If order doesn't matter, then 2^n.
 - Using **dynamic programming**, for every instance of the Knapsack problem, the Knapsack algorithm returns the total value of an optimal solution and runs in time O(n*w), where n is the number of items and w is the Knapsack capacity
+
+
+
+---
+
+## I. Asymptotic Notation Explanation
+
+Asymptotic notation is used to describe the **running time** of an algorithm, which is an estimation (in terms of input size $n$ or $V, E$) of the time it takes to solve a problem. When analyzing running time, you **suppress constant factors and lower-order terms**, as these terms are irrelevant for large inputs and too system-dependent.
+
+|Notation|Name|Characterization|Definition/Condition|
+|:--|:--|:--|:--|
+|**$O$**|**Big O**|**Worst-case asymptotic running time** or **Upper bound**. A function grows no faster than a certain rate.|$f(n) = O(g(n))$ if there exist positive constants $c$ and $n_0$ such that $0 \le f(n) \le c \cdot g(n)$ for all $n \ge n_0$.|
+|**$\Omega$**|**Big Omega**|**Best-case asymptotic running time** or **Lower bound**. A function grows at least as fast as a certain rate.|$f(n) = \Omega(g(n))$ if there exist positive constants $c$ and $n_0$ such that $0 \le c \cdot g(n) \le f(n)$ for all $n \ge n_0$.|
+|**$\Theta$**|**Big Theta**|**Asymptotically precise bound** (Tight Bound). Characterizes the rate of growth of the function precisely (within constant factors).|$T(n) = \Theta(f(n))$ if and only if there exist positive constants $c_1, c_2$ and $n_0$ such that $c_1 \cdot f(n) \le T(n) \le c_2 \cdot f(n)$ for all $n \ge n_0$. This is equivalent to $f(n) = O(g(n))$ AND $f(n) = \Omega(g(n))$.|
+
+The sources note that algorithm designers often use **$O$-notation** even when **$\Theta$-notation** would be more appropriate.
+
+## II. Big-O Running Times for Algorithms and Data Structures
+
+The tables below list the Big-O complexities mentioned in the sources. $V$ or $n$ denotes the number of vertices/nodes, and $E$ or $m$ denotes the number of edges.
+
+### A. Graph Algorithms (Shortest Paths & Search)
+
+|Algorithm / Implementation|Running Time|Explanation / Context|Source|
+|:--|:--|:--|:--|
+|**BFS** (Breadth-First Search)|**$O(V + E)$** or **$O(n + m)$**|Linear time running time for BFS. Total work is $O(V)$ for queue operations and initialization, plus $O(E)$ for scanning adjacency lists.||
+|**DFS** (Depth-First Search)|**$O(V + E)$**|Linear time complexity. Total time is $\Theta(V)$ for initialization and loops, plus $\Theta(E)$ for recursive calls/adjacency list scans.||
+|**Topological Sort** (on a DAG)|**$O(V + E)$**|Achieved by performing DFS and inserting vertices onto a list in order of decreasing finish time.||
+|**DAG Shortest Paths**|**$\Theta(V + E)$**|Linear time, requires topological sort followed by a single pass of edge relaxation.||
+|**Dijkstra's Algorithm (Straightforward)**|**$O(m \cdot n)$** or **$O(mn)$**|The straightforward implementation uses exhaustive search to find the minimum score in each of $O(n)$ iterations, costing $O(m)$ time per iteration.||
+|**Dijkstra's Algorithm (Heap-Based)**|**$O((m + n) \log n)$**|Improved running time achieved by using a Min-Heap (or Binary Heap) to store unprocessed nodes. Can be simplified to $O(m \log n)$.||
+|**A* Algorithm (Heap-Based)**|**$O((m + n) \log n)$**|The A* algorithm, when implemented with a heap, has the same complexity as the heap-based Dijkstra algorithm (especially when the heuristic $h$ is $O(1)$, i.e., equal to 0).||
+
+### B. Minimum Spanning Tree (MST) Algorithms
+
+|Algorithm / Implementation|Running Time|Explanation / Context|Source|
+|:--|:--|:--|:--|
+|**Prim's Algorithm (Straightforward/Naive)**|**$O(m \cdot n)$** or **$O(mn)$**|Due to $O(n)$ iterations, each requiring $O(m)$ time to exhaustively search all edges for the least cost crossing edge.||
+|**Prim's Algorithm (Heap-Based)**|**$O((m + n) \log n)$**|Heap use minimizes the time spent identifying the next vertex. Can be simplified to $O(m \log n)$ when $G$ is connected ($m \ge n-1$).||
+|**Kruskal's Algorithm (Straightforward/Naive)**|**$O(m \cdot n)$** or **$O(mn)$**|Sorting costs $O(m \log n)$, but the main loop performs $m$ iterations, with cycle checking (using DFS/BFS) taking $O(n)$ per iteration.||
+|**Kruskal's Algorithm (Union-Find-Based)**|**$O((m + n) \log n)$**|Dominated by sorting $O(m \log n)$ and $O(m)$ efficient Union-Find operations (Find/Union, typically $O(\log n)$ each).||
+
+### C. Data Structure Operations (Heaps and Trees)
+
+|Data Structure / Operation|Running Time|Context|Source|
+|:--|:--|:--|:--|
+|**Binary Search Tree (Unbalanced)** (Operation Time)|**$O(h)$** (where $h$ is tree height, $h \le n$)|The running time of most operations is proportional to the tree's height, which can be $O(\log n)$ (best case) to $O(n)$ (worst case).||
+|**Balanced Search Tree** (Insert, Delete, Search)|**$O(\log n)$**|Balanced BSTs guarantee logarithmic time for Insert/Delete/Search by performing additional work (rotations) to maintain balance.||
+|**Red-Black Tree** (Insert, Delete)|**$O(\log n)$**|A Red-Black tree (a form of balanced BST) guarantees $O(\log n)$ time for insertion and deletion.||
+|**Min/Max Heap: Insert**|**$O(\log n)$**||
+|**Min/Max Heap: Extract Min/Max**|**$O(\log n)$**||
+|**Min/Max Heap: Delete**|**$O(\log n)$**||
+|**Min/Max Heap: Find Min/Max**|**$O(1)$**|Reading the root of the heap takes constant time.||
+|**Heapify** (or **BUILD-MAX-HEAP**)|**$O(n)$**|Building a heap from an unordered array has linear running time.||
+|**Union-Find** (Find/Union using Rank/Compression)|**$O(\log n)$**|This bound is achievable using parent graph implementation strategies.||
+
+### D. Other Functions
+
+|Operation|Running Time|Context|Source|
+|:--|:--|:--|:--|
+|**Selection Sort** (Worst-Case)|**$\Theta(n^2)$**|The worst-case running time of selection sort.||
+|**Insertion Sort** (Worst-Case)|**$\Theta(n^2)$**|The worst-case running time of Insertion Sort.||
+|**Merge Sort** (Worst-Case/All Cases)|**$\Theta(n \lg n)$**|Merge sort runs in $\Theta(n \lg n)$ time in all cases.||
+|**Recursive Fibonacci Calculation**|**$O(2^n)$**|Upper bound for the naive recursive calculation.||
+
+## III. Key Information to Memorize for the Final Exam (Concise Summary)
+
+Based on the topics emphasized (search, shortest paths, MST, and complexity theory), the following are essential facts to memorize:
+
+### Core Definitions
+
+- **Asymptotic Notation Purpose:** Characterize the **order of growth** of running time by suppressing constant factors and lower-order terms.
+- **Big O ($O$):** Upper bound / Worst-case time.
+- **Big Theta ($\Theta$):** Tight bound / Exact growth rate.
+- **Running Time of an Algorithm:** Always aim for the **simplest and most precise** bound, typically using $\Theta$ if possible, otherwise $O$.
+
+### Graph Search and Shortest Paths
+
+- **BFS Running Time:** **$O(V + E)$**.
+- **DFS Running Time:** **$O(V + E)$**.
+- **Topological Sort:** Always uses **DFS** (not BFS) and runs in **$O(V + E)$**. It only exists for **Directed Acyclic Graphs (DAGs)**.
+- **Shortest Path (Unweighted):** Use **BFS** for shortest paths in terms of number of edges.
+- **Dijkstra's Algorithm (Required Assumption):** Requires **non-negative edge lengths**.
+- **Dijkstra's Naive Complexity:** **$O(mn)$**.
+- **Dijkstra's Heap Complexity:** **$O((m + n) \log n)$**.
+- **A* Complexity:** **$O((m + n) \log n)$** (If the heuristic is $h=0$, A* degenerates to Dijkstra).
+
+### Minimum Spanning Trees (MST)
+
+- **Prim's Algorithm:** Grows a single tree.
+    - **Naive Complexity:** **$O(mn)$**.
+    - **Optimized Complexity:** **$O((m + n) \log n)$** (using a **Heap** data structure).
+- **Kruskal's Algorithm:** Grows a forest.
+    - **Optimized Complexity:** **$O((m + n) \log n)$** (using **Union-Find**).
+- **MST Edge Requirement:** An MST for a connected graph with $V$ vertices always has exactly **$V - 1$** edges.
+
+### Data Structures
+
+- **Heap Operations (Insert, Extract Min/Max, Delete):** **$O(\log n)$**.
+- **Heap Operation (Find Min/Max):** **$O(1)$**.
+- **Heapify (Build Heap):** **$O(n)$** (Linear time).
+- **Balanced Search Trees (BST):** Operations guarantee **$O(\log n)$** running time.
+
+
+# Union Find
+Union-find, also known as the [Disjoint Set Union (DSU)](https://www.google.com/search?rlz=1C5CHFA_enCZ969CZ970&cs=0&sca_esv=d915882ffb3cd600&q=Disjoint+Set+Union+%28DSU%29&sa=X&ved=2ahUKEwif5dGBgrqQAxVu_7sIHXSOBbcQxccNegQIAxAB&mstk=AUtExfDmLdKS5aqCtGaRgfFS-4cPgkHYrOdXF2A3tI0JmStJxxyYOG8uAoVYS4x6rBh_Cu5fblcuJiXlxpq7FqDGHLUQNdoK_4oj0sTPcQaz2xXiMAwY0ZF5VhlRrtcchXi1LWb9KzTKh31xnFtikoCBfHGdw3_8m6Vlpr0eewXhM8X0FDw-2pPdItpPfDqZ-dsKacLN&csui=3) data structure, is ==a way to efficiently manage a collection of non-overlapping sets and track which elements belong to which set==. It provides two main operations: `Find`, which determines the representative of the set an element belongs to, and `Union`, which merges the sets containing two given elements. It's commonly used to solve dynamic connectivity problems and is a key component in algorithms like [Kruskal's algorithm for finding a minimum spanning tree](https://www.google.com/search?rlz=1C5CHFA_enCZ969CZ970&cs=0&sca_esv=d915882ffb3cd600&q=Kruskal%27s+algorithm+for+finding+a+minimum+spanning+tree&sa=X&ved=2ahUKEwif5dGBgrqQAxVu_7sIHXSOBbcQxccNegQICRAB&mstk=AUtExfDmLdKS5aqCtGaRgfFS-4cPgkHYrOdXF2A3tI0JmStJxxyYOG8uAoVYS4x6rBh_Cu5fblcuJiXlxpq7FqDGHLUQNdoK_4oj0sTPcQaz2xXiMAwY0ZF5VhlRrtcchXi1LWb9KzTKh31xnFtikoCBfHGdw3_8m6Vlpr0eewXhM8X0FDw-2pPdItpPfDqZ-dsKacLN&csui=3).

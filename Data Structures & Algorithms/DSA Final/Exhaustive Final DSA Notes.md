@@ -229,6 +229,7 @@ DP is an advanced technique used for **optimization problems** by combining solu
 |2|3|4|
 |3|4|5|
 |4|1|6|
+Heaps, BST, BFS, BFS, toposort, Dijkstra, Prim's, Kruskal's
 
 |$\boldsymbol{i} / \boldsymbol{c}$|**0**|**1**|**2**|**3**|**4**|**5**|**6**|**7**|**8**|
 |:--|:--|:--|:--|:--|:--|:--|:--|:--|:--|
