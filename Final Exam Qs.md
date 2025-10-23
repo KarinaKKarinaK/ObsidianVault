@@ -61,15 +61,6 @@ Input: directed graph G = (V,E), source s ∈ V, non-negative length ℓe for ea
 1. **Reduction:** The sources state that Breadth-First Search (BFS) is a special case of Dijkstra’s algorithm. Describe the specific condition that must hold for the input graph weights such that Dijkstra’s algorithm (which tracks $\ell_{en}(v)$ as the path length sum) yields the exact same result and search pattern as BFS (which finds the minimum number of edges).
 	- All edges have to have equal weight (any positive constant) for Dijkstra to behave like BFS. Then the path cost would be proprotional to the number of edges, so Dijkstra's tentative distances increase level by level  exactly as BFS explore layers.
 
----
-
-This course covers several high-yield areas beyond basic graph traversal (BFS/DFS) and shortest path/MST algorithms. Based on the course syllabus structure, lecture focus, and explicit assignments (A4 and material linked to Exam Part B), **Dynamic Programming (specifically the 0/1 Knapsack Problem)** is a highly likely topic for an open-answer examination question.
-
-Here is a question drawing on the principles and practical computation of Dynamic Programming:
-
----
-
-The following are open-answer questions, designed in an exam style, covering fundamental concepts and algorithms within the topic of graphs, drawing exclusively from the provided source materials.
 
 ---
 

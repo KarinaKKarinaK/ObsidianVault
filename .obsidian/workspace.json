@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Data Structures & Algorithms/DSA Final/Nice DSA Notes.md",
+                "file": "Data Structures & Algorithms/DSA Final/My All  Notes.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Nice DSA Notes"
+              "title": "My All  Notes"
             }
           },
           {
@@ -27,16 +27,15 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Final Exam Qs.md",
+                "file": "Data Structures & Algorithms/DSA Final/Nice DSA Notes.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Final Exam Qs"
+              "title": "Nice DSA Notes"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -196,12 +195,12 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "6d6b46527fc46017",
+  "active": "43bc1b17bdc9feee",
   "lastOpenFiles": [
-    "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-22 at 13.20.10.png",
-    "Data Structures & Algorithms/DSA Final/My All  Notes.md",
-    "Final Exam Qs.md",
     "Data Structures & Algorithms/DSA Final/Nice DSA Notes.md",
+    "Final Exam Qs.md",
+    "Data Structures & Algorithms/DSA Final/My All  Notes.md",
+    "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-22 at 13.20.10.png",
     "Data Structures & Algorithms/DSA Final/Lectures DSA Final/10-AstarKnapsack-Tuma.pdf",
     "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-22 at 13.26.43.png",
     "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-22 at 13.26.21.png",

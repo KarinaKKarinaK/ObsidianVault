@@ -9,23 +9,23 @@
 #### Prim's Pseudocode
 ```python
 Prim(G, start):
-	forn each vertex v in G:
-	key[v] = infinity
-	parent[v] = NIL
-	inMST[v] = FALSE
+	for each vertex v in G:
+		key[v] = infinity
+		parent[v] = NIL
+		inMST[v] = FALSE
 
-key[start] = 0
-
-for i = 1 to |V| - 1:
-	u = vertex with minimum key[u] not in MST
-	inMST[u] = TRUE
+	key[start] = 0
 	
-	for each neighbor v of u:
-		if (edge(u, v) exists) and (inMST[v] == FALSE) and (weight(u, v) < key[v]):
-			parent[v] = u
-			key[v] = weight(u, v)
-			
-	return parent[]
+	for i = 1 to |V| - 1:
+		u = vertex with minimum key[u] not in MST
+		inMST[u] = TRUE
+		
+		for each neighbor v of u:
+			if (edge(u, v) exists) and (inMST[v] == FALSE) and (weight(u, v) < key[v]):
+				parent[v] = u
+				key[v] = weight(u, v)
+				
+		return parent[]
 	
 ```
 
