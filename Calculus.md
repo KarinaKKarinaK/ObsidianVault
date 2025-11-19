@@ -154,3 +154,120 @@ This is the **Intermediate Value Theorem (IVT)**.
 Means the graph has no jumps.
 
 ---
+
+Let's solve the limit AND show how **approaching from the left vs. right** works in general.
+**Problem**
+
+$$ 
+\lim_{x\to 2^-}\frac{x^2-4}{x^2-4x+4}  
+$$
+
+---
+
+# STEP 1 — **Factor the expression**
+
+### Numerator:
+
+[  
+x^2-4 = (x-2)(x+2)  
+]
+
+### Denominator:
+
+[  
+x^2-4x+4 = (x-2)^2  
+]
+
+So the function becomes:  
+[  
+\frac{(x-2)(x+2)}{(x-2)^2}  
+= \frac{x+2}{x-2}.  
+]
+
+We must analyze:  
+[  
+\lim_{x\to 2^-} \frac{x+2}{x-2}.  
+]
+
+---
+
+# STEP 2 — **Plug in near 2 to see the sign**
+
+For limits involving division by **zero**, the **sign** decides if it → (+\infty) or (-\infty).
+
+---
+
+## ✔ Numerator near (x = 2):
+
+[  
+x+2 \approx 4  
+]
+
+This is **positive**.
+
+---
+
+## ✔ Denominator near 2 from the **left** ( (x\to 2^-) ):
+
+For (x) slightly _less_ than 2 (like 1.9):
+
+[  
+x - 2 \quad \text{is negative.}  
+]
+
+Example:
+
+[  
+1.9 - 2 = -0.1 < 0.  
+]
+
+So:
+
+- Numerator = **positive**
+    
+- Denominator = **tiny negative**
+    
+
+So the entire fraction:
+
+[  
+\frac{\text{positive}}{\text{tiny negative}} \to -\infty.  
+]
+
+---
+
+# ✅ **FINAL ANSWER**
+
+[  
+\boxed{-\infty}  
+]
+
+---
+
+# 🎯 **How to check left-hand vs. right-hand limits (general rule)**
+
+Take a function like:
+
+[  
+\frac{A}{x-a}  
+]
+
+Then:
+
+### 👉 As (x \to a^-):
+
+Denominator → **0 negative**, so the fraction → either (+\infty) or (-\infty) depending on the numerator’s sign.
+
+### 👉 As (x \to a^+):
+
+Denominator → **0 positive**, so the fraction → sign determined directly.
+
+---
+
+# ⭐ Want the right-hand limit too?
+
+I can compute:  
+[  
+\lim_{x\to 2^+} \frac{x^2-4}{x^2-4x+4}  
+]  
+Just say **yes**!
