@@ -22,6 +22,20 @@
             }
           },
           {
+            "id": "2a1d10b5c11bcbe5",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Behavioural Interview Prep.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Behavioural Interview Prep"
+            }
+          },
+          {
             "id": "2a5183ffd7d66480",
             "type": "leaf",
             "state": {
@@ -49,7 +63,8 @@
               "title": "Optiver - Table Of Contents"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -209,11 +224,12 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "03c169e3a5012a96",
+  "active": "2a1d10b5c11bcbe5",
   "lastOpenFiles": [
     "Quantitative Trading/LinkedIn Reachout.md",
-    "Quantitative Trading/Optiver - Table Of Contents.md",
+    "Behavioural Interview Prep.md",
     "Quantitative Trading/Personal Optiver Overview.md",
+    "Quantitative Trading/Optiver - Table Of Contents.md",
     "Quantitative Trading/Trading Concepts Breakdown.md",
     "Quantitative Trading",
     "Knowledge & Data/Final Practice Exercises.md",
@@ -257,7 +273,6 @@
     "Psychology/Psychology - Quiz 9.md",
     "Psychology/Exhaustive Psych Notes.md",
     "Psychology/Practice Quizzes/Psychology - Quiz 8.md",
-    "Psychology/Practice Quizzes/Psychology - Quiz 6.md",
     "Untitled 1.canvas"
   ]
 }

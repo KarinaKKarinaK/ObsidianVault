@@ -236,6 +236,7 @@ If you'd like, I can now create:
 • training drills for mental math + EV,  
 • a custom preparation plan for your cognitive interview days.
 
+
 ---
 Here are detailed, tailored answers addressing all aspects of your Optiver Quantitative Trading Internship application and interview preparation:
 
