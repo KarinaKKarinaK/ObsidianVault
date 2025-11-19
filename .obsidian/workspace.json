@@ -36,26 +36,12 @@
             }
           },
           {
-            "id": "2a5183ffd7d66480",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Quantitative Trading/LinkedIn Reachout.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "LinkedIn Reachout"
-            }
-          },
-          {
             "id": "866e44e2ca4c4528",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Quantitative Trading/Topic Notes/Technical-study roadmap.md",
+                "file": "Quantitative Trading/Technical-study roadmap.md",
                 "mode": "source",
                 "source": false
               },
@@ -69,12 +55,68 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "14 Day Plan.md",
+                "file": "Quantitative Trading/Technical-study roadmap.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "14 Day Plan"
+              "title": "Technical-study roadmap"
+            }
+          },
+          {
+            "id": "712e4f1c7e303eb7",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Quantitative Trading/Topic Notes/1 - Probability – Core Concepts.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "1 - Probability – Core Concepts"
+            }
+          },
+          {
+            "id": "7f60f2298a2eaa6f",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Quantitative Trading/Topic Notes/2 - EV.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "2 - EV"
+            }
+          },
+          {
+            "id": "38abee2532ee2d6a",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Quantitative Trading/Topic Notes/3 - Conditional Probability and Bayes.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "3 - Conditional Probability and Bayes"
+            }
+          },
+          {
+            "id": "e324aac499eedf58",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Quantitative Trading/Topic Notes/4 - Combinatronics & Permutations.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "4 - Combinatronics & Permutations"
             }
           },
           {
@@ -83,16 +125,16 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Quantitative Trading/Optiver - Table Of Contents.md",
+                "file": "Quantitative Trading/Trading Concepts Breakdown.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Optiver - Table Of Contents"
+              "title": "Trading Concepts Breakdown"
             }
           }
         ],
-        "currentTab": 4
+        "currentTab": 7
       }
     ],
     "direction": "vertical"
@@ -252,16 +294,20 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "31a5c73586818887",
+  "active": "e324aac499eedf58",
   "lastOpenFiles": [
-    "Quantitative Trading/Topic Notes/Technical-study roadmap.md",
-    "14 Day Plan.md",
-    "Quantitative Trading/Topic Notes",
-    "Quantitative Trading/LinkedIn Reachout.md",
-    "Quantitative Trading/Behavioural Interview Prep.md",
+    "Quantitative Trading/Topic Notes/3 - Conditional Probability and Bayes.md",
+    "Quantitative Trading/Topic Notes/2 - EV.md",
+    "Quantitative Trading/Topic Notes/1 - Probability – Core Concepts.md",
+    "Quantitative Trading/Topic Notes/4 - Combinatronics & Permutations.md",
+    "Quantitative Trading/Technical-study roadmap.md",
+    "Quantitative Trading/Trading Concepts Breakdown.md",
     "Quantitative Trading/Personal Optiver Overview.md",
     "Quantitative Trading/Optiver - Table Of Contents.md",
-    "Quantitative Trading/Trading Concepts Breakdown.md",
+    "Quantitative Trading/LinkedIn Reachout.md",
+    "Quantitative Trading/Behavioural Interview Prep.md",
+    "Quantitative Trading/14 Day Plan.md",
+    "Quantitative Trading/Topic Notes",
     "Quantitative Trading",
     "Knowledge & Data/Final Practice Exercises.md",
     "Calculus.md",
@@ -297,10 +343,6 @@
     "Knowledge & Data/K&D Quiz 1.md",
     "Knowledge & Data/K&D Notes.md",
     "Knowledge & Data/K&D Knowledge Gaps Notes.md",
-    "Knowledge & Data/Ontology Basics.md",
-    "Knowledge & Data/Queries.md",
-    "Knowledge & Data/K&D Quiz 2.md",
-    "Psychology/Psychology - Quiz 9.md",
     "Untitled 1.canvas"
   ]
 }
