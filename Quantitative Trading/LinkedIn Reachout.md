@@ -5,3 +5,4 @@ I’m Karina, and I’m currently preparing for interviews for an internship at 
 - and your experience with the learning culture and training at Optiver.
 
 Any brief advice or perspective would be extremely helpful. Thank you in advance.
+
