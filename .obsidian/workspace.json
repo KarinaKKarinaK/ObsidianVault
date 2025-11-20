@@ -111,12 +111,26 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Quantitative Trading/Trading Concepts Breakdown.md",
+                "file": "Quantitative Trading/Behavioural Interview Prep.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Trading Concepts Breakdown"
+              "title": "Behavioural Interview Prep"
+            }
+          },
+          {
+            "id": "3baeb0ebc258639e",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Linear Algebra Notes.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Linear Algebra Notes"
             }
           },
           {
@@ -134,7 +148,7 @@
             }
           }
         ],
-        "currentTab": 7
+        "currentTab": 8
       }
     ],
     "direction": "vertical"
@@ -294,11 +308,13 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "e324aac499eedf58",
+  "active": "3baeb0ebc258639e",
   "lastOpenFiles": [
-    "Quantitative Trading/Personal Optiver Overview.md",
     "Quantitative Trading/Behavioural Interview Prep.md",
+    "Linear Algebra Notes.md",
+    "Linear Algebra & Calc",
     "Quantitative Trading/Trading Concepts Breakdown.md",
+    "Quantitative Trading/Personal Optiver Overview.md",
     "Quantitative Trading/Topic Notes/4 - Combinatronics & Permutations.md",
     "Quantitative Trading/Topic Notes/3 - Conditional Probability and Bayes.md",
     "Quantitative Trading/Topic Notes/2 - EV.md",
@@ -310,7 +326,7 @@
     "Quantitative Trading/Topic Notes",
     "Quantitative Trading",
     "Knowledge & Data/Final Practice Exercises.md",
-    "Calculus.md",
+    "Linear Algebra & Calc/Calculus.md",
     "Untitled.canvas",
     "Data Structures & Algorithms/DSA Final/Nice DSA Notes.md",
     "Data Structures & Algorithms/DSA Final/Practice Exam 1.md",
@@ -337,12 +353,10 @@
     "Data Structures & Algorithms/DSA Final/All Algorithms - In Depth.md",
     "Data Structures & Algorithms/Course-evaluation-Mock-exam.pdf",
     "Data Structures & Algorithms/DSA Final/DSA Practice.md",
-    "Data Structures & Algorithms/DSA Final/Resources/W3_ DS-BFS-DFS-Exercises-Handout.docx.pdf",
     "Knowledge & Data/\"Cheatsheets\"/K&D Cheatsheet.md",
     "Knowledge & Data/K&D Quiz 3.md",
     "Knowledge & Data/K&D Quiz 1.md",
     "Knowledge & Data/K&D Notes.md",
-    "Knowledge & Data/K&D Knowledge Gaps Notes.md",
     "Untitled 1.canvas"
   ]
 }
