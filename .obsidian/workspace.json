@@ -8,147 +8,35 @@
         "type": "tabs",
         "children": [
           {
-            "id": "03c169e3a5012a96",
+            "id": "7151bc4ca5b65410",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Quantitative Trading/Personal Optiver Overview.md",
+                "file": "Quantitative Trading/Curated Notes/Market Making.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Personal Optiver Overview"
+              "title": "Market Making"
             }
           },
           {
-            "id": "2a1d10b5c11bcbe5",
+            "id": "fbccfb26d11785c9",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Quantitative Trading/Behavioural Interview Prep.md",
+                "file": "Quantitative Trading/Curated Notes/Example scenario.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Behavioural Interview Prep"
-            }
-          },
-          {
-            "id": "866e44e2ca4c4528",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Quantitative Trading/Technical-study roadmap.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Technical-study roadmap"
-            }
-          },
-          {
-            "id": "31a5c73586818887",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Quantitative Trading/Technical-study roadmap.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Technical-study roadmap"
-            }
-          },
-          {
-            "id": "712e4f1c7e303eb7",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Quantitative Trading/Topic Notes/1 - Probability – Core Concepts.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "1 - Probability – Core Concepts"
-            }
-          },
-          {
-            "id": "7f60f2298a2eaa6f",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Quantitative Trading/Topic Notes/2 - EV.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "2 - EV"
-            }
-          },
-          {
-            "id": "38abee2532ee2d6a",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Quantitative Trading/Topic Notes/3 - Conditional Probability and Bayes.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "3 - Conditional Probability and Bayes"
-            }
-          },
-          {
-            "id": "e324aac499eedf58",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Quantitative Trading/Behavioural Interview Prep.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Behavioural Interview Prep"
-            }
-          },
-          {
-            "id": "3baeb0ebc258639e",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Linear Algebra Notes.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Linear Algebra Notes"
-            }
-          },
-          {
-            "id": "40293412708b91ee",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Quantitative Trading/Trading Concepts Breakdown.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Trading Concepts Breakdown"
+              "title": "Example scenario"
             }
           }
         ],
-        "currentTab": 8
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -308,16 +196,22 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "3baeb0ebc258639e",
+  "active": "fbccfb26d11785c9",
   "lastOpenFiles": [
-    "Quantitative Trading/Behavioural Interview Prep.md",
-    "Linear Algebra Notes.md",
-    "Linear Algebra & Calc",
+    "Screenshot 2025-11-21 at 13.29.42.png",
+    "Screenshot 2025-11-21 at 13.28.02.png",
+    "Quantitative Trading/Curated Notes/Market Making.md",
+    "Quantitative Trading/Curated Notes/Example scenario.md",
+    "Quantitative Trading/Curated Notes/Screenshot 2025-11-21 at 13.16.07.png",
+    "Quantitative Trading/Curated Notes",
+    "Quantitative Trading/Topic Notes/2 - EV.md",
+    "Quantitative Trading/Topic Notes/3 - Conditional Probability and Bayes.md",
     "Quantitative Trading/Trading Concepts Breakdown.md",
+    "Linear Algebra & Calc/Linear Algebra Notes.md",
+    "Quantitative Trading/Behavioural Interview Prep.md",
+    "Linear Algebra & Calc",
     "Quantitative Trading/Personal Optiver Overview.md",
     "Quantitative Trading/Topic Notes/4 - Combinatronics & Permutations.md",
-    "Quantitative Trading/Topic Notes/3 - Conditional Probability and Bayes.md",
-    "Quantitative Trading/Topic Notes/2 - EV.md",
     "Quantitative Trading/Topic Notes/1 - Probability – Core Concepts.md",
     "Quantitative Trading/Technical-study roadmap.md",
     "Quantitative Trading/Optiver - Table Of Contents.md",
@@ -347,16 +241,10 @@
     "Data Structures & Algorithms/DSA Final/Lectures DSA Final/8-Spanning-Madeiral.pdf",
     "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-21 at 19.42.35.png",
     "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-21 at 19.42.22.png",
-    "Data Structures & Algorithms/DSA Final/NotebookLM Mind Map (7).png",
-    "Data Structures & Algorithms/DSA Final/NotebookLM Mind Map (6).png",
     "Data Structures & Algorithms/DSA Final/BFS Correctness.md",
     "Data Structures & Algorithms/DSA Final/All Algorithms - In Depth.md",
-    "Data Structures & Algorithms/Course-evaluation-Mock-exam.pdf",
     "Data Structures & Algorithms/DSA Final/DSA Practice.md",
     "Knowledge & Data/\"Cheatsheets\"/K&D Cheatsheet.md",
-    "Knowledge & Data/K&D Quiz 3.md",
-    "Knowledge & Data/K&D Quiz 1.md",
-    "Knowledge & Data/K&D Notes.md",
     "Untitled 1.canvas"
   ]
 }
