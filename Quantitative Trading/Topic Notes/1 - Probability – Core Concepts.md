@@ -124,9 +124,9 @@ This is tested EXTREMELY frequently.
 
 # ✅ **3. Expected Value (Most Important For Traders)**
 
-[  
+$$
 EV = \sum p_i \cdot x_i  
-]
+$$
 
 Optiver constantly asks questions like:
 

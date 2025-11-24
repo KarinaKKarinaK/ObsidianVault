@@ -36,6 +36,32 @@
             }
           },
           {
+            "id": "7477e36eb80cbd0b",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Quantitative Trading/Topic Notes/Core Probability.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Core Probability"
+            }
+          },
+          {
+            "id": "d3d4e3054b4b3352",
+            "type": "leaf",
+            "state": {
+              "type": "image",
+              "state": {
+                "file": "Quantitative Trading/Screenshot 2025-11-24 at 16.17.48.png"
+              },
+              "icon": "lucide-image",
+              "title": "Screenshot 2025-11-24 at 16.17.48"
+            }
+          },
+          {
             "id": "cf46dfc244e57c6a",
             "type": "leaf",
             "state": {
@@ -62,7 +88,7 @@
             }
           }
         ],
-        "currentTab": 2
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -224,10 +250,18 @@
   },
   "active": "77837552dc6fb3a9",
   "lastOpenFiles": [
+    "Quantitative Trading/Topic Notes/Bayes' Theorem.md",
+    "Quantitative Trading/Topic Notes/Core Probability.md",
+    "Quantitative Trading/Screenshot 2025-11-24 at 17.18.28.png",
+    "Quantitative Trading/Screenshot 2025-11-24 at 17.15.22.png",
+    "Quantitative Trading/Screenshot 2025-11-24 at 17.15.07.png",
+    "Quantitative Trading/Screenshot 2025-11-24 at 17.09.16.png",
+    "Quantitative Trading/Screenshot 2025-11-24 at 17.06.27.png",
+    "Quantitative Trading/Screenshot 2025-11-24 at 16.17.48.png",
     "Quantitative Trading/Topic Notes/1 - Probability – Core Concepts.md",
     "Quantitative Trading/Curated Notes/Probability Practice.md",
-    "Quantitative Trading/Screenshot 2025-11-24 at 14.58.09.png",
     "Quantitative Trading/量化绿皮书.pdf",
+    "Quantitative Trading/Screenshot 2025-11-24 at 14.58.09.png",
     "Quantitative Trading/Topic Notes/2 - EV.md",
     "Quantitative Trading/Curated Notes/Example scenario.md",
     "Quantitative Trading/Curated Notes/Market Making.md",
@@ -256,21 +290,13 @@
     "Data Structures & Algorithms/DSA Final/Exhaustive Final DSA Notes.md",
     "Data Structures & Algorithms/DSA Final/My All  Notes.md",
     "Data Structures & Algorithms/Final Exam Qs.md",
-    "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-22 at 13.20.10.png",
     "Data Structures & Algorithms/DSA Final/Lectures DSA Final/10-AstarKnapsack-Tuma.pdf",
-    "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-22 at 13.26.43.png",
-    "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-22 at 13.26.21.png",
-    "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-22 at 13.25.49.png",
-    "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-22 at 13.25.31.png",
-    "Data Structures & Algorithms/DSA Final/DSA Assets/Screenshot 2025-10-22 at 13.24.59.png",
     "Data Structures & Algorithms/DSA Final/Resources/W6_ Handout-Kruskal-Prims.docx.pdf",
     "Data Structures & Algorithms/DSA Final/Lectures DSA Final/9-Topo Sort-Madeiral.pdf",
     "Data Structures & Algorithms/DSA Final/Lectures DSA Final/5-HeapsBis.pdf",
     "Data Structures & Algorithms/DSA Final/Lectures DSA Final/9-Dijsktra-Tuma.pdf",
     "Data Structures & Algorithms/DSA Final/BFS Correctness.md",
     "Data Structures & Algorithms/DSA Final/All Algorithms - In Depth.md",
-    "Data Structures & Algorithms/DSA Final/DSA Practice.md",
-    "Knowledge & Data/\"Cheatsheets\"/K&D Cheatsheet.md",
     "Untitled 1.canvas"
   ]
 }
