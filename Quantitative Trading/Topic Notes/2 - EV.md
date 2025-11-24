@@ -1,5 +1,17 @@
 # Expected Value (EV)
 
+#### Learn & practice:
+
+- EV formulas
+- Turning probabilities into odds
+- EV = 0 break-even logic
+- Fair bets (e.g., 20% chance → 4:1 odds)
+- EV decision-making in trading context
+
+#### Practice:
+
+- EverythingQuant EV exercises
+- Brainstellar EV problems
 ## Definition
 - Intuitive explanation:
 - Formula:
