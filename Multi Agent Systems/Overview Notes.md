@@ -61,24 +61,24 @@ A Prolog system consists of a **Knowledge Base** (KB) and **Queries**:
 
 #### C. Definitions of Prolog Syntax
 
-|Concept|Definition|Rules/Characteristics|Citation|
-|:--|:--|:--|:--|
-|**Atom**|Basic building block. Sequence of letters/digits/underscores.|Starts with a lower-case letter, or enclosed in single quotes, or a string of special characters (e.g., `:-`). Atoms are constants and terms.||
-|**Number**|Any sequence of numbers, possibly containing a dot.|Numbers are constants.||
-|**Constant**|Includes both atoms and numbers.|||
-|**Variable**|Sequence of letters/digits/underscores.|Starts with an upper-case letter or an underscore.||
-|**Anonymous Variable**|The variable `_`.|Used when the value of a variable is not needed.||
-|**Term**|Defined recursively.|Constants and variables are terms; $f(t_1, \dots, t_k)$ is a term if $f$ is an atom and each $t_i$ is a term.||
-|**Ground Term**|A term that contains no variables.|||
-|**Compound Term**|A term $f(t_1, \dots, t_k)$.|||
-|**Functor**|The atom $f$ in a compound term.|||
-|**Arity**|The number of arguments $k$.|||
-|**Signature**|Notation $f/k$ (e.g., `has_wheels/1`).|||
-|**Predicate**|Any constant or compound term.|||
-|**Fact (Knowledge)**|A predicate immediately followed by a dot (`.`).|||
-|**Rule**|$A_0 :- A_1, \dots, A_n.$ ($A_0$ is the head, $A_1, \dots, A_n$ is the body).|Rules are always universal (e.g., $p(X)$ holds for all $X$).||
-|**Clause**|Any fact or rule.|||
-|**Query (Goal)**|`?- p.`.|Queries are existential (e.g., `?- p(X)` corresponds to $\exists X p(X)$).||
+| Concept                | Definition                                                                    | Rules/Characteristics                                                                                                                         |
+| :--------------------- | :---------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Atom**               | Basic building block. Sequence of letters/digits/underscores.                 | Starts with a lower-case letter, or enclosed in single quotes, or a string of special characters (e.g., `:-`). Atoms are constants and terms. |
+| **Number**             | Any sequence of numbers, possibly containing a dot.                           | Numbers are constants.                                                                                                                        |
+| **Constant**           | Includes both atoms and numbers.                                              |                                                                                                                                               |
+| **Variable**           | Sequence of letters/digits/underscores.                                       | Starts with an upper-case letter or an underscore.                                                                                            |
+| **Anonymous Variable** | The variable `_`.                                                             | Used when the value of a variable is not needed.                                                                                              |
+| **Term**               | Defined recursively.                                                          | Constants and variables are terms; $f(t_1, \dots, t_k)$ is a term if $f$ is an atom and each $t_i$ is a term.                                 |
+| **Ground Term**        | A term that contains no variables.                                            |                                                                                                                                               |
+| **Compound Term**      | A term $f(t_1, \dots, t_k)$.                                                  |                                                                                                                                               |
+| **Functor**            | The atom $f$ in a compound term.                                              |                                                                                                                                               |
+| **Arity**              | The number of arguments $k$.                                                  |                                                                                                                                               |
+| **Signature**          | Notation $f/k$ (e.g., `has_wheels/1`).                                        |                                                                                                                                               |
+| **Predicate**          | Any constant or compound term.                                                |                                                                                                                                               |
+| **Fact (Knowledge)**   | A predicate immediately followed by a dot (`.`).                              |                                                                                                                                               |
+| **Rule**               | $A_0 :- A_1, \dots, A_n.$ ($A_0$ is the head, $A_1, \dots, A_n$ is the body). | Rules are always universal (e.g., $p(X)$ holds for all $X$).                                                                                  |
+| **Clause**             | Any fact or rule.                                                             |                                                                                                                                               |
+| **Query (Goal)**       | `?- p.`.                                                                      | Queries are existential (e.g., `?- p(X)` corresponds to $\exists X p(X)$).                                                                    |
 
 #### D. Prolog Operators and Examples
 
