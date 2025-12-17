@@ -13,7 +13,9 @@
 - **Production-grade projects** that _actually_ look impressive on GitHub
     
 - Clear **daily routines**, **note-taking methods**, **learning sources**, and **outputs**
-    
+
+DEEP PROCESSING SESSION --> everyday review what you have learnt the previous day
+- Implement Kanban project using Shadcn
 
 This is **intense but realistic** if treated like a part-time/full-time growth sprint.
 

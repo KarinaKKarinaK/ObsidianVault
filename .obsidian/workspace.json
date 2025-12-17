@@ -78,7 +78,7 @@
             }
           }
         ],
-        "currentTab": 3
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -238,13 +238,13 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "8b1ffae4a852b708",
+  "active": "a1b3884921e7890d",
   "lastOpenFiles": [
     "Technical Skills/Technical Roadmap/Roadmap Blueprint.md",
-    "Obsidian Structure Blueprint.md",
     "Technical Skills/Technical Roadmap/Daily Check List.md",
-    "Technical Skills",
     "Technical Skills/Technical Roadmap/Roadmap Draft.md",
+    "Obsidian Structure Blueprint.md",
+    "Technical Skills",
     "Linear Algebra & Calc/Linear Algebra Notes.md",
     "Technical Skills/Technical Roadmap",
     "Linear Algebra & Calc/Calculus.md",
