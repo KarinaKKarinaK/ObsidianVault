@@ -27,34 +27,6 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Technical Skills/Technical Roadmap/Obsidian Structure Blueprint.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Obsidian Structure Blueprint"
-            }
-          },
-          {
-            "id": "b7983183de3eac12",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Technical Skills/Notes/Subtopics/Reflections.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Reflections"
-            }
-          },
-          {
-            "id": "6f89efbc40978b42",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
                 "file": "Technical Skills/Notes/Subtopics/LLMs.md",
                 "mode": "source",
                 "source": false
@@ -62,9 +34,23 @@
               "icon": "lucide-file",
               "title": "LLMs"
             }
+          },
+          {
+            "id": "ebaff31bb2be4f89",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Technical Skills/Notes/Subtopics/(AI) Chips.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "(AI) Chips"
+            }
           }
         ],
-        "currentTab": 3
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -224,14 +210,15 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "77837552dc6fb3a9",
+  "active": "8b1ffae4a852b708",
   "lastOpenFiles": [
+    "Technical Skills/Technical Roadmap/Obsidian Structure Blueprint.md",
+    "Technical Skills/Notes/Subtopics/(AI) Chips.md",
+    "Technical Skills/Notes/Subtopics/LLMs.md",
+    "Technical Skills/Notes/Subtopics/Reflections.md",
     "Technical Skills/Notes/08 - UI+UX.md",
     "Technical Skills/Notes/05 - Databases.md",
     "Technical Skills/Notes/11 - Basic Hardware.md",
-    "Technical Skills/Notes/Subtopics/Reflections.md",
-    "Technical Skills/Technical Roadmap/Obsidian Structure Blueprint.md",
-    "Technical Skills/Notes/Subtopics/LLMs.md",
     "Technical Skills/Notes/10 - Algorithms.md",
     "Technical Skills/Notes/09 - Machine Learning.md",
     "Technical Skills/Notes/04 - Backend APIs.md",
@@ -265,7 +252,6 @@
     "Quantitative Trading/Curated Notes/Probability Practice.md",
     "Quantitative Trading/Screenshot 2025-11-24 at 14.58.09.png",
     "Quantitative Trading/Topic Notes/2 - EV.md",
-    "Quantitative Trading/Curated Notes/Example scenario.md",
     "Quantitative Trading/Screenshot 2025-11-21 at 13.29.42.png",
     "Quantitative Trading/Screenshot 2025-11-21 at 13.28.02.png",
     "Quantitative Trading/Curated Notes",
