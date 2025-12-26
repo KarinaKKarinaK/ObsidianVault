@@ -57,3 +57,20 @@ console.log(y); // ❌ error
 let y = 5;
 
 ```
+
+
+# Variable Scopes
+***This is taken from the linked website.****
+
+Variable scope determines the accessibility of variables in different parts of your code. JavaScript has three main types of scopes:
+
+- **Global scope:** Variables declared outside of any function or block have global scope. They can be accessed and modified from anywhere in your code.
+    
+- **Function scope:** Variables declared inside a function have function scope. They are only accessible within that function.
+    
+- **Block scope:** Variables declared with `let` or `const` inside a block (e.g., inside an `if` statement or a loop) have block scope. They are only accessible within that block.
+    
+
+A **local scope** generally refers to either function scope or block scope, meaning the variable is only accessible within a limited region of the code.
+
+Finally, **module scopes** provide a way to encapsulate variables within a module, preventing them from polluting the global scope and allowing for better organization and reusability of code.
