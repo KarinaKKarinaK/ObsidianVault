@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Technical Skills/Technical Roadmap/Roadmap Draft.md",
+                "file": "Technical Skills/Notes/02 - JS and TS.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Roadmap Draft"
+              "title": "02 - JS and TS"
             }
           },
           {
@@ -34,23 +34,8 @@
               "icon": "lucide-file",
               "title": "Obsidian Structure Blueprint"
             }
-          },
-          {
-            "id": "87ffc7bc4fdcf231",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Technical Skills/Notes/01 - Foundations.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "01 - Foundations"
-            }
           }
-        ],
-        "currentTab": 2
+        ]
       }
     ],
     "direction": "vertical"
@@ -210,23 +195,27 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "87ffc7bc4fdcf231",
+  "active": "a1b3884921e7890d",
   "lastOpenFiles": [
+    "Technical Skills/Technical Roadmap/Roadmap Blueprint.md",
+    "Technical Skills/Technical Roadmap/Obsidian Structure Blueprint.md",
+    "Technical Skills/Notes/02 - JS and TS.md",
+    "Technical Skills/Notes/01 - Foundations.md",
+    "Pasted image 20251226212759.png",
+    "Technical Skills/Technical Roadmap/Roadmap Draft.md",
+    "Technical Skills/Notes/Subtopics/Reflections.md",
+    "Baryonic vs Non-baryonic matter.md",
+    "Curiosities",
     "Data Structures & Algorithms/DSA Midterm/Basic Algorithms.md",
     "Data Structures & Algorithms/DSA Midterm/!!! Pre-Exam Review.md",
     "Data Structures & Algorithms/DSA Midterm/Basic Data Structures.md",
     "Data Structures & Algorithms/Final Exam Qs.md",
     "Data Structures & Algorithms/Main Review Resources.md",
     "Data Structures & Algorithms/Course-evaluation-Mock-exam.pdf",
-    "Technical Skills/Notes/01 - Foundations.md",
     "Screenshot 2025-12-20 at 8.20.46 PM.png",
     "Pasted image 20251220202008.png",
-    "Technical Skills/Technical Roadmap/Obsidian Structure Blueprint.md",
-    "Technical Skills/Technical Roadmap/Roadmap Draft.md",
-    "Technical Skills/Technical Roadmap/Roadmap Blueprint.md",
     "Technical Skills/Notes/Subtopics/(AI) Chips.md",
     "Technical Skills/Notes/Subtopics/LLMs.md",
-    "Technical Skills/Notes/Subtopics/Reflections.md",
     "Technical Skills/Notes/08 - UI+UX.md",
     "Technical Skills/Notes/05 - Databases.md",
     "Technical Skills/Notes/11 - Basic Hardware.md",
@@ -237,14 +226,11 @@
     "Technical Skills/Notes/07 - DevOps.md",
     "Technical Skills/Notes/06 - System Design.md",
     "Technical Skills/Notes/03 - React & Next.md",
-    "Technical Skills/Notes/02 - JS and TS.md",
     "Technical Skills/Notes",
     "Linear Algebra & Calc/Linear Algebra Notes.md",
     "Technical Skills/Technical Roadmap/Daily Check List.md",
     "Technical Skills",
     "Technical Skills/Technical Roadmap",
-    "Linear Algebra & Calc/Calculus.md",
-    "Multi Agent Systems/Overview Notes.md",
     "Quantitative Trading/Screenshot 2025-11-25 at 11.52.35.png",
     "Multi Agent Systems",
     "Quantitative Trading/量化绿皮书.pdf",
@@ -254,10 +240,8 @@
     "Quantitative Trading/Screenshot 2025-11-24 at 17.15.07.png",
     "Quantitative Trading/Screenshot 2025-11-24 at 17.09.16.png",
     "Quantitative Trading/Screenshot 2025-11-24 at 17.06.27.png",
-    "Quantitative Trading/Screenshot 2025-11-24 at 14.58.09.png",
     "Quantitative Trading/Curated Notes",
     "Linear Algebra & Calc",
-    "Quantitative Trading/Topic Notes",
     "Untitled.canvas",
     "Untitled 1.canvas"
   ]

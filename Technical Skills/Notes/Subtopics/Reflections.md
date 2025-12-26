@@ -1,0 +1,1 @@
+methods like quantum annealing, variational quantum optimization, variational quantum eigensolver and quantummachine learning, and learn how to execute these methods on a classical simulator or a cloud-based quantumcomputer
