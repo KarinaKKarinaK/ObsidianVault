@@ -92,8 +92,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200,
-    "collapsed": true
+    "width": 200
   },
   "right": {
     "id": "99bcb3fc9cbeeafd",
@@ -198,14 +197,17 @@
   },
   "active": "a1b3884921e7890d",
   "lastOpenFiles": [
+    "Technical Skills/Notes/01 - Foundations.md",
+    "Technical Skills/Notes/Subtopics/Reflections.md",
+    "Technical Skills/Notes/Subtopics/LLMs.md",
+    "Technical Skills/Notes/Subtopics/(AI) Chips.md",
+    "Technical Skills/Notes/07 - DevOps.md",
+    "Technical Skills/Notes/06 - System Design.md",
     "Technical Skills/Notes/05 - Databases.md",
     "Technical Skills/Notes/04 - Backend APIs.md",
     "Technical Skills/Notes/03 - React & Next.md",
     "Technical Skills/Notes/02 - JS and TS.md",
-    "Technical Skills/Notes/01 - Foundations.md",
-    "Technical Skills/Notes/06 - System Design.md",
     "Technical Skills/Notes/08 - UI+UX.md",
-    "Technical Skills/Notes/07 - DevOps.md",
     "Technical Skills/Notes/09 - Machine Learning.md",
     "Technical Skills/Notes/10 - Algorithms.md",
     "Technical Skills/Notes/11 - Basic Hardware.md",
@@ -214,9 +216,6 @@
     "Pasted image 20260108165155.png",
     "Pasted image 20260108164003.png",
     "Pasted image 20260107205527.png",
-    "Technical Skills/Notes/Subtopics/Reflections.md",
-    "Technical Skills/Notes/Subtopics/LLMs.md",
-    "Technical Skills/Notes/Subtopics/(AI) Chips.md",
     "Technical Skills/Technical Roadmap/Roadmap Blueprint.md",
     "Technical Skills/Technical Roadmap/Obsidian Structure Blueprint.md",
     "Pasted image 20251226212759.png",

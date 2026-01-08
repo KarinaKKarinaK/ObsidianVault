@@ -130,3 +130,6 @@ Modern systems thrive on **asynchronous communication** and **service isolati
 
 ### Further resources:
 - https://www.systemdesignhandbook.com/guides/system-design/
+- https://roadmap.sh/system-design - FAVORITE, mind-map style
+- https://github.com/donnemartin/system-design-primer 
+- Nice "how to learn system design" overview: https://medium.com/@himanshusingour7/how-i-learned-system-design-d7444d454367
