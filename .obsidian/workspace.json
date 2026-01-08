@@ -41,16 +41,16 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Technical Skills/Notes/06 - System Design.md",
+                "file": "Technical Skills/Notes/11 - Basic Hardware.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "06 - System Design"
+              "title": "11 - Basic Hardware"
             }
           }
         ],
-        "currentTab": 1
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -210,16 +210,25 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "c4f1b8f7ae6b228c",
+  "active": "087a31ca56537f3c",
   "lastOpenFiles": [
+    "Data Structures & Algorithms/DSA Final/My All  Notes.md",
+    "Technical Skills/Notes/01 - Foundations.md",
+    "Technical Skills/Notes/08 - UI+UX.md",
+    "Technical Skills/Notes/09 - Machine Learning.md",
+    "Technical Skills/Notes/10 - Algorithms.md",
+    "Technical Skills/Notes/11 - Basic Hardware.md",
+    "Technical Skills/Notes/02 - JS and TS.md",
     "Technical Skills/Technical Roadmap/Obsidian Structure Blueprint.md",
-    "Technical Skills/Notes/04 - Backend APIs.md",
+    "Technical Skills/Technical Roadmap/Roadmap Blueprint.md",
+    "Technical Skills/Technical Roadmap/Roadmap Draft.md",
+    "Untitled 1.base",
+    "Untitled.base",
     "Technical Skills/Notes/06 - System Design.md",
+    "Technical Skills/Notes/04 - Backend APIs.md",
     "Technical Skills/Notes/05 - Databases.md",
     "Technical Skills/Notes/07 - DevOps.md",
     "Technical Skills/Technical Roadmap/Daily Check List.md",
-    "Untitled 1.base",
-    "Untitled.base",
     "Artificial Intelligence/Business/AI Startups.md",
     "Technical Skills/Assets/Screenshot 2025-12-20 at 8.20.46 PM.png",
     "Technical Skills/Assets/Pasted image 20251220202008.png",
@@ -229,31 +238,22 @@
     "Physics",
     "Technical Skills/Notes/81cc39d3-aafa-45c0-af31-9be4e10e9083.pdf",
     "Technical Skills/Assets/Pasted image 20260108174754.png",
-    "Technical Skills/Notes/01 - Foundations.md",
     "Technical Skills/Notes/Subtopics/Reflections.md",
     "Technical Skills/Notes/Subtopics/LLMs.md",
     "Technical Skills/Notes/Subtopics/(AI) Chips.md",
     "Technical Skills/Notes/03 - React & Next.md",
-    "Technical Skills/Notes/02 - JS and TS.md",
-    "Technical Skills/Notes/08 - UI+UX.md",
-    "Technical Skills/Notes/09 - Machine Learning.md",
-    "Technical Skills/Notes/10 - Algorithms.md",
-    "Technical Skills/Notes/11 - Basic Hardware.md",
     "Technical Skills/Assets/Pasted image 20260108170411.png",
     "Technical Skills/Assets/Pasted image 20260108165748.png",
     "Technical Skills/Assets/Pasted image 20260108165155.png",
     "Technical Skills/Assets/Pasted image 20260108164003.png",
     "Technical Skills/Assets/Pasted image 20260107205527.png",
-    "Technical Skills/Technical Roadmap/Roadmap Blueprint.md",
     "Technical Skills/Assets/Pasted image 20251226212759.png",
-    "Technical Skills/Technical Roadmap/Roadmap Draft.md",
     "Physics/Baryonic vs Non-baryonic matter.md",
     "Curiosities",
     "Data Structures & Algorithms/DSA Midterm/Basic Algorithms.md",
     "Data Structures & Algorithms/DSA Midterm/!!! Pre-Exam Review.md",
     "Data Structures & Algorithms/DSA Midterm/Basic Data Structures.md",
     "Data Structures & Algorithms/Final Exam Qs.md",
-    "Data Structures & Algorithms/Main Review Resources.md",
     "Data Structures & Algorithms/Course-evaluation-Mock-exam.pdf",
     "Technical Skills/Notes/Subtopics",
     "Technical Skills/Notes",
