@@ -159,3 +159,29 @@ Adapted from: [A Medium Post](https://medium.com/@bhanuchaddha/demystifying-devo
 - Amazon Web Services
 - Google Cloud Platform
 - Microsoft Azure
+
+### Monitoring
+
+- Metrics
+    
+- Alerts
+    
+- SLIs & SLOs
+
+### Logging
+
+- Structured logs
+    
+- Log aggregation
+    
+- Correlation IDs
+
+## Reliability Engineering (SRE)
+
+- Error budgets
+    
+- Chaos engineering
+    
+- Incident response
+    
+- Postmortems
