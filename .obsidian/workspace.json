@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Technical Skills/Technical Roadmap/Obsidian Structure Blueprint.md",
+                "file": "Technical Skills/Notes/08 - UI+UX.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Obsidian Structure Blueprint"
+              "title": "08 - UI+UX"
             }
           },
           {
@@ -50,7 +50,7 @@
             }
           }
         ],
-        "currentTab": 2
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -210,12 +210,12 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "087a31ca56537f3c",
+  "active": "c4f1b8f7ae6b228c",
   "lastOpenFiles": [
-    "Technical Skills/Notes/05 - Databases.md",
-    "Technical Skills/Notes/06 - System Design.md",
-    "Technical Skills/Notes/04 - Backend APIs.md",
     "Technical Skills/Technical Roadmap/Obsidian Structure Blueprint.md",
+    "Technical Skills/Notes/04 - Backend APIs.md",
+    "Technical Skills/Notes/06 - System Design.md",
+    "Technical Skills/Notes/05 - Databases.md",
     "Technical Skills/Notes/07 - DevOps.md",
     "Technical Skills/Technical Roadmap/Daily Check List.md",
     "Untitled 1.base",
