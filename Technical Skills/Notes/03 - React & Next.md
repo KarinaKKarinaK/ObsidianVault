@@ -1,0 +1,1 @@
+Instead of notes -> reading & practice (looking at code)

@@ -74,3 +74,5 @@ Variable scope determines the accessibility of variables in different parts of y
 A **local scope** generally refers to either function scope or block scope, meaning the variable is only accessible within a limited region of the code.
 
 Finally, **module scopes** provide a way to encapsulate variables within a module, preventing them from polluting the global scope and allowing for better organization and reusability of code.
+
+***Rest of notes are in practice (coding itself)***
