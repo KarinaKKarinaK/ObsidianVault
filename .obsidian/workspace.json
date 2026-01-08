@@ -48,9 +48,23 @@
               "icon": "lucide-file",
               "title": "11 - Basic Hardware"
             }
+          },
+          {
+            "id": "96b92467af8a8bea",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Technical Skills/dal-lms-site review.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "dal-lms-site review"
+            }
           }
         ],
-        "currentTab": 2
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -210,14 +224,16 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "087a31ca56537f3c",
+  "active": "96b92467af8a8bea",
   "lastOpenFiles": [
+    "Technical Skills/Notes/11 - Basic Hardware.md",
+    "Technical Skills/dal-lms-site review.md",
+    "dal-lms-site",
     "Data Structures & Algorithms/DSA Final/My All  Notes.md",
     "Technical Skills/Notes/01 - Foundations.md",
     "Technical Skills/Notes/08 - UI+UX.md",
     "Technical Skills/Notes/09 - Machine Learning.md",
     "Technical Skills/Notes/10 - Algorithms.md",
-    "Technical Skills/Notes/11 - Basic Hardware.md",
     "Technical Skills/Notes/02 - JS and TS.md",
     "Technical Skills/Technical Roadmap/Obsidian Structure Blueprint.md",
     "Technical Skills/Technical Roadmap/Roadmap Blueprint.md",
@@ -253,11 +269,9 @@
     "Data Structures & Algorithms/DSA Midterm/Basic Algorithms.md",
     "Data Structures & Algorithms/DSA Midterm/!!! Pre-Exam Review.md",
     "Data Structures & Algorithms/DSA Midterm/Basic Data Structures.md",
-    "Data Structures & Algorithms/Final Exam Qs.md",
     "Data Structures & Algorithms/Course-evaluation-Mock-exam.pdf",
     "Technical Skills/Notes/Subtopics",
     "Technical Skills/Notes",
-    "Technical Skills",
     "Untitled.canvas",
     "Untitled 1.canvas"
   ]
