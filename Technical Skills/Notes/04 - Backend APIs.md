@@ -121,3 +121,116 @@ app.get("/users/:id", async (req, res) => {
 - Version APIs (`/api/v1/`)  
 - Use environment variables  
 - Log errors
+
+
+## REST Principles
+
+**REST (Representational State Transfer)** defines how APIs should behave.
+
+- **Client–server separation**  
+    → Client and server are independent
+    
+- **Statelessness**  
+    → Each request contains all required information
+
+- **Resource-based URLs**  
+    → Endpoints represent resources, not actions
+    - `/users`
+    - `/orders/123`
+
+- **HTTP methods**
+    
+    - `GET` → read
+        
+    - `POST` → create
+        
+    - `PUT/PATCH` → update
+        
+    - `DELETE` → remove
+        
+- **Standard HTTP status codes**
+    
+    - `200 = OK`
+        
+    - `400 = Bad Request`
+        
+    - `401 = Unauthorized`
+        
+    - `404 = Not Found`
+
+### API Design
+
+**API design** focuses on clarity, consistency, and usability.
+
+- **Clear naming**
+    
+- **Versioning**    
+    - E.g. `/v1/users`, versioning prevents breaking clients
+        
+- **Consistency**
+    
+    - Same patterns across endpoints
+        
+- **Pagination & filtering**
+	*Examples:*
+    - `?page=1&limit=20`
+    - `?status=active`
+        
+- **Error handling**
+    - Meaningful error messages + Predictable response format
+
+### Auth Strategies 
+
+**Authentication & authorization** control access to APIs.
+
+- **API keys** --> simple but limited security
+    
+- **JWT (JSON Web Tokens)**
+    
+    - Stateless authentication; sent in request headers
+    
+- **OAuth 2.0**
+    - Secure delegated access
+    - Used for third-party logins
+
+- **Role-based access control (RBAC)** --> Permissions based on user roles
+    
+
+### Rate Limiting
+
+**Rate limiting** protects APIs from abuse and overload.
+- Limits number of requests per user or IP
+- It **prevents:**
+    - DDoS attacks
+    - Server overload
+
+**Common strategies:**
+- Fixed window
+- Sliding window
+- Token bucket
+
+*Response example:* `429 Too Many Requests`
+
+### Caching Patterns
+
+**Caching** improves API performance and reduces load.
+
+- **Client-side caching** => Browser or app stores responses
+- **Server-side caching** => Cache frequent responses
+    
+- **HTTP caching headers**
+    - `Cache-Control`
+    - `ETag`
+
+- **Cache invalidation**: Update or clear cache when data changes
+Trade-off:  **Speed vs data "freshness"**
+
+
+#### API Memory Shortcuts:
+
+**REST = rules**  
+**Design = clarity**  
+**Auth = security**  
+**Rate limiting = protection**  
+**Caching = speed**
+

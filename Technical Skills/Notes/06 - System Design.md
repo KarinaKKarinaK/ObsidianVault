@@ -102,6 +102,24 @@ Modern systems thrive on **asynchronous communication** and **service isolati
 - **Microservices** break down monoliths into smaller, independently deployable services.
 - **Event-driven architectures** use message queues (Kafka, RabbitMQ) to decouple producers and consumers, enabling resilience and scalability.
 
+### Microservices vs Monolith
+
+- **Monolith** ==> one big application
+- **Microservices** ==> many small applications working together
+
+| Aspect                        | Monolith                            | Microservices                             |
+| ----------------------------- | ----------------------------------- | ----------------------------------------- |
+| **Structure**                 | One single codebase and application | Many small, independent services          |
+| **Deployment**                | Entire app deployed together        | Each service deployed separately          |
+| **Complexity**                | Simple to build and understand      | More complex to design and manage         |
+| **Scalability**               | Harder to scale specific parts      | Easy to scale only what’s needed          |
+| **Development speed (early)** | Faster at the beginning             | Slower setup at first                     |
+| **Development speed (later)** | Slows down as app grows             | Faster for large teams                    |
+| **Fault isolation**           | One bug can crash everything        | Failures are isolated to one service      |
+| **Technology choice**         | One tech stack                      | Different services can use different tech |
+| **Communication**             | In-process function calls           | Network calls (APIs, messages)            |
+| **Best for**                  | Small or early-stage applications   | Large, scalable, high-traffic systems     |
+
 ## Event-Driven Architecture
 
 - Components react to events
@@ -127,6 +145,7 @@ Modern systems thrive on **asynchronous communication** and **service isolati
 6. **Address trade-offs** (e.g. consistency vs availability, simplicity vs scalability, latency vs cost)
 7. **Security, observabilitry, and maintainability**
 	- Include **authentication, authorization, encryption, and secure data storage**. Add **monitoring and alerting pipelines**. Emphasize maintainability; **versioning APIs, automating deployments, and ensuring documentation.**
+
 
 ### Further resources:
 - https://www.systemdesignhandbook.com/guides/system-design/
