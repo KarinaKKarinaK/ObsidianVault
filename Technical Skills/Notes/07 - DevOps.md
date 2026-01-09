@@ -102,16 +102,16 @@ Adapted from: [A Medium Post](https://medium.com/@bhanuchaddha/demystifying-devo
 - **Kubernetes**: Kubernetes is an open-source DevOps tool used to automate deployment and management of containerized applications & perhaps one of the most popular container orchestration tools.
 - also Mesos
 
-|Aspect|Docker|Kubernetes|
-|---|---|---|
-|**What it is**|Tool to package and run applications|Tool to manage many containers|
-|**Main purpose**|Create and run containers|Orchestrate (control) containers|
-|**Focus**|Single application or container|Large-scale container systems|
-|**Scaling**|Manual or limited|Automatic scaling|
-|**Container management**|Runs containers|Deploys, scales, heals containers|
-|**Fault handling**|If container fails, it stops|Automatically restarts failed containers|
-|**Typical use**|Development, testing, small apps|Production, large systems|
-|**Relationship**|Creates containers|Uses Docker containers|
+| Aspect                   | Docker                               | Kubernetes                               |
+| ------------------------ | ------------------------------------ | ---------------------------------------- |
+| **What it is**           | Tool to package and run applications | Tool to manage many containers           |
+| **Main purpose**         | Create and run containers            | Orchestrate (control) containers         |
+| **Focus**                | Single application or container      | Large-scale container systems            |
+| **Scaling**              | Manual or limited                    | Automatic scaling                        |
+| **Container management** | Runs containers                      | Deploys, scales, heals containers        |
+| **Fault handling**       | If container fails, it stops         | Automatically restarts failed containers |
+| **Typical use**          | Development, testing, small apps     | Production, large systems                |
+| **Relationship**         | Creates containers                   | Uses Docker containers                   |
 
 **Application Performance Monitoring**
 - **Prometheus** = open-source and community driven performance monitoring solution; supports container monitoring and creates alerts based on time series data.
