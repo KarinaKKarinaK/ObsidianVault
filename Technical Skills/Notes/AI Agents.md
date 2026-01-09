@@ -51,3 +51,8 @@ Fine-tuning = adapting a model's style and refining it's knwoeldge on a specific
 Common & effective **orchestration pattern** --> **ReAct (Reason + Action) == a framework** that synergizes the reasoning & acting capabilities of LLMs.
 - it sets a dynamic, multi-turn loop where the model generates both reasoning traces (thoughts) and task-specific actions in an interleaved manner
 	- this allows for greater synergy --> reaosning helps the model track & update action plans, while actions gather info from external tools to inform the reasoning process.
+
+**How this pattern works:**
+1. **Reason:** agent assesses goal & current state, forms a hypothesis abot the next best step & whether a tool is required
+2. **Act:** agent selects & invokes the appropriate tool
+3. **Observe:** agent receives the output from the tool. This new info is integrated into the agent's context and feeds into the next Reason step of the cycle.
