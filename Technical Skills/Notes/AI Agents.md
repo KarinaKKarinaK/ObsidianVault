@@ -35,4 +35,13 @@ Fine-tuning = adapting a model's style and refining it's knwoeldge on a specific
 		- a structured knowledge base for fact-based grounding via retrieval-augmented generation (RAG)
 		- a persistent store for user interaction history to enable a continuous, personalized experience
 		- an operational data lake for raw material like conversation transcripts and workflow states (for more complex cognitive processes and future analytics).
-2. 
+2. **Working memory (conversational context & short-term state)**
+	- this layer manages the transit info needed for and ongoing task or conversation.
+	- must provide extremely low-latency access to maintain a responsive user experience
+3. **Transactional memory (state management and action auditing)**
+	- this layer records actions and state changes with consistency & integrity
+	- serves as the system of record, (often requires ACID guarantees to ensure reliability)
+
+## Agent Orchestration - The Executive Function
+
+**Orchestration** == the opertional core which guides the agent through a multi-step task
