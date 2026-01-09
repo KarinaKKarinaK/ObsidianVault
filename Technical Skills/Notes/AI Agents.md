@@ -45,3 +45,9 @@ Fine-tuning = adapting a model's style and refining it's knwoeldge on a specific
 ## Agent Orchestration - The Executive Function
 
 **Orchestration** == the opertional core which guides the agent through a multi-step task
+- for any task that **requires more than one step**, orchetsration determines **which tools** are needed, **in what sequence**, and **how their outputs should be combined** to achieve a final goal.
+- "responsible for planning and decision-making"
+
+Common & effective **orchestration pattern** --> **ReAct (Reason + Action) == a framework** that synergizes the reasoning & acting capabilities of LLMs.
+- it sets a dynamic, multi-turn loop where the model generates both reasoning traces (thoughts) and task-specific actions in an interleaved manner
+	- this allows for greater synergy --> reaosning helps the model track & update action plans, while actions gather info from external tools to inform the reasoning process.
