@@ -56,3 +56,43 @@ Common & effective **orchestration pattern** --> **ReAct (Reason + Action) == a 
 1. **Reason:** agent assesses goal & current state, forms a hypothesis abot the next best step & whether a tool is required
 2. **Act:** agent selects & invokes the appropriate tool
 3. **Observe:** agent receives the output from the tool. This new info is integrated into the agent's context and feeds into the next Reason step of the cycle.
+
+## Runtime: Deploying Agents At Scale
+
+Deploying an agent into production requires robust **runtime architecture**. Handling complex **operational requirements** like **security, load balancing, and error handling.**
+
+Production-grade runtime environment for AI agents must provide several core capabilities:
+- **Scalability:** automatic scaling (from zero to million requests); thsi includes both request-based load balancing and resource-based
+- **Security:** managing identity, network access ontrols, secure communication channels (to protect the agent and the data it accesses).
+- **Reliability & Observability:** mechanisms for error handling, autom atic retries, comprehensive monitoring (this involves: logging agent actions & tool outputs, and cvollecting metrics on performance and resource utilization to diagnose & resolve issues)
+
+# The Role Of Grounding In Agentic Systems + RAG
+The **agent's credibility & usefulness** depends on its ability to provide **accurate, trustworthy answers** based on **verifiable facts**, a process known as **grounding**.
+
+***RAG grounds an agent by retrieving text based on semantic similarity.***
+
+- **Retrieving text**: fetching relevant documents or passages from a knowledge source.
+    
+- **Grounding**: constraining the model’s responses to be based on retrieved, factual information.
+    
+- **Semantic similarity**: measuring how close in meaning two pieces of text are, not just their exact words.
+
+**GraphRAG =>** enriches grounding by understanding the explicit relationships between data points in a knowledge graph.
+
+**Agentic RAG =>** the agent is no longer a passive recipient of info but rather an active, reasoning participant in the retrieval process itself, capable of executing m ulti-step strategies to find the best possible answer.
+
+### RAG:
+- The RAG approach **enhances an LLM's responses** by **retrieving relevant info** from an **external knowledge base** before generating an answer.
+- Instead of relying solely on its pre-trained knowledge, the agent performs semantic search to find verifiable data, which is then passed to the LLM in context. (ensures a basleine of grounded, verifiable answers).
+- **Limitations:** its a simple retrieve-then-generate process whcih treats knwoeldge as **a flat collection of disconnected facts**, its effective for **direct question-answering**, but it falls short on **complex queries that require a deeper understanding of the relationships between data points**.
+- **Benefits:**
+	- **Agents can access the latest info =>** retrieved info is more current than the one from the agent's last training date
+	- **Agents are more accurate =>** RAG reduces risk of outputs that could lead to incorrect or inappropriate agentic actions
+	- **Faster responses** => vector embeddings and specialized databases enable really fast semantic searches of massive datasets, so agents can deliver more responsive, timely decisions.
+	- **More comprehensive agent awareness** => the **RAG workflow** (which consists of **ingesting, parsing, chunking, embedding, storing, and retrieving**) can be applied to text, images, and other data types. With this **deeper understanding** --> agents can perform more complex, multistep reasoning tasks.
+
+
+![[Pasted image 20260110142912.png]]
+
+
+### Vector Databases: Search by meaning
