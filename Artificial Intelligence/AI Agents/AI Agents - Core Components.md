@@ -77,7 +77,7 @@ The **agent's credibility & usefulness** depends on its ability to provide **acc
     
 - **Semantic similarity**: measuring how close in meaning two pieces of text are, not just their exact words.
 
-**GraphRAG =>** enriches grounding by understanding the explicit relationships between data points in a knowledge graph.
+**GraphRAG =>** enriches grounding by understanding the explicit relationships between data points in a knowledge graph. (Rather than just matching similar phrases, the agent understands how concepts relate)
 
 **Agentic RAG =>** the agent is no longer a passive recipient of info but rather an active, reasoning participant in the retrieval process itself, capable of executing m ulti-step strategies to find the best possible answer.
 
@@ -95,4 +95,33 @@ The **agent's credibility & usefulness** depends on its ability to provide **acc
 ![[Pasted image 20260110142912.png]]
 
 
-### Vector Databases: Search by meaning
+## Vector Databases: Search by meaning
+
+"A **vector database** is a specialized database designed to efficiently store, index, and search high-dimensional numerical representations (called **vector embeddings**) of unstructured data like text, images, audio, and video"
+
+**Vector embeddings** --> gives the ability to search by meaning, not just keywords.
+- these **numerical representations** capture the **conceptual essence of data** (like text and images), allowing a system **to find relevant information no matter how a question is phrased.**
+- **Vector databases** --> the infrastructure that makes this possible at scale
+	- highly specialized systems deisgned to store, index, and query millions of these embeddings with the etxremely low latency required for a responsive agentic system.
+
+##### **How it works:**
+1. **Data is transformed into vector embeddings =>** the ML model places semantically similar items close together in a multidimensional vector space
+2. **Storage & indexing =>** the **vector database stores these embeddings** and **builds specialized indexes** to enable **fast and efficient similiarity searches.**
+3. **Querying** => the **user's query is converted into an embedding** using the **same model.** The database the**n finds the embeddings in its index that are closest to the query embedding**, in this way, retrieving the **most semantically relevant information** to ground the model's response.
+
+
+
+![[Pasted image 20260110143054.png]]
+![[Pasted image 20260110143110.png]]
+
+#### Agentic RAG: Dynamic reasoning and retrieval
+
+Agentic RAG forms a central pillar of the **context layer**, allowing **AI agents** to **iteratively find, retrieve, and reason** over **ground truth data** before generating a final answer.
+
+**Key idea:** *"The future is multi-LLM: different models for different tasks, connected by a model- and data-agnostic context layer that unlocks their full potential."*
+
+**Tips:** use the **"retrieve and re-rank approach"** => addressing the trade-off between recall (finding all relevant documents) and precision (ensuring every retrieved document is relevant).
+- it first **widens the recall aperture** to retrieve a **larger-than-needed set of candidate documents**. Secondly, this larger set is **passed to the LLM or a specialized re-ranking service**, which **identifies the most relevant documents and discards any that are irrelevant or semantically opposite.**
+
+## Key Takeaways - Agent Components
+![[Google_ Startup technical guide AI agents.jpeg]]
