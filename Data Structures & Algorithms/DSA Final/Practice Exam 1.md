@@ -103,7 +103,7 @@ A, B, and C are true statements.
 
 **Correct Answer: C. $O(1)$**
 
-**Explanation:** For both Min-Heaps and Max-Heaps, the minimum (or maximum) element is always stored at the root (index 0 or 1). Therefore, the `Find min` operation only requires reading the root of the heap. This operation has a running time of **$O(1)$**.
+**Explanation:** For both [[Min-Heaps]] and Max-Heaps, the minimum (or maximum) element is always stored at the root (index 0 or 1). Therefore, the `Find min` operation only requires reading the root of the heap. This operation has a running time of **$O(1)$**.
 
 ### Question 5: Graph Search Memory Usage
 

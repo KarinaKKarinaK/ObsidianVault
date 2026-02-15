@@ -41,7 +41,7 @@ Every level (but possibly the last) is filled
 
 The **BUILD-MAX-HEAP,** procedure can be used to sort an un-ordered array, in log-linear running time
 ![[Screenshot 2025-10-17 at 18.51.51.png]]
-The **HEAPSORT(A,n)** procedure satisfies the **loop invariant**: 
+The **HEAPSORT(A,n)** procedure satisfies the **[[Loop Invariant]]**: 
 - At the start of iteration i - The subarray A[1:i] is a max-heap containing the smallest elements. 
 - The subarray A[i+1:n] contains the rest and is sorted.
 

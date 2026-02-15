@@ -20,7 +20,7 @@ In DDD, **_strategic patterns_ are large-grained patterns used to distill the 
 - **Bounded Context:** The ubiquitous language makes sense in a specific context. An “account” means different things whether you see it in a banking context (a bank account) or in a user management context (a user account).  
     In DDD we call this kind of context a _bounded context_. **A bounded context defines a clear conceptual boundary around a whole application or a part of it**. Outside the _bounded context_, the same word may (and certainly does) means something totally different. _Bounded context_ forms the second pillar of DDD.
 
-**DAL DDD (Exam Prep AI LMS specific) ==** core = assessment & personalization intelligence; subdomains = everything that lets it run safely at scale (users, ops, governance, infra)
+**DAL DDD ([[Exam Prep]] AI LMS specific) ==** core = assessment & personalization intelligence; subdomains = everything that lets it run safely at scale (users, ops, governance, infra)
 
 ![[Pasted image 20260116182212.png]]
 

@@ -1,4 +1,4 @@
-Below is a **clean, simple, intuitive explanation** of every key concept relevant to Optiver, quant trading, and market making. This is designed so you understand the ideas _deeply_, not just as definitions.
+Below is a **clean, simple, intuitive explanation** of every key concept relevant to Optiver, quant trading, and [[Market Making]]. This is designed so you understand the ideas _deeply_, not just as definitions.
 
 I will explain them in layers:  
 • What it is  

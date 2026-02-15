@@ -314,7 +314,7 @@ Ontology population involves filling the ontology with instances. Data sources (
     - LMs bring strong language understanding, enabling alignment of linguistic variations without relying solely on external dictionaries.
     - **BERTMap:** Uses domain-specific corpora to fine-tune BERT for alignment tasks, leveraging entity names and aliases as text corpus inputs.
     - **Retrieve-then-Rerank:** A hybrid approach for large ontologies, where an efficient Retriever (e.g., BERT) narrows candidates down, and a Re-ranker (e.g., GPT/Gemini) provides deeper, fine-grained reasoning.
-    - **Agentic Workflow:** Utilizing LLMs as autonomous agents equipped with tools like a **SPARQL Engine**, **Semantic Retriever**, and **Ontology Reasoner** to dynamically plan and execute alignment decisions.
+    - **Agentic Workflow:** Utilizing [[LLMs]] as autonomous agents equipped with tools like a **SPARQL Engine**, **Semantic Retriever**, and **Ontology Reasoner** to dynamically plan and execute alignment decisions.
 3. **Data Integration Summary:**
     
     - Transform external information into RDF if necessary.

@@ -54,10 +54,10 @@ Prolog is a **logic-based programming language** that focuses on the description
 
 #### B. Prolog Framework and Components
 
-A Prolog system consists of a **Knowledge Base** (KB) and **Queries**:
+A Prolog system consists of a **Knowledge Base** (KB) and **[[Queries]]**:
 
 1. **Knowledge Base:** Stores **Facts** and **Rules** in `.pl` files.
-2. **Queries:** Posted from the shell, starting with `?-`.
+2. **[[Queries]]:** Posted from the shell, starting with `?-`.
 
 #### C. Definitions of Prolog Syntax
 

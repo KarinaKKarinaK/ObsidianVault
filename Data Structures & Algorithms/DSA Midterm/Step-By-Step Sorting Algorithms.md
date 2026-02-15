@@ -21,7 +21,7 @@
 
 ✅ Sorted in **O(n²)** worst case.
 
-**Exam tip**: Mention the **loop invariant**: At the beginning of each iteration `i`, subarray `A[1..i-1]` is sorted.
+**Exam tip**: Mention the **[[Loop Invariant]]**: At the beginning of each iteration `i`, subarray `A[1..i-1]` is sorted.
 
 ---
 

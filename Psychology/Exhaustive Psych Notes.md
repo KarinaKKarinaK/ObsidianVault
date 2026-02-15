@@ -7,7 +7,7 @@
 #### **1. Core Concepts and Definitions**
 
 - **Psychological Science:** The **scientific study of mind, brain, and behaviour**.
-- **Mind/Body Problem:** Modern psychology rejects **dualism** (mind and body are separate) and agrees that the mind arises from **brain activity**.
+- **Mind/Body Problem:** Modern [[Psychology]] rejects **dualism** (mind and body are separate) and agrees that the mind arises from **brain activity**.
 - **Nature vs. Nurture:** Both genetics (nature) and environment (nurture) **continuously interact** to shape behaviour.
 - **Genome:** The entire set of genes in an organism, acting as the blueprint.
 - **Genotype:** The **genetic makeup** of an individual, determined at conception and constant throughout life.
@@ -41,7 +41,7 @@
 - **Variation among individuals** of a population is an **essential condition for evolutionary change**
 - **Natural Selection (Darwin):** The core mechanism of evolution. Traits that improve survival and reproduction are passed on.
 - **Three Conditions for Natural Selection:** 1. **Variation** in traits, 2. **Differential survival and reproduction**, 3. **Heritability** of advantageous traits.
-- **Evolutionary Psychology:** Focuses on how natural selection shapes psychological traits (e.g., forming social bonds for survival).
+- **Evolutionary [[Psychology]]:** Focuses on how natural selection shapes psychological traits (e.g., forming social bonds for survival).
 
 ---
 

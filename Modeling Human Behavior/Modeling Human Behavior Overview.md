@@ -12,7 +12,7 @@ Agent-Based Modeling is a computational modeling approach in which a system is r
 - Interacting locally
     
 - Producing macro-level patterns that emerge from micro-level rules
-    
+
 
 Key principle:
 

@@ -248,5 +248,5 @@ Goal: find the k-th smallest element.
 ---
 # Dictionary
 
-**Loop Invariant:**
+**[[Loop Invariant]]:**
 - a condition or property about program variables that is true immediately before and after every iteration of a loop

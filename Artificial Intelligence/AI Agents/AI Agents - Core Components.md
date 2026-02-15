@@ -48,7 +48,7 @@ Fine-tuning = adapting a model's style and refining it's knwoeldge on a specific
 - for any task that **requires more than one step**, orchetsration determines **which tools** are needed, **in what sequence**, and **how their outputs should be combined** to achieve a final goal.
 - "responsible for planning and decision-making"
 
-Common & effective **orchestration pattern** --> **ReAct (Reason + Action) == a framework** that synergizes the reasoning & acting capabilities of LLMs.
+Common & effective **orchestration pattern** --> **ReAct (Reason + Action) == a framework** that synergizes the reasoning & acting capabilities of [[LLMs]].
 - it sets a dynamic, multi-turn loop where the model generates both reasoning traces (thoughts) and task-specific actions in an interleaved manner
 	- this allows for greater synergy --> reaosning helps the model track & update action plans, while actions gather info from external tools to inform the reasoning process.
 
@@ -84,7 +84,7 @@ The **agent's credibility & usefulness** depends on its ability to provide **acc
 ### RAG:
 - The RAG approach **enhances an LLM's responses** by **retrieving relevant info** from an **external knowledge base** before generating an answer.
 - Instead of relying solely on its pre-trained knowledge, the agent performs semantic search to find verifiable data, which is then passed to the LLM in context. (ensures a basleine of grounded, verifiable answers).
-- **Limitations:** its a simple retrieve-then-generate process whcih treats knwoeldge as **a flat collection of disconnected facts**, its effective for **direct question-answering**, but it falls short on **complex queries that require a deeper understanding of the relationships between data points**.
+- **Limitations:** its a simple retrieve-then-generate process whcih treats knwoeldge as **a flat collection of disconnected facts**, its effective for **direct question-answering**, but it falls short on **complex [[Queries]] that require a deeper understanding of the relationships between data points**.
 - **Benefits:**
 	- **Agents can access the latest info =>** retrieved info is more current than the one from the agent's last training date
 	- **Agents are more accurate =>** RAG reduces risk of outputs that could lead to incorrect or inappropriate agentic actions

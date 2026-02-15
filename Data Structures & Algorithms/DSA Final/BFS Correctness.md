@@ -14,7 +14,7 @@ The rigorous proof that $v.d = \delta(s, v)$ is typically achieved by demonstrat
 
 #### 1. Upper Bound (Proof: $v.d \le \delta(s, v)$)
 
-This step establishes a loop invariant that $v.d$ is an upper bound on the shortest path distance: $\mathbf{v.d \le \delta(s, v)}$ for any vertex $v$.
+This step establishes a [[Loop Invariant]] that $v.d$ is an upper bound on the shortest path distance: $\mathbf{v.d \le \delta(s, v)}$ for any vertex $v$.
 
 - **Initialization:** For the source $s$, $s.d = 0 = \delta(s, s)$. For all other vertices $v$, $v.d = \infty$ (or $+1$), which trivially satisfies $v.d \ge \delta(s, v)$.
 - **Maintenance:** When an unexplored (white) vertex $v$ is discovered via vertex $u$, BFS sets $v.d = u.d + 1$. By the inductive hypothesis, $u.d \ge \delta(s, u)$. Since $\delta(s, v) \le \delta(s, u) + 1$ (triangle inequality), then $v.d = u.d + 1 \ge \delta(s, u) + 1 \ge \delta(s, v)$. Thus, $v.d$ remains an upper bound.

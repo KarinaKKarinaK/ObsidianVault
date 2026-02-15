@@ -6,7 +6,7 @@
 Single action rtaken on a database, a request presented in a predefined format. (e.g. SELECT, INSERT, UPDATE, or DELETE). "Query" can also describe a request from a user for information from a database
 
 **Transaction**  
-A transaction is a sequence of operations (queries) that make up a single unit of work performed against a database
+A transaction is a sequence of operations ([[Queries]]) that make up a single unit of work performed against a database
 
 **ACID: Atomicity, Consistency, Isolation, Durability** 
 In most popular databases, a transaction is only qualified as a transaction if it exhibits the four “ACID” properties:  
@@ -82,7 +82,7 @@ A JOIN operation combines rows from multiple tables in one query.
 **Normalization and Denormalization**
 - **Normalization** = the process of organizing the relations and attributes of a relational database in a way that reduces redundancy and improves data integrity (accurate, consistent, up-to-date data). 
 	- Data might be arranged based on dependencies between attributes, (e.g. we can prevent repeating information by using JOIN operations). 
-- **Denormalization** = the process of adding redundant data in order to speed up complex queries. We might include the data from one table in another to eliminate the second table and reduce the number of JOIN operations.
+- **Denormalization** = the process of adding redundant data in order to speed up complex [[Queries]]. We might include the data from one table in another to eliminate the second table and reduce the number of JOIN operations.
 
 **ORM: Object-Relational Mapping**  
 ORM = a technique for translating the logical representation of objects (as in object-oriented programming) into a more atomized form that is capable of being stored in a relational database (and back again when they are retrieved).
@@ -104,7 +104,7 @@ A "non-relational" database is one that doesn’t use the relational model; no r
 ![[Pasted image 20260108170411.png]]
 
 **Object or Object-Oriented Database**  
-Not as common as other non-relational databases, an object or object-oriented database is ones in which data is represented in the form of “objects” (with attributes and methods) as used in object-oriented programming. This type might be used in place of a relational database and ORM, and may make sense when the data is complex or there are complex many-to-many relationships involved. Beware its language dependence and difficulty with ad-hoc queries though.
+Not as common as other non-relational databases, an object or object-oriented database is ones in which data is represented in the form of “objects” (with attributes and methods) as used in object-oriented programming. This type might be used in place of a relational database and ORM, and may make sense when the data is complex or there are complex many-to-many relationships involved. Beware its language dependence and difficulty with ad-hoc [[Queries]] though.
 
 ### Common Architectures
 Client → API → Database  

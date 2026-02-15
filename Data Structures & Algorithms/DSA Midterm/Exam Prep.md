@@ -64,7 +64,7 @@ Make Obisdian notes using LLMs (from resources like: slides, book, past papers) 
     
 - **Stack/Queue implementation** → always test for **overflow/underflow**.
     
-- **Loop invariant** → use the 3-step proof (init, maintenance, termination).
+- **[[Loop Invariant]]** → use the 3-step proof (init, maintenance, termination).
     
 - **Sorting comparisons** → always contrast best vs worst case.
 
