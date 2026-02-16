@@ -27,12 +27,26 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Modeling Human Behavior/Shaping AI Agent Behavior.md",
+                "file": "Orq.ai/orq_ai_onboarding_guide.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Shaping AI Agent Behavior"
+              "title": "orq_ai_onboarding_guide"
+            }
+          },
+          {
+            "id": "e05de5bb2ea3c35c",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Orq.ai/agent_eval_strategy.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "agent_eval_strategy"
             }
           }
         ],
@@ -197,17 +211,17 @@
       "obisidian-note-linker:Note Linker": false
     }
   },
-  "active": "77837552dc6fb3a9",
+  "active": "cb16829698a60d7e",
   "lastOpenFiles": [
     "Orq.ai/agent_eval_strategy.md",
+    "Orq.ai/orq_ai_onboarding_guide.md",
+    "Modeling Human Behavior/Shaping AI Agent Behavior.md",
     "Screenshot 2026-02-12 at 2.09.20 PM.png",
     "Modeling Human Behavior/W2 Answers.md",
     "Modeling Human Behavior/Comparison Theory Tables.md",
     "Modeling Human Behavior/Agent-Based Modeling (ABM).md",
     "Orq.ai/Notes on Stuff.md",
-    "Orq.ai/orq_ai_onboarding_guide.md",
     "Untitled 1.base",
-    "Modeling Human Behavior/Shaping AI Agent Behavior.md",
     "Modeling Human Behavior/Modeling Human Behavior Overview.md",
     "Orq.ai",
     "Screenshot 2026-02-12 at 2.08.07 PM.png",

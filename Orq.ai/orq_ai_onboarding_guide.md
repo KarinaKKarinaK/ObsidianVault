@@ -1,4 +1,4 @@
-# AI Research Engineer Onboarding Guide - orq.ai
+qq# AI Research Engineer Onboarding Guide - orq.ai
 ## Prepared for Your First Day - February 16, 2026
 
 ---
