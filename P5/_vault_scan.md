@@ -8,28 +8,28 @@
 
 ### Files found
 
-| File | Type | Contents |
-|------|------|----------|
-| `CLAUDE_DATABASES.md` | Instructions | Complete build instructions for DB prep — video schedule (51 videos, ~770 min), daily schedule Apr 17–Jun 4, all 10 build steps, full topic checklist |
-| `other_resources.md` | Links | Notion notes links (vscos, applesauce, lausta) + exam review link |
-| `exercises/ExercisesModelling.pdf` | PDF | ER diagram exercises |
-| `exercises/ExercisesModellingSolution.pdf` | PDF | Solutions for modelling exercises |
-| `exercises/ExercisesNormalisation.pdf` | PDF | Normalisation / FD exercises |
-| `exercises/ExercisesNormalisationSolution.pdf` | PDF | Solutions for normalisation exercises |
-| `exercises/ExercisesSQL.pdf` | PDF | SQL exercises (likely Suppliers/Parts/Catalog schema) |
-| `exercises/ExercisesSQLSolution.pdf` | PDF | SQL exercise solutions |
-| `exercises/ExercisesTransactions.pdf` | PDF | Transaction / serialisability exercises |
-| `exercises/ExercisesTransactionsSolution.pdf` | PDF | Solutions for transaction exercises |
-| `past_exams/ExerciseExam (1).pdf` | PDF | Exercise exam (used as main practice exam in CLAUDE_DATABASES.md) |
-| `past_exams/ExerciseExamSolutions (1).pdf` | PDF | Solutions for exercise exam |
-| `slides/00_introduction.pdf` | Slides | Introduction to databases |
-| `slides/01_relational_model.pdf` | Slides | Relational model — schemas, keys, constraints |
-| `slides/02_data_modelling.pdf` | Slides | ER diagrams, cardinality, weak entities, ISA |
-| `slides/03_tranlation_to_relation.pdf` | Slides | ER → relational schema translation |
-| `slides/04_functional_dependencies.pdf` | Slides | FDs, canonical sets, BCNF, 3NF, 4NF |
-| `slides/05_sql.pdf` | Slides | SQL — all patterns including NOT EXISTS, aggregation |
-| `slides/06_transactions.pdf` | Slides | Transactions, 2PL, serialisability, isolation levels |
-| `slides/07_db_application_programming.pdf` | Slides | DB APIs, ANSI SPARC, ORM, prepared statements |
+| File                                           | Type         | Contents                                                                                                                                              |
+| ---------------------------------------------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `CLAUDE_DATABASES.md`                          | Instructions | Complete build instructions for DB prep — video schedule (51 videos, ~770 min), daily schedule Apr 17–Jun 4, all 10 build steps, full topic checklist |
+| `other_resources.md`                           | Links        | Notion notes links (vscos, applesauce, lausta) + exam review link                                                                                     |
+| `exercises/ExercisesModelling.pdf`             | PDF          | ER diagram exercises                                                                                                                                  |
+| `exercises/ExercisesModellingSolution.pdf`     | PDF          | Solutions for modelling exercises                                                                                                                     |
+| `exercises/ExercisesNormalisation.pdf`         | PDF          | Normalisation / FD exercises                                                                                                                          |
+| `exercises/ExercisesNormalisationSolution.pdf` | PDF          | Solutions for normalisation exercises                                                                                                                 |
+| `exercises/ExercisesSQL.pdf`                   | PDF          | SQL exercises (likely Suppliers/Parts/Catalog schema)                                                                                                 |
+| `exercises/ExercisesSQLSolution.pdf`           | PDF          | SQL exercise solutions                                                                                                                                |
+| `exercises/ExercisesTransactions.pdf`          | PDF          | Transaction / serialisability exercises                                                                                                               |
+| `exercises/ExercisesTransactionsSolution.pdf`  | PDF          | Solutions for transaction exercises                                                                                                                   |
+| `past_exams/ExerciseExam (1).pdf`              | PDF          | Exercise exam (used as main practice exam in CLAUDE_DATABASES.md)                                                                                     |
+| `past_exams/ExerciseExamSolutions (1).pdf`     | PDF          | Solutions for exercise exam                                                                                                                           |
+| `slides/00_introduction.pdf`                   | Slides       | Introduction to databases                                                                                                                             |
+| `slides/01_relational_model.pdf`               | Slides       | Relational model — schemas, keys, constraints                                                                                                         |
+| `slides/02_data_modelling.pdf`                 | Slides       | ER diagrams, cardinality, weak entities, ISA                                                                                                          |
+| `slides/03_tranlation_to_relation.pdf`         | Slides       | ER → relational schema translation                                                                                                                    |
+| `slides/04_functional_dependencies.pdf`        | Slides       | FDs, canonical sets, BCNF, 3NF, 4NF                                                                                                                   |
+| `slides/05_sql.pdf`                            | Slides       | SQL — all patterns including NOT EXISTS, aggregation                                                                                                  |
+| `slides/06_transactions.pdf`                   | Slides       | Transactions, 2PL, serialisability, isolation levels                                                                                                  |
+| `slides/07_db_application_programming.pdf`     | Slides       | DB APIs, ANSI SPARC, ORM, prepared statements                                                                                                         |
 
 ### Coverage assessment
 - All 7 lecture topics have slides ✓

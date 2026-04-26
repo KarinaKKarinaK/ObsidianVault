@@ -109,12 +109,14 @@
             "id": "fa34fd5ebcf875ad",
             "type": "leaf",
             "state": {
-              "type": "excalidraw",
+              "type": "markdown",
               "state": {
-                "file": "Excalidraw/Drawing 2026-04-21 20.03.37.excalidraw.md"
+                "file": "P5/CLAUDE_CODE_MASTER_PROMPT.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "excalidraw-icon",
-              "title": "Drawing 2026-04-21 20.03.37.excalidraw"
+              "icon": "lucide-file",
+              "title": "CLAUDE_CODE_MASTER_PROMPT"
             }
           }
         ],
@@ -282,8 +284,11 @@
   },
   "active": "fa34fd5ebcf875ad",
   "lastOpenFiles": [
-    "Challenge.md",
+    "P5/000 MOC — Exam Season 2026.md",
+    "P5/Courses/SP — Statistics & Probability/SP — Index.md",
+    "P5/_vault_scan.md",
     "Excalidraw/Drawing 2026-04-21 20.03.37.excalidraw.md",
+    "Challenge.md",
     "Excalidraw",
     "Research Notes.md",
     "Research.md",
@@ -316,9 +321,6 @@
     "ML/Lecture 5 — Deep Learning 1 (Autodiff & CNNs).md",
     "ML/Lecture 4 — Neural Networks & Backpropagation.md",
     "ML/Lecture 3 — Probabilistic Models.md",
-    "ML/Lecture 2 — Model Evaluation (Experiments + Metrics + Basic Stats).md",
-    "ML/Lecture 0 — What is ML.md",
-    "ML/Lecture 10 — Embedding Models & Recommenders.md",
     "Screenshot 2026-02-12 at 2.09.20 PM.png",
     "Screenshot 2026-02-12 at 2.08.07 PM.png",
     "DAL/ExamPrep AI/Start Decision Options Flow-2026-01-16-171718.png",

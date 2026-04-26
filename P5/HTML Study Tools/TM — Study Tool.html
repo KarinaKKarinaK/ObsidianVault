@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Text Mining — Study Tool</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f5f5;
+    --surface: #ffffff;
+    --surface2: #ececec;
+    --border: #d0d0d0;
+    --text: #111111;
+    --text2: #555555;
+    --accent: #3b7dd8;
+    --accent-light: #e8f0fb;
+    --green: #22863a;
+    --green-bg: #e6f4ea;
+    --red: #c0392b;
+    --red-bg: #fde8e6;
+    --yellow: #856404;
+    --yellow-bg: #fff8e1;
+    --radius: 12px;
+    --shadow: 0 2px 12px rgba(0,0,0,0.1);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #111418;
+      --surface: #1c2128;
+      --surface2: #252c37;
+      --border: #373e47;
+      --text: #e6edf3;
+      --text2: #8b949e;
+      --accent: #58a6ff;
+      --accent-light: #1c2e45;
+      --green: #3fb950;
+      --green-bg: #0d2218;
+      --red: #f85149;
+      --red-bg: #2d0f0e;
+      --yellow: #d29922;
+      --yellow-bg: #2b2107;
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  header h1 { font-size: 1.05rem; font-weight: 700; }
+  header span { font-size: 0.8rem; color: var(--text2); }
+  .tabs {
+    display: flex;
+    gap: 0;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    position: sticky;
+    top: 57px;
+    z-index: 99;
+  }
+  .tab-btn {
+    padding: 12px 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border: none;
+    background: transparent;
+    color: var(--text2);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    min-height: 44px;
+    transition: all 0.15s;
+  }
+  .tab-btn.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+    background: var(--surface);
+  }
+  .tab-btn:hover:not(.active) { color: var(--text); background: var(--surface); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+  .container { max-width: 800px; margin: 0 auto; padding: 24px 16px; }
+
+  /* ─── FLASHCARDS ─── */
+  .fc-controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .fc-counter { font-size: 0.875rem; color: var(--text2); flex: 1; }
+  .fc-progress {
+    height: 4px;
+    background: var(--surface2);
+    border-radius: 2px;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .fc-progress-bar {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 0.3s;
+  }
+  .fc-card-wrap {
+    perspective: 1000px;
+    height: 260px;
+    margin-bottom: 24px;
+    cursor: pointer;
+  }
+  .fc-card {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.4s cubic-bezier(0.4, 0.2, 0.2, 1);
+  }
+  .fc-card.flipped { transform: rotateY(180deg); }
+  .fc-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 28px;
+    text-align: center;
+    backface-visibility: hidden;
+  }
+  .fc-face.back {
+    background: var(--accent-light);
+    transform: rotateY(180deg);
+  }
+  .fc-face-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text2);
+    margin-bottom: 12px;
+  }
+  .fc-face.back .fc-face-label { color: var(--accent); }
+  .fc-face-content {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--text);
+  }
+  .fc-face.back .fc-face-content { font-size: 0.9rem; }
+  .fc-tag {
+    margin-top: 12px;
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 100px;
+    background: var(--surface2);
+    color: var(--text2);
+    font-weight: 600;
+  }
+  .fc-nav {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    min-height: 44px;
+    min-width: 44px;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn:hover { background: var(--surface2); }
+  .btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .btn.primary:hover { opacity: 0.9; }
+  .kbd-hint {
+    font-size: 0.75rem;
+    color: var(--text2);
+    text-align: center;
+    margin-top: 16px;
+  }
+  .kbd {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+  }
+  .fc-filter {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .filter-chip {
+    padding: 6px 12px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text2);
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    min-height: 36px;
+    transition: all 0.15s;
+  }
+  .filter-chip.active {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+
+  /* ─── QUIZ ─── */
+  .quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .quiz-score-bar {
+    height: 4px;
+    background: var(--surface2);
+    border-radius: 2px;
+    margin-bottom: 24px;
+    overflow: hidden;
+  }
+  .quiz-score-fill {
+    height: 100%;
+    background: var(--green);
+    border-radius: 2px;
+    transition: width 0.4s;
+  }
+  .q-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+  }
+  .q-meta {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text2);
+    margin-bottom: 10px;
+    display: flex;
+    gap: 8px;
+  }
+  .q-lit-badge {
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: var(--yellow-bg);
+    color: var(--yellow);
+  }
+  .q-stem {
+    font-size: 0.975rem;
+    font-weight: 600;
+    line-height: 1.5;
+    margin-bottom: 18px;
+  }
+  .q-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .q-opt {
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 1.5px solid var(--border);
+    background: var(--surface2);
+    cursor: pointer;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    transition: all 0.15s;
+    min-height: 44px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .q-opt:hover:not(.locked) { border-color: var(--accent); background: var(--accent-light); }
+  .q-opt.correct { background: var(--green-bg); border-color: var(--green); color: var(--green); }
+  .q-opt.wrong { background: var(--red-bg); border-color: var(--red); color: var(--red); }
+  .q-opt.locked { cursor: default; }
+  .q-opt-key {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 0.8rem;
+    min-width: 18px;
+    opacity: 0.6;
+  }
+  .q-explanation {
+    margin-top: 14px;
+    padding: 12px;
+    border-radius: 8px;
+    background: var(--surface2);
+    font-size: 0.83rem;
+    line-height: 1.6;
+    color: var(--text2);
+    display: none;
+  }
+  .q-explanation.show { display: block; }
+  .q-explanation strong { color: var(--text); }
+  .quiz-results {
+    display: none;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px;
+    text-align: center;
+    box-shadow: var(--shadow);
+  }
+  .quiz-results h2 { font-size: 1.5rem; margin-bottom: 8px; }
+  .quiz-results .score-big { font-size: 3rem; font-weight: 700; color: var(--accent); margin: 16px 0; }
+  .topic-breakdown { text-align: left; margin-top: 24px; }
+  .topic-breakdown h3 { font-size: 0.875rem; font-weight: 700; margin-bottom: 12px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.08em; }
+  .topic-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 0.875rem; }
+  .topic-row-label { min-width: 160px; color: var(--text2); }
+  .topic-row-bar { flex: 1; height: 8px; background: var(--surface2); border-radius: 4px; overflow: hidden; }
+  .topic-row-fill { height: 100%; border-radius: 4px; background: var(--green); }
+  .topic-row-pct { min-width: 40px; text-align: right; font-weight: 700; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; }
+
+  /* ─── LITERATURE ─── */
+  .lit-grid { display: flex; flex-direction: column; gap: 14px; }
+  .lit-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .lit-header {
+    padding: 16px 20px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    min-height: 44px;
+    transition: background 0.15s;
+  }
+  .lit-header:hover { background: var(--surface2); }
+  .lit-ref { font-size: 0.78rem; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
+  .lit-claim { font-size: 0.875rem; line-height: 1.5; color: var(--text); }
+  .lit-week { font-size: 0.7rem; padding: 2px 8px; border-radius: 100px; background: var(--surface2); color: var(--text2); font-weight: 600; white-space: nowrap; }
+  .lit-expand { font-size: 1rem; color: var(--text2); transition: transform 0.2s; flex-shrink: 0; margin-top: 2px; }
+  .lit-card.open .lit-expand { transform: rotate(180deg); }
+  .lit-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+  .lit-card.open .lit-body { max-height: 400px; }
+  .lit-body-inner { padding: 0 20px 18px; }
+  .lit-row { display: flex; gap: 10px; margin-bottom: 10px; font-size: 0.83rem; }
+  .lit-row-label { font-weight: 700; min-width: 90px; color: var(--text2); }
+  .lit-row-val { flex: 1; line-height: 1.5; }
+  .lit-exam-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; background: var(--yellow-bg); color: var(--yellow); font-size: 0.7rem; font-weight: 700; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>Text Mining — Study Tool</h1>
+    <span>Exam: Tue 27 May 2026, 08:30 · Target: 9.0</span>
+  </div>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('flashcards',this)">Flashcards (68)</button>
+  <button class="tab-btn" onclick="showTab('quiz',this)">Quiz (30 MC)</button>
+  <button class="tab-btn" onclick="showTab('literature',this)">Literature Review</button>
+</div>
+
+<!-- ══════════════ FLASHCARDS ══════════════ -->
+<div class="tab-panel active" id="tab-flashcards">
+<div class="container">
+  <div class="fc-filter" id="fc-filter">
+    <button class="filter-chip active" onclick="setFilter('all',this)">All (68)</button>
+    <button class="filter-chip" onclick="setFilter('Intro',this)">Intro</button>
+    <button class="filter-chip" onclick="setFilter('Linguistics',this)">Linguistics</button>
+    <button class="filter-chip" onclick="setFilter('Pipeline',this)">Pipeline</button>
+    <button class="filter-chip" onclick="setFilter('Evaluation',this)">Evaluation</button>
+    <button class="filter-chip" onclick="setFilter('Embeddings',this)">Embeddings</button>
+    <button class="filter-chip" onclick="setFilter('Sentiment',this)">Sentiment</button>
+    <button class="filter-chip" onclick="setFilter('NER',this)">NER</button>
+    <button class="filter-chip" onclick="setFilter('Topic',this)">Topic</button>
+    <button class="filter-chip" onclick="setFilter('LIT',this)">Literature</button>
+  </div>
+  <div class="fc-controls">
+    <span class="fc-counter" id="fc-counter">Card 1 of 68</span>
+    <button class="btn" onclick="shuffleCards()">↕ Shuffle</button>
+    <button class="btn" onclick="resetCards()">↺ Reset</button>
+  </div>
+  <div class="fc-progress"><div class="fc-progress-bar" id="fc-bar" style="width:0%"></div></div>
+  <div class="fc-card-wrap" onclick="flipCard()">
+    <div class="fc-card" id="fc-card">
+      <div class="fc-face front">
+        <div class="fc-face-label">Front</div>
+        <div class="fc-face-content" id="fc-front">Loading...</div>
+        <span class="fc-tag" id="fc-tag"></span>
+      </div>
+      <div class="fc-face back">
+        <div class="fc-face-label">Back</div>
+        <div class="fc-face-content" id="fc-back">Loading...</div>
+      </div>
+    </div>
+  </div>
+  <div class="fc-nav">
+    <button class="btn" onclick="prevCard()">← Prev</button>
+    <button class="btn primary" onclick="flipCard()">Flip</button>
+    <button class="btn" onclick="nextCard()">Next →</button>
+  </div>
+  <div class="kbd-hint">
+    <kbd class="kbd">Space</kbd> flip &nbsp;
+    <kbd class="kbd">←</kbd> previous &nbsp;
+    <kbd class="kbd">→</kbd> next
+  </div>
+</div>
+</div>
+
+<!-- ══════════════ QUIZ ══════════════ -->
+<div class="tab-panel" id="tab-quiz">
+<div class="container">
+  <div class="quiz-header">
+    <div>
+      <strong id="quiz-progress-text">Question 1–30</strong>
+      <span style="color:var(--text2); font-size:0.85rem;"> · Score: <span id="quiz-score-text">0/0</span></span>
+    </div>
+    <button class="btn" onclick="resetQuiz()">↺ Restart</button>
+  </div>
+  <div class="quiz-score-bar"><div class="quiz-score-fill" id="quiz-score-bar" style="width:0%"></div></div>
+  <div id="quiz-questions"></div>
+  <div class="quiz-results" id="quiz-results">
+    <h2>Quiz Complete!</h2>
+    <div class="score-big" id="result-score">—</div>
+    <p id="result-msg" style="color:var(--text2); font-size:0.9rem;"></p>
+    <div class="topic-breakdown">
+      <h3>Score by Topic</h3>
+      <div id="result-breakdown"></div>
+    </div>
+    <button class="btn primary" style="margin-top:24px;" onclick="resetQuiz()">↺ Try Again</button>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════ LITERATURE ══════════════ -->
+<div class="tab-panel" id="tab-literature">
+<div class="container">
+  <p style="color:var(--text2); font-size:0.85rem; margin-bottom:20px;">Click any card to reveal exam relevance. All 19 assigned readings.</p>
+  <div class="lit-grid" id="lit-grid"></div>
+</div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════
+
+const CARDS = [
+  // Intro
+  {tag:"Intro",front:"What is Text Mining?",back:"Converting unstructured text into structured data (information or knowledge). Goal: understand the technology, limitations, and build applications."},
+  {tag:"Intro",front:"Difference between NLP and Text Mining?",back:"NLP = engineering to address aspects of natural language (tokenisation, POS tagging, etc.). Text mining = broader goal of extracting structured knowledge from text using NLP as a tool."},
+  {tag:"Intro",front:"Name 4 Python NLP toolkits and their strengths.",back:"NLTK (well-documented, teaching), spaCy (fast, industrial), AllenNLP (deep learning), HuggingFace (models + datasets). Utility: Scikit-learn, Gensim, Pandas."},
+  {tag:"Intro",front:"What are the two fundamental problems for Text Mining?",back:"Ambiguity (one form, multiple meanings) and Variation (multiple forms, one meaning)."},
+  {tag:"Intro",front:"What stat describes lexical ambiguity in English?",back:"121 most frequent English nouns have on average 7.8 meanings each (Ng & Lee 1996, Princeton WordNet)."},
+  {tag:"Intro",front:"Give an example of structural ambiguity.",back:"'Krelis waved at the cow with a hat' — two valid parse trees: Krelis has the hat, OR the cow has the hat."},
+  // Linguistics
+  {tag:"Linguistics",front:"What is a morpheme?",back:"The smallest meaning-bearing unit of language. 'walked' = walk + -ed (two morphemes)."},
+  {tag:"Linguistics",front:"Free morpheme vs. bound morpheme?",back:"Free = occurs independently (boy, walk). Bound = must attach to another (-ed, -ism, -ity). Bound: inflection (walk→walked) or derivation (race→racism)."},
+  {tag:"Linguistics",front:"Inflection vs. Derivation?",back:"Inflection = modifies word without changing category (walk→walked; boy→boys). Derivation = creates new word, often changes category (essential→essentially)."},
+  {tag:"Linguistics",front:"State Zipf's Law.",back:"f(wᵢ) = f(W₁) / r(wᵢ). Word frequency ∝ 1/rank. Most frequent words are short, polysemous, and make up ~80% of any text."},
+  {tag:"Linguistics",front:"Word forms ratio: English vs. Finnish?",back:"English 2:1. Dutch/German 5:1. Finnish/Turkish >200:1 (morphologically rich). Matters for NLP: sparser training data per form in rich languages."},
+  {tag:"Linguistics",front:"What is chunking (shallow parsing)?",back:"Cheap alternative to full parsing. Produces list of constituents up to depth 2. E.g. [Krelis]NP [quickly waved]VP [at [the cow]NP]PP [with [a hat]NP]PP"},
+  {tag:"Linguistics",front:"Open-class vs. Closed-class words?",back:"Open class (add freely): Noun, Verb, Adjective, Adverb. Closed class (rarely change): Pronouns, Prepositions — fewer than 100 words per language."},
+  {tag:"Linguistics",front:"Linguistics subdisciplines → NLP modules (table)",back:"Phonetics→ASR. Morphology→tokenizers/POS taggers/lemmatizers. Syntax→parsers/chunkers. Semantics→semantic parsers/WSD. Pragmatics→context/domain models."},
+  {tag:"Linguistics",front:"Baseline accuracy for POS tagging using only the most frequent tag?",back:"~90% accuracy. Choosing the prior (most frequent POS tag per word) already achieves this baseline. The hard 10% are the ambiguous cases."},
+  {tag:"Linguistics",front:"What are the 4 phrase types in syntax and their heads?",back:"NP (head=noun), VP (head=verb), AP (head=adjective), PP (head=preposition). Sentence S = NP + VP."},
+  // Pipeline
+  {tag:"Pipeline",front:"Name the 5 layers of the NLP pipeline in order.",back:"Tokenisation → Lexical Analysis → Syntactic Analysis → Semantic Analysis → Pragmatic Analysis."},
+  {tag:"Pipeline",front:"What is error propagation in NLP pipelines?",back:"Errors in early modules (e.g. tokenisation) cascade into and degrade later modules. Propagated cross-folded results are significantly worse than isolated module benchmarks."},
+  {tag:"Pipeline",front:"3 problems with tokenisation (examples).",back:"Hyphens (nitty-gritty), contractions (don't, men's), encoding (UTF-8, diacritics), currency ($523.45), brackets ((semi-)irony), end-of-sentence hyphens."},
+  {tag:"Pipeline",front:"4 issues with NLP pipeline architectures.",back:"(1) Error propagation. (2) Ambiguities not exploited (confidence scores ignored downstream). (3) Conflicts between modules. (4) Complexity — interoperable I/O required."},
+  {tag:"Pipeline",front:"Modules in a simple NER pipeline.",back:"Document → Tokenisation + Sentence Splitting → POS Tagging → Named Entity Recognition & Disambiguation."},
+  {tag:"Pipeline",front:"Modules in a sentiment analysis pipeline.",back:"Document → Tokenisation + Sentence Splitting → POS Tagging → Word Sense Disambiguation → Sentiment Analysis."},
+  // Evaluation
+  {tag:"Evaluation",front:"Formula for Precision.",back:"P = tp / (tp + fp). Of all items the system labelled positive, what fraction were actually positive?"},
+  {tag:"Evaluation",front:"Formula for Recall.",back:"R = tp / (tp + fn). Of all items that were actually positive, what fraction did the system find?"},
+  {tag:"Evaluation",front:"Formula for F1.",back:"F1 = 2·P·R / (P+R). Harmonic mean of precision and recall."},
+  {tag:"Evaluation",front:"Macro vs. micro averaging — when to use each?",back:"Macro: compute P/R per class then average → each class counts equally. Use when small classes matter. Micro: pool all TPs → each instance counts equally. Use when class sizes are balanced."},
+  {tag:"Evaluation",front:"Church 2021's key warning about cross-validation.",back:"Cross-validation alone is NOT the real test. True generalization requires out-of-domain testing. NERC performance drops >20% with domain shift (Wikinews benchmark)."},
+  {tag:"Evaluation",front:"High recall + low precision: which application?",back:"Tsunami alert (never miss a disaster, false alarms acceptable). Also: topic classification. Strategy: first maximise recall, then improve precision."},
+  {tag:"Evaluation",front:"High precision + low recall: which application?",back:"Spam filter with no false positives (one legitimate email wrongly blocked = unacceptable). Precision maximised at cost of missing some spam."},
+  {tag:"Evaluation",front:"Why is accuracy misleading on imbalanced data?",back:"If 99% of emails are not spam, always predicting 'not spam' = 99% accuracy but detects zero spam. Precision and recall are essential for imbalanced classes."},
+  // Embeddings
+  {tag:"Embeddings",front:"Static vs. contextual embeddings — key difference.",back:"Static (GloVe/Word2Vec): one fixed vector per word type. Contextual (BERT): different vector per token occurrence depending on context → resolves word sense ambiguity."},
+  {tag:"Embeddings",front:"What does GloVe capture?",back:"Global word co-occurrence statistics. Produces 300D vectors. Captures semantic analogies: king − man + woman ≈ queen. One fixed vector per word type."},
+  {tag:"Embeddings",front:"BERT: dimensions and layers?",back:"768 dimensions, 12 layers, 12 attention heads. Pre-trained via [MASK] token prediction on large corpora."},
+  {tag:"Embeddings",front:"Define fine-tuning.",back:"Taking a pre-trained language model and training it further on a small labelled dataset for a specific downstream task (NER, sentiment, classification, etc.)."},
+  {tag:"Embeddings",front:"How does BERT tokenise 'Ilia'?",back:"BERT (WordPiece): ['Il', '##ia']. XLM-RoBERTa (SentencePiece): ['▁Ili', 'a']. ## prefix marks sub-word continuation. Handles unseen/rare words."},
+  {tag:"Embeddings",front:"Name 5 HuggingFace pipeline task types.",back:"ner, sentiment-analysis, text-classification, fill-mask, question-answering, summarization, translation, zero-shot-classification, token-classification."},
+  // Sentiment
+  {tag:"Sentiment",front:"Define subjectivity (TM context).",back:"All social and emotional relationships expressed when posting information. Broader than sentiment: includes opinions, emotions, stances, attributions."},
+  {tag:"Sentiment",front:"Explicit vs. implicit sentiment.",back:"Explicit: 'boundless energy' (pos), 'ridiculous' (neg) — lexically marked. Implicit: 'dies', 'suffer' (neg inferred from event, not marked in lexicon)."},
+  {tag:"Sentiment",front:"What is a Source Introducing Predicate (SIP)?",back:"A verb that introduces an opinion or claim: speech-act verbs (say, claim, state, deny, confirm) and cognitive verbs (think, believe, feel, hate, like)."},
+  {tag:"Sentiment",front:"Opinion structure: 4 components.",back:"Holder → SIP → Sentiment → Target. E.g. 'BMW spokesman (holder) said (SIP): excellent engine (sentiment) about the new model (target).'"},
+  {tag:"Sentiment",front:"Holder types: Author vs. Participant.",back:"Author: expresses own opinion directly. Participant: emotions inferred from context — described as dying, suffering, celebrating."},
+  {tag:"Sentiment",front:"What is agenda setting?",back:"Author's subjective choice of what to mention or omit from a report — implicit subjectivity without explicit opinion words."},
+  {tag:"Sentiment",front:"Ekman's 6 basic emotions (1976).",back:"Anger, Disgust, Fear, Happiness, Sadness, Surprise. Claimed to be cross-culturally universal."},
+  {tag:"Sentiment",front:"Plutchik's Wheel of Emotions (1980).",back:"Emotions vary in intensity (ecstasy > joy > serenity) and can combine (love = joy + trust; submission = trust + fear)."},
+  {tag:"Sentiment",front:"11 WN-Affect A-label types.",back:"EMOTION, MOOD, TRAIT, COGNITIVE STATE, PHYSICAL STATE, HEDONIC SIGNAL, EMOTION-ELICITING SITUATION, EMOTIONAL RESPONSE, BEHAVIOUR, ATTITUDE, SENSATION."},
+  {tag:"Sentiment",front:"Most-used ML method for sentiment analysis? (Ravi & Ravi 2015)",back:"SVM — used in 55/136 papers. DBA: 41. Naïve Bayes: 28. In-domain accuracy: 72–92%."},
+  {tag:"Sentiment",front:"Cohen's κ values for TM annotation tasks.",back:"Hotel reviews (doc-level): 0.87 (high). Black Pete tweets: 0.55–0.65 (moderate). News opinion expressions: 0.70."},
+  {tag:"Sentiment",front:"Context dependence example in sentiment.",back:"'Cold' person = negative. 'Cold' soda = positive. Same word, opposite polarity. Solution: weak supervision or double propagation via syntactic dependencies."},
+  {tag:"Sentiment",front:"Ravi & Ravi 2015: 4 steps of sentiment analysis pipeline.",back:"(1) Subjectivity classification → polarity. (2) Sentiment classification (ML/lexicon/hybrid). (3) Opinion spam detection. (4) Aspect extraction (ontology / non-ontology)."},
+  // NER
+  {tag:"NER",front:"Define: Entity, Reference, Named entity expression.",back:"Entity: instance of person/org/place/object/incident. Reference: communicative act to identify an entity. Named entity expression: definite NPs and proper nouns."},
+  {tag:"NER",front:"What does NERC-D/L stand for?",back:"NER (Recognition/Detection) + NEC (Classification) + NEL/NED (Entity Linking/Disambiguation) + Coreference resolution."},
+  {tag:"NER",front:"5 named entity types.",back:"People, Locations, Organisations, Time, Events. No universal full set — FIGER has 112 fine-grained types."},
+  {tag:"NER",front:"6 challenges that make NER hard.",back:"Variation (IBM/'The Big Blue'), Ambiguity ('may may still rule in may'), Extent (nested entities), Metonymy ('US' = people/org/location), Types (fine-grained), Time (relative: 'yesterday')."},
+  {tag:"NER",front:"What is BIO/IOB tagging?",back:"B = Beginning of entity span. I = Inside span (continuation). O = Outside any entity. E.g.: 'Apple B-ORG delayed O iPhone O 13 O'."},
+  {tag:"NER",front:"BiLSTM+CRF architecture for NER.",back:"Char + GloVe Embeddings (300D) → Character LSTM → L-to-R LSTM + R-to-L LSTM → Concatenation → CRF Layer → BIO labels. (Lample et al. 2016)"},
+  {tag:"NER",front:"What is an affix in NER features?",back:"n-gram prefixes and suffixes capturing morpho-syntactic patterns. Helps identify entity types: '-isation' → not a person; '-berg' → possibly German location."},
+  {tag:"NER",front:"What are gazetteers?",back:"Lists of known entities and entity cues: org names, person names, location names, person titles (Dr., President), org typical words (Inc., Corp.)."},
+  {tag:"NER",front:"Feature-inferring NN vs. feature-engineered NERC?",back:"Feature-inferring NN models (word+char+affix) outperform feature-engineered models even without domain-specific rules. Best: Yadav et al. 2018, F1 ~91% English CoNLL."},
+  // Topic
+  {tag:"Topic",front:"What is the IPTC Media Topics taxonomy?",back:"1,200 terms, 17 top-level categories, 4 levels deep, multi-language, continuously updated. Standard for news topic classification."},
+  {tag:"Topic",front:"Name the 17 IPTC top-level categories.",back:"arts/culture, conflict/war, crime/law, disaster/accident, economy/business, education, environment, health, human interest, labour, lifestyle/leisure, politics, religion/belief, science/tech, society, sport, weather."},
+  {tag:"Topic",front:"What does LDA output?",back:"Two distributions: (1) P(words|topic) — word distribution per topic. (2) P(topics|document) — topic distribution per document."},
+  {tag:"Topic",front:"Supervised vs. unsupervised topic assignment: key trade-off.",back:"Supervised: high performance, controlled topics, cannot detect new topics, needs maintenance. Unsupervised: discovers hidden structure, no control over what topics emerge."},
+  {tag:"Topic",front:"What is multi-label text classification?",back:"A document belongs to multiple categories simultaneously. Implemented as one-against-all (binary classifier per class). Keyword extraction via TF×IDF."},
+  {tag:"Topic",front:"What is JRC-Acquis?",back:"Multilingual corpus of EU legal documents in 22 official EU languages, multi-label, using the EuroVoc thesaurus as topic taxonomy."},
+  // LIT
+  {tag:"LIT",front:"Wolf et al. 2020 — key claim.",back:"HuggingFace Transformers: unified API for 10,000+ pre-trained models across all major architectures (BERT, GPT, T5, RoBERTa). Works with PyTorch and TensorFlow. Democratised access to fine-tuned NLP models."},
+  {tag:"LIT",front:"Church, Chen & Ma 2021 — key claim.",back:"Fine-tuning pre-trained LMs achieves SOTA on NLP tasks. Cross-validation alone is NOT the real test — out-of-domain testing reveals true generalization. Performance drops >20% with domain shift."},
+  {tag:"LIT",front:"Lample et al. 2016 (NAACL) — key claim.",back:"BiLSTM + CRF with character embeddings for NER. Character-level features capture morpho-syntactic/word-shape properties. Outperformed feature-engineered CRFs."},
+  {tag:"LIT",front:"Nadeau & Sekine 2007 — key claim.",back:"Comprehensive NERC feature taxonomy: word-level features (case, shape, punctuation, POS), gazetteers (entity lists, entity cues), document features (multiple occurrences, local syntax, corpus frequency)."},
+  {tag:"LIT",front:"Ravi & Ravi 2015 — key claim.",back:"Survey of 136 SA papers. 4-step pipeline: subjectivity→classification→spam detection→aspect extraction. SVM most popular (55 papers). In-domain accuracy 72–92%. 5 opinion extraction classification problems."},
+  {tag:"LIT",front:"Maynard, Derczynski & Bontcheva 2016 — key claim.",back:"Performance vs. complexity curve: BoW ~90% → events ~30%. Two fundamental TM problems: Ambiguity & Variation. Structural vs. lexical ambiguity. Performance tradeoffs figure (1.3)."},
+];
+
+const QUESTIONS = [
+  {topic:"Intro",lit:false,stem:"Which of the following best defines 'text mining'?",opts:["The process of training language models on large corpora","The process of converting unstructured text into structured data or knowledge","The application of regular expressions to extract named entities","Sentiment analysis of social media posts"],correct:1,exp:"Text mining is defined as 'from unstructured text to structured data (information or knowledge)'. It encompasses all NLP tasks applied toward knowledge extraction."},
+  {topic:"Intro",lit:false,stem:"What are the two fundamental problems that affect all Text Mining tasks?",opts:["Tokenisation and lemmatisation","Precision and recall","Ambiguity and variation","Supervised and unsupervised learning"],correct:2,exp:"L3 and Maynard et al. 2016 identify Ambiguity (one form, multiple meanings) and Variation (multiple forms, one meaning) as the two core challenges."},
+  {topic:"Intro",lit:true,stem:"[LIT] According to Maynard et al. 2016, how does NLP task performance relate to task complexity?",opts:["Performance increases as tasks become more complex","Performance is constant regardless of complexity","Performance decreases as tasks become more complex (BoW ~90% → events ~30%)","Performance only decreases for domain-specific tasks"],correct:2,exp:"Maynard et al. 2016 Figure 1.3: BoW (simplest) ~90%, entities ~80%, relations ~50%, events ~30%."},
+  {topic:"Linguistics",lit:false,stem:"A language with a forms-to-stems ratio of >200:1 is an example of:",opts:["A low-resource language","A morphologically rich language","A language with complex syntax","A language with many loanwords"],correct:1,exp:"Finnish and Turkish have >200:1 ratios. English has just 2:1. This matters for NLP: more word forms means sparser training data per form."},
+  {topic:"Linguistics",lit:false,stem:"What does Zipf's Law predict about the most frequent words in any text?",opts:["They tend to be long words with precise meanings","They tend to be short, have many different meanings, and make up ~80% of any text","They tend to be content words (nouns and verbs)","They tend to occur only once in a corpus"],correct:1,exp:"Zipf's Law: f(w) = f(W₁)/rank. Most frequent words (the, of, and...) are short, highly polysemous, and make up ~80% of any text."},
+  {topic:"Linguistics",lit:false,stem:"What is the baseline accuracy for POS tagging if you simply choose the most frequent tag?",opts:["50%","70%","90%","99%"],correct:2,exp:"Choosing the prior (most frequent POS tag per word) already gives ~90% accuracy. The remaining 10% are the hard ambiguous cases."},
+  {topic:"Linguistics",lit:false,stem:"Which of the following is an example of PP-attachment ambiguity?",opts:["'John or Mary may win'","'Krelis waved at the cow with a hat'","'Flying planes can be dangerous'","'Hospitals Sued by 7 Foot Doctors'"],correct:1,exp:"'With a hat' can attach to 'cow' (the cow has a hat) or to 'waved' (Krelis has a hat). Two valid parse trees."},
+  {topic:"Pipeline",lit:false,stem:"In NLP pipeline architectures, 'error propagation' means:",opts:["Models propagate gradients back through layers during training","Errors in early pipeline modules cascade into and degrade later modules","Classification errors that occur equally across all classes","Evaluation metrics that propagate from dev to test set"],correct:1,exp:"In a pipeline, an error in tokenisation affects every subsequent module. L3 shows propagated cross-folded results are significantly worse than isolated module results."},
+  {topic:"Pipeline",lit:false,stem:"Which of the following is NOT one of the issues with NLP pipeline architectures?",opts:["Error propagation across modules","Ambiguities with confidence scores not exploited downstream","Overfitting due to shared parameters","Conflicts between different modules"],correct:2,exp:"L3 lists pipeline issues: error propagation, ambiguities not exploited, conflicts, and complexity of maintaining interoperable I/O. Shared parameter overfitting is a deep learning issue, not a pipeline issue."},
+  {topic:"Evaluation",lit:false,stem:"For a multi-class task where you want small classes to count equally, which averaging should you use?",opts:["Micro-averaging, because it pools all true positives","Macro-averaging, because it calculates P/R per class and then averages","Weighted averaging, because it weights by class frequency","Binary averaging, because it treats all classes as one vs. rest"],correct:1,exp:"Macro-averaging computes P/R separately per class then averages — equal weight to each class. Micro-averaging pools all instances and favours large classes."},
+  {topic:"Evaluation",lit:true,stem:"[LIT] According to Church, Chen & Ma 2021, what is the limitation of cross-validation?",opts:["It is computationally too expensive","It cannot be applied to multi-class problems","Cross-validation alone is not the real test — domain shift reveals true generalization","It only works for binary classification"],correct:2,exp:"Church et al. 2021 warn that cross-validation is insufficient. NERC performance drops >20% when the test domain differs from training (Wikinews benchmark)."},
+  {topic:"Evaluation",lit:false,stem:"Which application scenario requires high recall but can tolerate low precision?",opts:["Spam filter with no false positives","Medical records deduplication","Tsunami early-warning alert system","Financial document retrieval for audits"],correct:2,exp:"Tsunami alerts prioritise recall (never miss a real disaster) and can tolerate false alarms. Spam filters need high precision (no legitimate emails blocked)."},
+  {topic:"Evaluation",lit:false,stem:"A classifier achieves 99% accuracy on spam detection where only 1% of emails are spam. This is:",opts:["Excellent — 99% accuracy indicates a highly effective classifier","Misleading — a classifier always predicting 'not spam' achieves the same score","Acceptable — precision and recall are not needed here","Problematic only if test set differs from training"],correct:1,exp:"On imbalanced data (99% not spam), a trivial classifier achieves 99% accuracy without detecting any spam. Precision and recall are essential."},
+  {topic:"Embeddings",lit:false,stem:"What is the key advantage of contextual embeddings (e.g. BERT) over static embeddings (e.g. GloVe)?",opts:["Contextual embeddings have a smaller vocabulary","Each token occurrence gets a different vector, resolving word sense ambiguity","Static embeddings require more training data","Contextual embeddings can only process single sentences"],correct:1,exp:"GloVe/Word2Vec: one fixed vector per word type. BERT: different vector per occurrence based on context — 'Apple' differs in 'Apple delayed iPhone 13' vs 'Apple with cinnamon'."},
+  {topic:"Embeddings",lit:true,stem:"[LIT] What does the Wolf et al. 2020 HuggingFace Transformers paper provide?",opts:["A new training algorithm for BERT that is 10× faster","A unified API for 10,000+ pre-trained models across PyTorch and TensorFlow","The first implementation of the attention mechanism","Benchmarks comparing transformers on CoNLL-2003"],correct:1,exp:"Wolf et al. 2020 introduced HuggingFace Transformers as a unified API enabling access to thousands of pre-trained models across architectures and frameworks."},
+  {topic:"Embeddings",lit:false,stem:"How does BERT tokenise the name 'Ilia' using WordPiece?",opts:["['Ilia'] — as a single token","['I','l','i','a'] — character by character","['Il', '##ia'] — split into subword units with ## prefix","['UNK'] — as an unknown token"],correct:2,exp:"BERT WordPiece: 'Ilia' → ['Il', '##ia'] where ## indicates the sub-word continues from the previous token."},
+  {topic:"Sentiment",lit:false,stem:"Which of the following is the correct definition of a Source Introducing Predicate (SIP)?",opts:["A pronoun that refers back to a previously mentioned entity","A verb that introduces a claim or opinion (speech-act or cognitive verbs)","A preposition marking the relation between agent and target","A negation word that reverses sentiment polarity"],correct:1,exp:"SIPs: speech-act verbs (say, claim, state, deny, confirm) and cognitive verbs (think, believe, feel, hate, like). They mark the link between holder and sentiment."},
+  {topic:"Sentiment",lit:true,stem:"[LIT] According to Ekman et al. 1976, what are the 6 basic emotions?",opts:["Love, Hate, Joy, Sadness, Fear, Surprise","Anger, Disgust, Fear, Happiness, Sadness, Surprise","Anger, Joy, Trust, Fear, Sadness, Disgust","Happiness, Sadness, Anger, Fear, Anticipation, Surprise"],correct:1,exp:"Ekman et al. 1976: Anger, Disgust, Fear, Happiness, Sadness, Surprise — claimed to be cross-culturally universal. Plutchik 1980 adds Trust and Anticipation in his Wheel."},
+  {topic:"Sentiment",lit:true,stem:"[LIT] According to Ravi & Ravi 2015, which ML method was used most often for sentiment analysis?",opts:["Naïve Bayes (28 articles)","Decision trees (31 articles)","SVM (55 articles)","Deep Belief Architecture (41 articles)"],correct:2,exp:"Ravi & Ravi 2015: SVM used in 55/136 papers. DBA second (41), NB third (28). In-domain accuracy: 72–92%."},
+  {topic:"Sentiment",lit:false,stem:"What is 'agenda setting' in the context of subjectivity mining?",opts:["A process for determining which topics appear in a corpus","The author's subjective choice of what to mention or omit from a report","A technique for identifying the holder of an opinion","A method for setting confidence thresholds in opinion classifiers"],correct:1,exp:"Agenda setting = implicit subjectivity via author's choices about what to include/exclude. An author who only reports negative events expresses stance without explicit opinion words."},
+  {topic:"Sentiment",lit:false,stem:"'Cold person (negative) ≠ cold soda (positive)' illustrates which sentiment analysis problem?",opts:["Domain shift between training and test data","Context dependence: same word has opposite polarity in different contexts","Inter-annotator disagreement about subjectivity","Inability of SVM to handle polarity inversion"],correct:1,exp:"Context dependence: polarity cannot be determined from a word alone — surrounding context determines it. Solution: weak supervision or double propagation."},
+  {topic:"Sentiment",lit:false,stem:"Which of the following is NOT one of the 5 opinion extraction classification problems?",opts:["Is this text subjective?","Who is the holder?","What is the stance toward a debate position?","What is the polarity?"],correct:2,exp:"The 5 problems are: (1) subjective?, (2) opinion expression?, (3) holder?, (4) target?, (5) polarity?. Stance is a related but distinct concept not listed among the 5."},
+  {topic:"NER",lit:false,stem:"What does the 'B' label in BIO/IOB sequence labelling mean?",opts:["'Background' — token is background of entity","'Beginning' — token is first word of entity span","'Binary' — token is either entity or not","'Bidirectional' — processed left-to-right and right-to-left"],correct:1,exp:"BIO = Beginning, Inside, Outside. B marks the first token of an entity span. I marks continuation tokens. O marks non-entity tokens."},
+  {topic:"NER",lit:true,stem:"[LIT] What was the key architectural contribution of Lample et al. 2016 for NER?",opts:["Introduction of CRF for sequence labelling","BiLSTM + CRF model using character embeddings for morpho-syntactic properties","A transformer-based model replacing LSTMs for NER","First use of gazetteers in a neural NER system"],correct:1,exp:"Lample et al. 2016 (NAACL) introduced BiLSTM + CRF with character-level embeddings. Character LSTM captures word shape and morphological patterns. CRF models sequence-level dependencies."},
+  {topic:"NER",lit:true,stem:"[LIT] According to Nadeau & Sekine 2007, word shape features like 'Xxx' and 'xxxXx' capture which type of information?",opts:["Syntactic category of a token","Case pattern (initial cap, all-caps, mixed case) used for entity detection","Word's sentiment polarity","Word's frequency rank in a reference corpus"],correct:1,exp:"Word shape features (Xxx = initial capital, Xxxxxxxxx = all-caps, xxxXx = camelCase) capture capitalisation patterns that strongly indicate proper nouns/entities."},
+  {topic:"NER",lit:false,stem:"'The US decided to intervene' — 'US' refers to the US government. This is an example of:",opts:["Coreference","Entity extent ambiguity","Metonymy","Type ambiguity (fine-grained vs. coarse)"],correct:2,exp:"Metonymy = using one entity's name to refer to a related entity ('US' meaning US government, 'White House' meaning the president). L5 lists metonymy as one of 6 NER challenges."},
+  {topic:"NER",lit:true,stem:"[LIT] Yadav & Bethard 2018 tested four NN architectures for NER. Which achieved the best results?",opts:["Word-level NN only","Character-level NN only","Word + Character + Affix embeddings","Word + Gazetteer features"],correct:2,exp:"Yadav & Bethard found word+char+affix achieved the best F1 (~91% English CoNLL). Affix = n-gram prefixes/suffixes as linguistic units."},
+  {topic:"Topic",lit:true,stem:"[LIT] What does LDA (Latent Dirichlet Allocation) produce as output?",opts:["A single topic label per document","A ranked list of keywords per document","Two distributions: P(words|topic) and P(topics|document)","A binary classification of documents as relevant or irrelevant"],correct:2,exp:"LDA outputs (1) word distributions per topic P(words|topic) and (2) topic distributions per document P(topics|document). Both are needed to interpret topics and classify documents."},
+  {topic:"Topic",lit:false,stem:"Which of the following is a disadvantage of supervised text classification for topic assignment?",opts:["It cannot achieve high accuracy","It cannot handle multi-label classification","New topics that emerge after training cannot be detected without retraining","It requires too much computation compared to LDA"],correct:2,exp:"Supervised topic classification is biased to its training label set. New topics invisible to the model. Unsupervised methods discover new topics but offer less control."},
+  {topic:"Topic",lit:true,stem:"[LIT] What was the main finding of Sun et al. 2019 regarding BERT for text classification?",opts:["BERT performs worse than SVM for text classification","Domain-specific pre-training is always necessary before fine-tuning","Fine-tuning BERT with task-specific strategies achieves state-of-the-art results","BERT plateaus after 3 epochs regardless of dataset size"],correct:2,exp:"Sun et al. 2019 showed that fine-tuning pre-trained BERT with appropriate strategies achieves SOTA on text classification benchmarks, establishing fine-tuning as the dominant paradigm."},
+];
+
+const LITERATURE = [
+  {week:"W2",ref:"Maynard, Derczynski & Bontcheva (2016)",title:"NLP for Semantic Web, Chapter 2",claim:"Performance decreases as NLP task complexity increases (BoW ~90% → events ~30%). Two core TM problems: Ambiguity & Variation.",detail:"Key figure: Performance Tradeoffs (Fig 1.3). Defines structural ambiguity (parse trees) vs lexical ambiguity (polysemy). 121 most frequent English nouns have 7.8 meanings on average.",exam:"Performance curve shape. Ambiguity types. Structural vs lexical ambiguity distinction."},
+  {week:"W2",ref:"NLTK ch.8 (Analyzing sentence structure)",title:"Natural Language Processing with Python, ch.8",claim:"Formal syntax, parse trees, context-free grammars, recursive descent parsing.",detail:"Covers phrase structure rules, syntactic trees, PP-attachment ambiguity, chunking. Foundation for understanding how NLP systems parse sentences.",exam:"Phrase types (NP/VP/PP/AP), syntactic ambiguity, chunking vs full parsing."},
+  {week:"W2",ref:"NLTK ch.6 (Learning to classify)",title:"Natural Language Processing with Python, ch.6",claim:"Feature-based text classification using Naïve Bayes and decision trees.",detail:"Practical classification pipeline: feature extraction, training, evaluation. Shows how to build classifiers from annotated datasets.",exam:"Classification pipeline stages, feature selection, Naïve Bayes for text."},
+  {week:"W2",ref:"J&M ch.4 (Logistic Regression)",title:"Speech & Language Processing, ch.4",claim:"Logistic regression for text classification — gradient descent, cross-entropy loss, sigmoid/softmax.",detail:"Mathematical foundations of classification: binary vs multi-class LR, feature vectors, training via gradient descent. Connection to neural networks.",exam:"LR as a classifier, sigmoid function, cross-entropy loss, multi-class classification."},
+  {week:"W3",ref:"J&M ch.5 (Word Embeddings)",title:"Speech & Language Processing, ch.5",claim:"Dense vector representations (Word2Vec, GloVe) capture semantic relationships not possible with BoW.",detail:"PPMI, SVD, Word2Vec skip-gram/CBOW, GloVe global co-occurrence. Semantic analogy: king−man+woman=queen. Foundation for deep NLP.",exam:"Why embeddings > BoW, static vs contextual, semantic analogy, GloVe training."},
+  {week:"W3",ref:"Wolf et al. (2020)",title:"Transformers: State-of-the-art NLP (HuggingFace)",claim:"Single unified API for 10,000+ pre-trained transformer models, working across PyTorch and TensorFlow.",detail:"Introduces HuggingFace Transformers library. Available task types include: ner, sentiment-analysis, fill-mask, question-answering, summarization, translation, zero-shot-classification. Default models: dbmdz/bert-large for NER, distilbert for sentiment.",exam:"pipeline() API, available task types, model naming conventions, what HuggingFace provides."},
+  {week:"W3",ref:"Church, Chen & Ma (2021)",title:"Emerging trends: A gentle introduction to fine-tuning",claim:"Fine-tuning pre-trained LMs achieves SOTA on NLP. Cross-validation alone is NOT the real test — domain shift exposes true generalization.",detail:"Shows >20% performance drop on NERC when shifting to Wikinews domain. Fine-tuning = take pre-trained model, train on small task-specific labelled set. Distinguishes fine-tuning from inference.",exam:"Definition of fine-tuning, domain shift, cross-validation limitation, NERC Wikinews >20% drop."},
+  {week:"W4",ref:"J&M ch.17 (Sequence Labelling)",title:"Speech & Language Processing, ch.17",claim:"HMMs and CRFs model sequence-level dependencies for tasks like POS tagging and NER.",detail:"Viterbi decoding for HMMs. CRF models left-to-right and right-to-left sequence dependencies. Foundation for understanding BiLSTM-CRF. IOB encoding for entity spans.",exam:"CRF for NER, sequence dependencies, IOB labelling, HMM vs CRF."},
+  {week:"W4",ref:"J&M ch.22 (Coreference)",title:"Speech & Language Processing, ch.22",claim:"Coreference resolution: finding all expressions in a text that refer to the same real-world entity.",detail:"Techniques: mention detection, mention ranking, entity clustering. Evaluation: B³, MUC, CEAF metrics. Key for NERC-D/L pipeline: pronouns and NPs refer back to named entities.",exam:"Coreference in NERC pipeline, referring expressions, mention detection."},
+  {week:"W4",ref:"Yadav & Bethard (2018/2019)",title:"A Survey on Recent Advances in NER",claim:"Word+character+affix NN architectures achieve best CoNLL F1 (~91% English). Feature-inferring > feature-engineered.",detail:"Tests 4 architectures: word-level NN, char-level NN, word+char, word+char+affix. Best results from combined approach. Affixes = n-gram prefixes/suffixes acting as linguistic units. Performance: ~87 SP, ~87 DU, ~91 EN, ~79 GE (Yadav et al. 2018, 150 epochs).",exam:"Architecture comparison table, affix embeddings, F1 numbers, why NN > feature engineering."},
+  {week:"W4",ref:"Lample et al. (2016) — NAACL",title:"Neural Architectures for Named Entity Recognition",claim:"BiLSTM + CRF with character embeddings achieves SOTA NER, outperforming feature-engineered CRFs.",detail:"Architecture: Char + GloVe (300D) → Char LSTM → Bi-LSTM (left-to-right + right-to-left) → Concatenation → CRF → BIO labels. Character embeddings capture morpho-syntactic + word shape properties.",exam:"Full architecture diagram, why character embeddings help, CRF at sequence level."},
+  {week:"W4",ref:"Huang et al. (2015)",title:"Bidirectional LSTM-CRF Models for Sequence Labeling",claim:"Bi-directional LSTM combined with CRF outperforms previous sequence labelling methods (HMM, MEMM, CRF alone).",detail:"Key paper establishing BiLSTM-CRF as the standard architecture for sequence labelling. Processes input both L→R and R→L, concatenates, passes through CRF.",exam:"BiLSTM-CRF architecture, why bidirectional, comparison with CRF-only."},
+  {week:"W4",ref:"Nadeau & Sekine (2007)",title:"A Survey of Named Entity Recognition and Classification",claim:"Comprehensive feature taxonomy for NERC: word-level, gazetteers, and document features.",detail:"Word-level: case (Capitalized/all-caps/mixed), punctuation, digit, POS, word shape (Xxx, xxxXx), short shape. Gazetteers: entity lists (org/person/location), entity cues (titles, typical words). Document: multiple occurrences, local syntax, meta-information, corpus frequency.",exam:"Feature taxonomy table, word shape types, gazetteer categories, document feature types."},
+  {week:"L4",ref:"Ravi & Ravi (2015)",title:"A Survey on Opinion Mining and Sentiment Analysis",claim:"4-step sentiment analysis pipeline. SVM most used (55/136 papers). In-domain accuracy 72–92%. 5 opinion extraction classification problems.",detail:"Step 1: subjectivity classification → polarity. Step 2: sentiment classification (ML/lexicon/hybrid). Step 3: opinion spam detection. Step 4: aspect extraction. ML methods: SVM>DBA>NB. Document-level results: rule+lexicon F1=78.3, NB+BoW 82.3, BoW+LEMMA 83.6, BoW+sentiment+rules 84.7, best ~92%.",exam:"4 steps verbatim, SVM count (55), accuracy range (72-92%), F1 comparison table."},
+  {week:"L4",ref:"Ekman et al. (1976)",title:"Pictures of Facial Affect",claim:"6 cross-culturally universal basic emotions: Anger, Disgust, Fear, Happiness, Sadness, Surprise.",detail:"Universal facial expressions across cultures. Foundational for emotion classification in NLP. Compare with Plutchik 1980 which adds Trust and Anticipation and introduces intensity/mixing.",exam:"Exactly which 6 emotions, cross-cultural universality claim."},
+  {week:"L4",ref:"Plutchik (1980)",title:"Emotion: A Psychoevolutionary Synthesis",claim:"Emotions vary in intensity (ecstasy > joy > serenity) and can combine (love = joy + trust).",detail:"The Wheel of Emotions: 8 primary emotions in 4 opposite pairs. Intensity: inner = most intense, outer = least. Dyads: adjacent emotions combine (anticipation + joy = optimism). Compared with WN-Affect's 11 A-label types.",exam:"Intensity concept, mixture examples (love=joy+trust), difference from Ekman."},
+  {week:"L6",ref:"Saigal & Khanna (2020)",title:"Improved Text Sentiment Classification Using SVM",claim:"SVM is effective for multi-category news text classification with appropriate feature selection.",detail:"Demonstrates SVM performance on multi-class text classification. Consistent with Ravi & Ravi 2015 finding that SVM is the dominant ML method for text classification tasks.",exam:"SVM for text classification, multi-category classification."},
+  {week:"L6",ref:"Churchill & Singh (2021)",title:"The Evolution of Topic Modeling",claim:"Survey of topic modeling evolution from LSA to neural LDA variants, showing progression toward richer representations.",detail:"Historical context: from LSA (matrix factorisation) to probabilistic LDA to neural variants. Shows how topic modeling has developed alongside deep learning progress.",exam:"Historical context, LDA variants, evolution of the field."},
+  {week:"L6",ref:"Vayansky & Kumar (2020)",title:"A Review of Topic Modeling Methods",claim:"Review of LDA and its variants, including different priors, formulations, and extensions.",detail:"Covers standard LDA, Hierarchical Dirichlet Process, dynamic topic models, neural topic models. Different variants suited to different data/task requirements.",exam:"LDA variants, probabilistic topic models, when to use which variant."},
+  {week:"L6",ref:"Sun et al. (2019)",title:"How to Fine-Tune BERT for Text Classification?",claim:"Fine-tuning BERT with task-specific strategies achieves SOTA on text classification benchmarks.",detail:"Investigates: task-specific pre-training on in-domain data, fine-tuning multiple layers, appropriate learning rates, different fine-tuning strategies. Established fine-tuning as the dominant paradigm for text classification.",exam:"Fine-tuning strategies, task-specific pre-training, BERT for classification."},
+];
+
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+let fcCards = [...CARDS];
+let fcIdx = 0;
+let fcFlipped = false;
+let fcFilter = 'all';
+
+let quizAnswers = new Array(QUESTIONS.length).fill(null);
+let quizAnswered = new Array(QUESTIONS.length).fill(false);
+let quizScore = 0;
+let quizAnsweredCount = 0;
+
+// ══════════════════════════════════════════
+// TABS
+// ══════════════════════════════════════════
+function showTab(name, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+}
+
+// ══════════════════════════════════════════
+// FLASHCARDS
+// ══════════════════════════════════════════
+function setFilter(filter, chip) {
+  fcFilter = filter;
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  chip.classList.add('active');
+  if (filter === 'all') {
+    fcCards = [...CARDS];
+  } else {
+    fcCards = CARDS.filter(c => c.tag === filter);
+  }
+  fcIdx = 0;
+  fcFlipped = false;
+  renderCard();
+}
+
+function renderCard() {
+  if (fcCards.length === 0) {
+    document.getElementById('fc-front').textContent = 'No cards for this filter.';
+    document.getElementById('fc-back').textContent = '';
+    document.getElementById('fc-tag').textContent = '';
+    document.getElementById('fc-counter').textContent = '0 cards';
+    document.getElementById('fc-bar').style.width = '0%';
+    return;
+  }
+  const card = fcCards[fcIdx];
+  document.getElementById('fc-front').textContent = card.front;
+  document.getElementById('fc-back').textContent = card.back;
+  document.getElementById('fc-tag').textContent = card.tag;
+  document.getElementById('fc-counter').textContent = `Card ${fcIdx + 1} of ${fcCards.length}`;
+  document.getElementById('fc-bar').style.width = ((fcIdx + 1) / fcCards.length * 100) + '%';
+  const el = document.getElementById('fc-card');
+  el.classList.toggle('flipped', fcFlipped);
+}
+
+function flipCard() {
+  fcFlipped = !fcFlipped;
+  document.getElementById('fc-card').classList.toggle('flipped', fcFlipped);
+}
+
+function nextCard() {
+  fcFlipped = false;
+  fcIdx = (fcIdx + 1) % fcCards.length;
+  renderCard();
+}
+
+function prevCard() {
+  fcFlipped = false;
+  fcIdx = (fcIdx - 1 + fcCards.length) % fcCards.length;
+  renderCard();
+}
+
+function shuffleCards() {
+  for (let i = fcCards.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [fcCards[i], fcCards[j]] = [fcCards[j], fcCards[i]];
+  }
+  fcIdx = 0;
+  fcFlipped = false;
+  renderCard();
+}
+
+function resetCards() {
+  if (fcFilter === 'all') fcCards = [...CARDS];
+  else fcCards = CARDS.filter(c => c.tag === fcFilter);
+  fcIdx = 0;
+  fcFlipped = false;
+  renderCard();
+}
+
+document.addEventListener('keydown', function(e) {
+  const activeTab = document.querySelector('.tab-panel.active');
+  if (!activeTab) return;
+  if (activeTab.id === 'tab-flashcards') {
+    if (e.code === 'Space') { e.preventDefault(); flipCard(); }
+    if (e.code === 'ArrowRight') nextCard();
+    if (e.code === 'ArrowLeft') prevCard();
+  }
+});
+
+// ══════════════════════════════════════════
+// QUIZ
+// ══════════════════════════════════════════
+function buildQuiz() {
+  const container = document.getElementById('quiz-questions');
+  container.innerHTML = '';
+  QUESTIONS.forEach((q, qi) => {
+    const card = document.createElement('div');
+    card.className = 'q-card';
+    card.id = 'q-' + qi;
+    const meta = document.createElement('div');
+    meta.className = 'q-meta';
+    meta.innerHTML = `<span>Q${qi+1} · ${q.topic}</span>${q.lit ? '<span class="q-lit-badge">LITERATURE</span>' : ''}`;
+    const stem = document.createElement('div');
+    stem.className = 'q-stem';
+    stem.textContent = q.stem;
+    const opts = document.createElement('div');
+    opts.className = 'q-options';
+    const keys = ['A','B','C','D'];
+    q.opts.forEach((opt, oi) => {
+      const btn = document.createElement('div');
+      btn.className = 'q-opt';
+      btn.id = `q-${qi}-opt-${oi}`;
+      btn.onclick = () => selectAnswer(qi, oi);
+      btn.innerHTML = `<span class="q-opt-key">${keys[oi]}</span><span>${opt}</span>`;
+      opts.appendChild(btn);
+    });
+    const exp = document.createElement('div');
+    exp.className = 'q-explanation';
+    exp.id = 'q-exp-' + qi;
+    exp.innerHTML = `<strong>Explanation:</strong> ${q.exp}`;
+    card.appendChild(meta);
+    card.appendChild(stem);
+    card.appendChild(opts);
+    card.appendChild(exp);
+    container.appendChild(card);
+  });
+}
+
+function selectAnswer(qi, oi) {
+  if (quizAnswered[qi]) return;
+  quizAnswered[qi] = true;
+  quizAnswers[qi] = oi;
+  quizAnsweredCount++;
+  const q = QUESTIONS[qi];
+  const keys = ['A','B','C','D'];
+  q.opts.forEach((_, idx) => {
+    const el = document.getElementById(`q-${qi}-opt-${idx}`);
+    el.classList.add('locked');
+    if (idx === q.correct) el.classList.add('correct');
+    else if (idx === oi && idx !== q.correct) el.classList.add('wrong');
+  });
+  document.getElementById('q-exp-' + qi).classList.add('show');
+  if (oi === q.correct) quizScore++;
+  updateQuizHeader();
+  if (quizAnsweredCount === QUESTIONS.length) {
+    setTimeout(showResults, 600);
+  }
+}
+
+function updateQuizHeader() {
+  document.getElementById('quiz-score-text').textContent = `${quizScore}/${quizAnsweredCount}`;
+  document.getElementById('quiz-score-bar').style.width = (quizAnsweredCount > 0 ? (quizScore/quizAnsweredCount*100) : 0) + '%';
+}
+
+function showResults() {
+  const pct = Math.round(quizScore / QUESTIONS.length * 100);
+  document.getElementById('result-score').textContent = `${quizScore} / ${QUESTIONS.length}`;
+  const msgs = {
+    90: "Outstanding! Exam-ready.",
+    75: "Strong performance. Review the missed ones.",
+    60: "Good foundation. Focus on weak topics.",
+    0: "Keep studying — you've got this!"
+  };
+  const msg = Object.entries(msgs).reverse().find(([k]) => pct >= k);
+  document.getElementById('result-msg').textContent = msg ? msg[1] : "";
+  // Topic breakdown
+  const topics = {};
+  QUESTIONS.forEach((q, qi) => {
+    if (!topics[q.topic]) topics[q.topic] = {correct:0, total:0};
+    topics[q.topic].total++;
+    if (quizAnswered[qi] && quizAnswers[qi] === q.correct) topics[q.topic].correct++;
+  });
+  const bd = document.getElementById('result-breakdown');
+  bd.innerHTML = '';
+  Object.entries(topics).forEach(([topic, data]) => {
+    const p = Math.round(data.correct/data.total*100);
+    bd.innerHTML += `<div class="topic-row">
+      <span class="topic-row-label">${topic}</span>
+      <div class="topic-row-bar"><div class="topic-row-fill" style="width:${p}%"></div></div>
+      <span class="topic-row-pct">${data.correct}/${data.total}</span>
+    </div>`;
+  });
+  document.getElementById('quiz-results').style.display = 'block';
+  document.getElementById('quiz-results').scrollIntoView({behavior:'smooth'});
+}
+
+function resetQuiz() {
+  quizAnswers = new Array(QUESTIONS.length).fill(null);
+  quizAnswered = new Array(QUESTIONS.length).fill(false);
+  quizScore = 0;
+  quizAnsweredCount = 0;
+  document.getElementById('quiz-results').style.display = 'none';
+  updateQuizHeader();
+  buildQuiz();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ══════════════════════════════════════════
+// LITERATURE
+// ══════════════════════════════════════════
+function buildLiterature() {
+  const grid = document.getElementById('lit-grid');
+  grid.innerHTML = '';
+  LITERATURE.forEach((lit, i) => {
+    const card = document.createElement('div');
+    card.className = 'lit-card';
+    card.id = 'lit-' + i;
+    card.innerHTML = `
+      <div class="lit-header" onclick="toggleLit(${i})">
+        <div>
+          <div class="lit-ref">${lit.ref}</div>
+          <div class="lit-claim">${lit.claim}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;">
+          <span class="lit-week">${lit.week}</span>
+          <span class="lit-expand">▾</span>
+        </div>
+      </div>
+      <div class="lit-body" id="lit-body-${i}">
+        <div class="lit-body-inner">
+          <div class="lit-exam-tag">EXAM RELEVANCE</div>
+          <div class="lit-row">
+            <span class="lit-row-label">Title</span>
+            <span class="lit-row-val">${lit.title}</span>
+          </div>
+          <div class="lit-row">
+            <span class="lit-row-label">Detail</span>
+            <span class="lit-row-val">${lit.detail}</span>
+          </div>
+          <div class="lit-row">
+            <span class="lit-row-label">MC focus</span>
+            <span class="lit-row-val">${lit.exam}</span>
+          </div>
+        </div>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+function toggleLit(i) {
+  const card = document.getElementById('lit-' + i);
+  const body = document.getElementById('lit-body-' + i);
+  const isOpen = card.classList.contains('open');
+  // close all
+  document.querySelectorAll('.lit-card').forEach(c => {
+    c.classList.remove('open');
+    c.querySelector('.lit-body').style.maxHeight = null;
+  });
+  if (!isOpen) {
+    card.classList.add('open');
+    body.style.maxHeight = body.scrollHeight + 'px';
+  }
+}
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+renderCard();
+buildQuiz();
+buildLiterature();
+</script>
+</body>
+</html>

@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DB — Practice Tool</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f5f5; --surface: #ffffff; --surface2: #f0f0f0;
+  --text: #1a1a1a; --text2: #555; --accent: #3b6cf4;
+  --accent2: #1a3fa0; --border: #ddd; --correct: #16a34a;
+  --wrong: #dc2626; --warn: #d97706; --card-back: #eef2ff;
+  --radius: 12px; --mono: 'JetBrains Mono', monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f1117; --surface: #1c1f2e; --surface2: #252836;
+    --text: #e8eaf0; --text2: #9399b0; --accent: #5b8aff;
+    --accent2: #3d6aff; --border: #333650; --correct: #22c55e;
+    --wrong: #f87171; --warn: #fbbf24; --card-back: #1e254a;
+  }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 16px 24px; display: flex; align-items: center; gap: 16px; }
+header h1 { font-size: 1.1rem; font-weight: 700; color: var(--accent); }
+header span { font-size: 0.8rem; color: var(--text2); }
+nav { display: flex; gap: 0; border-bottom: 1px solid var(--border); background: var(--surface); padding: 0 24px; }
+.tab { padding: 14px 20px; font-size: 0.9rem; font-weight: 500; cursor: pointer; border: none; background: none; color: var(--text2); border-bottom: 3px solid transparent; transition: all 0.2s; min-width: 44px; }
+.tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab:hover { color: var(--text); }
+.panel { display: none; padding: 24px; max-width: 860px; margin: 0 auto; }
+.panel.active { display: block; }
+
+/* FLASHCARDS */
+.fc-controls { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+.fc-controls select { padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-size: 0.9rem; }
+.fc-progress { flex: 1; min-width: 160px; }
+.fc-progress-bar { height: 6px; background: var(--surface2); border-radius: 3px; overflow: hidden; }
+.fc-progress-fill { height: 100%; background: var(--accent); border-radius: 3px; transition: width 0.3s; }
+.fc-counter { font-size: 0.85rem; color: var(--text2); margin-top: 4px; }
+.card-wrap { perspective: 1200px; height: 280px; cursor: pointer; user-select: none; }
+.card { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.5s ease; }
+.card.flipped { transform: rotateY(180deg); }
+.card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: var(--radius); display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 28px; text-align: center; border: 1px solid var(--border); }
+.card-front { background: var(--surface); }
+.card-back { background: var(--card-back); transform: rotateY(180deg); }
+.card-label { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text2); margin-bottom: 12px; }
+.card-front .card-label { color: var(--accent); }
+.card-content { font-size: 1rem; line-height: 1.6; }
+.card-content code { font-family: var(--mono); font-size: 0.85rem; background: var(--surface2); padding: 2px 5px; border-radius: 4px; }
+.card-content pre { font-family: var(--mono); font-size: 0.78rem; background: var(--surface2); padding: 10px; border-radius: 6px; text-align: left; margin-top: 8px; white-space: pre-wrap; line-height: 1.5; }
+.fc-nav { display: flex; gap: 12px; margin-top: 16px; justify-content: center; }
+.btn { padding: 10px 22px; border-radius: 8px; border: none; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: all 0.15s; min-height: 44px; min-width: 44px; }
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: var(--accent2); }
+.btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+.btn-secondary:hover { background: var(--border); }
+.shortcuts { font-size: 0.78rem; color: var(--text2); text-align: center; margin-top: 12px; }
+.shortcuts kbd { background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px; font-family: var(--mono); font-size: 0.75rem; }
+
+/* PRACTICE */
+.prob-list { display: flex; flex-direction: column; gap: 20px; }
+.prob-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; }
+.prob-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.prob-tag { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: 3px 8px; border-radius: 4px; }
+.tag-norm { background: #dbeafe; color: #1d4ed8; }
+.tag-sql { background: #dcfce7; color: #15803d; }
+.tag-tx { background: #fef3c7; color: #b45309; }
+.tag-api { background: #f3e8ff; color: #7e22ce; }
+@media (prefers-color-scheme: dark) {
+  .tag-norm { background: #1e3a5f; color: #93c5fd; }
+  .tag-sql { background: #14532d; color: #86efac; }
+  .tag-tx { background: #451a03; color: #fcd34d; }
+  .tag-api { background: #3b0764; color: #d8b4fe; }
+}
+.prob-q { font-weight: 600; margin-bottom: 8px; line-height: 1.5; }
+.prob-detail { font-size: 0.9rem; color: var(--text2); margin-bottom: 12px; line-height: 1.6; }
+.prob-detail code { font-family: var(--mono); font-size: 0.82rem; background: var(--surface2); padding: 2px 5px; border-radius: 4px; }
+.prob-detail pre { font-family: var(--mono); font-size: 0.8rem; background: var(--surface2); padding: 12px; border-radius: 6px; overflow-x: auto; line-height: 1.5; margin-top: 6px; white-space: pre-wrap; }
+.reveal-btn { font-size: 0.85rem; }
+.solution { display: none; margin-top: 14px; padding: 14px; background: var(--surface2); border-radius: 8px; border-left: 3px solid var(--correct); }
+.solution.show { display: block; }
+.solution pre { font-family: var(--mono); font-size: 0.8rem; line-height: 1.5; white-space: pre-wrap; }
+
+/* QUIZ */
+.quiz-setup { text-align: center; padding: 40px 20px; }
+.quiz-setup h2 { font-size: 1.4rem; margin-bottom: 8px; }
+.quiz-setup p { color: var(--text2); margin-bottom: 24px; }
+.quiz-container { display: none; }
+.quiz-container.active { display: block; }
+.q-progress { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+.q-progress-bar { flex: 1; height: 6px; background: var(--surface2); border-radius: 3px; overflow: hidden; }
+.q-progress-fill { height: 100%; background: var(--accent); border-radius: 3px; transition: width 0.3s; }
+.q-counter { font-size: 0.85rem; color: var(--text2); white-space: nowrap; }
+.q-topic-badge { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: 3px 8px; border-radius: 4px; margin-bottom: 10px; display: inline-block; }
+.q-text { font-size: 1rem; font-weight: 600; line-height: 1.6; margin-bottom: 18px; }
+.q-text code { font-family: var(--mono); font-size: 0.88rem; background: var(--surface2); padding: 2px 5px; border-radius: 4px; font-weight: 400; }
+.options { display: flex; flex-direction: column; gap: 10px; }
+.option { padding: 12px 16px; border: 1.5px solid var(--border); border-radius: 8px; cursor: pointer; background: var(--surface); transition: all 0.15s; text-align: left; font-size: 0.9rem; line-height: 1.5; min-height: 44px; }
+.option:hover:not(.locked) { border-color: var(--accent); background: var(--card-back); }
+.option.correct { border-color: var(--correct); background: #dcfce7; color: #14532d; }
+.option.wrong { border-color: var(--wrong); background: #fee2e2; color: #7f1d1d; }
+@media (prefers-color-scheme: dark) {
+  .option.correct { background: #14532d; color: #bbf7d0; }
+  .option.wrong { background: #7f1d1d; color: #fecaca; }
+}
+.option.locked { cursor: default; }
+.q-explanation { display: none; margin-top: 14px; padding: 12px 14px; background: var(--surface2); border-radius: 8px; font-size: 0.88rem; line-height: 1.6; border-left: 3px solid var(--accent); }
+.q-explanation.show { display: block; }
+.q-nav { display: flex; justify-content: flex-end; margin-top: 18px; }
+.quiz-results { display: none; text-align: center; padding: 20px 0; }
+.quiz-results.show { display: block; }
+.score-big { font-size: 3rem; font-weight: 700; color: var(--accent); }
+.score-label { color: var(--text2); margin-bottom: 24px; }
+.topic-breakdown { text-align: left; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 20px; }
+.topic-row { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 0.88rem; }
+.topic-row:last-child { border-bottom: none; }
+.topic-name { flex: 1; font-weight: 500; }
+.topic-score { font-weight: 600; }
+.topic-bar-wrap { width: 100px; height: 6px; background: var(--surface2); border-radius: 3px; overflow: hidden; }
+.topic-bar { height: 100%; border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>DB — Practice Tool</h1>
+  <span>Databases | Exam: Thu 21 May 2026</span>
+</header>
+
+<nav>
+  <button class="tab active" onclick="switchTab('flashcards')">Flashcards</button>
+  <button class="tab" onclick="switchTab('practice')">Practice Problems</button>
+  <button class="tab" onclick="switchTab('quiz')">Quiz</button>
+</nav>
+
+<!-- ═══════════════════════ FLASHCARDS ═══════════════════════ -->
+<div id="flashcards" class="panel active">
+  <div class="fc-controls">
+    <select id="fc-deck" onchange="loadDeck()">
+      <option value="all">All Topics</option>
+      <option value="norm">Normalization</option>
+      <option value="sql">SQL Patterns</option>
+      <option value="tx">Transactions</option>
+      <option value="api">Database APIs</option>
+      <option value="er">ER / Relational Model</option>
+    </select>
+    <div class="fc-progress">
+      <div class="fc-progress-bar"><div class="fc-progress-fill" id="fc-fill" style="width:0%"></div></div>
+      <div class="fc-counter" id="fc-counter">Card 1 of 1</div>
+    </div>
+  </div>
+
+  <div class="card-wrap" onclick="flipCard()">
+    <div class="card" id="flashcard">
+      <div class="card-face card-front">
+        <div class="card-label">Term / Question</div>
+        <div class="card-content" id="fc-front"></div>
+      </div>
+      <div class="card-face card-back">
+        <div class="card-label">Answer</div>
+        <div class="card-content" id="fc-back"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fc-nav">
+    <button class="btn btn-secondary" onclick="prevCard()">← Prev</button>
+    <button class="btn btn-primary" onclick="flipCard()">Flip</button>
+    <button class="btn btn-secondary" onclick="nextCard()">Next →</button>
+  </div>
+  <div class="shortcuts">
+    <kbd>Space</kbd> flip &nbsp; <kbd>←</kbd> prev &nbsp; <kbd>→</kbd> next
+  </div>
+</div>
+
+<!-- ═══════════════════════ PRACTICE ═══════════════════════ -->
+<div id="practice" class="panel">
+  <div class="prob-list" id="prob-list"></div>
+</div>
+
+<!-- ═══════════════════════ QUIZ ═══════════════════════ -->
+<div id="quiz" class="panel">
+  <div class="quiz-setup" id="quiz-setup">
+    <h2>DB Quiz</h2>
+    <p>25 questions · All topics · Immediate feedback</p>
+    <button class="btn btn-primary" onclick="startQuiz()">Start Quiz</button>
+  </div>
+  <div class="quiz-container" id="quiz-container">
+    <div class="q-progress">
+      <div class="q-progress-bar"><div class="q-progress-fill" id="q-fill" style="width:0%"></div></div>
+      <div class="q-counter" id="q-counter">1 / 25</div>
+    </div>
+    <div id="q-topic-badge" class="q-topic-badge tag-norm"></div>
+    <div class="q-text" id="q-text"></div>
+    <div class="options" id="q-options"></div>
+    <div class="q-explanation" id="q-explanation"></div>
+    <div class="q-nav">
+      <button class="btn btn-primary" id="q-next-btn" onclick="nextQuestion()" style="display:none">Next →</button>
+    </div>
+  </div>
+  <div class="quiz-results" id="quiz-results">
+    <div class="score-big" id="score-big"></div>
+    <div class="score-label" id="score-label"></div>
+    <div class="topic-breakdown" id="topic-breakdown"></div>
+    <button class="btn btn-primary" onclick="restartQuiz()">Retake Quiz</button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════ DATA ═══════════════════
+
+const DECKS = {
+  norm: [
+    { f: "What is a Functional Dependency (FD)?", b: "X → Y holds if whenever two tuples agree on X, they also agree on Y. Formally: for all t,u ∈ R: t.X = u.X ⟹ t.Y = u.Y" },
+    { f: "What is a trivial FD?", b: "X → Y where Y ⊆ X. Always holds; conveys no information." },
+    { f: "Closure algorithm: X⁺", b: "Start: X⁺ = X\nRepeat: for each FD L→R in F, if L ⊆ X⁺ then X⁺ = X⁺ ∪ R\nUntil no change.\nResult: all attributes functionally determined by X." },
+    { f: "Armstrong's 3 Axioms", b: "1. Reflexivity: Y ⊆ X ⟹ X→Y\n2. Augmentation: X→Y ⟹ XZ→YZ\n3. Transitivity: X→Y and Y→Z ⟹ X→Z" },
+    { f: "Canonical FD Set — 4 Steps", b: "1. Split RHS: each FD has single attribute on right\n2. Remove redundant LHS attrs (minimize LHS)\n3. Remove redundant FDs\n4. Result = F_c (minimal basis)" },
+    { f: "How to check if LHS attribute is redundant in XY→A?", b: "Compute X⁺ using F. If A ∈ X⁺, then Y is redundant → replace XY→A with X→A." },
+    { f: "How to check if an FD X→A is redundant?", b: "Remove X→A from F. Compute X⁺ in the remaining set. If A ∈ X⁺, the FD is redundant → remove it." },
+    { f: "BCNF Definition", b: "For every non-trivial FD X→A in F:\nX must be a superkey of R.\n\nRough intuition: 'all FDs are keys.'\nBCNF may lose FDs during decomposition." },
+    { f: "3NF Definition", b: "For every non-trivial FD X→A in F:\n• X is a superkey, OR\n• A is a prime attribute (member of some candidate key)\n\n3NF always preserves FDs." },
+    { f: "BCNF vs 3NF: which preserves FDs?", b: "3NF always preserves all FDs.\nBCNF may lose FDs (rare but possible).\nWhen BCNF loses an FD, 3NF synthesis is used instead." },
+    { f: "What is a prime attribute?", b: "An attribute that is a member of at least one candidate key." },
+    { f: "1NF — First Normal Form", b: "All table entries must be atomic — not lists, sets, records, or relations.\nAll further normal forms assume 1NF." },
+    { f: "BCNF Decomposition: algorithm", b: "While relation R is not in BCNF:\n  Find FD X→A violating BCNF (X not superkey)\n  Split: R1 = X⁺, R2 = (R − X⁺) ∪ X\nRepeat on sub-relations." },
+    { f: "3NF Synthesis: algorithm", b: "1. Compute canonical set F_c\n2. One relation per FD in F_c: R_i = LHS ∪ {A}\n3. If no relation contains a key of R, add one (the key itself)\n4. Remove redundant relations (subsets of others)" },
+    { f: "Multivalued Dependency X ↠ Y", b: "Given X, the set of Y values is independent of other attributes.\n4NF: for every non-trivial MVD X↠Y, X must be a superkey." },
+  ],
+  sql: [
+    { f: "Double NOT EXISTS pattern — what does it implement?", b: "Universal quantification: 'for all'\n∀x P(x) ≡ ¬∃x ¬P(x)\n\nWHERE NOT EXISTS (\n  SELECT 1 FROM T WHERE condition\n  AND NOT EXISTS (\n    SELECT 1 FROM S WHERE ...\n  )\n)" },
+    { f: "NOT IN vs NOT EXISTS — key difference", b: "NOT IN: if subquery returns any NULL, entire condition = UNKNOWN (silently wrong!)\nNOT EXISTS: NULL-safe — checks existence of rows, not value equality.\nAlways prefer NOT EXISTS when NULLs are possible." },
+    { f: "SQL query: parts supplied by only ONE supplier", b: "SELECT DISTINCT c1.pid\nFROM Catalog c1\nWHERE NOT EXISTS (\n  SELECT 1 FROM Catalog c2\n  WHERE c2.pid = c1.pid\n  AND c2.sid <> c1.sid\n);" },
+    { f: "SQL query: suppliers who sell ALL black parts", b: "SELECT s.sname\nFROM Suppliers s\nWHERE NOT EXISTS (\n  SELECT 1 FROM Parts p\n  WHERE p.color = 'black'\n  AND NOT EXISTS (\n    SELECT 1 FROM Catalog c\n    WHERE c.sid = s.sid\n    AND c.pid = p.pid\n  )\n);" },
+    { f: "WHERE vs HAVING — when to use each", b: "WHERE: filters individual rows BEFORE grouping (cannot use aggregates)\nGROUP BY: groups the filtered rows\nHAVING: filters GROUPS after aggregation (CAN use aggregates)\nOrder: WHERE → GROUP BY → HAVING → SELECT" },
+    { f: "Self-join pattern", b: "Compare rows in the same table by aliasing it twice:\n\nSELECT c1.sid, c2.sid, c1.pid\nFROM Catalog c1, Catalog c2\nWHERE c1.pid = c2.pid\n  AND c1.sid < c2.sid;\n\n(< avoids symmetric duplicates)" },
+    { f: "LEFT OUTER JOIN — use case", b: "Keeps ALL rows from the left table, even if no match on right.\nNon-matching rows get NULL for right-table columns.\n\nUse to find: parts never in catalog:\nFROM Parts p LEFT OUTER JOIN Catalog c ON p.pid = c.pid\nWHERE c.pid IS NULL" },
+    { f: "Correlated vs uncorrelated subquery", b: "Uncorrelated: inner query runs once, independently of outer.\nCorrelated: inner query references outer query variable — runs once per outer row.\n\nNOT EXISTS queries are always correlated (must reference outer table)." },
+    { f: "COALESCE function", b: "Returns the first non-NULL value in its argument list.\nCOALESCE(a, b, c) → a if not null, else b if not null, else c\n\nUseful for default values: COALESCE(cost, 0)" },
+    { f: "ORDER BY with NULLs", b: "ORDER BY col ASC NULLS LAST  → NULLs appear at bottom\nORDER BY col ASC NULLS FIRST → NULLs appear at top\nDefault varies by database (PostgreSQL: NULLs last for ASC)" },
+  ],
+  tx: [
+    { f: "What are the 3 conflict types?", b: "Two ops conflict if: different transactions, same data item, ≥1 write.\n\n• W-R: dirty read risk\n• R-W: unrepeatable read\n• W-W: lost update" },
+    { f: "Precedence graph: how to build it", b: "Nodes = transactions\nEdge Ti→Tj: Ti has operation that conflicts with AND precedes a Tj operation.\n\nSchedule is conflict serializable ⟺ graph is ACYCLIC." },
+    { f: "Recoverable schedule — definition", b: "If Ti reads data written by Tj, then Tj must COMMIT before Ti commits.\n\nEnsures: aborting Tj doesn't corrupt Ti's committed result." },
+    { f: "Cascadeless schedule — definition", b: "Transactions only read data written by ALREADY COMMITTED transactions.\n\nNo dirty reads → no cascading rollbacks.\nCascadeless ⊂ Recoverable (cascadeless implies recoverable)." },
+    { f: "2PL — Two-Phase Locking", b: "Growing phase: acquire locks freely, release NONE.\nShrinking phase: release locks, acquire NONE.\n\nGuarantees conflict-serializable schedules." },
+    { f: "Strict 2PL vs 2PL", b: "Strict 2PL: hold ALL locks until commit or abort.\nAdds: prevents dirty reads → cascadeless schedules.\nStill susceptible to deadlocks." },
+    { f: "Preclaiming (Conservative) 2PL", b: "Acquire ALL needed locks BEFORE the transaction starts.\nPrevents deadlocks.\nMay cause starvation.\n\nProtocol comparison:\n2PL: serializable only\nStrict: + cascadeless\nPreclaiming: + deadlock-free" },
+    { f: "MVCC — key property", b: "Multiversion Concurrency Control:\nReaders never block writers; writers never block readers.\nReaders see a consistent snapshot from transaction start.\nUsed by PostgreSQL, Oracle." },
+    { f: "Lost update anomaly", b: "T1 and T2 both read X, both compute new value, both write.\nIf T2 commits after T1: T1's write is overwritten and lost.\n\nSolved by: locking (prevent concurrent reads+writes of same item)." },
+    { f: "Isolation levels — order from weakest to strongest", b: "READ UNCOMMITTED → dirty reads allowed\nREAD COMMITTED → prevents dirty reads\nREPEATABLE READ → prevents unrepeatable reads\nSERIALIZABLE → prevents phantom reads\n\nHigher = safer but less concurrent." },
+  ],
+  api: [
+    { f: "ANSI SPARC — 3 levels (highest to lowest)", b: "External (highest): how applications/users see data — views, user schemas\nConceptual (middle): full logical structure — all tables, FKs, constraints\nInternal (lowest): physical storage — files, indexes, data structures" },
+    { f: "Where does ORM sit in ANSI SPARC?", b: "At the EXTERNAL level (or external/conceptual boundary).\n\nPurpose: hides navigational access behind objects; provides application-level view; supports schema evolution without changing application code.\n\nExamples: Hibernate, Entity Framework, ActiveRecord, ADO.NET/LINQ" },
+    { f: "SQL injection — how it works", b: "Application builds SQL by concatenating user input as strings.\n\nVulnerable:\nquery = \"SELECT * FROM users WHERE name = '\" + input + \"'\"\n\nAttack input: ' OR '1'='1\nResulting SQL: WHERE name = '' OR '1'='1' → always true" },
+    { f: "Prepared statements — why safe?", b: "SQL query compiled once with placeholders (?).\nParameters sent separately — never interpreted as SQL syntax.\n\nAdditional benefits:\n• Query plan cached → faster repeated execution\n• Type safety enforced\n• Database handles escaping" },
+    { f: "Static vs Dynamic SQL", b: "Static: queries fixed at compile time (SQLJ, Embedded SQL for C/C++)\n• Inflexible but syntax-checked at compile time\n\nDynamic: queries built at runtime via API (JDBC, Python DB-API, ODBC)\n• Flexible but error-prone (SQL injection risk)" },
+  ],
+  er: [
+    { f: "Weak entity set — what makes it weak?", b: "Cannot be uniquely identified by its own attributes alone.\nDepends on an IDENTIFYING RELATIONSHIP with an owner entity.\nIdentified by: discriminator attribute + owner's primary key.\n\nDrawn with: double rectangle + double diamond." },
+    { f: "ISA inheritance — 4 combinations", b: "Overlapping vs Disjoint: can an entity be in multiple subtypes?\nCovering vs Non-covering: must every supertype instance be in a subtype?\n\nOverlapping + Covering = most flexible\nDisjoint + Covering = every instance in exactly one subtype" },
+    { f: "Aggregation — when to use it", b: "When a RELATIONSHIP itself needs to participate in another relationship.\n\nExample: 'a professor SUPERVISES a graduate student's work ON a specific project'\n→ The (student, project) relationship is aggregated into an entity." },
+    { f: "Many-to-many relationship in relational schema", b: "Always becomes its own relation table.\nTable contains: PKs of both participating entities (both form composite PK) + any relationship attributes.\n\nExample: Catalog(sid→Suppliers, pid→Parts, cost)" },
+    { f: "Foreign key — when is it NULLable?", b: "FK is NULLable when participation is PARTIAL (not every entity must participate in the relationship).\n\nExample: a project may have no graduate students yet → the FK in the assignment table is optional.\n\nFK is NOT NULL when participation is TOTAL (mandatory)." },
+    { f: "Superkey vs Candidate Key vs Primary Key", b: "Superkey: any set of attributes uniquely identifying a tuple\nCandidate key: MINIMAL superkey (removing any attribute breaks uniqueness)\nPrimary key: the chosen candidate key (underlined in schema notation)\n\nA relation can have multiple candidate keys but exactly one primary key." },
+  ],
+};
+DECKS.all = Object.values(DECKS).flat();
+
+let currentDeck = DECKS.all;
+let cardIndex = 0;
+
+function loadDeck() {
+  const sel = document.getElementById('fc-deck').value;
+  currentDeck = DECKS[sel];
+  cardIndex = 0;
+  showCard();
+}
+
+function showCard() {
+  const card = currentDeck[cardIndex];
+  document.getElementById('fc-front').innerHTML = card.f.replace(/\n/g, '<br>');
+  document.getElementById('fc-back').innerHTML = card.b.replace(/```([\s\S]*?)```/g, '<pre>$1</pre>').replace(/`([^`]+)`/g, '<code>$1</code>').replace(/\n/g, '<br>');
+  document.getElementById('flashcard').classList.remove('flipped');
+  const pct = ((cardIndex + 1) / currentDeck.length * 100).toFixed(0);
+  document.getElementById('fc-fill').style.width = pct + '%';
+  document.getElementById('fc-counter').textContent = `Card ${cardIndex + 1} of ${currentDeck.length}`;
+}
+
+function flipCard() { document.getElementById('flashcard').classList.toggle('flipped'); }
+function nextCard() { cardIndex = (cardIndex + 1) % currentDeck.length; showCard(); }
+function prevCard() { cardIndex = (cardIndex - 1 + currentDeck.length) % currentDeck.length; showCard(); }
+
+document.addEventListener('keydown', e => {
+  if (document.getElementById('flashcards').classList.contains('active')) {
+    if (e.key === ' ') { e.preventDefault(); flipCard(); }
+    if (e.key === 'ArrowRight') nextCard();
+    if (e.key === 'ArrowLeft') prevCard();
+  }
+  if (document.getElementById('quiz').classList.contains('active')) {
+    if (e.key === 'Enter' && document.getElementById('q-next-btn').style.display !== 'none') nextQuestion();
+  }
+});
+
+loadDeck();
+
+// ═══════════════════ PRACTICE PROBLEMS ═══════════════════
+
+const PROBLEMS = [
+  {
+    tag: 'norm', tagLabel: 'Normalization',
+    q: 'Drill 1 — Exercise Exam FD Set',
+    detail: 'R(A,B,C,D,E), F = {A→DB, B→D, AE→ED, E→A}\n(a) Find canonical set\n(b) Find minimal keys\n(c) Decompose to BCNF\n(d) Synthesise to 3NF',
+    solution: `(a) Canonical set F_c:
+Step 1 – split RHS: A→D, A→B, B→D, AE→E (trivial, remove), AE→D, E→A
+Step 2 – AE→D: A⁺ = {A,B,D} so D ∈ A⁺ → remove E: becomes A→D (duplicate, drop)
+Step 3 – A→D: remove it; compute A⁺ in {A→B, B→D, E→A} = {A,B,D} → D ∈ A⁺ → redundant
+F_c = {A→B, B→D, E→A}
+
+(b) C never appears on any RHS → must be in every key.
+    E⁺ = {E,A,B,D}. CE⁺ = {A,B,C,D,E} ✓
+    Minimal key: {CE}
+
+(c) BCNF violations: A→B (A not superkey), B→D, E→A.
+    Decompose using E→A first:
+      R1(E,A,B,D) — A→B, B→D remain; E is key? E⁺={E,A,B,D}=all ✓... wait, C missing
+    Correct decomposition:
+      Split on A→B: R1(A,B), R2(A,C,D,E)
+      Check R2: B→D doesn't apply here. E→A applies: E not superkey of R2(A,C,D,E) → split
+        R2a(E,A), R2b(C,D,E): no more violations
+      R1(A,B): A is key ✓ BCNF
+    Result: {R1(A,B), R2a(A,E), R2b(C,D,E)}
+    Check: B→D is LOST in this decomposition. ← expected; BCNF can lose FDs
+
+(d) 3NF synthesis:
+    1. One relation per F_c FD: R1(A,B), R2(B,D), R3(E,A)
+    2. Add key relation: R4(C,E)
+    Result: {R1(A,B), R2(B,D), R3(E,A), R4(C,E)} — all FDs preserved ✓`
+  },
+  {
+    tag: 'norm', tagLabel: 'Normalization',
+    q: 'Drill 2 — Fresh FD Set',
+    detail: 'R(A,B,C,D,E), F = {AB→C, C→D, D→B, A→E}\n(a) Canonical set  (b) Minimal keys  (c) BCNF?  (d) 3NF?',
+    solution: `(a) Step 1: all single RHS already.
+Step 2: AB→C — can A alone determine C? A⁺ in F = {A,E}. C ∉ A⁺.
+        Can B alone? B⁺ = {B,D,B...} = {B,D}. C ∉ {B,D}. → AB→C stays.
+Step 3: no FDs derivable without themselves.
+F_c = {AB→C, C→D, D→B, A→E}
+
+(b) E and C never on RHS... wait: E is never on any LHS, A→E means E depends on A.
+    A must be in every key (only path to E is via A→E; A not reachable from others).
+    A⁺ = {A,E}. Need B or C or D.
+    AB⁺ = {A,B,E} → via AB→C: {A,B,C,E} → via C→D: {A,B,C,D,E} ✓
+    Minimal key: {AB}
+
+(c) BCNF violations:
+    C→D: C⁺ = {C,D,B} ≠ all → violation
+    D→B: D⁺ = {D,B} ≠ all → violation
+    A→E: A⁺ = {A,E} ≠ all → violation
+    AB→C: AB is key ✓
+    NOT in BCNF.
+
+(d) Prime attributes: A, B (members of key {AB}).
+    C→D: C not superkey, D not prime → violation.
+    D→B: D not superkey, B IS prime ✓ (3NF exception applies!)
+    A→E: A not superkey, E not prime → violation.
+    NOT in 3NF (due to C→D and A→E).`
+  },
+  {
+    tag: 'norm', tagLabel: 'Normalization',
+    q: 'Drill 3 — Closure Practice',
+    detail: 'F = {A→B, B→C, C→D, D→A, E→F, F→E}\nCompute: A⁺, E⁺, AE⁺, BE⁺\nFind all minimal keys of R(A,B,C,D,E,F)',
+    solution: `A⁺: start {A} → A→B: {A,B} → B→C: {A,B,C} → C→D: {A,B,C,D} → D→A: no change
+A⁺ = {A,B,C,D}
+
+E⁺: {E} → E→F: {E,F} → F→E: no change
+E⁺ = {E,F}
+
+AE⁺: {A,E} → all of A⁺ and E⁺ = {A,B,C,D,E,F} ✓
+
+BE⁺: {B,E} → B→C: {B,C,E} → C→D: {B,C,D,E} → D→A: {A,B,C,D,E} → E→F: {A,B,C,D,E,F} ✓
+
+Minimal keys:
+A alone: A⁺={A,B,C,D} — missing E,F ✗
+E alone: E⁺={E,F} ✗
+AE: AE⁺ = all ✓ → check minimality: A⁺≠all, E⁺≠all → both needed ✓
+BE: BE⁺ = all ✓ → minimal? B alone = {B,C,D,A} ✗, E alone ✗ → ✓
+CE, DE are also minimal keys (same cycle: A↔B↔C↔D, E↔F)
+
+All minimal keys: {AE}, {BE}, {CE}, {DE}, {AF}, {BF}, {CF}, {DF}`
+  },
+  {
+    tag: 'sql', tagLabel: 'SQL',
+    q: 'SQL 1 — Suppliers/Parts/Catalog queries',
+    detail: `Schema:
+Suppliers(sid, sname, saddress)
+Parts(pid, pname, color)
+Catalog(sid→Suppliers, pid→Parts, cost)
+
+Write queries for:
+(a) Find pids supplied by more than one supplier (NOT EXISTS)
+(b) Find parts that no supplier catalogs (LEFT OUTER JOIN)
+(c) Supplier names and their cheapest catalog cost`,
+    solution: `(a) Parts supplied by more than one supplier:
+SELECT DISTINCT c1.pid
+FROM Catalog c1
+WHERE EXISTS (
+  SELECT 1 FROM Catalog c2
+  WHERE c2.pid = c1.pid
+    AND c2.sid <> c1.sid
+);
+
+(b) Parts not in any catalog:
+SELECT p.pid, p.pname
+FROM Parts p
+LEFT OUTER JOIN Catalog c ON p.pid = c.pid
+WHERE c.pid IS NULL;
+
+(c) Cheapest cost per supplier:
+SELECT s.sname, MIN(c.cost) AS min_cost
+FROM Suppliers s
+JOIN Catalog c ON s.sid = c.sid
+GROUP BY s.sid, s.sname
+ORDER BY min_cost ASC NULLS LAST;`
+  },
+  {
+    tag: 'sql', tagLabel: 'SQL',
+    q: 'SQL 2 — Advanced patterns',
+    detail: `Using the same schema. Write:
+(a) Suppliers who sell ONLY red parts (no non-red parts)
+(b) For each part: its name, and how many suppliers catalog it
+(c) Parts where ALL suppliers charge over 50`,
+    solution: `(a) Suppliers selling ONLY red parts:
+-- Supplier exists AND no non-red part they sell exists
+SELECT s.sname
+FROM Suppliers s
+WHERE EXISTS (SELECT 1 FROM Catalog c WHERE c.sid = s.sid)  -- sells at least one part
+AND NOT EXISTS (
+  SELECT 1 FROM Catalog c JOIN Parts p ON c.pid = p.pid
+  WHERE c.sid = s.sid AND p.color <> 'red'
+);
+
+(b) Supplier count per part:
+SELECT p.pname, COUNT(c.sid) AS num_suppliers
+FROM Parts p
+LEFT JOIN Catalog c ON p.pid = c.pid
+GROUP BY p.pid, p.pname;
+
+(c) Parts where all suppliers charge > 50:
+-- No supplier exists who charges ≤ 50 for this part
+SELECT p.pname
+FROM Parts p
+WHERE EXISTS (SELECT 1 FROM Catalog c WHERE c.pid = p.pid)  -- at least one supplier
+AND NOT EXISTS (
+  SELECT 1 FROM Catalog c
+  WHERE c.pid = p.pid AND c.cost <= 50
+);`
+  },
+  {
+    tag: 'sql', tagLabel: 'SQL',
+    q: 'SQL 3 — Aggregation & CASE',
+    detail: `Write:
+(a) Label each part as 'cheap' (<10), 'medium' (10–50), 'expensive' (>50) using CASE
+(b) Find suppliers with above-average catalog size (number of parts they sell)
+(c) UNION: all sids that appear in Suppliers but NOT in Catalog`,
+    solution: `(a) CASE expression:
+SELECT p.pname,
+  CASE
+    WHEN c.cost < 10  THEN 'cheap'
+    WHEN c.cost <= 50 THEN 'medium'
+    ELSE                   'expensive'
+  END AS tier
+FROM Parts p
+JOIN Catalog c ON p.pid = c.pid;
+
+(b) Suppliers with above-average catalog size:
+SELECT s.sname, COUNT(c.pid) AS catalog_size
+FROM Suppliers s
+JOIN Catalog c ON s.sid = c.sid
+GROUP BY s.sid, s.sname
+HAVING COUNT(c.pid) > (
+  SELECT AVG(cnt) FROM (
+    SELECT COUNT(pid) AS cnt
+    FROM Catalog
+    GROUP BY sid
+  ) AS sub
+);
+
+(c) Suppliers not in catalog:
+SELECT sid FROM Suppliers
+EXCEPT
+SELECT sid FROM Catalog;
+-- Or with NOT EXISTS:
+SELECT sid FROM Suppliers s
+WHERE NOT EXISTS (
+  SELECT 1 FROM Catalog c WHERE c.sid = s.sid
+);`
+  },
+  {
+    tag: 'sql', tagLabel: 'SQL',
+    q: 'SQL 4 — Self-join & Outer joins',
+    detail: `Write:
+(a) Find all pairs of parts that share the same color (no duplicates, no self-pairs)
+(b) Find all suppliers and the parts they sell — include suppliers with no parts
+(c) Find all parts and all suppliers — show NULL where no catalog entry exists (FULL OUTER JOIN)`,
+    solution: `(a) Pairs of parts with same color:
+SELECT p1.pname AS part1, p2.pname AS part2, p1.color
+FROM Parts p1, Parts p2
+WHERE p1.color = p2.color
+  AND p1.pid < p2.pid;
+
+(b) All suppliers with their parts (include suppliers with no parts):
+SELECT s.sname, p.pname, c.cost
+FROM Suppliers s
+LEFT OUTER JOIN Catalog c ON s.sid = c.sid
+LEFT OUTER JOIN Parts p ON c.pid = p.pid;
+
+(c) Full outer join parts and suppliers:
+SELECT p.pname, s.sname, c.cost
+FROM Parts p
+FULL OUTER JOIN Catalog c ON p.pid = c.pid
+FULL OUTER JOIN Suppliers s ON c.sid = s.sid;`
+  },
+  {
+    tag: 'tx', tagLabel: 'Transactions',
+    q: 'Transaction 1 — Exercise Exam Schedule',
+    detail: `Build the precedence graph and determine conflict serializability:
+T1:  R(Z)              R(Y)
+T2:       R(Y)  W(Y)        R(V)
+T3:  W(V)                         W(Z)
+
+Also: classify the schedule as cascadeless / recoverable / neither.`,
+    solution: `Time-ordered operations:
+T3:W(V), T1:R(Z), T2:R(Y), T2:W(Y), T1:R(Y), T2:R(V), T3:W(Z)
+
+Conflicting pairs (diff txn, same item, ≥1 write):
+• T3:W(V) vs T2:R(V) — V, W-R → edge T3→T2
+• T2:W(Y) vs T1:R(Y) — Y, W-R → edge T2→T1
+• T1:R(Z) vs T3:W(Z) — Z, R-W → edge T1→T3
+
+Precedence graph: T3→T2→T1→T3
+CYCLE EXISTS → NOT conflict serializable.
+
+Cascadeless / Recoverable:
+T1 reads Y AFTER T2:W(Y) (T2 not yet committed) → dirty read → NOT cascadeless.
+Is it recoverable? T2 must commit before T1 — not guaranteed by the schedule listing → cannot determine without commit operations shown.`
+  },
+  {
+    tag: 'tx', tagLabel: 'Transactions',
+    q: 'Transaction 2 — Generated Schedule',
+    detail: `Schedule:
+T1: R(A)  W(A)
+T2:            R(B)  W(B)
+T3:       R(A)            W(B)
+
+Build precedence graph. Is it conflict serializable? If so, which serial order?`,
+    solution: `Time order: T1:R(A), T1:W(A), T3:R(A), T2:R(B), T2:W(B), T3:W(B)
+
+Conflicting pairs:
+• T1:W(A) vs T3:R(A) — W-R → T1→T3
+• T2:W(B) vs T3:W(B) — W-W → T2→T3
+
+Precedence graph:
+T1 → T3
+T2 → T3
+
+No cycle → ACYCLIC → conflict serializable ✓
+Equivalent serial order: T1, T2, T3  (or T2, T1, T3)
+
+Is it cascadeless?
+T3:R(A) reads T1:W(A) — T1 may not be committed yet → NOT cascadeless.`
+  },
+  {
+    tag: 'tx', tagLabel: 'Transactions',
+    q: 'Transaction 3 — 2PL and locking',
+    detail: `(a) Define the 2PL protocol and explain why it guarantees conflict serializability.
+(b) What does strict 2PL add and what problem does it solve?
+(c) A schedule uses strict 2PL. Transaction T1 reads X (written by T2) and then T2 aborts. What happens?`,
+    solution: `(a) 2PL Protocol:
+Growing phase: transaction acquires locks, releases none.
+Shrinking phase: transaction releases locks, acquires none.
+Lock point = first release.
+
+Why serializable: the lock points impose a total order on transactions. Any two conflicting operations from Ti and Tj are ordered by their lock points → equivalent to serial execution in that order.
+
+(b) Strict 2PL adds: hold ALL locks (shared and exclusive) until the transaction commits or aborts.
+Solves: cascading rollbacks. Since no transaction reads uncommitted data (locks held until commit), aborting one transaction never forces others to abort.
+Also ensures cascadeless schedules (no dirty reads).
+
+(c) Strict 2PL + T2 abort:
+T2 holds its write lock on X until abort.
+T1 cannot read X until T2 releases the lock (after abort).
+Since T2 aborts, T2's write is rolled back BEFORE T1 can read X.
+→ T1 reads the correct committed value (or waits for the lock to be released).
+→ No cascading rollback needed.`
+  },
+  {
+    tag: 'api', tagLabel: 'Database APIs',
+    q: 'API 1 — ANSI SPARC + ORM',
+    detail: `(a) Name and describe the 3 ANSI SPARC architecture levels (highest to lowest).
+(b) At which level do ORMs (Hibernate, Entity Framework) operate? What is their purpose?`,
+    solution: `(a) ANSI SPARC levels:
+1. External (highest): how individual users/applications see the data.
+   Multiple external schemas possible (different views for different apps/roles).
+   This is where views, stored procedures, user-facing interfaces live.
+
+2. Conceptual (middle): the full logical structure of the database.
+   All tables, columns, foreign keys, integrity constraints.
+   Database-independent; describes WHAT is stored, not HOW.
+
+3. Internal (lowest): how data is physically stored on disk.
+   File structures, indexes, storage blocks, compression.
+   Describes HOW data is stored.
+
+(b) ORMs sit at the EXTERNAL level (sometimes described as external/conceptual boundary).
+
+Purpose:
+• Hide navigational access behind objects (use object methods instead of SQL)
+• Provide an application-level view of the database
+• Support schema evolution: change the database schema without rewriting all application code
+• Map database rows to programming language objects automatically
+
+Examples: Hibernate (JPA, Java), Entity Framework (.NET), Ruby on Rails ActiveRecord`
+  },
+  {
+    tag: 'api', tagLabel: 'Database APIs',
+    q: 'API 2 — SQL Injection',
+    detail: `(a) Explain how string assembly creates an SQL injection vulnerability. Give a concrete example.
+(b) How do prepared statements prevent this? Show the fix for your example.`,
+    solution: `(a) String assembly vulnerability:
+The application builds an SQL query by concatenating user-provided input directly:
+
+// Java example (VULNERABLE):
+String query = "SELECT * FROM Users WHERE name = '" + userName + "'";
+
+Normal input: userName = "Alice"
+→ SELECT * FROM Users WHERE name = 'Alice'  ✓
+
+Malicious input: userName = "' OR '1'='1"
+→ SELECT * FROM Users WHERE name = '' OR '1'='1'
+→ '1'='1' is always true → returns ALL users
+
+More dangerous: userName = "'; DROP TABLE Users; --"
+→ Deletes the entire Users table!
+
+(b) Prepared statements — the fix:
+// Java (SAFE):
+PreparedStatement ps = conn.prepareStatement(
+  "SELECT * FROM Users WHERE name = ?"
+);
+ps.setString(1, userName);
+ResultSet rs = ps.executeQuery();
+
+How it prevents injection:
+The SQL structure is compiled FIRST (the ? is a placeholder).
+User input is passed as a parameter SEPARATELY — it is treated as a data value, never as SQL syntax.
+Even if userName = "' OR '1'='1", it is searched for literally as a name string.`
+  },
+];
+
+function buildProblems() {
+  const container = document.getElementById('prob-list');
+  PROBLEMS.forEach((p, i) => {
+    const tagClass = `tag-${p.tag}`;
+    container.innerHTML += `
+      <div class="prob-card">
+        <div class="prob-header">
+          <span class="prob-tag ${tagClass}">${p.tagLabel}</span>
+          <strong>${p.q}</strong>
+        </div>
+        <div class="prob-detail"><pre>${p.detail}</pre></div>
+        <button class="btn btn-secondary reveal-btn" onclick="revealSolution(${i})">Show Solution</button>
+        <div class="solution" id="sol-${i}"><pre>${p.solution}</pre></div>
+      </div>`;
+  });
+}
+function revealSolution(i) {
+  const el = document.getElementById('sol-' + i);
+  el.classList.toggle('show');
+}
+buildProblems();
+
+// ═══════════════════ QUIZ ═══════════════════
+
+const QUESTIONS = [
+  { topic: 'ER / Relational', tc: 'tag-norm',
+    q: 'What is a candidate key?',
+    opts: ['Any set of attributes that uniquely identifies a tuple', 'A minimal superkey — no attribute can be removed without losing uniqueness', 'The primary key chosen by the DBA', 'A foreign key that references a candidate key'],
+    ans: 1, exp: 'A candidate key is a MINIMAL superkey. A superkey just needs to be unique; a candidate key cannot have any attribute removed while staying unique.' },
+  { topic: 'ER / Relational', tc: 'tag-norm',
+    q: 'When is a foreign key attribute NULLable?',
+    opts: ['Always — FKs are always optional', 'When participation in the relationship is partial (not mandatory)', 'When it references a non-primary candidate key', 'Never — FKs must always be NOT NULL'],
+    ans: 1, exp: 'FK is NULLable when the relationship participation is partial (optional). Total/mandatory participation → FK must be NOT NULL.' },
+  { topic: 'ER / Relational', tc: 'tag-norm',
+    q: 'A many-to-many relationship in ER always translates to:',
+    opts: ['An attribute on one of the entity tables', 'A new relation table containing the PKs of both entities', 'An ISA hierarchy', 'A constraint on the existing entity tables'],
+    ans: 1, exp: 'Many-to-many relationships always become their own table containing the PKs of both participating entities (forming a composite PK) plus any relationship attributes.' },
+  { topic: 'Normalization', tc: 'tag-norm',
+    q: 'F = {A→B, B→C}. What is A⁺?',
+    opts: ['{A}', '{A, B}', '{A, B, C}', '{A, B, C, D} — depends on schema'],
+    ans: 2, exp: 'Start with {A}. A→B fires: {A,B}. B→C fires: {A,B,C}. No more FDs fire. A⁺ = {A,B,C}.' },
+  { topic: 'Normalization', tc: 'tag-norm',
+    q: 'Which step of the canonical set algorithm removes redundant FDs?',
+    opts: ['Step 1 (split RHS)', 'Step 2 (remove redundant LHS attributes)', 'Step 3 (remove redundant FDs)', 'Step 4 (result)'],
+    ans: 2, exp: 'Step 1: split RHS. Step 2: minimize LHS of each FD. Step 3: remove entire FDs that are derivable from the rest.' },
+  { topic: 'Normalization', tc: 'tag-norm',
+    q: 'BCNF requires that for every non-trivial FD X→A:',
+    opts: ['A is a prime attribute', 'X is a superkey', 'X is a prime attribute', 'A is not a prime attribute'],
+    ans: 1, exp: 'BCNF: for every non-trivial FD X→A, X must be a superkey. This is stronger than 3NF which allows A to be prime.' },
+  { topic: 'Normalization', tc: 'tag-norm',
+    q: '3NF allows an FD X→A to NOT have X as a superkey, provided:',
+    opts: ['X is a prime attribute', 'A is a prime attribute', 'The FD is trivial', 'X is a subset of the primary key'],
+    ans: 1, exp: '3NF allows violation of the superkey rule ONLY when A (the RHS attribute) is a prime attribute — a member of at least one candidate key.' },
+  { topic: 'Normalization', tc: 'tag-norm',
+    q: 'Which normal form always preserves all functional dependencies?',
+    opts: ['BCNF', '3NF', '4NF', '1NF'],
+    ans: 1, exp: '3NF synthesis always preserves FDs. BCNF decomposition may lose FDs in rare cases.' },
+  { topic: 'Normalization', tc: 'tag-norm',
+    q: 'R(A,B,C), F = {A→B, B→C, C→A}. How many minimal keys are there?',
+    opts: ['1 — only {A}', '2 — {A} and {B}', '3 — {A}, {B}, and {C}', '0 — no minimal key exists'],
+    ans: 2, exp: 'The FDs form a cycle: A→B→C→A. Each single attribute determines all others. So {A}, {B}, and {C} are all minimal keys.' },
+  { topic: 'SQL', tc: 'tag-sql',
+    q: 'Why is NOT EXISTS preferred over NOT IN when NULLs may be present?',
+    opts: ['NOT EXISTS is faster', 'NOT IN returns UNKNOWN (not FALSE) for any NULL in the subquery result, silently excluding all rows', 'NOT IN requires a correlated subquery', 'They behave identically'],
+    ans: 1, exp: 'If the subquery returns any NULL, NOT IN evaluates to UNKNOWN for every comparison. This silently filters out all rows. NOT EXISTS checks for row existence, so NULLs do not cause this problem.' },
+  { topic: 'SQL', tc: 'tag-sql',
+    q: 'The double NOT EXISTS pattern implements:',
+    opts: ['Set intersection', 'Universal quantification ("for all")', 'Set difference', 'Existential quantification ("there exists")'],
+    ans: 1, exp: '∀x P(x) ≡ ¬∃x ¬P(x). The outer NOT EXISTS says "there is no x" and the inner NOT EXISTS says "for which P(x) fails".' },
+  { topic: 'SQL', tc: 'tag-sql',
+    q: 'Which clause filters rows AFTER grouping, and can use aggregate functions?',
+    opts: ['WHERE', 'GROUP BY', 'HAVING', 'ORDER BY'],
+    ans: 2, exp: 'HAVING filters groups after GROUP BY. WHERE filters rows before grouping and cannot use aggregate functions in its condition.' },
+  { topic: 'SQL', tc: 'tag-sql',
+    q: 'SELECT pid FROM Catalog GROUP BY pid HAVING COUNT(DISTINCT sid) = 1 — what does this find?',
+    opts: ['Parts in the catalog exactly once', 'Parts supplied by exactly one supplier', 'Parts with a unique pid', 'Suppliers with exactly one part'],
+    ans: 1, exp: 'COUNT(DISTINCT sid) = 1 means only one distinct supplier for that pid. This is equivalent to the NOT EXISTS version (but loses full marks on this exam).' },
+  { topic: 'SQL', tc: 'tag-sql',
+    q: 'A correlated subquery:',
+    opts: ['Runs once for the entire query', 'References variables from the outer query and runs once per outer row', 'Is always faster than uncorrelated', 'Cannot be used in a WHERE clause'],
+    ans: 1, exp: 'Correlated subqueries reference the outer query\'s row variables (e.g. s.sid from the outer SELECT). They run once per row of the outer query.' },
+  { topic: 'SQL', tc: 'tag-sql',
+    q: 'COALESCE(a, b, c) returns:',
+    opts: ['The maximum of a, b, c', 'The first non-NULL value among a, b, c', 'NULL if any of a, b, c is NULL', 'The concatenation of a, b, c'],
+    ans: 1, exp: 'COALESCE returns the first non-NULL argument. Useful for providing default values when a column may be NULL.' },
+  { topic: 'Transactions', tc: 'tag-tx',
+    q: 'Two operations conflict if:',
+    opts: ['They access the same table', 'They are from different transactions, access the same data item, and at least one is a write', 'They are both writes to the same table', 'They are from the same transaction'],
+    ans: 1, exp: 'All three conditions must hold: (1) different transactions, (2) same data item, (3) at least one is a write.' },
+  { topic: 'Transactions', tc: 'tag-tx',
+    q: 'A schedule is conflict serializable if and only if:',
+    opts: ['It has no dirty reads', 'Its precedence graph is acyclic', 'All transactions commit in order', 'It uses two-phase locking'],
+    ans: 1, exp: 'The precedence graph test: nodes=transactions, edge Ti→Tj for each conflict where Ti\'s operation precedes Tj\'s. Acyclic ⟺ conflict serializable.' },
+  { topic: 'Transactions', tc: 'tag-tx',
+    q: 'Cascadeless schedules are _____ recoverable schedules.',
+    opts: ['Equivalent to', 'A subset of (stricter than)', 'A superset of (weaker than)', 'Unrelated to'],
+    ans: 1, exp: 'Cascadeless ⊂ Recoverable. Every cascadeless schedule is recoverable, but not every recoverable schedule is cascadeless.' },
+  { topic: 'Transactions', tc: 'tag-tx',
+    q: 'Strict 2PL vs basic 2PL: what does strict 2PL add?',
+    opts: ['All locks acquired before the transaction starts', 'All locks held until commit or abort', 'Shared locks only — no exclusive locks', 'Deadlock detection via waits-for graph'],
+    ans: 1, exp: 'Strict 2PL: hold ALL locks until commit/abort. This prevents dirty reads and ensures cascadeless schedules. Preclaiming 2PL (not strict) acquires all locks at start.' },
+  { topic: 'Transactions', tc: 'tag-tx',
+    q: 'Which isolation level prevents dirty reads but allows unrepeatable reads?',
+    opts: ['READ UNCOMMITTED', 'READ COMMITTED', 'REPEATABLE READ', 'SERIALIZABLE'],
+    ans: 1, exp: 'READ COMMITTED prevents dirty reads (only reads committed data) but does not prevent unrepeatable reads (a second read of the same row may give different results if another transaction committed a change).' },
+  { topic: 'Transactions', tc: 'tag-tx',
+    q: 'MVCC (Multiversion Concurrency Control) ensures:',
+    opts: ['Readers block writers and writers block readers', 'Readers never block writers; writers never block readers', 'Only one version of each data item exists', 'Strict 2PL is used for all transactions'],
+    ans: 1, exp: 'MVCC maintains multiple versions of data items. Readers see a consistent snapshot without locking. Used by PostgreSQL and Oracle.' },
+  { topic: 'Database APIs', tc: 'tag-api',
+    q: 'ANSI SPARC: which level describes the physical storage of data?',
+    opts: ['External level', 'Conceptual level', 'Internal level', 'Application level'],
+    ans: 2, exp: 'Internal level (lowest) = physical storage: files, indexes, blocks, compression. Conceptual = logical schema. External = user/application views.' },
+  { topic: 'Database APIs', tc: 'tag-api',
+    q: 'ORMs like Hibernate operate at which ANSI SPARC level?',
+    opts: ['Internal level — closest to storage', 'Conceptual level — logical schema', 'External level — application view', 'They span all three levels equally'],
+    ans: 2, exp: 'ORMs sit at the External level. They provide an object-oriented view of the database to the application, hiding the relational structure behind objects.' },
+  { topic: 'Database APIs', tc: 'tag-api',
+    q: 'The primary security advantage of prepared statements is:',
+    opts: ['They run faster than dynamic SQL', 'SQL structure is compiled before parameters are bound, preventing injection', 'They encrypt the database connection', 'They validate SQL syntax at runtime'],
+    ans: 1, exp: 'Prepared statements separate the SQL structure (compiled first) from the user-provided parameters (bound later as data, never as SQL). This prevents any injected SQL from being interpreted.' },
+  { topic: 'Database APIs', tc: 'tag-api',
+    q: 'String assembly in database APIs is dangerous because:',
+    opts: ['It is slower than prepared statements', 'User input is concatenated directly into SQL, allowing it to be interpreted as SQL syntax', 'It requires more memory', 'It does not support Unicode'],
+    ans: 1, exp: 'When user input is part of the SQL string, a malicious user can inject SQL code (e.g. OR \'1\'=\'1\') that changes the query\'s logic, potentially bypassing authentication or destroying data.' },
+];
+
+let quizOrder = [];
+let qIndex = 0;
+let qScore = 0;
+let topicScores = {};
+let answered = false;
+
+function startQuiz() {
+  quizOrder = [...Array(QUESTIONS.length).keys()].sort(() => Math.random() - 0.5);
+  qIndex = 0; qScore = 0; topicScores = {}; answered = false;
+  document.getElementById('quiz-setup').style.display = 'none';
+  document.getElementById('quiz-results').classList.remove('show');
+  document.getElementById('quiz-container').classList.add('active');
+  showQuestion();
+}
+
+function showQuestion() {
+  answered = false;
+  const qi = quizOrder[qIndex];
+  const q = QUESTIONS[qi];
+  document.getElementById('q-fill').style.width = ((qIndex / QUESTIONS.length) * 100) + '%';
+  document.getElementById('q-counter').textContent = `${qIndex + 1} / ${QUESTIONS.length}`;
+  const badge = document.getElementById('q-topic-badge');
+  badge.textContent = q.topic;
+  badge.className = 'q-topic-badge ' + q.tc;
+  document.getElementById('q-text').innerHTML = q.q.replace(/`([^`]+)`/g, '<code>$1</code>');
+  const opts = document.getElementById('q-options');
+  opts.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    btn.textContent = opt;
+    btn.onclick = () => selectAnswer(i);
+    opts.appendChild(btn);
+  });
+  document.getElementById('q-explanation').textContent = '';
+  document.getElementById('q-explanation').classList.remove('show');
+  document.getElementById('q-next-btn').style.display = 'none';
+}
+
+function selectAnswer(i) {
+  if (answered) return;
+  answered = true;
+  const qi = quizOrder[qIndex];
+  const q = QUESTIONS[qi];
+  const opts = document.querySelectorAll('.option');
+  opts.forEach(o => o.classList.add('locked'));
+  if (i === q.ans) {
+    opts[i].classList.add('correct');
+    qScore++;
+    topicScores[q.topic] = topicScores[q.topic] || { correct: 0, total: 0 };
+    topicScores[q.topic].correct++;
+  } else {
+    opts[i].classList.add('wrong');
+    opts[q.ans].classList.add('correct');
+  }
+  topicScores[q.topic] = topicScores[q.topic] || { correct: 0, total: 0 };
+  topicScores[q.topic].total++;
+  const exp = document.getElementById('q-explanation');
+  exp.textContent = q.exp;
+  exp.classList.add('show');
+  document.getElementById('q-next-btn').style.display = 'block';
+}
+
+function nextQuestion() {
+  qIndex++;
+  if (qIndex >= QUESTIONS.length) { showResults(); return; }
+  showQuestion();
+}
+
+function showResults() {
+  document.getElementById('quiz-container').classList.remove('active');
+  const res = document.getElementById('quiz-results');
+  res.classList.add('show');
+  document.getElementById('score-big').textContent = `${qScore} / ${QUESTIONS.length}`;
+  const pct = Math.round(qScore / QUESTIONS.length * 100);
+  document.getElementById('score-label').textContent = `${pct}% — ${pct >= 80 ? 'Strong' : pct >= 60 ? 'On track' : 'Needs work'}`;
+  const breakdown = document.getElementById('topic-breakdown');
+  breakdown.innerHTML = '';
+  Object.entries(topicScores).sort((a,b) => (a[1].correct/a[1].total) - (b[1].correct/b[1].total)).forEach(([topic, s]) => {
+    const p = Math.round(s.correct / s.total * 100);
+    const color = p >= 80 ? 'var(--correct)' : p >= 60 ? 'var(--warn)' : 'var(--wrong)';
+    breakdown.innerHTML += `
+      <div class="topic-row">
+        <div class="topic-name">${topic}</div>
+        <div class="topic-bar-wrap"><div class="topic-bar" style="width:${p}%;background:${color}"></div></div>
+        <div class="topic-score" style="color:${color}">${s.correct}/${s.total}</div>
+      </div>`;
+  });
+}
+
+function restartQuiz() {
+  document.getElementById('quiz-results').classList.remove('show');
+  document.getElementById('quiz-setup').style.display = 'block';
+}
+
+// ═══════════════════ TAB SWITCHING ═══════════════════
+function switchTab(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(name).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>

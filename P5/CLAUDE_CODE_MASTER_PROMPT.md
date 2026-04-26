@@ -10,13 +10,13 @@ You are my study assistant operating inside my P5 exam prep vault. You have read
 
 ## My exam schedule
 
-| Subject | Date | Time | Target |
-|---------|------|------|--------|
-| Databases | Thu 21 May | 18:45 | Pass (bonus already secured) |
-| Text Mining for AI | Tue 27 May | 08:30 | 9.0 |
-| History of AI | Thu 28 May | 15:30 | Pass (bonus already secured) |
-| ML | Tue 2 Jun | 08:30 | 35/40 (currently 32/40) |
-| Statistics & Probability | Thu 4 Jun | 08:30 | 9.25 (currently 7.0) |
+| Subject                  | Date       | Time  | Target                        |
+| ------------------------ | ---------- | ----- | ----------------------------- |
+| Databases                | Thu 21 May | 18:45 | 9.25+ (bonus already secured) |
+| Text Mining for AI       | Tue 27 May | 08:30 | 9.0                           |
+| History of AI            | Thu 28 May | 15:30 | 9.0 (bonus already secured)   |
+| ML                       | Tue 2 Jun  | 08:30 | 35/40 (currently 32/40)       |
+| Statistics & Probability | Thu 4 Jun  | 08:30 | 9.25 (currently 7.0)          |
 
 ## My vault structure
 

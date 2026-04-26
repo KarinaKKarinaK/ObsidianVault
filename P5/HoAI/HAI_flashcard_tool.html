@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>History of AI — Study Tool</title>
+<style>
+  :root {
+    --bg: #f5f5f5; --surface: #ffffff; --surface2: #f0f0f0;
+    --border: #ddd; --text: #1a1a1a; --text2: #555;
+    --accent: #3d5a99; --accent2: #2c4070; --green: #2d7a3a;
+    --red: #c0392b; --orange: #d47e00; --tab-active: #3d5a99;
+    --card-back: #e8eef7; --shadow: rgba(0,0,0,0.1);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1a2e; --surface: #16213e; --surface2: #0f3460;
+      --border: #334; --text: #e0e0e0; --text2: #aaa;
+      --accent: #5b7ec8; --accent2: #7b9de8; --green: #4caf6a;
+      --red: #e05555; --orange: #e0a030; --tab-active: #5b7ec8;
+      --card-back: #1e2d50; --shadow: rgba(0,0,0,0.4);
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+  header { background: var(--accent); color: white; padding: 16px 24px; }
+  header h1 { font-size: 1.3rem; font-weight: 700; }
+  header p { font-size: 0.85rem; opacity: 0.8; margin-top: 4px; }
+  .tabs { display: flex; background: var(--surface); border-bottom: 2px solid var(--border); overflow-x: auto; }
+  .tab { padding: 14px 20px; cursor: pointer; font-size: 0.9rem; font-weight: 500; color: var(--text2); white-space: nowrap; border-bottom: 3px solid transparent; margin-bottom: -2px; min-height: 44px; display: flex; align-items: center; transition: all 0.2s; }
+  .tab:hover { color: var(--accent); }
+  .tab.active { color: var(--tab-active); border-bottom-color: var(--tab-active); }
+  .panel { display: none; padding: 24px; max-width: 900px; margin: 0 auto; }
+  .panel.active { display: block; }
+  .kbd { display: inline-block; background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; padding: 2px 6px; font-size: 0.75rem; font-family: monospace; }
+  .shortcuts { text-align: center; font-size: 0.8rem; color: var(--text2); margin-bottom: 16px; }
+  /* FLASHCARD STYLES */
+  .card-container { perspective: 1000px; margin: 0 auto 24px; max-width: 680px; }
+  .card { width: 100%; height: 260px; cursor: pointer; position: relative; transform-style: preserve-3d; transition: transform 0.5s ease; }
+  .card.flipped { transform: rotateY(180deg); }
+  .card-face { position: absolute; inset: 0; border-radius: 12px; padding: 28px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; backface-visibility: hidden; box-shadow: 0 4px 16px var(--shadow); }
+  .card-front { background: var(--surface); border: 2px solid var(--accent); }
+  .card-back { background: var(--card-back); border: 2px solid var(--accent2); transform: rotateY(180deg); }
+  .card-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text2); margin-bottom: 12px; }
+  .card-text { font-size: 1.05rem; line-height: 1.5; color: var(--text); }
+  .card-back .card-text { font-size: 0.95rem; }
+  .card-meta { font-size: 0.75rem; color: var(--text2); margin-top: 10px; }
+  .card-nav { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 16px; }
+  .btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: 600; min-height: 44px; transition: opacity 0.2s; }
+  .btn:hover { opacity: 0.85; }
+  .btn-primary { background: var(--accent); color: white; }
+  .btn-outline { background: transparent; border: 2px solid var(--accent); color: var(--accent); }
+  .btn-sm { padding: 8px 14px; font-size: 0.82rem; min-height: 36px; }
+  .card-progress { text-align: center; color: var(--text2); font-size: 0.85rem; margin-bottom: 12px; }
+  .filter-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .filter-btn { padding: 6px 14px; border: 2px solid var(--border); border-radius: 20px; cursor: pointer; font-size: 0.82rem; background: var(--surface); color: var(--text2); min-height: 36px; }
+  .filter-btn.active { border-color: var(--accent); background: var(--accent); color: white; }
+  /* ESSAY PROMPTS */
+  .prompt-card { background: var(--surface); border-radius: 10px; padding: 20px; margin-bottom: 16px; border-left: 4px solid var(--accent); box-shadow: 0 2px 8px var(--shadow); }
+  .prompt-type { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--accent); letter-spacing: 1px; margin-bottom: 6px; }
+  .prompt-q { font-size: 1rem; font-weight: 600; margin-bottom: 12px; line-height: 1.4; }
+  .reveal-btn { padding: 8px 16px; border: 2px solid var(--accent); border-radius: 6px; background: transparent; color: var(--accent); cursor: pointer; font-size: 0.85rem; font-weight: 600; min-height: 36px; }
+  .reveal-btn:hover { background: var(--accent); color: white; }
+  .model-answer { display: none; margin-top: 16px; padding: 16px; background: var(--surface2); border-radius: 8px; font-size: 0.9rem; line-height: 1.6; color: var(--text); }
+  .model-answer.visible { display: block; }
+  .model-answer h4 { color: var(--accent); margin-bottom: 8px; font-size: 0.85rem; }
+  .model-answer ul { margin-left: 20px; margin-top: 4px; }
+  .model-answer li { margin-bottom: 4px; }
+  /* LITERATURE */
+  .lit-card { background: var(--surface); border-radius: 10px; padding: 18px; margin-bottom: 12px; box-shadow: 0 2px 8px var(--shadow); cursor: pointer; }
+  .lit-card:hover { border-left: 4px solid var(--accent); }
+  .lit-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+  .lit-author { font-weight: 700; font-size: 0.95rem; }
+  .lit-title { font-size: 0.85rem; color: var(--text2); font-style: italic; margin-top: 2px; }
+  .lit-claim { font-size: 0.88rem; line-height: 1.5; margin-top: 10px; }
+  .lit-relevance { display: none; margin-top: 10px; padding: 10px; background: var(--surface2); border-radius: 6px; font-size: 0.85rem; color: var(--accent2); }
+  .lit-relevance.visible { display: block; }
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.72rem; font-weight: 600; }
+  .tag-a { background: #3d5a9930; color: var(--accent); }
+  .tag-b { background: #2d7a3a30; color: var(--green); }
+  .tag-c { background: #d47e0030; color: var(--orange); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>History of AI — Study Tool</h1>
+  <p>Exam: Thu 28 May 2026, 15:30 &nbsp;|&nbsp; 1A + 2B + 1C &nbsp;|&nbsp; Target: pass comfortably</p>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('fc-a')">Tab 1: A-Questions</div>
+  <div class="tab" onclick="switchTab('fc-b')">Tab 2: B-Questions</div>
+  <div class="tab" onclick="switchTab('fc-c')">Tab 3: C-Concepts</div>
+  <div class="tab" onclick="switchTab('essay')">Tab 4: Essay Practice</div>
+</div>
+
+<!-- TAB 1: A-QUESTION FLASHCARDS -->
+<div id="fc-a" class="panel active">
+  <div class="shortcuts"><span class="kbd">Space</span> flip &nbsp; <span class="kbd">←</span> prev &nbsp; <span class="kbd">→</span> next</div>
+  <div class="card-container">
+    <div class="card" id="card-a" onclick="flipCard('a')">
+      <div class="card-face card-front">
+        <div class="card-label">A-Question Theme</div>
+        <div class="card-text" id="card-a-front"></div>
+      </div>
+      <div class="card-face card-back">
+        <div class="card-label">Line of Thought</div>
+        <div class="card-text" id="card-a-back"></div>
+      </div>
+    </div>
+  </div>
+  <div class="card-progress" id="progress-a"></div>
+  <div class="card-nav">
+    <button class="btn btn-outline" onclick="prevCard('a')">← Prev</button>
+    <button class="btn btn-primary" onclick="flipCard('a')">Flip</button>
+    <button class="btn btn-outline" onclick="nextCard('a')">Next →</button>
+  </div>
+  <div style="text-align:center"><button class="btn btn-sm btn-outline" onclick="shuffleCards('a')">Shuffle</button></div>
+</div>
+
+<!-- TAB 2: B-QUESTION FLASHCARDS -->
+<div id="fc-b" class="panel">
+  <div class="shortcuts"><span class="kbd">Space</span> flip &nbsp; <span class="kbd">←</span> prev &nbsp; <span class="kbd">→</span> next</div>
+  <div class="card-container">
+    <div class="card" id="card-b" onclick="flipCard('b')">
+      <div class="card-face card-front">
+        <div class="card-label">CK Chapter</div>
+        <div class="card-text" id="card-b-front"></div>
+      </div>
+      <div class="card-face card-back">
+        <div class="card-label">Key Argument + Exam Angle</div>
+        <div class="card-text" id="card-b-back"></div>
+      </div>
+    </div>
+  </div>
+  <div class="card-progress" id="progress-b"></div>
+  <div class="card-nav">
+    <button class="btn btn-outline" onclick="prevCard('b')">← Prev</button>
+    <button class="btn btn-primary" onclick="flipCard('b')">Flip</button>
+    <button class="btn btn-outline" onclick="nextCard('b')">Next →</button>
+  </div>
+  <div style="text-align:center"><button class="btn btn-sm btn-outline" onclick="shuffleCards('b')">Shuffle</button></div>
+</div>
+
+<!-- TAB 3: C-CONCEPT FLASHCARDS -->
+<div id="fc-c" class="panel">
+  <div class="shortcuts"><span class="kbd">Space</span> flip &nbsp; <span class="kbd">←</span> prev &nbsp; <span class="kbd">→</span> next</div>
+  <div class="card-container">
+    <div class="card" id="card-c" onclick="flipCard('c')">
+      <div class="card-face card-front">
+        <div class="card-label">C-Concept</div>
+        <div class="card-text" id="card-c-front"></div>
+      </div>
+      <div class="card-face card-back">
+        <div class="card-label">Definition + Primary Example</div>
+        <div class="card-text" id="card-c-back"></div>
+      </div>
+    </div>
+  </div>
+  <div class="card-progress" id="progress-c"></div>
+  <div class="card-nav">
+    <button class="btn btn-outline" onclick="prevCard('c')">← Prev</button>
+    <button class="btn btn-primary" onclick="flipCard('c')">Flip</button>
+    <button class="btn btn-outline" onclick="nextCard('c')">Next →</button>
+  </div>
+  <div style="text-align:center"><button class="btn btn-sm btn-outline" onclick="shuffleCards('c')">Shuffle</button></div>
+
+  <div style="margin-top: 32px; border-top: 1px solid var(--border); padding-top: 24px;">
+    <h3 style="margin-bottom:16px; color:var(--accent)">Literature Quick Reference</h3>
+    <div id="lit-list"></div>
+  </div>
+</div>
+
+<!-- TAB 4: ESSAY PRACTICE -->
+<div id="essay" class="panel">
+  <div style="margin-bottom:16px">
+    <div class="filter-row">
+      <span style="color:var(--text2); font-size:0.85rem; line-height:36px; margin-right:4px">Filter:</span>
+      <button class="filter-btn active" onclick="filterEssays('all', this)">All</button>
+      <button class="filter-btn" onclick="filterEssays('A', this)">A-Questions</button>
+      <button class="filter-btn" onclick="filterEssays('B', this)">B-Questions</button>
+      <button class="filter-btn" onclick="filterEssays('C', this)">C-Questions</button>
+    </div>
+  </div>
+  <div id="essay-list"></div>
+</div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+
+const cardsA = [
+  {
+    front: "Three Traditions of Automation",
+    back: "Computing's prehistory = three separate traditions: Administration (Hollerith census), Process control (Dutch waterworks, Taylor), Science (ballistics, physics). They operated independently — no single origin story. Each reflects a different agenda."
+  },
+  {
+    front: "Technology and Trust (Hollerith 1890)",
+    back: "Technical capability alone ≠ adoption. Hollerith's census machine needed to build institutional trust: speed (2.5 yrs vs 7.5), legible output. Same dynamic: UNIVAC CBS demo 1952, IBM brand ('nobody got fired buying IBM'), Atanasoff passed over for lack of trust network."
+  },
+  {
+    front: "History of AI is older than History of Computing",
+    back: "AI prehistory = logic tradition (Aristotle → Llull → Leibniz → Boole → Principia Mathematica). Computing prehistory = admin/military tradition. They merge at Dartmouth 1956. AI's roots (formal reasoning, universal language) predate electronic computers."
+  },
+  {
+    front: "Babbage and the Aiken Intermezzo",
+    back: "Babbage's unfinished engines (1822/1837) were largely forgotten. Aiken invoked Babbage's legacy to secure Harvard/IBM funding for Mark I (1944) — a textbook agenda: using a historical narrative instrumentally. IBM later disputed Harvard taking all credit."
+  },
+  {
+    front: "Dutch Dinosaurs",
+    back: "Van Veen (Rijkswaterstaat, Deltar) + Van Wijngaarden (Mathematisch Centrum, ARRA 21 June 1952, ALGOL 60). Dutch computing emerged from water management needs. Counter-narrative to Anglo-American story. CK = particular history, not universal."
+  },
+  {
+    front: "Prejudice in Computing History (Polish Mathematicians)",
+    back: "Rejewski, Różycki, Zygalski broke Enigma from 1932 — before Turing. Anglo-American narrative erases this. Simple computing hero stories are always 'prejudiced' (Stephanie Dick). Cold War science shaped which contributions were valorised."
+  },
+  {
+    front: "Computing Sounds",
+    back: "Strachey: EDSAC plays 'God Save the Queen' 1951. ARRA plays Dutch anthem. Sounds served: termination, auditive monitoring, navigation, instruction, cultural demonstration. Speakers made machines legible to non-experts. Later: silence = professionalism."
+  },
+  {
+    front: "Metaphors in Computing",
+    back: "'Program' (1946), 'programming' (1948). Before: plugging, sequencing, assembling, autocoding, pseudo-coding. Each metaphor encoded assumptions about what computers do. 'Electronic brain' (EDSAC in British press) = exciting but threatening. Metaphors are not neutral — they serve agendas."
+  },
+  {
+    front: "Game Culture and Appropriation",
+    back: "Strachey: Ferranti Mark I plays Nim (1951) — scientific computer appropriated for game/AI demo. Games = AI benchmark (chess, draughts/Samuel 1959). GPU (games hardware) → AlexNet 2012 → deep learning. Game culture integral to AI history, not tangential."
+  },
+  {
+    front: "Cybernetics in Business + Scifi and AI",
+    back: "Wiener's Cybernetics (1948): feedback + control + communication = animals AND machines. Stafford Beer: management cybernetics. Project Cybersyn (Chile, Beer + Medina, 1971–73): socialist cybernetic economy. Scifi (Asimov, Clarke) created cultural expectations. McCarthy chose 'AI' to distance from cybernetics (Dartmouth 1956)."
+  },
+  {
+    front: "AI and Mathematics — Proof Checkers",
+    back: "Principia Mathematica (Russell+Whitehead 1910) → automated reasoning dream → Gödel incompleteness 1931 → Turing computability 1936 → Church lambda calculus 1936 → McCarthy LISP 1958 → AI as theorem proving. MacKenzie: proof-checking computers used in Patriot missile."
+  },
+  {
+    front: "AI and Education — Programmed Instruction vs LOGO",
+    back: "Skinner (1960s): behaviourist — computer as drill-and-practice teaching machine. Papert/LOGO (MIT, 1967): constructivist — child programs turtle, discovers math by doing. Top-down authority vs bottom-up tool. Debate continues: AI tutors today. Appears in BOTH past exams."
+  },
+  {
+    front: "Programming Languages — ALGOL 60 vs FORTRAN/COBOL",
+    back: "FORTRAN (IBM, 1957): practical, American, commercial agenda. COBOL (Hopper, 1959): business, natural language, committee. ALGOL 60 (van Wijngaarden + Bauer + Backus...): European, academic, elegant, universal. US rejected ALGOL as too academic. Dijkstra + van Wijngaarden championed it. Cultural divide = agendas."
+  },
+  {
+    front: "Software Crisis and Rise of Software Industry",
+    back: "IBM Unbundling (1968): software priced separately → software industry born. NATO Software Crisis conference 1968: OS/360 late, over budget, buggy. Brooks: adding programmers makes late project later. Dijkstra: structured programming = mathematical discipline (European). US response: management. Different agendas."
+  },
+];
+
+const cardsB = [
+  {
+    front: "Ch 4 — Inventing the Computer",
+    back: "Moore School = 'means to an end' (ballistics). ENIAC (Mauchly+Eckert+Goldstine, 1945). Von Neumann → EDVAC First Draft → stored-program concept. Moore School Lectures 1946 → Manchester Baby (Williams/Newman) + EDSAC (Wilkes). Atanasoff/ABC passed over. Key question: Why was Moore School central? Distinguish built vs disseminated."
+  },
+  {
+    front: "Ch 5 — Computer Becomes a Business Machine",
+    back: "3 company types: Electronics (RCA/GE/Honeywell), Business machines (IBM/Remington Rand/NCR), Startups (EMCC/ERA). Eckert+Mauchly → UNIVAC → Remington Rand → 1952 CBS election prediction. IBM slow (Watson sceptical) but Model 650 dominated. 'IBM and 7 dwarfs.' Key phrase: 'Watson rational but wrong; Eckert & Mauchly irrational but right.'"
+  },
+  {
+    front: "Ch 6 — Maturing of the Mainframe",
+    back: "IBM ~75% market. IBM 1401: fast printer (IBM 1403), RPG, 12,000 sold. 7 dwarfs survival: IBM-compatible (RCA Spectra 70), own family (Honeywell/Burroughs/NCR), niche (Control Data→scientific; GE→timesharing). System/360 (1964): $5bn bet, technically conservative, commercially revolutionary. 1970–71: RCA+GE exit → 'IBM and the BUNCH.'"
+  },
+  {
+    front: "Ch 7 — Real Time Computing",
+    back: "Batch → real-time (processing fast enough to affect ongoing events). Whirlwind (MIT/Forrester 1944): aircraft sim → Perry Crawford converts to digital 1945 → Bill Papian core memory 1951 → SAGE. SAGE: 23 centers, IBM AN/FSQ-7, militarily obsolete but huge spinoff. Civilian: SABRE (IBM+American Airlines 1957–64; 1,100 terminals), credit cards, ATMs, UPC (1973). Key: 'blending military research + entrepreneurial efforts.'"
+  },
+  {
+    front: "Ch 8–9 — New Ways of Computing / Timesharing",
+    back: "Timesharing: multiple users share one computer (CTSS MIT 1961; GE niche). BASIC (Kemeny+Kurtz, Dartmouth 1963): programming for non-specialists. Whole Earth Catalogue (Brand 1968): computers as liberation tools. California counterculture + tech culture blend → precursor to personal computing. Key: how timesharing created new user types + BASIC's democratising role."
+  },
+  {
+    front: "Ch 10 — The Personal Computer",
+    back: "Broadening appeal: Apple II (1977) for hobbyists → IBM PC (1981) legitimises for business (open architecture) → Macintosh (1984) GUI/mouse for 'the rest of us.' Failed: Apple Lisa (1983) $9,995 too expensive; VisiCorp VisiOn too slow. VisiCalc (Apple II killer app); Lotus 1-2-3 (IBM PC killer app). Desktop publishing = Mac's use case."
+  },
+  {
+    front: "Ch 11 — The Internet",
+    back: "Three desires: Military (ARPANET 1969, survivable network, packet switching) + Academic (email Tomlinson 1971, information sharing — email was appropriation, became dominant use) + Commercial (WWW Berners-Lee 1989, Mosaic 1993, Amazon 1994). Sociologists studied email social effects: flaming, identity, norms. Tensions between desires persist today."
+  },
+  {
+    front: "Ch 12 — Silicon Valley Myth",
+    back: "'Two boys in a garage' (Apple/HP/Google) myth. Reality: Stanford connections, defence contracts, VC ecosystem (Shockley→Fairchild→Intel). Valley culture: flat hierarchy, stock options, informal, tolerance for failure. Contrasts with IBM (suits, hierarchy) or East Coast institutions. Question: Is the garage myth accurate? What does it conceal?"
+  },
+  {
+    front: "Ch 13 — Globalization and Diversity",
+    back: "Off-shoring: US → India (Infosys/Wipro/TCS), Eastern Europe, China. Cost savings but job losses + IP concerns. Out-sourcing: EDS, Accenture, IBM Global Services manage clients' IT. 2010s diversity crisis: 30% women at Google (2014 report); 2% Black. Pipeline argument vs structural change. Algorithmic bias = diversity problem = AI safety problem."
+  },
+  {
+    front: "Ch 14 — Google and Surveillance Capitalism",
+    back: "Google (Page+Brin 1998): PageRank = relevance via link structure. Revenue problem → AdWords 2000 = targeted ads from user data → surveillance capitalism loop. Netflix: viewing data → recommendation → commissioning (House of Cards) → engagement max. Zuboff: behaviour as raw material → prediction products → sold to influence. GDPR 2018 = EU response."
+  },
+  {
+    front: "Ch 15 — Computers and Governance",
+    back: "US: self-regulation, First Amendment, Section 230 (platforms not liable for user content). EU: GDPR (2018) fundamental rights, explicit consent, right to erasure; EU AI Act (2024) risk-based. Ethical liability: who's responsible for algorithmic discrimination, autonomous vehicle deaths? 'Brussels Effect': EU standards become global default. Key: compare legal philosophies, not just laws."
+  },
+];
+
+const cardsC = [
+  {
+    front: "Appropriation",
+    back: "Def: Using technology for purposes its designers did not intend.\nExamples: Ferranti Mark I → Nim (1951), ARPANET → email (1971), GPU → deep learning (2012), SAGE → SABRE, Internet → social media.\nKey: Technological trajectories are NOT predetermined — appropriation is how new meanings emerge."
+  },
+  {
+    front: "Agendas",
+    back: "Def: Interests/goals that shape how historical narratives are constructed.\nExamples: Aiken invokes Babbage (funding narrative), AI winter used to argue for investment, Anglo-American history ignores Polish/Dutch/Soviet, FORTRAN vs ALGOL (commercial vs academic).\nKey: All histories have agendas — ask who benefits from this telling?"
+  },
+  {
+    front: "Defining Technology (Bolter, Turing's Man 1984)",
+    back: "Def: Technology that reshapes cultural self-understanding — provides metaphors for human nature.\nExamples: Clock (humans as clockwork), Steam engine (society as energy), Cybernetics/computers (1960s: brain as info processor), AI (21st c: intelligence as computation).\nKey: Spreads vocabulary beyond technical domain into philosophy, medicine, education, politics."
+  },
+  {
+    front: "Surveillance Capitalism",
+    back: "Def (Zuboff): Human behaviour collected as raw material → prediction products → sold to advertisers/influence-buyers.\nGoogle: search data → AdWords (2000). Netflix: watch history → recommendation → content commissioning.\nEU response: GDPR 2018. US: Section 230, self-regulation.\nKey: Service appears 'free' — users pay with behavioural data."
+  },
+  {
+    front: "AI Winters",
+    back: "Def: Periods of drastically reduced AI funding after over-promising.\n1st winter (1970s): Lighthill Report, machine translation failure. 2nd winter (late 1980s): expert systems collapse, LISP machines.\nNarrative use: Winter→spring framing used to argue for sustained investment (agenda!). Babbage parallel: over-promise → abandonment → revival.\nKey: AI winter concept is itself a rhetorical tool."
+  },
+  {
+    front: "Digital Culture",
+    back: "Def: Transformation of existing practices by digital technology's specific logic (data collection, personalisation, platformisation, network effects).\nExamples: Music (streaming), journalism (algorithmic virality), banking (ATMs→algorithmic credit), education (programmed instruction→LOGO→MOOCs→AI tutors).\nKey: Not just 'computers change things' — the specific logic of digital reshapes cultural production and consumption."
+  },
+  {
+    front: "Technology and Trust",
+    back: "Def: Technical capability alone ≠ adoption — social trust must be actively constructed.\nHollerith 1890: speed + legible output → government trust. UNIVAC CBS 1952: TV demo → public trust. IBM: 'nobody got fired buying IBM' → institutional trust. Atanasoff: technically fine but no trust network → passed over.\nKey: Trust is a social achievement, not a technical one."
+  },
+];
+
+const literature = [
+  { author: "Campbell-Kelly et al. (2023⁴)", title: "Computer: A History of the Information Machine", claim: "Computing history told through economic and social lens, centering the American story from ENIAC through the internet era.", relevance: "Source for ALL B-questions. Know chapter titles, periods, theses, and specific named examples.", tag: "tag-b" },
+  { author: "J. David Bolter (1984)", title: "Turing's Man", claim: "The computer is the 'defining technology' of the modern age — it reshapes cultural self-understanding and provides new metaphors for human nature.", relevance: "C-question: defining technology. Know: clock→steam engine→cybernetics→AI as sequence of defining technologies.", tag: "tag-c" },
+  { author: "Shoshana Zuboff (2019)", title: "The Age of Surveillance Capitalism", claim: "Human experience and behaviour are collected as raw material, processed into prediction products, and sold to buyers who want to influence behaviour.", relevance: "C-question: surveillance capitalism. Know definition precisely + Google/Netflix examples.", tag: "tag-c" },
+  { author: "Pamela McCorduck", title: "Machines Who Think", claim: "AI history as a narrative of persistent progress despite setbacks — the field survived winters through the dedication of researchers.", relevance: "NO BONUS question (July 2025). AI winters as advocacy narrative = agendas concept.", tag: "tag-c" },
+  { author: "Edsger Dijkstra (1930–2002)", title: "Structured programming / Go To Statement Considered Harmful (1968)", claim: "Software development requires mathematical discipline — unstructured programming (GOTO) is the root of the software crisis.", relevance: "A-question: software crisis. European vs. US response. Dutch figure.", tag: "tag-a" },
+  { author: "Eden Medina", title: "Cybernetic Revolutionaries", claim: "Project Cybersyn (Chile, 1971–73) was a socialist attempt to use cybernetic management for a national economy — a politically radical application of cybernetics.", relevance: "A-question: cybernetics in business. Concrete example for Bolter's defining technology (cybernetics in 1960s).", tag: "tag-a" },
+  { author: "Stephanie Dick", title: "AI history / Marxist in the Machine", claim: "Computing history reflects cultural dispositions — choices about what counts as 'computing' encode ideological assumptions.", relevance: "A-question: prejudice in computing history. Why simple hero stories are incomplete.", tag: "tag-a" },
+  { author: "Jonnie Penn", title: "Animo Nullius (essay)", claim: "Data collected by AI systems is treated as res nullius (ownerless resource) — a colonial framing that erases the human labour and context behind data.", relevance: "A-question: prehistory of AI, data ethics. L1 reading. Connects computing to colonial theory.", tag: "tag-a" },
+  { author: "Frederick Brooks (1975)", title: "The Mythical Man-Month", claim: "Adding programmers to a late software project makes it later — software development is a fundamentally human communication problem.", relevance: "B-question context: software crisis (Ch 7/8). Why IBM's OS/360 failed despite resources.", tag: "tag-b" },
+];
+
+const essayPrompts = [
+  { type: "A", src: "May 2025", q: "In the lecture, the introduction of new computing technology always went hand in hand with the need to build trust in the technology. Explain the line of thought.", answer: { intro: "Claim: Technical capability alone is never sufficient — trust must be socially constructed.", points: ["Hollerith 1890: government officials had to trust census tabulation machine → speed + legible output = trust built", "UNIVAC 1952: CBS election prediction = public trust built through dramatic TV demonstration", "IBM 'nobody ever got fired buying IBM': institutional trust reduces risk for decision-makers", "Atanasoff ABC: technically worked, no institutional trust → passed over in history", "Conclusion: Trust is a social achievement, not a technical one"] } },
+  { type: "A", src: "May 2025", q: "In the lecture, a number of Dutch computer pioneers were discussed. Explain their role in the history of computing.", answer: { intro: "Claim: Dutch computing emerged from national infrastructure needs (water management) — a counter-narrative to the Anglo-American story.", points: ["Van Veen + Rijkswaterstaat + Deltar: process control tradition, Dutch floods", "Van Wijngaarden + Mathematisch Centrum (1947) + ARRA (21 June 1952): scientific tradition", "Van Wijngaarden co-designed ALGOL 60: major European contribution to programming", "Dutch case shows computing was NOT only American/military — multiple national origins", "Highlighting Dutch story = countering Anglo-American historiographical agenda"] } },
+  { type: "A", src: "May 2025", q: "In the lecture, the metaphor of the 'electronic brain' was discussed. Explain the line of thought.", answer: { intro: "Claim: The language used to describe computers is never neutral — metaphors shape understanding, expectations, and research agendas.", points: ["'Electronic brain' in British press (1950s): exciting (machine can think) + threatening (jobs, autonomy)", "Cybernetics (Wiener 1948): brain=machine and machine=brain — metaphor both directions", "McCarthy chose 'Artificial Intelligence' (1956) partly to avoid brain metaphor — scientific precision", "Programming vocabulary progression: plugging → assembling → programming → each encodes different assumptions", "Conclusion: Metaphors are cognitive tools that enable AND constrain — they open and close possibilities"] } },
+  { type: "A", src: "May 2025", q: "Give two examples of the relationship between AI and mathematics.", answer: { intro: "Claim: AI and mathematics are deeply entangled — AI is not applied to mathematics as an afterthought; it emerged from mathematical ideas.", points: ["Example 1: LISP (McCarthy 1958) based on Church lambda calculus (1936) → mathematics drove AI tool creation", "The chain: Principia Mathematica → Gödel → Turing → Church → LISP → AI theorem proving", "Example 2: Formal proof checking — computers to verify mathematical proofs (MacKenzie: Patriot missile)", "Russell & Whitehead dream of reducing mathematics to logic → automated reasoning → expert systems → AI", "Conclusion: AI's mathematical roots predate electronic computers"] } },
+  { type: "A", src: "May 2025", q: "Explain the relationship between AI and education in the 1960s and 1970s. Give two examples.", answer: { intro: "Claim: Two opposing traditions of AI in education emerged — behaviourist programmed instruction and constructivist LOGO — reflecting deep disagreements about learning and the role of computers.", points: ["Programmed instruction (Skinner, 1950s–60s): computer as teaching machine, drill-and-practice, behaviourist", "LOGO (Papert, MIT, 1967): child programs turtle, discovers math by doing, constructivist", "Key contrast: Top-down authority (Skinner) vs bottom-up tool (Papert)", "Both claimed 'AI' concepts but opposite pedagogical philosophies", "Debate continues with AI tutors today: ChatGPT as Skinner machine or LOGO-style tool?"] } },
+  { type: "A", src: "May 2025", q: "Explain the role of game culture in the history of AI.", answer: { intro: "Claim: Games were not peripheral entertainment in AI history but a core demonstration domain and a driver of the computing infrastructure AI now runs on.", points: ["Nim (Strachey, Ferranti Mark I, 1951): appropriation of scientific computer → game → AI proof of concept", "Chess: Shannon 1950, Turing algorithm 1953, then Deep Blue 1997, AlphaGo 2016 — continuous lineage", "Dartmouth 1956: game-playing as AI benchmark — Shannon's influence", "GPU: graphics processors for video games → AlexNet 2012 → deep learning revolution", "Conclusion: Game culture → computing → AI in a direct causal chain"] } },
+  { type: "A", src: "July 2025", q: "What events in the prehistory of AI and the prehistory of computing do they have in common?", answer: { intro: "Claim: The prehistories of AI and computing are largely separate traditions that overlap at specific key moments — they are not the same history.", points: ["Babbage Analytical Engine (1837): claimed as computing AND AI precursor (stored-program + algorithmic logic)", "Turing: 1936 computability paper (computing theory) + 1950 'Computing Machinery and Intelligence' (AI theory)", "Dartmouth Conference 1956: explicit convergence — McCarthy coined 'AI', united computing + logic researchers", "Before 1956: computing = admin/military; AI = logic/mathematics — separate traditions", "Conclusion: Convergence at Dartmouth is the key shared moment; before that, parallel histories"] } },
+  { type: "A", src: "July 2025", q: "Grace Hopper made both direct and indirect contributions to computing and AI. Explain both.", answer: { intro: "Claim: Hopper's contributions were technical (foundational tools) and cultural (democratising access and legitimising women in computing).", points: ["Direct: First compiler (A-0, 1952): symbolic code → machine code → higher-level programming possible", "Direct: COBOL (1959): business language, natural-language orientation, still in banking infrastructure", "Indirect: Advocated making computing accessible to non-specialists — democratic vision", "Indirect: Popularised 'bug' (literal insect in Mark II, 1947), legitimised women in computing as naval officer", "AI relevance: Natural language orientation prefigured NLP; compiler = translating between abstraction levels"] } },
+  { type: "A", src: "July 2025", q: "AI and education: programmed instruction vs LOGO.", answer: { intro: "Same as A-05 model answer — this appears in both exams. See card above.", points: ["Always contrast Skinner (behaviourist, top-down) with Papert (constructivist, bottom-up)", "Skinner: immediate feedback, drill-practice, computer as authority", "Papert: turtle, discovery, computer as tool for thinking", "Know this cold — it's in BOTH past exams"] } },
+  { type: "B", src: "May 2025", q: "What was the importance of Maurice Wilkes and EDSAC in the history of computing?", answer: { intro: "Claim: Wilkes and EDSAC were pivotal as the first practical demonstration of the stored-program concept and as the origin of systematic programming methodology.", points: ["Attended Moore School Lectures 1946 → returned to Cambridge → built EDSAC (first run May 6, 1949)", "EDSAC = first practical stored-program computer in regular operation (ENIAC pre-dates but was not stored-program)", "Wilkes+Wheeler+Gill (1951): first programming manual — systematised programming as a discipline", "Knowledge transfer: trained researchers who spread to British universities and influenced van Wijngaarden/ARRA", "Conclusion: EDSAC completed the Moore School Lectures' most direct legacy"] } },
+  { type: "B", src: "May 2025", q: "CK uses the phrase 'Watson rational but wrong; Eckert and Mauchly irrational but right.' Explain.", answer: { intro: "Claim: This phrase illustrates how rational analysis of present conditions can lead to wrong predictions about future technological trajectories.", points: ["Watson rational but wrong: market analysis showed tiny computer demand → sceptical → almost missed the computer age", "Eckert & Mauchly irrational but right: founded EMCC with no market evidence, built UNIVAC — demand materialised", "Why Watson was wrong: new technologies create new markets, don't just serve existing ones", "Why Eckert & Mauchly were 'right': demand for UNIVAC from Census Bureau etc. proved real", "Lesson: CK argues technological history ≠ story of optimal rational actors — irrationality can win"] } },
+  { type: "B", src: "May 2025", q: "Real-time computing started as a military and safety project. Explain.", answer: { intro: "Claim: Real-time computing (processing fast enough to affect ongoing events) emerged from specific military + safety requirements — not commercial demand.", points: ["Whirlwind (MIT, Forrester, 1944): aircraft simulator → Perry Crawford 1945 converts to digital → real-time requirement", "Whirlwind almost cancelled for cost overruns; saved by SAGE connection", "SAGE (1958–63): 23 direction centers, IBM AN/FSQ-7; Cold War air defence", "SAGE militarily obsolete (ICBMs) but huge tech spinoff: core memory, CRT, modems, trained engineers", "Safety dimension: aircraft simulation required reliability under time pressure — design philosophy carried forward"] } },
+  { type: "B", src: "May 2025", q: "Campbell-Kelly calls the Internet the 'confluence of three desires.' What were they?", answer: { intro: "Claim: The Internet emerged from three distinct institutional streams with different values — military survivability, academic sharing, and commercial communication.", points: ["Military (ARPANET 1969): packet switching, survive nuclear attack, decentralisation, DARPA", "Academic (email Tomlinson 1971): information sharing, open access, became dominant ARPANET use — appropriation", "Commercial (WWW 1989, Mosaic 1993, Amazon 1994): visual access, e-commerce, advertising-based", "Tensions persist: net neutrality, GDPR, platform regulation = military vs academic vs commercial desires in conflict", "Conclusion: Internet as we know it is not what anyone designed — it accumulated from these three streams"] } },
+  { type: "B", src: "May 2025", q: "How did Google develop surveillance capitalism?", answer: { intro: "Claim: Google solved a revenue problem by commodifying user behaviour, creating a business model that now defines the digital economy.", points: ["PageRank (1998): link structure as relevance signal → dramatically better search → massive user base", "Revenue problem: how to monetise free search?", "AdWords (2000): targeted ads based on search queries → user data reveals intent", "Loop: more users → more data → better targeting → more advertiser revenue → more capacity → more users", "Zuboff: this is surveillance capitalism — behaviour as raw material, prediction products sold to influence", "EU response: GDPR 2018; US: self-regulation"] } },
+  { type: "B", src: "July 2025", q: "In what ways was the Moore School relevant in the history of computing? Distinguish pre-war, war, post-war.", answer: { intro: "Claim: The Moore School was crucial in all three periods — as a computing centre, as the site of ENIAC, and as the origin of global knowledge transfer.", points: ["Pre-war: Differential Analyzer (mechanical analogue computer) — computing centre before WWII", "War (1943–45): BRL contract → ENIAC (Mauchly+Eckert+Goldstine) → Von Neumann joins → EDVAC First Draft (stored-program concept)", "Post-war (1946): Moore School Lectures — Newman+Williams → Manchester Baby; Wilkes → EDSAC; spread design globally", "Eckert and Mauchly left to found EMCC; Moore School's own role diminished but legacy enormous", "Conclusion: Moore School = manufacturing + intellectual + dissemination hub for early computing"] } },
+  { type: "B", src: "July 2025", q: "Campbell-Kelly attributes real-time computing to a blending of military research and entrepreneurial efforts. Explain his line of thought.", answer: { intro: "Claim: Real-time computing required military funding to develop the technology AND entrepreneurial vision to apply it commercially.", points: ["Military part: Whirlwind (Forrester/Crawford) → SAGE (IBM) — only possible with defence budgets and urgency", "Entrepreneurial part: SABRE (IBM + American Airlines 1957–64) — Perry Crawford also involved; 1,100 terminals in 50 cities", "The blending: military developed core technology (real-time processing, CRT, modems); entrepreneurs recognised civilian applications", "UPC (1973): McKinsey + IBM + vendor committee = political AND technical achievement — entrepreneurial coordination", "Conclusion: Neither pure military nor pure commercial alone could have produced real-time computing"] } },
+  { type: "B", src: "July 2025", q: "Compare the US and EU approaches to computing governance.", answer: { intro: "Claim: US and EU have developed fundamentally different legal philosophies rooted in different conceptions of rights, markets, and state power.", points: ["US: market self-regulation, First Amendment values, Section 230 (platform immunity), no federal data law", "EU: fundamental rights approach, GDPR 2018 (explicit consent, right to erasure, 4% turnover fines), EU AI Act 2024", "Key philosophical difference: US trusts markets to punish bad actors; EU sees data as fundamental right requiring proactive protection", "'Brussels Effect' (Vogel): EU standards become global default because multinationals standardise globally", "Consequence: EU = higher compliance costs + slower innovation; US = faster innovation + documented harms (bias, data breaches)"] } },
+  { type: "C", src: "May 2025", q: "Historians can choose different starting points for the history of computing. Explain how the choice of starting point reflects the historian's agenda.", answer: { intro: "Claim: Every starting point is a choice — and that choice reveals what the historian values and who they serve.", points: ["ENIAC (1945): American, military funding, WWII context — US technological achievement narrative", "Babbage (1837): British, ideas over implementation — interrupted Victorian dream narrative (which Aiken exploited!)", "Hollerith (1890): administrative tradition, computing + statecraft + surveillance — power narrative", "Polish mathematicians (1932): counter-hegemonic, challenges Anglo-American erasure", "Conclusion: Starting points are never innocent — they determine who is central or peripheral. Recognising agendas makes us better critical consumers."] } },
+  { type: "C", src: "May 2025", q: "Apply Bolter's concept of 'defining technology' to cybernetics in the 1960s.", answer: { intro: "Claim: Cybernetics was a defining technology in Bolter's sense — it provided a universal vocabulary (feedback, control, information) that reshaped self-understanding across domains.", points: ["Bolter: defining technology reshapes how humans understand themselves, not just what they do", "Cybernetics (Wiener 1948): animals AND machines = information-processing + feedback systems", "Spread: neuroscience (brain as switches), psychology (mind as info processor), management (Beer's cybernetic firm), ecology", "Project Cybersyn (Chile 1971–73): entire national economy managed cybernetically — most ambitious application", "21st century parallel: AI as current defining technology — LLMs reshaping concepts of intelligence, creativity, personhood"] } },
+  { type: "C", src: "May 2025", q: "Give an example of appropriation in the history of the Internet and explain how it changed the Internet.", answer: { intro: "Claim: Email is the clearest example of appropriation in Internet history — designed as a minor utility, it became the network's dominant use and transformed who used it.", points: ["ARPANET (1969): designed for remote login + file transfer between researchers", "Email (Tomlinson, 1971): added as minor utility — within 2 years, majority of ARPANET traffic", "Appropriation effect 1: person-to-person asynchronous communication → attracted non-engineers (admins, faculty, students)", "Appropriation effect 2: raised first social/legal Internet questions (flaming, privacy, workplace monitoring)", "Further appropriations: WWW (CERN physics papers → e-commerce), YouTube (video sharing → viral culture)", "Conclusion: Internet we know ≠ what anyone designed — accumulated appropriations"] } },
+  { type: "C", src: "May 2025", q: "Describe AI winters and explain how the narrative of AI winters itself serves an agenda.", answer: { intro: "Claim: AI winters are real historical phenomena, but the narrative of 'AI winter' is itself a rhetorical tool that serves different agendas depending on who uses it.", points: ["1st winter (1970s): Lighthill Report, machine translation failure, DARPA funding cuts", "2nd winter (late 1980s): expert systems brittle, LISP machines commercial failure, Japan 5th Gen disappointment", "Narrative use 1: 'We are in a winter — sustained investment brings spring' → argument for funding", "Narrative use 2: 'AI always over-promises' → warning against hype (critics use same narrative)", "Babbage parallel: Aiken used Babbage's thwarted-genius narrative to secure funding — same rhetorical move", "Conclusion: Recognising the narrative as a tool doesn't mean winters didn't happen — it means asking who benefits from which version"] } },
+  { type: "C", src: "July 2025", q: "Can AI be considered a 'defining technology' in Bolter's sense for the 21st century? Discuss.", answer: { intro: "Claim: AI has strong claims to be the 21st century's defining technology, but its status as 'defining' in Bolter's durable sense is not yet settled.", points: ["For: LLMs reshaping metaphors for mind and creativity — if machine writes poetry, what defines human creativity?", "For: AI vocabulary ('hallucination', 'prompt engineering') spreading into cultural discourse — Bolter's criterion met", "For: In medicine, law, education, art — AI provides new frameworks for understanding human activities", "Against: We may be in AI summer before another winter — Bolter's examples (clock, steam engine) were durable", "Against: Cybernetics was 1960s 'defining technology' but was absorbed into the next paradigm", "Conclusion: AI meets Bolter's criteria in the present moment; whether it will prove durable is an open question"] } },
+  { type: "C", src: "July 2025", q: "Give an example of appropriation and explain how it connects the history of computing to the history of AI.", answer: { intro: "Claim: Appropriation is the key mechanism linking computing and AI histories — AI researchers consistently took computing tools designed for other purposes and turned them toward intelligence research.", points: ["Ferranti Mark I → Nim (Strachey 1951): scientific computer → game → AI proof of concept → inspired Dartmouth researchers", "Samuel's checkers (1959): appropriated draughts as testbed → first machine learning demonstration (self-learning)", "GPU: 1990s games graphics hardware → AlexNet 2012 (Hinton) → deep learning revolution", "SAGE → SABRE: military technology → civilian reservation system → real-time computing culture", "Conclusion: Appropriation explains why computing and AI histories cannot be told separately — AI borrowed computing infrastructure at every stage"] } },
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let state = {
+  a: { idx: 0, flipped: false, order: [] },
+  b: { idx: 0, flipped: false, order: [] },
+  c: { idx: 0, flipped: false, order: [] }
+};
+
+function initOrder(type, data) {
+  state[type].order = data.map((_, i) => i);
+}
+
+function getCard(type, data) {
+  const s = state[type];
+  return data[s.order[s.idx]];
+}
+
+function renderCard(type, data) {
+  const s = state[type];
+  const card = getCard(type, data);
+  const cardEl = document.getElementById('card-' + type);
+  document.getElementById('card-' + type + '-front').textContent = card.front;
+  document.getElementById('card-' + type + '-back').textContent = card.back;
+  document.getElementById('progress-' + type).textContent = (s.idx + 1) + ' / ' + data.length;
+  if (s.flipped) { cardEl.classList.add('flipped'); } else { cardEl.classList.remove('flipped'); }
+}
+
+function flipCard(type) {
+  state[type].flipped = !state[type].flipped;
+  const data = type === 'a' ? cardsA : (type === 'b' ? cardsB : cardsC);
+  renderCard(type, data);
+}
+
+function nextCard(type) {
+  const data = type === 'a' ? cardsA : (type === 'b' ? cardsB : cardsC);
+  state[type].idx = (state[type].idx + 1) % data.length;
+  state[type].flipped = false;
+  renderCard(type, data);
+}
+
+function prevCard(type) {
+  const data = type === 'a' ? cardsA : (type === 'b' ? cardsB : cardsC);
+  state[type].idx = (state[type].idx - 1 + data.length) % data.length;
+  state[type].flipped = false;
+  renderCard(type, data);
+}
+
+function shuffleCards(type) {
+  const data = type === 'a' ? cardsA : (type === 'b' ? cardsB : cardsC);
+  for (let i = state[type].order.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [state[type].order[i], state[type].order[j]] = [state[type].order[j], state[type].order[i]];
+  }
+  state[type].idx = 0;
+  state[type].flipped = false;
+  renderCard(type, data);
+}
+
+// ============================================================
+// TABS
+// ============================================================
+function switchTab(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const tabIdx = ['fc-a','fc-b','fc-c','essay'].indexOf(id);
+  document.querySelectorAll('.tab')[tabIdx].classList.add('active');
+}
+
+// ============================================================
+// ESSAY PROMPTS
+// ============================================================
+let essayFilter = 'all';
+function renderEssays() {
+  const list = document.getElementById('essay-list');
+  list.innerHTML = '';
+  essayPrompts.filter(p => essayFilter === 'all' || p.type === essayFilter).forEach((prompt, i) => {
+    const div = document.createElement('div');
+    div.className = 'prompt-card';
+    const tagClass = 'tag-' + prompt.type.toLowerCase();
+    div.innerHTML = `
+      <div class="prompt-type"><span class="tag ${tagClass}">${prompt.type}</span> &nbsp; ${prompt.src}</div>
+      <div class="prompt-q">${prompt.q}</div>
+      <button class="reveal-btn" onclick="toggleAnswer(this, ${i})">Show model answer structure</button>
+      <div class="model-answer" id="essay-ans-${i}">
+        <h4>Intro: ${prompt.answer.intro}</h4>
+        <ul>${prompt.answer.points.map(p => '<li>' + p + '</li>').join('')}</ul>
+      </div>
+    `;
+    list.appendChild(div);
+  });
+}
+
+function toggleAnswer(btn, i) {
+  const ans = document.getElementById('essay-ans-' + i);
+  const visible = ans.classList.toggle('visible');
+  btn.textContent = visible ? 'Hide model answer' : 'Show model answer structure';
+}
+
+function filterEssays(type, btn) {
+  essayFilter = type;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderEssays();
+}
+
+// ============================================================
+// LITERATURE
+// ============================================================
+function renderLiterature() {
+  const list = document.getElementById('lit-list');
+  literature.forEach((lit, i) => {
+    const div = document.createElement('div');
+    div.className = 'lit-card';
+    div.innerHTML = `
+      <div class="lit-header">
+        <div>
+          <div class="lit-author">${lit.author}</div>
+          <div class="lit-title">${lit.title}</div>
+        </div>
+        <span class="tag ${lit.tag}">${lit.tag === 'tag-a' ? 'A' : (lit.tag === 'tag-b' ? 'B' : 'C')}</span>
+      </div>
+      <div class="lit-claim">${lit.claim}</div>
+      <div class="lit-relevance" id="lit-rel-${i}">${lit.relevance}</div>
+    `;
+    div.onclick = () => { document.getElementById('lit-rel-' + i).classList.toggle('visible'); };
+    list.appendChild(div);
+  });
+}
+
+// ============================================================
+// KEYBOARD NAVIGATION
+// ============================================================
+document.addEventListener('keydown', e => {
+  const active = document.querySelector('.panel.active');
+  if (!active) return;
+  const id = active.id;
+  const type = id === 'fc-a' ? 'a' : (id === 'fc-b' ? 'b' : (id === 'fc-c' ? 'c' : null));
+  if (!type) return;
+  if (e.code === 'Space') { e.preventDefault(); flipCard(type); }
+  if (e.code === 'ArrowRight') nextCard(type);
+  if (e.code === 'ArrowLeft') prevCard(type);
+});
+
+// ============================================================
+// INIT
+// ============================================================
+initOrder('a', cardsA);
+initOrder('b', cardsB);
+initOrder('c', cardsC);
+renderCard('a', cardsA);
+renderCard('b', cardsB);
+renderCard('c', cardsC);
+renderEssays();
+renderLiterature();
+</script>
+</body>
+</html>
