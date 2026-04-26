@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Statistics & Probability — Practice Exam</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Fraunces:ital,wght@0,300;0,600;0,800;1,300;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0e10;
+    --surface: #16161a;
+    --surface2: #1e1e26;
+    --border: #2a2a35;
+    --accent: #c8f078;
+    --text: #e8e8f0;
+    --text-muted: #6868a0;
+    --correct: #78f0a0;
+    --wrong: #f07880;
+    --correct-bg: rgba(120,240,160,0.08);
+    --wrong-bg: rgba(240,120,128,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Mono', monospace; font-size: 14px; line-height: 1.7; min-height: 100vh; }
+
+  .app-header { padding: 36px 32px 0; max-width: 960px; margin: 0 auto; }
+  .app-title { font-family: 'Fraunces', serif; font-size: 26px; font-weight: 800; margin-bottom: 2px; }
+  .app-title em { font-style: italic; color: var(--accent); }
+  .app-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 24px; }
+
+  .exam-tabs { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-bottom: 20px; }
+  .exam-tab { background: var(--surface); padding: 12px 14px; cursor: pointer; transition: background 0.15s; text-align: center; }
+  .exam-tab:hover { background: var(--surface2); }
+  .exam-tab.active { background: var(--surface2); box-shadow: inset 0 -2px 0 var(--accent); }
+  .tab-name { font-size: 12px; font-weight: 500; color: var(--text); display: block; margin-bottom: 2px; }
+  .exam-tab.active .tab-name { color: var(--accent); }
+  .tab-score { font-size: 10px; color: var(--text-muted); }
+
+  .progress-wrap { height: 3px; background: var(--border); margin-bottom: 8px; overflow: hidden; }
+  .progress-bar { height: 100%; background: var(--accent); transition: width 0.3s; }
+  .progress-meta { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-bottom: 18px; }
+  .c-ok { color: var(--correct); }
+  .c-bad { color: var(--wrong); }
+
+  .q-grid { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 24px; }
+  .q-dot { width: 30px; height: 30px; border: 1px solid var(--border); background: var(--surface); display: flex; align-items: center; justify-content: center; font-size: 11px; cursor: pointer; transition: all 0.12s; color: var(--text-muted); }
+  .q-dot:hover { border-color: var(--accent); color: var(--accent); }
+  .q-dot.current { border-color: var(--accent); background: rgba(200,240,120,0.1); color: var(--accent); font-weight: 600; }
+  .q-dot.g-ok { border-color: var(--correct); background: rgba(120,240,160,0.1); color: var(--correct); }
+  .q-dot.g-bad { border-color: var(--wrong); background: rgba(240,120,128,0.1); color: var(--wrong); }
+  .q-dot.g-skip { opacity: 0.4; }
+
+  .results-panel { display: none; background: var(--surface); border: 1px solid var(--border); padding: 28px 28px; margin-bottom: 24px; }
+  .results-panel.show { display: block; }
+  .r-top { display: flex; align-items: baseline; gap: 16px; margin-bottom: 20px; }
+  .r-pct { font-family: 'Fraunces', serif; font-size: 60px; font-weight: 800; color: var(--accent); line-height: 1; }
+  .r-info { font-size: 12px; color: var(--text-muted); }
+  .r-info strong { color: var(--text); display: block; margin-bottom: 2px; }
+  .r-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); margin-bottom: 20px; }
+  .r-stat { background: var(--bg); padding: 14px; text-align: center; }
+  .r-num { font-family: 'Fraunces', serif; font-size: 26px; font-weight: 600; display: block; }
+  .r-lbl { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); }
+
+  .q-card { background: var(--surface); border: 1px solid var(--border); padding: 28px 28px; }
+  .q-meta { display: flex; gap: 10px; align-items: center; margin-bottom: 14px; }
+  .q-num { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); }
+  .q-topic { font-size: 10px; color: var(--text-muted); }
+  .q-text { font-family: 'Fraunces', serif; font-size: 17px; font-weight: 300; line-height: 1.65; margin-bottom: 22px; }
+
+  .opts { display: flex; flex-direction: column; gap: 7px; margin-bottom: 18px; }
+  .opt { display: flex; align-items: flex-start; gap: 12px; padding: 11px 15px; border: 1px solid var(--border); background: var(--bg); cursor: pointer; transition: all 0.12s; }
+  .opt:hover { border-color: var(--accent); }
+  .opt.sel { border-color: var(--accent); background: rgba(200,240,120,0.05); }
+  .opt.ok { border-color: var(--correct); background: var(--correct-bg); }
+  .opt.bad { border-color: var(--wrong); background: var(--wrong-bg); }
+  .opt.hint { border-color: var(--correct); background: var(--correct-bg); opacity: 0.55; }
+  .opt-k { font-size: 11px; color: var(--text-muted); min-width: 16px; padding-top: 1px; }
+  .opt.sel .opt-k, .opt.ok .opt-k { color: var(--accent); }
+  .opt.bad .opt-k { color: var(--wrong); }
+  .opt-t { font-size: 13px; line-height: 1.6; flex: 1; }
+  .opt-m { margin-left: auto; font-size: 13px; min-width: 14px; }
+
+  .opt.multi .opt-k { width: 15px; height: 15px; min-width: 15px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 9px; margin-top: 2px; }
+  .opt.multi.sel .opt-k { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+  .multi-hint { font-size: 11px; color: var(--text-muted); margin-bottom: 14px; }
+
+  .tf-tbl { width: 100%; border-collapse: collapse; margin-bottom: 18px; }
+  .tf-tbl th { padding: 7px 12px; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); text-align: center; border-bottom: 1px solid var(--border); }
+  .tf-tbl th:first-child { text-align: left; }
+  .tf-tbl td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; font-size: 13px; }
+  .tf-tbl td:not(:first-child) { text-align: center; width: 70px; }
+  .tf-b { width: 26px; height: 26px; border: 1px solid var(--border); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; font-size: 11px; transition: all 0.12s; }
+  .tf-b:hover { border-color: var(--accent); }
+  .tf-b.sel { border-color: var(--accent); background: rgba(200,240,120,0.1); color: var(--accent); }
+  .tf-b.ok { border-color: var(--correct); background: var(--correct-bg); color: var(--correct); }
+  .tf-b.bad { border-color: var(--wrong); background: var(--wrong-bg); color: var(--wrong); }
+  .tf-b.hint { border-color: var(--correct); background: var(--correct-bg); color: var(--correct); opacity: 0.5; }
+
+  .fill-wrap { margin-bottom: 18px; }
+  .fill-inp { padding: 10px 15px; background: var(--bg); border: 1px solid var(--border); color: var(--text); font-family: 'DM Mono', monospace; font-size: 15px; width: 180px; outline: none; transition: border-color 0.12s; }
+  .fill-inp:focus { border-color: var(--accent); }
+  .fill-inp.ok { border-color: var(--correct); background: var(--correct-bg); }
+  .fill-inp.bad { border-color: var(--wrong); background: var(--wrong-bg); }
+  .fill-hint { font-size: 11px; color: var(--text-muted); margin-top: 6px; }
+
+  .fb { padding: 13px 16px; border-left: 3px solid var(--border); background: var(--surface2); margin-bottom: 18px; display: none; }
+  .fb.show { display: block; }
+  .fb.ok { border-color: var(--correct); background: var(--correct-bg); }
+  .fb.bad { border-color: var(--wrong); background: var(--wrong-bg); }
+  .fb-lbl { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 4px; }
+  .fb.ok .fb-lbl { color: var(--correct); }
+  .fb.bad .fb-lbl { color: var(--wrong); }
+  .fb-body { font-size: 12px; color: var(--text-muted); line-height: 1.7; }
+
+  .nav { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 4px; }
+  .btn { padding: 10px 22px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: all 0.12s; }
+  .btn:hover { border-color: var(--text-muted); }
+  .btn-p { background: var(--accent); color: var(--bg); border-color: var(--accent); font-weight: 500; }
+  .btn-p:hover { background: #d8ff88; }
+  .btn-g { color: var(--text-muted); background: transparent; border-color: transparent; }
+  .btn-g:hover { color: var(--text); }
+  .mla { margin-left: auto; }
+
+  .main { max-width: 960px; margin: 0 auto; padding: 0 32px 80px; }
+  @media(max-width:640px) {
+    .exam-tabs { grid-template-columns: repeat(3,1fr); }
+    .app-header, .main { padding-left: 14px; padding-right: 14px; }
+    .q-card { padding: 18px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <div class="app-title">Statistics &amp; <em>Probability</em></div>
+  <div class="app-sub">VU Amsterdam · XB_0115 / X_401020 — 5 past exams, 108 questions</div>
+  <div class="exam-tabs" id="exam-tabs"></div>
+</div>
+
+<div class="main">
+  <div class="progress-wrap"><div class="progress-bar" id="prog-bar"></div></div>
+  <div class="progress-meta">
+    <span id="prog-lbl">—</span>
+    <span><span class="c-ok" id="cnt-ok">0✓</span> · <span class="c-bad" id="cnt-bad">0✗</span> · <span id="cnt-left">— left</span></span>
+  </div>
+  <div class="q-grid" id="q-grid"></div>
+  <div class="results-panel" id="res-panel">
+    <div class="r-top">
+      <div class="r-pct" id="r-pct">—</div>
+      <div class="r-info"><strong id="r-score">—</strong><span id="r-exam">—</span></div>
+    </div>
+    <div class="r-stats">
+      <div class="r-stat"><span class="r-num" id="r-ok" style="color:var(--correct)">0</span><div class="r-lbl">Correct</div></div>
+      <div class="r-stat"><span class="r-num" id="r-bad" style="color:var(--wrong)">0</span><div class="r-lbl">Wrong</div></div>
+      <div class="r-stat"><span class="r-num" id="r-skip" style="color:var(--text-muted)">0</span><div class="r-lbl">Skipped</div></div>
+    </div>
+    <button class="btn btn-p" onclick="resetExam()">Reset This Exam →</button>
+  </div>
+  <div id="q-area"></div>
+</div>
+
+<script>
+const EXAMS = [
+{name:"Oct 2024 CS", short:"Oct 2024",questions:[
+{id:1,topic:"Bayes' Rule",type:"fill",text:"Machine A produces 60% of items (2% defect). Machine B produces 40%. P(defective)=0.1. Given a defective item, P(from machine A)? (3 decimals)",answer:["0.12","0.120"],feedback:"P(A|D) = P(D|A)·P(A)/P(D) = 0.02×0.6/0.1 = 0.12"},
+{id:2,topic:"Birthday Problem",type:"fill",text:"In a group of 3 people, P(at least 2 share a birthday)? 365 days, no leap years. (3 decimals)",answer:["0.008"],feedback:"1 − (364/365)(363/365) ≈ 0.008"},
+{id:3,topic:"CDF Properties",type:"mc",text:"Which is a property of any CDF?",options:["Always non-decreasing","Can decrease at certain points","Constant over the real line","Value always ≤ 0","Always left-continuous"],correct:[0],feedback:"CDFs are always non-decreasing and right-continuous."},
+{id:4,topic:"CI (Proportion) 99%",type:"mc",text:"400 people surveyed, 240 prefer public transit. Approximate 99% CI for proportion:",options:["(0.57, 0.63)","(0.54, 0.66)","(0.51, 0.69)","(0.59, 0.61)"],correct:[1],feedback:"p̂=0.6, z=2.58. CI = 0.6 ± 2.58·√(0.24/400) ≈ (0.54, 0.66)"},
+{id:5,topic:"Probability Rules",type:"multi",text:"Which are generally true? (Select all)",options:["P(A∪B|C) = P(A|C)+P(B|C) [if A,B disjoint given C]","P(A∪B|C) = P(A|B∪C)·P(C)","P(A∪B∪C) = 1−P(Aᶜ∩Bᶜ∩Cᶜ)","P(A|B) = P(B|A)·P(B)/P(A)","P(A∩B) = P(A|B)·P(B)"],correct:[2,4],feedback:"C: complement rule. E: definition of conditional probability."},
+{id:6,topic:"Conditional Prob (Dice)",type:"mc",text:"Roll two dice. P(sum=7 | exactly one die shows 3)?",options:["1","1/6","1/5","1/3"],correct:[2],feedback:"10 outcomes with exactly one 3. Of those, sum=7: (3,4),(4,3) = 2. P=2/10=1/5."},
+{id:7,topic:"Binomial Expectation",type:"fill",text:"X ~ Binomial(n=10, p=0.2). E[X]? (1 decimal)",answer:["2","2.0"],feedback:"E[X] = np = 10×0.2 = 2.0"},
+{id:8,topic:"Continuous Expectation",type:"fill",text:"X has PDF f(x)=3x⁻⁴ for x>1. E[X]? (1 decimal)",answer:["1.5"],feedback:"∫₁^∞ x·3x⁻⁴ dx = 3∫x⁻³dx = 3/2 = 1.5"},
+{id:9,topic:"Test Tails",type:"mc",text:"H₀: μ=21 vs H₁: μ<21. This is:",options:["Right tailed","Left tailed","Cross tailed","Center tailed"],correct:[1],feedback:"H₁: μ<21 → left tail."},
+{id:10,topic:"Type I Error",type:"mc",text:"A Type I error occurs if:",options:["A false H₀ is rejected","A true H₀ is rejected","A false H₀ is not rejected","A true H₀ is not rejected"],correct:[1],feedback:"Type I: rejecting a true H₀."},
+{id:11,topic:"Law of Total Probability",type:"fill",text:"Machine A: 60%, 2% defect. Machine B: 40%, 5% defect. P(random item defective)? (3 decimals)",answer:["0.032"],feedback:"0.02×0.6 + 0.05×0.4 = 0.032"},
+{id:12,topic:"LOTUS",type:"mc",text:"X has PDF f(x)=4x(1−x) for x∈[0,1]. Which gives E[X²]?",options:["(∫ x·4x(1−x) dx)²","∫ x·(4x(1−x))² dx","∫ x²·4x(1−x) dx","∫ (x·4x(1−x))² dx"],correct:[2],feedback:"E[X²] = ∫ x²·fₓ(x) dx by LOTUS."},
+{id:13,topic:"Normal Distribution",type:"mc",text:"X~N(3,4). P(X>4)=?",options:["1−Φ(0.5)","Φ(0.5)","1−Φ(0.25)","Φ(0.25)","2Φ(0.5)","2Φ(0.25)"],correct:[0],feedback:"Z=(4−3)/2=0.5. P(X>4)=1−Φ(0.5)."},
+{id:14,topic:"Union of 3 Events",type:"mc",text:"P(A)=0.4, P(B)=0.5, P(C)=0.3, mutually independent. P(A∪B∪C)?",options:["0.64","0.76","0.82","0.91","0.79","None"],correct:[4],feedback:"1−P(Aᶜ)P(Bᶜ)P(Cᶜ) = 1−0.6×0.5×0.7 = 0.79"},
+{id:15,topic:"p-value Decision",type:"mc",text:"p-value=0.04, α=0.05. Conclusion?",options:["Fail to reject H₀","Reject H₀","Increase sample size","Decrease α","None of the above"],correct:[1],feedback:"p<α → reject H₀."},
+{id:16,topic:"Independence & Disjoint",type:"tf",text:"Spam: P(spam)=0.2, P(flagged|spam)=0.9, P(flagged|not spam)=0.05. W={flagged}, S={spam}.",statements:["W and S are independent.","W and S are disjoint."],correct:[false,false],feedback:"P(S)≠P(W|S) → not independent. P(W∩S)≠0 → not disjoint."},
+{id:17,topic:"Inclusion-Exclusion",type:"mc",text:"P(A∪B)=0.8, P(A)=0.5, P(B)=0.4. P(A∩B)?",options:["0.1","0.3","0.4","0.5"],correct:[0],feedback:"0.5+0.4−0.8 = 0.1"},
+{id:18,topic:"p-value Computation",type:"mc",text:"H₀:μ=25 vs H₁:μ<25. X̄=24, n=36, σ=6. p-value?",options:["Φ(−1/6)","Φ(−1)","φ(−1/6)","Φ(−6)","1−Φ(−1)","1−Φ(−1/6)"],correct:[1],feedback:"t=√36·(24−25)/6=−1. Left-tail: p=Φ(−1)."},
+{id:19,topic:"Variance of Sample Mean",type:"mc",text:"Xᵢ iid, mean=10, variance=5. Var(X̄)?",options:["5/n","10/n","5/√n","25/n","25/√n","10/√n"],correct:[0],feedback:"Var(X̄)=σ²/n=5/n"},
+{id:20,topic:"MSE & Unbiasedness",type:"tf",text:"X₁,...,Xₙ~N(μ,4). Evaluate:",statements:["Sample mean is unbiased for μ.","MSE for estimating μ equals 2/√n."],correct:[true,false],feedback:"Unbiased: yes. MSE=Var(X̄)=4/n, not 2/√n."},
+{id:21,topic:"MLE (Exponential)",type:"tf",text:"xᵢ iid Exponential(λ). Evaluate:",statements:["Likelihood depends only on Σxᵢ.","MLE equals the sample mean."],correct:[true,false],feedback:"L=λⁿexp(−λΣxᵢ) — yes on sum. MLE=λ̂=1/x̄, not x̄."},
+{id:22,topic:"Continuous Probability",type:"fill",text:"f(x)=x+1/2 for 0≤x≤1. P(X>1/3)? (2 decimals)",answer:["0.77","0.78"],feedback:"∫_{1/3}^1(x+1/2)dx = 1−4/18 ≈ 0.78"},
+{id:23,topic:"Geometric CDF",type:"fill",text:"X~Geometric(0.2). Fₓ(2.5)? (2 decimals)",answer:["0.36"],feedback:"P(X=1)+P(X=2) = 0.2+0.16 = 0.36"},
+{id:24,topic:"Type I Error Comp.",type:"mc",text:"X₁,...,X₉~N(μ,1). H₀:μ=1 vs H₁:μ>1. Reject if X̄>1.5. P(Type I error)?",options:["Φ(3/2)","Φ(4/5)","1−Φ(4.5)","1−Φ(3/2)","Φ(−3/2)","Φ(−4.5)"],correct:[3],feedback:"P_{μ=1}(X̄>1.5)=P(Z>3/2)=1−Φ(3/2)"}
+]},
+{name:"Mar 2025 AI",short:"Mar 2025",questions:[
+{id:1,topic:"Cond. Prob (Coins)",type:"mc",text:"Toss fair coin 3×. Given ≥1 heads, P(≥2 heads)?",options:["4/7","3/7","1/5","2/7"],correct:[0],feedback:"P(A₂)/P(A₁)=(4/8)/(7/8)=4/7"},
+{id:2,topic:"Cond. Prob (Dice)",type:"mc",text:"Roll two fair dice. P(sum≥7 | exactly one die shows 3)?",options:["2/5","1/3","3/5","1/2"],correct:[2],feedback:"10 outcomes with exactly one 3; 6 have sum≥7. P=6/10=3/5."},
+{id:3,topic:"CI Concepts",type:"tf",text:"Indicate true or false:",statements:["CIs become larger when sample size increases.","A 95% CI is smaller than a 99% CI."],correct:[false,true],feedback:"Larger n → narrower CI. Higher confidence → wider CI."},
+{id:4,topic:"CI (Proportion) 95%",type:"mc",text:"290/400 prefer transit. Approximate 95% CI:",options:["[0.68, 0.77]","[0.66, 0.79]","[0.70, 0.75]","[0.64, 0.81]"],correct:[0],feedback:"p̂=0.725. 0.725 ± 1.96·√(0.725·0.275/400) ≈ [0.68, 0.77]"},
+{id:5,topic:"CI (Known Var.)",type:"mc",text:"n=100, σ²=16, X̄=23.5. Approx 95% CI for E[Xᵢ]?",options:["[22.3, 24.6]","[22.2, 24.7]","[22.1, 24.9]","[22.7, 24.3]"],correct:[3],feedback:"23.5 ± 1.96×4/10 = 23.5 ± 0.784 ≈ [22.7, 24.3]"},
+{id:6,topic:"CDF Property",type:"mc",text:"Which is a CDF property?",options:["Differentiable","Non-decreasing","Continuous","Can decrease countably"],correct:[1],feedback:"CDFs are non-decreasing. Not necessarily differentiable or continuous."},
+{id:7,topic:"Continuous Expectation",type:"fill",text:"f(x)=3x⁻⁴ for x>1. E[X]? (1 decimal)",answer:["1.5"],feedback:"3∫₁^∞x⁻³dx = 3/2 = 1.5"},
+{id:8,topic:"LOTUS",type:"mc",text:"f(x)=4x(1−x) for x∈[0,1]. E(X²)?",options:["1/4","3/4","1/5","4/5"],correct:[2],feedback:"∫₀¹x²·4x(1−x)dx = 4[1/4−1/5]=1/5"},
+{id:9,topic:"Normal Distribution",type:"mc",text:"X~N(3,4). P(X>4)?",options:["1−Φ(0.5)","Φ(0.5)","1−Φ(0.25)","2Φ(0.25)"],correct:[0],feedback:"Z=(4−3)/2=0.5. P(X>4)=1−Φ(0.5)."},
+{id:10,topic:"PDF Normalization",type:"mc",text:"f(x)=ce⁻ˣ for 1<x<2. c=?",options:["e+1","e/(e+1)","(e+1)/(e−1)","e²/(e−1)"],correct:[3],feedback:"c·∫₁²e⁻ˣdx = c(e⁻¹−e⁻²) = c(e−1)/e² = 1 → c=e²/(e−1)"},
+{id:11,topic:"Poisson",type:"fill",text:"10 customers/hr. X=arrivals in 1.5hrs. P(14≤X≤16)? (2 dec)",answer:["0.30","0.3"],feedback:"X~Poisson(15). P(14)+P(15)+P(16)≈0.30"},
+{id:12,topic:"t-statistic",type:"fill",text:"Nat'l avg=170cm. Sample n=9: X̄=165.8, S=8.25. t-stat? (2 dec)",answer:["-1.53","-1.52"],feedback:"t=(165.8−170)/(8.25/3)=−4.2/2.75≈−1.53"},
+{id:13,topic:"Type II Error",type:"mc",text:"Type II error occurs if:",options:["False H₀ rejected","True H₀ rejected","False H₀ not rejected","True H₀ not rejected"],correct:[2],feedback:"Type II: failing to reject false H₀."},
+{id:14,topic:"p-value Decision",type:"mc",text:"p=0.04, α=0.05. Conclusion?",options:["Reject H₀","Accept H₀","Increase n","None"],correct:[0],feedback:"p<α → reject H₀."},
+{id:15,topic:"Type I Error Comp.",type:"mc",text:"X₁,...,X₉~N(μ,1). Reject H₀:μ=1 if X̄>1.5. P(Type I)?",options:["1−Φ(4.5)","Φ(3/2)","Φ(4/5)","1−Φ(3/2)"],correct:[3],feedback:"1−Φ(3/2)"},
+{id:16,topic:"Bayes' Rule",type:"fill",text:"Machine A: 60%, 2% defect. P(D)=0.1. P(from A | defective)? (2 dec)",answer:["0.12"],feedback:"0.02×0.6/0.1=0.12"},
+{id:17,topic:"Probability Rules",type:"multi",text:"Which are true? (Select all)",options:["P(A∩B)≤P(A∪B)","P(A|B)=P(A∩B)/P(A)","P(A∪B∪C)=1−P(Aᶜ∩Bᶜ∩Cᶜ)","P(A∪B|C)=P(A|C)+P(B|C)"],correct:[0,2],feedback:"A: intersection ⊆ union. C: complement rule. B: denominator should be P(B)."},
+{id:18,topic:"Sum Rule",type:"mc",text:"P(A∩B)=0.1, P(A)=0.3, P(B)=0.2. P(A∪B)?",options:["0.2","0.4","0.1","0.5"],correct:[1],feedback:"0.3+0.2−0.1=0.4"},
+{id:19,topic:"Countability",type:"tf",text:"Indicate true or false:",statements:["Rational numbers are uncountable.","Cartesian product of two countable sets is countable."],correct:[false,true],feedback:"ℚ is countable. Countable×Countable=Countable."},
+{id:20,topic:"CLT",type:"tf",text:"Indicate true or false:",statements:["CLT: (X₁+…+Xₙ)/n converges to N(μ,σ²/n).","Sample mean is unbiased for μ."],correct:[true,true],feedback:"Both true."}
+]},
+{name:"Final 2025 (X_401020)",short:"Final 2025",questions:[
+{id:1,topic:"Confidence Interval",type:"mc",text:"X~N(θ,1), n=4, obs=(2,3,1,2). 90% CI for θ?",options:["[1.18, 2.82]","[1.36, 2.64]","[1.22, 2.78]","[1.11, 2.11]"],correct:[0],feedback:"X̄=2. CI=2±1.645/2≈[1.18,2.82]"},
+{id:2,topic:"Expected Values",type:"multi",text:"Which have E[X]=2? (Select all)",options:["X~Geometric(0.5)","X~Binomial(40,0.05)","X~Uniform(0,2)","X~Exponential(2)"],correct:[0,1],feedback:"Geo(0.5):E=2. Binom:E=2. Uniform(0,2):E=1. Exp(2):E=0.5."},
+{id:3,topic:"LOTUS",type:"mc",text:"Which formula gives E[X²] for continuous X?",options:["∫ x²fₓ(x)dx","∫ x²Fₓ(x)dx","(∫ xfₓ(x)dx)²","(∫ xFₓ(x)dx)²","None"],correct:[0],feedback:"E[X²]=∫x²fₓ(x)dx by LOTUS."},
+{id:4,topic:"Type II Error",type:"mc",text:"H₀={μ≤50}, K=[55,∞). T=54, actual μ=52. After decision:",options:["Type II error","Type I error","Type III error","Correct decision","No decision"],correct:[0],feedback:"T<55→don't reject H₀. μ=52>50→H₁ true. Type II."},
+{id:5,topic:"MLE Geometric",type:"fill",text:"X₁,X₂~Geometric(θ), x₁=3,x₂=2. MLE? (1 dec)",answer:["0.4"],feedback:"θ̂=2/(3+2)=0.4"},
+{id:6,topic:"Normal Transform",type:"mc",text:"X~N(2,1), Y=2X−1. Y~?",options:["μ=3,σ=2","μ=3,σ=1","μ=2,σ=2","μ=2,σ=1","None"],correct:[0],feedback:"E[Y]=3, Var[Y]=4, σ=2."},
+{id:7,topic:"Pascal Distribution",type:"fill",text:"5 people ahead, P(cash)=0.3. P(5th person is 2nd cash)? (2 dec)",answer:["0.12"],feedback:"C(4,1)·0.3²·0.7³≈0.12"},
+{id:8,topic:"PDF→CDF",type:"fill",text:"fₓ(x)=x⁻² for x≥1. Fₓ(4)? (2 dec)",answer:["0.75"],feedback:"1−1/4=0.75"},
+{id:9,topic:"PMF→CDF",type:"fill",text:"Pₓ(k)=2⁻ᵏ, k=1,2,… Fₓ(2.5)? (2 dec)",answer:["0.75"],feedback:"1/2+1/4=0.75"},
+{id:10,topic:"Normal Probability",type:"mc",text:"X~N(4,4) (μ=4,σ=2). P(X>2)?",options:["1−Φ(−1)","1−Φ(2)","Φ(1)","Φ(−2)","None"],correct:[0],feedback:"P(Z>(2−4)/2)=P(Z>−1)=1−Φ(−1)"},
+{id:11,topic:"Random Experiments",type:"multi",text:"Which are true? (Select all)",options:["If P({ω})=0 ∀ω∈A, then P(A)=0.","Sample space is the set of events.","If P(A)≠0 and P(B|A)≠0, then P(B)≠0."],correct:[2],feedback:"Only C. A fails for continuous distributions."},
+{id:12,topic:"Dice Probability",type:"fill",text:"Roll die twice. P(first>4 AND second<first)? (2 dec)",answer:["0.25"],feedback:"9/36=0.25"},
+{id:13,topic:"Var of Sample Mean",type:"fill",text:"n=20, σ²=4. Var(X̄)? (1 dec)",answer:["0.2"],feedback:"4/20=0.2"},
+{id:14,topic:"Sample Variance",type:"fill",text:"x₁=−2, x₂=0, x₃=2. S²?",answer:["4"],feedback:"[(−2)²+0+4]/2=4"},
+{id:15,topic:"Variance Discrete",type:"mc",text:"X∈{−2,+2}, P(−2)=P(+2). Var(X)?",options:["2","4","16","None"],correct:[1],feedback:"4·½+4·½=4"},
+{id:16,topic:"CLT Application",type:"fill",text:"X₁,…,X₁₀₀₀ iid μ=0.4, σ²=1. P(ΣXᵢ≤400)≈? (1 dec)",answer:["0.5"],feedback:"Φ(0)=0.5"}
+]},
+{name:"Jan 2025 CS",short:"Jan 2025",questions:[
+{id:1,topic:"MSE",type:"tf",text:"X₁,...,Xₙ~N(μ,4). Evaluate:",statements:["Sample mean is unbiased for μ.","MSE for μ equals 4/n."],correct:[true,true],feedback:"Both true."},
+{id:2,topic:"Pascal",type:"mc",text:"Coin P(H)=1/3, toss until 2 heads. P(exactly 5 tosses)?",options:["0.03","0.13","0.24","0.10","0.08","None"],correct:[1],feedback:"C(4,1)·(1/3)²·(2/3)³≈0.132"},
+{id:3,topic:"Union & Independence",type:"mc",text:"A,B,C independent. P(Aᶜ∩Bᶜ)=1/2, P(C)=1/3. P(A∪B∪C)?",options:["0.12","0.25","0.37","0.66","0.67","0.83"],correct:[3],feedback:"1−(1/2)(2/3)=1−1/3≈0.66"},
+{id:4,topic:"CLT (Binomial)",type:"mc",text:"X~Bin(20,1/5). CLT approx of P(X>8)?",options:["1−Φ(0.5√5)","1−Φ(√5)","1−Φ(2√5)","Φ(0.5√5)","Φ(√5)","Φ(2√5)"],correct:[1],feedback:"μ=4, σ²=16/5. Z=(8−4)/√(16/5)=√5. P=1−Φ(√5)."},
+{id:5,topic:"Cond. Prob Rules",type:"tf",text:"Events A,B,C. Indicate:",statements:["P(C|C)=1","P(A∪B|C)=P(A|C)+P(B|C)"],correct:[true,false],feedback:"P(C|C)=1. Union rule only holds if A,B exclusive given C."},
+{id:6,topic:"Independence vs Disjoint",type:"tf",text:"Indicate:",statements:["Independent A,B → disjoint.","Disjoint A,B → independent."],correct:[false,false],feedback:"Both false in general."},
+{id:7,topic:"PDF Normalization",type:"mc",text:"f(x)=cx² for x∈[−1,1]. c=?",options:["0.5","1","1.5","2/3","2","−1"],correct:[2],feedback:"c·2/3=1 → c=3/2=1.5"},
+{id:8,topic:"Cond. Prob (Max)",type:"fill",text:"Roll 2 dice. Given max=3, P(sum=4)? (2 dec)",answer:["0.40","0.4"],feedback:"2 outcomes out of 5: P=2/5=0.40"},
+{id:9,topic:"Sum of Normals",type:"mc",text:"X~N(3,1), Y~N(−3,2) (σ). Independent. Z=X+Y−2. Z~?",options:["N(−2,5)","N(−2,3)","N(−2,9)","N(0,5)","N(0,3)","Not normal"],correct:[0],feedback:"E[Z]=−2. Var=σₓ²+σᵧ²=1+4=5. Z~N(−2,5)."},
+{id:10,topic:"MLE Binomial",type:"mc",text:"X₁,...,X₄~Bin(3,θ), obs=(1,3,2,2). L(θ)?",options:["θ⁴(1−θ)⁴","13θ⁵(1−θ)⁴","27θ⁸(1−θ)⁴","3θ⁴(1−θ)⁶","12θ(1−θ)⁴"],correct:[2],feedback:"∑xᵢ=8, ∑(3−xᵢ)=4. Constants=3·1·3·3=27. L=27θ⁸(1−θ)⁴."},
+{id:11,topic:"Sample Size CI",type:"mc",text:"90% CI, margin 3%. Min n?",options:["500","600","700","800","900"],correct:[3],feedback:"n≥(1.645/0.03)²·0.25≈752 → n=800"},
+{id:12,topic:"Type I (Geometric)",type:"fill",text:"X~Geo(θ). H₀:θ=1/2, reject if X≥3. P(Type I)? (2 dec)",answer:["0.25"],feedback:"1−P(X=1)−P(X=2)=1−0.5−0.25=0.25"},
+{id:13,topic:"Poisson",type:"fill",text:"X~Poisson(3). P(X>1.8)? (2 dec)",answer:["0.80"],feedback:"1−e⁻³−3e⁻³=1−4e⁻³≈0.80"},
+{id:14,topic:"LOTUS Uniform",type:"mc",text:"X~Uniform[0,2]. E[X³]?",options:["3","1","1/2","2","1/4","0.16"],correct:[3],feedback:"∫₀²x³·(1/2)dx=(1/2)·4=2"},
+{id:15,topic:"p-value",type:"mc",text:"H₀:μ=25 vs H₁:μ<25. X̄=24, n=36, σ=6. p-value?",options:["Φ(−1/6)","Φ(−1)","φ(−1/6)","Φ(−6)","1−Φ(−1)","1−Φ(−1/6)"],correct:[1],feedback:"t=6·(−1)/6=−1. p=Φ(−1)."},
+{id:16,topic:"Chi-Square CI",type:"mc",text:"16 bolts, s²=0.04. 95% CI for σ² (χ₀.₀₂₅,₁₅=27.49, χ₀.₉₇₅,₁₅=6.26)?",options:["[0.022, 0.096]","[0.021, 0.087]","[0.032, 0.076]","[0.012, 0.136]","Info missing"],correct:[0],feedback:"[0.6/27.49, 0.6/6.26]≈[0.022,0.096]"},
+{id:17,topic:"CDF Properties",type:"mc",text:"Which is a CDF property?",options:["Always strictly increasing","Can decrease","Constant everywhere","lim_{x→∞}F(x)=0","Always right-continuous"],correct:[4],feedback:"CDFs are right-continuous. Limit at +∞ is 1."},
+{id:18,topic:"Total Probability",type:"mc",text:"W₁(0.5,2%), W₂(0.3,5%), W₃(0.2,10%). P(defective)?",options:["0.045","0.055","0.065","0.075","0.085"],correct:[0],feedback:"0.01+0.015+0.02=0.045"},
+{id:19,topic:"Bayes (Medical)",type:"fill",text:"P(cancer)=1/7, P(neg|cancer)=0.02, P(neg)=0.85. P(cancer|neg)? (4 dec)",answer:["0.0034"],feedback:"0.02·(1/7)/0.85≈0.0034"},
+{id:20,topic:"Significance Level",type:"tf",text:"Rejected at α=0.025, then:",statements:["Must reject at α=0.01.","Must reject at α=0.05."],correct:[false,true],feedback:"p≤0.025<0.05 → yes at 0.05. But not guaranteed at 0.01."},
+{id:21,topic:"Type II Error",type:"tf",text:"Which are true?",statements:["P(Type II)=P(not rejecting H₀ when H₀ true).","Larger rejection region → smaller P(Type II)."],correct:[false,true],feedback:"First false (not rejecting true H₀ is correct). Second true."},
+{id:22,topic:"p-value & Errors",type:"tf",text:"If rejected at α=0.025:",statements:["P(Type II error)<0.025","May or may not be rejected at α=0.01"],correct:[false,true],feedback:"Type II unrelated to α. May/may not hold at smaller α."},
+{id:23,topic:"MLE Computation",type:"fill",text:"L(θ)=12θ³(1−θ)⁵. MLE? (2 dec)",answer:["0.38","3/8"],feedback:"3/θ=5/(1−θ) → θ̂=3/8≈0.38"},
+{id:24,topic:"Probability Uniform",type:"fill",text:"X~Uniform(0,1). P(√X>0.5)? (2 dec)",answer:["0.75"],feedback:"P(X>0.25)=0.75"}
+]}
+];
+
+// ── STATE ──
+let S = { ei:0, qi:0, ans:{}, sub:{} };
+EXAMS.forEach((_,i)=>{ S.ans[i]={}; S.sub[i]={}; });
+
+const $=id=>document.getElementById(id);
+
+// ── TABS ──
+function buildTabs(){
+  $('exam-tabs').innerHTML=EXAMS.map((e,i)=>{
+    const {ok,total}=examScore(i);
+    const done=Object.keys(S.sub[i]).length;
+    const score=done>0?ok+'✓ / '+done+' done':'0 / '+e.questions.length+' qs';
+    return `<div class="exam-tab${i===S.ei?' active':''}" onclick="switchExam(${i})">
+      <span class="tab-name">${e.short}</span>
+      <span class="tab-score">${score}</span>
+    </div>`;
+  }).join('');
+}
+function examScore(i){
+  let ok=0;
+  EXAMS[i].questions.forEach((_,qi)=>{ if(S.sub[i][qi]&&isOk(i,qi)) ok++; });
+  return {ok, total:EXAMS[i].questions.length};
+}
+function switchExam(i){ S.ei=i; S.qi=0; buildTabs(); renderGrid(); render(); }
+
+// ── GRID ──
+function renderGrid(){
+  const qs=EXAMS[S.ei].questions;
+  $('q-grid').innerHTML=qs.map((_,i)=>{
+    let cls='q-dot';
+    if(i===S.qi) cls+=' current';
+    else if(S.sub[S.ei][i]) cls+=isOk(S.ei,i)?' g-ok':' g-bad';
+    return `<div class="${cls}" onclick="goQ(${i})">${i+1}</div>`;
+  }).join('');
+}
+function goQ(i){ S.qi=i; renderGrid(); render(); window.scrollTo(0,0); }
+
+// ── PROGRESS ──
+function updateProg(){
+  const qs=EXAMS[S.ei].questions;
+  const total=qs.length, done=Object.keys(S.sub[S.ei]).length;
+  let ok=0,bad=0;
+  qs.forEach((_,i)=>{ if(S.sub[S.ei][i]){isOk(S.ei,i)?ok++:bad++;} });
+  $('prog-bar').style.width=(done/total*100)+'%';
+  $('prog-lbl').textContent=`Question ${S.qi+1} of ${total}`;
+  $('cnt-ok').textContent=ok+'✓';
+  $('cnt-bad').textContent=bad+'✗';
+  $('cnt-left').textContent=(total-done)+' left';
+}
+
+// ── RENDER ──
+function render(){
+  updateProg();
+  const ei=S.ei, qi=S.qi;
+  const q=EXAMS[ei].questions[qi];
+  const done=!!S.sub[ei][qi];
+  const ans=S.ans[ei][qi];
+
+  let h=`<div class="q-card">
+    <div class="q-meta"><span class="q-num">Q${qi+1} / ${EXAMS[ei].questions.length}</span><span class="q-topic">· ${q.topic}</span></div>
+    <div class="q-text">${q.text}</div>`;
+
+  if(q.type==='mc') h+=buildMC(q,ans,done,ei,qi);
+  else if(q.type==='multi') h+=buildMulti(q,ans,done);
+  else if(q.type==='fill') h+=buildFill(q,ans,done,ei,qi);
+  else if(q.type==='tf') h+=buildTF(q,ans,done);
+
+  const cor=done&&isOk(ei,qi);
+  h+=`<div class="fb${done?' show '+(cor?'ok':'bad'):''}">
+    <div class="fb-lbl">${done?(cor?'✓ Correct':'✗ Incorrect'):''}</div>
+    <div class="fb-body">${q.feedback||''}</div>
+  </div>`;
+
+  h+='<div class="nav">';
+  if(!done){
+    h+=`<button class="btn btn-p" onclick="submit()">Check Answer</button>`;
+    h+=`<button class="btn btn-g" onclick="skipQ()">Skip</button>`;
+  } else {
+    h+=`<button class="btn btn-p" onclick="nextQ()">Next →</button>`;
+  }
+  if(qi>0) h+=`<button class="btn mla" onclick="prevQ()">← Back</button>`;
+  h+='</div></div>';
+
+  $('q-area').innerHTML=h;
+  $('res-panel').classList.remove('show');
+  checkAllDone();
+}
+
+function buildMC(q,ans,done,ei,qi){
+  return '<div class="opts">'+q.options.map((o,i)=>{
+    let cls='opt', tick='';
+    if(done){
+      if(q.correct.includes(i)){ cls+=i===ans?' ok':' hint'; tick='✓'; }
+      else if(i===ans){ cls+=' bad'; tick='✗'; }
+    } else if(i===ans) cls+=' sel';
+    return `<div class="${cls}"${done?'':` onclick="selMC(${i})"`}>
+      <span class="opt-k">${String.fromCharCode(65+i)}</span>
+      <span class="opt-t">${o}</span>
+      <span class="opt-m">${tick}</span>
+    </div>`;
+  }).join('')+'</div>';
+}
+function buildMulti(q,ans,done){
+  const sel=ans||[];
+  let h='<div class="opts">'+q.options.map((o,i)=>{
+    const s=sel.includes(i), c=q.correct.includes(i);
+    let cls='opt multi', kc='', tick='';
+    if(done){
+      if(c&&s){cls+=' ok';kc=tick='✓';}
+      else if(!c&&s){cls+=' bad';kc=tick='✗';}
+      else if(c&&!s){cls+=' hint';kc='✓';}
+    } else { if(s){cls+=' sel';kc='✓';} }
+    return `<div class="${cls}"${done?'':` onclick="togMulti(${i})"`}>
+      <span class="opt-k">${kc}</span>
+      <span class="opt-t">${o}</span>
+      <span class="opt-m">${tick}</span>
+    </div>`;
+  }).join('')+'</div>';
+  if(!done) h+='<div class="multi-hint">Select all that apply</div>';
+  return h;
+}
+function buildFill(q,ans,done,ei,qi){
+  const ok=done&&isOk(ei,qi);
+  return `<div class="fill-wrap">
+    <input type="text" class="fill-inp${done?(ok?' ok':' bad'):''}" id="fi"
+      value="${ans||''}" placeholder="Answer…" ${done?'disabled':''}
+      onkeydown="if(event.key==='Enter')submit()">
+    <div class="fill-hint">Use decimal point (e.g. 0.75)</div>
+  </div>`;
+}
+function buildTF(q,ans,done){
+  const sv=ans||[];
+  return '<table class="tf-tbl"><thead><tr><th>Statement</th><th>True</th><th>False</th></tr></thead><tbody>'+
+  q.statements.map((s,i)=>{
+    const u=sv[i], c=q.correct[i];
+    let tc='tf-b',fc='tf-b',tt='',ft='';
+    if(done){
+      if(c===true){tc+=' '+(u===true?'ok':'hint');tt='✓'; if(u===false){fc+=' bad';ft='✗';}}
+      else{fc+=' '+(u===false?'ok':'hint');ft='✓'; if(u===true){tc+=' bad';tt='✗';}}
+    } else {
+      if(u===true){tc+=' sel';tt='✓';}
+      if(u===false){fc+=' sel';ft='✓';}
+    }
+    return `<tr><td>${s}</td>
+      <td><div class="${tc}"${done?'':` onclick="selTF(${i},true)"`}>${tt}</div></td>
+      <td><div class="${fc}"${done?'':` onclick="selTF(${i},false)"`}>${ft}</div></td>
+    </tr>`;
+  }).join('')+'</tbody></table>';
+}
+
+// ── INTERACTIONS ──
+function selMC(i){
+  if(S.sub[S.ei][S.qi]) return;
+  S.ans[S.ei][S.qi]=i;
+  document.querySelectorAll('.opt:not(.multi)').forEach((el,j)=>el.classList.toggle('sel',j===i));
+}
+function togMulti(i){
+  if(S.sub[S.ei][S.qi]) return;
+  if(!S.ans[S.ei][S.qi]) S.ans[S.ei][S.qi]=[];
+  const a=S.ans[S.ei][S.qi], p=a.indexOf(i);
+  p===-1?a.push(i):a.splice(p,1);
+  document.querySelectorAll('.opt.multi').forEach((el,j)=>{
+    el.classList.toggle('sel',a.includes(j));
+    el.querySelector('.opt-k').textContent=a.includes(j)?'✓':'';
+  });
+}
+function selTF(si,val){
+  if(S.sub[S.ei][S.qi]) return;
+  const q=EXAMS[S.ei].questions[S.qi];
+  if(!S.ans[S.ei][S.qi]) S.ans[S.ei][S.qi]=new Array(q.statements.length).fill(null);
+  S.ans[S.ei][S.qi][si]=val;
+  const tr=document.querySelectorAll('.tf-tbl tbody tr')[si];
+  if(!tr) return;
+  const tb=tr.cells[1].querySelector('.tf-b'), fb=tr.cells[2].querySelector('.tf-b');
+  tb.className='tf-b'+(val===true?' sel':''); tb.textContent=val===true?'✓':'';
+  fb.className='tf-b'+(val===false?' sel':''); fb.textContent=val===false?'✓':'';
+}
+function submit(){
+  const ei=S.ei,qi=S.qi,q=EXAMS[ei].questions[qi];
+  if(q.type==='fill'){ const fi=$('fi'); S.ans[ei][qi]=fi?fi.value.trim():''; }
+  S.sub[ei][qi]=true;
+  buildTabs(); renderGrid(); render();
+}
+function skipQ(){ S.ans[S.ei][S.qi]=null; S.sub[S.ei][S.qi]=true; buildTabs(); renderGrid(); nextQ(); }
+function nextQ(){
+  const t=EXAMS[S.ei].questions.length;
+  if(S.qi<t-1){ S.qi++; renderGrid(); render(); window.scrollTo(0,0); }
+  else { checkAllDone(true); }
+}
+function prevQ(){ if(S.qi>0){ S.qi--; renderGrid(); render(); window.scrollTo(0,0); } }
+
+function isOk(ei,qi){
+  const q=EXAMS[ei].questions[qi], a=S.ans[ei][qi];
+  if(a===null||a===undefined) return false;
+  if(q.type==='mc') return a===q.correct[0];
+  if(q.type==='multi'){
+    if(!a||!a.length) return false;
+    return JSON.stringify([...a].sort((x,y)=>x-y))===JSON.stringify([...q.correct].sort((x,y)=>x-y));
+  }
+  if(q.type==='fill') return q.answer.some(x=>x.toString().toLowerCase()===a.toString().toLowerCase().trim());
+  if(q.type==='tf'){ if(!a) return false; return q.correct.every((c,i)=>a[i]===c); }
+  return false;
+}
+
+function checkAllDone(force){
+  const ei=S.ei, qs=EXAMS[ei].questions;
+  const all=qs.every((_,i)=>!!S.sub[ei][i]);
+  if(!all) return;
+  let ok=0,bad=0,skip=0;
+  qs.forEach((_,i)=>{ const a=S.ans[ei][i]; a===null?skip++:(isOk(ei,i)?ok++:bad++); });
+  const pct=Math.round(ok/qs.length*100);
+  $('r-pct').textContent=pct+'%';
+  $('r-score').textContent=ok+' of '+qs.length+' correct';
+  $('r-exam').textContent=EXAMS[ei].name;
+  $('r-ok').textContent=ok; $('r-bad').textContent=bad; $('r-skip').textContent=skip;
+  $('res-panel').classList.add('show');
+}
+function resetExam(){
+  S.ans[S.ei]={}; S.sub[S.ei]={}; S.qi=0;
+  buildTabs(); renderGrid(); render();
+}
+
+// ── INIT ──
+buildTabs(); renderGrid(); render();
+</script>
+</body>
+</html>

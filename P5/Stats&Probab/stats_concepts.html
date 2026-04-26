@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stats Concepts Study Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,300;1,9..144,700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0c0c0f;
+  --s1: #131318;
+  --s2: #1a1a22;
+  --s3: #22222e;
+  --border: #2e2e3e;
+  --border2: #3e3e52;
+  --text: #e2e2f0;
+  --muted: #7070a0;
+  --dim: #4a4a70;
+  --accent: #c8f078;
+  --accent2: #78b4f8;
+  --accent3: #f09878;
+  --accent4: #a878f8;
+  --accent5: #78f0c8;
+  --ok: #78f0a0;
+  --warn: #f8d878;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace;font-size:13px;line-height:1.7;min-height:100vh;}
+
+/* layout */
+.shell{display:grid;grid-template-columns:240px 1fr;min-height:100vh;}
+.sidebar{background:var(--s1);border-right:1px solid var(--border);padding:24px 0;position:sticky;top:0;height:100vh;overflow-y:auto;}
+.content{padding:40px 48px 80px;}
+
+/* sidebar */
+.logo{padding:0 20px 20px;border-bottom:1px solid var(--border);margin-bottom:16px;}
+.logo-title{font-family:'Fraunces',serif;font-size:15px;font-weight:700;color:var(--text);}
+.logo-title em{color:var(--accent);font-style:italic;}
+.logo-sub{font-size:10px;color:var(--muted);letter-spacing:0.15em;text-transform:uppercase;margin-top:2px;}
+.nav-group{margin-bottom:6px;}
+.nav-group-label{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--dim);padding:6px 20px 4px;}
+.nav-item{display:flex;align-items:center;gap:8px;padding:7px 20px;cursor:pointer;transition:all 0.12s;color:var(--muted);font-size:12px;}
+.nav-item:hover{color:var(--text);background:var(--s2);}
+.nav-item.active{color:var(--text);background:var(--s2);border-right:2px solid var(--accent);}
+.nav-dot{width:6px;height:6px;border-radius:50%;background:var(--dim);flex-shrink:0;}
+.nav-item.active .nav-dot{background:var(--accent);}
+.nav-item:hover .nav-dot{background:var(--border2);}
+
+/* content */
+.concept-section{display:none;}
+.concept-section.active{display:block;}
+.concept-header{margin-bottom:32px;}
+.concept-tag{font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+.concept-title{font-family:'Fraunces',serif;font-size:32px;font-weight:700;line-height:1.2;margin-bottom:8px;}
+.concept-freq{font-size:11px;color:var(--muted);}
+.freq-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent);margin-right:3px;}
+.freq-dot.dim{background:var(--border2);}
+
+/* cards */
+.card-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
+.card-row.single{grid-template-columns:1fr;}
+.card-row.three{grid-template-columns:1fr 1fr 1fr;}
+.card{background:var(--s2);border:1px solid var(--border);padding:20px;}
+.card-label{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+.card-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:8px;}
+.card-body{font-size:12px;color:var(--muted);line-height:1.75;}
+.card-body strong{color:var(--text);font-weight:500;}
+
+/* formula box */
+.formula{background:var(--s3);border:1px solid var(--border2);border-left:3px solid var(--accent);padding:14px 18px;margin:16px 0;font-family:'DM Mono',monospace;}
+.formula-label{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;}
+.formula-body{font-size:13px;color:var(--text);line-height:1.9;}
+.formula-body .hl{color:var(--accent);}
+.formula-body .hl2{color:var(--accent2);}
+.formula-body .hl3{color:var(--accent3);}
+.formula-body .hl4{color:var(--accent4);}
+.formula-body .hl5{color:var(--accent5);}
+.formula.warn{border-left-color:var(--warn);}
+.formula.warn .formula-label{color:var(--warn);}
+
+/* steps */
+.steps{margin:16px 0;}
+.step{display:flex;gap:14px;margin-bottom:12px;align-items:flex-start;}
+.step-num{width:22px;height:22px;border-radius:50%;background:rgba(200,240,120,0.1);border:1px solid var(--accent);color:var(--accent);font-size:10px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.step-body{font-size:12px;color:var(--muted);line-height:1.75;}
+.step-body strong{color:var(--text);font-weight:500;}
+
+/* pitfall */
+.pitfall{background:rgba(240,152,120,0.07);border:1px solid rgba(240,152,120,0.25);border-left:3px solid var(--accent3);padding:14px 18px;margin:16px 0;}
+.pitfall-label{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent3);margin-bottom:6px;}
+.pitfall-body{font-size:12px;color:var(--muted);line-height:1.75;}
+.pitfall-body strong{color:var(--text);font-weight:500;}
+
+/* tip */
+.tip{background:rgba(120,180,248,0.07);border:1px solid rgba(120,180,248,0.2);border-left:3px solid var(--accent2);padding:14px 18px;margin:16px 0;}
+.tip-label{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent2);margin-bottom:6px;}
+.tip-body{font-size:12px;color:var(--muted);line-height:1.75;}
+.tip-body strong{color:var(--text);font-weight:500;}
+
+/* divider */
+.divider{border:none;border-top:1px solid var(--border);margin:28px 0;}
+.section-label{font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--dim);margin:24px 0 12px;}
+
+/* tag pill */
+.pill{display:inline-block;padding:2px 8px;font-size:10px;border-radius:2px;margin:2px;}
+.pill-g{background:rgba(120,240,160,0.1);color:var(--ok);border:1px solid rgba(120,240,160,0.2);}
+.pill-b{background:rgba(120,180,248,0.1);color:var(--accent2);border:1px solid rgba(120,180,248,0.2);}
+.pill-o{background:rgba(240,152,120,0.1);color:var(--accent3);border:1px solid rgba(240,152,120,0.2);}
+.pill-p{background:rgba(168,120,248,0.1);color:var(--accent4);border:1px solid rgba(168,120,248,0.2);}
+
+/* table */
+.ref-table{width:100%;border-collapse:collapse;margin:12px 0;}
+.ref-table th{font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);padding:8px 12px;border-bottom:1px solid var(--border);text-align:left;}
+.ref-table td{font-size:12px;padding:9px 12px;border-bottom:1px solid var(--border);color:var(--muted);vertical-align:top;}
+.ref-table td:first-child{color:var(--text);}
+.ref-table tr:last-child td{border-bottom:none;}
+.ref-table .hl{color:var(--accent);}
+
+/* mobile */
+@media(max-width:700px){
+  .shell{grid-template-columns:1fr;}
+  .sidebar{position:relative;height:auto;border-right:none;border-bottom:1px solid var(--border);}
+  .content{padding:24px 18px 60px;}
+  .card-row,.card-row.three{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="logo">
+    <div class="logo-title">Stats &amp; <em>Prob</em></div>
+    <div class="logo-sub">Concept reference</div>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-label">Probability</div>
+    <div class="nav-item active" onclick="show('bayes')"><div class="nav-dot"></div>Bayes' rule</div>
+    <div class="nav-item" onclick="show('prob-rules')"><div class="nav-dot"></div>Probability rules</div>
+    <div class="nav-item" onclick="show('cond-prob')"><div class="nav-dot"></div>Conditional probability</div>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-label">Distributions</div>
+    <div class="nav-item" onclick="show('distributions')"><div class="nav-dot"></div>Key distributions</div>
+    <div class="nav-item" onclick="show('normal')"><div class="nav-dot"></div>Normal & standardising</div>
+    <div class="nav-item" onclick="show('expectation')"><div class="nav-dot"></div>Expectation & LOTUS</div>
+    <div class="nav-item" onclick="show('cdf-pdf')"><div class="nav-dot"></div>PDF / PMF / CDF</div>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-label">Inference</div>
+    <div class="nav-item" onclick="show('ci')"><div class="nav-dot"></div>Confidence intervals</div>
+    <div class="nav-item" onclick="show('hyp')"><div class="nav-dot"></div>Hypothesis testing</div>
+    <div class="nav-item" onclick="show('errors')"><div class="nav-dot"></div>Type I & II errors</div>
+    <div class="nav-item" onclick="show('mle')"><div class="nav-dot"></div>MLE</div>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-label">Limit theorems</div>
+    <div class="nav-item" onclick="show('clt')"><div class="nav-dot"></div>CLT & sample mean</div>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-label">Reference</div>
+    <div class="nav-item" onclick="show('zvalues')"><div class="nav-dot"></div>z / t / χ² values</div>
+  </div>
+</nav>
+
+<!-- CONTENT -->
+<main class="content">
+
+<!-- ══ BAYES ══ -->
+<section class="concept-section active" id="s-bayes">
+  <div class="concept-header">
+    <div class="concept-tag">Probability · appears every exam</div>
+    <div class="concept-title">Bayes' rule</div>
+    <div class="concept-freq">
+      <span class="freq-dot"></span><span class="freq-dot"></span><span class="freq-dot"></span><span class="freq-dot"></span><span class="freq-dot"></span>
+      Highest frequency — appears in every single paper
+    </div>
+  </div>
+
+  <div class="card-row">
+    <div class="card">
+      <div class="card-label">Intuition</div>
+      <div class="card-body">You observe something surprising. Bayes tells you how to <strong>update your belief about a cause</strong> given that effect.<br><br>Classic form: "Given that the item is defective, what's the probability it came from Machine A?" — you already know how likely A produces defects, now you flip it.</div>
+    </div>
+    <div class="card">
+      <div class="card-label">When to use</div>
+      <div class="card-body">Any question of the form <strong>"Given [observation], what's the probability of [cause]?"</strong><br><br>
+      Triggers: "given it's defective…", "given a positive test…", "given she tests negative…".<br><br>You need: P(cause), P(observation | cause), P(observation).</div>
+    </div>
+  </div>
+
+  <div class="formula">
+    <div class="formula-label">Formula</div>
+    <div class="formula-body">
+      P(<span class="hl">A</span> | <span class="hl2">B</span>) = P(<span class="hl2">B</span> | <span class="hl">A</span>) · P(<span class="hl">A</span>) / P(<span class="hl2">B</span>)<br><br>
+      where P(<span class="hl2">B</span>) = P(<span class="hl2">B</span>|A)·P(A) + P(<span class="hl2">B</span>|Aᶜ)·P(Aᶜ)  <span style="color:var(--dim)">[law of total probability]</span>
+    </div>
+  </div>
+
+  <div class="section-label">Strategy — step by step</div>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Label your events.</strong> Define cause = A, observation/effect = D (or B). Write down what you know: P(A), P(D|A), and either P(D) directly or P(D|Aᶜ) so you can compute P(D).</div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body"><strong>If P(D) isn't given, compute it</strong> using total probability: P(D) = P(D|A)·P(A) + P(D|Aᶜ)·P(Aᶜ). This is often a sub-question.</div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Apply Bayes:</strong> P(A|D) = P(D|A)·P(A) / P(D). Divide numerator by the full denominator. Plug, compute, round.</div></div>
+  </div>
+
+  <div class="pitfall">
+    <div class="pitfall-label">Common mistake</div>
+    <div class="pitfall-body">Confusing P(A|D) with P(D|A). They are not the same. <strong>"What's the probability of rain given clouds?"</strong> ≠ <strong>"What's the probability of clouds given rain?"</strong> Always ask: which is the cause, which is the observation?</div>
+  </div>
+
+  <div class="section-label">Worked pattern (exam-style)</div>
+  <div class="formula warn">
+    <div class="formula-label">Machine defect example</div>
+    <div class="formula-body">
+      P(A)=0.6, P(D|A)=0.02, P(D)=0.1<br>
+      P(A|D) = <span class="hl3">0.02 × 0.6</span> / <span class="hl2">0.1</span> = <span class="hl">0.12</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PROB RULES ══ -->
+<section class="concept-section" id="s-prob-rules">
+  <div class="concept-header">
+    <div class="concept-tag">Probability · appears every exam</div>
+    <div class="concept-title">Probability rules</div>
+  </div>
+
+  <div class="card-row three">
+    <div class="card">
+      <div class="card-label">Addition rule</div>
+      <div class="card-body">P(A∪B) = P(A) + P(B) − <strong>P(A∩B)</strong><br><br>The overlap gets counted twice so subtract it once.</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Complement rule</div>
+      <div class="card-body">P(Aᶜ) = 1 − P(A)<br><br>Also: P(A∪B∪C) = <strong>1 − P(Aᶜ∩Bᶜ∩Cᶜ)</strong><br>Much easier than expanding.</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Independence</div>
+      <div class="card-body">A,B independent ⟺ P(A∩B) = <strong>P(A)·P(B)</strong><br><br>Independent ≠ disjoint. Disjoint means P(A∩B)=0.</div>
+    </div>
+  </div>
+
+  <div class="formula">
+    <div class="formula-label">P(A∪B∪C) — the complement trick (exam favourite)</div>
+    <div class="formula-body">
+      P(A∪B∪C) = 1 − P(<span class="hl">Aᶜ</span>)·P(<span class="hl2">Bᶜ</span>)·P(<span class="hl3">Cᶜ</span>)  <span style="color:var(--dim)">[if A,B,C independent]</span><br><br>
+      e.g. P(A)=0.4, P(B)=0.5, P(C)=0.3 → 1 − 0.6 × 0.5 × 0.7 = <span class="hl">0.79</span>
+    </div>
+  </div>
+
+  <div class="section-label">True/false traps on every paper</div>
+  <table class="ref-table">
+    <tr><th>Statement</th><th>Verdict</th><th>Why</th></tr>
+    <tr><td>P(A∪B|C) = P(A|C) + P(B|C)</td><td><span class="pill pill-o">false in general</span></td><td>Only true if A∩B given C = ∅</td></tr>
+    <tr><td>P(A∩B) = P(A|B)·P(B)</td><td><span class="pill pill-g">always true</span></td><td>Definition of conditional prob</td></tr>
+    <tr><td>P(A∩B) ≤ P(A∪B)</td><td><span class="pill pill-g">always true</span></td><td>Intersection ⊆ union</td></tr>
+    <tr><td>Independent → disjoint</td><td><span class="pill pill-o">false</span></td><td>P(A∩B)=P(A)P(B)≠0 usually</td></tr>
+    <tr><td>Disjoint → independent</td><td><span class="pill pill-o">false</span></td><td>P(A∩B)=0 but P(A)P(B)≠0</td></tr>
+    <tr><td>P(C|C) = 1</td><td><span class="pill pill-g">always true</span></td><td>P(C∩C)/P(C)=P(C)/P(C)=1</td></tr>
+  </table>
+</section>
+
+<!-- ══ COND PROB ══ -->
+<section class="concept-section" id="s-cond-prob">
+  <div class="concept-header">
+    <div class="concept-tag">Probability · appears every exam</div>
+    <div class="concept-title">Conditional probability</div>
+  </div>
+
+  <div class="card-row">
+    <div class="card">
+      <div class="card-label">Intuition</div>
+      <div class="card-body">You <strong>restrict the sample space</strong> to only the outcomes where B occurred, then ask how many of those have A. You're zooming in on a subset.</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Definition</div>
+      <div class="card-body">P(A | B) = P(A ∩ B) / P(B)<br><br>Read: "probability of A, <strong>given</strong> B already happened".<br>Denominator: size of the new (restricted) universe.</div>
+    </div>
+  </div>
+
+  <div class="section-label">Dice / coin exam questions — the enumeration approach</div>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-body"><strong>List all outcomes satisfying the "given" condition.</strong> This is your new sample space. Don't use all 36 dice outcomes — use only the ones matching the condition.</div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Count how many of those also satisfy the event you want.</strong></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Divide</strong> (count of wanted) / (count of condition).</div></div>
+  </div>
+
+  <div class="formula warn">
+    <div class="formula-label">Dice example — P(sum=7 | exactly one die shows 3)</div>
+    <div class="formula-body">
+      Outcomes with exactly one 3: (3,1),(3,2),(3,4),(3,5),(3,6),(1,3),(2,3),(4,3),(5,3),(6,3) = <span class="hl2">10</span><br>
+      Of those, sum=7: (3,4) and (4,3) = <span class="hl">2</span><br>
+      P = 2/10 = <span class="hl">1/5</span>
+    </div>
+  </div>
+
+  <div class="tip">
+    <div class="tip-label">Coin problem pattern</div>
+    <div class="tip-body">When asked "given at least one heads, P(at least two heads)?": note that {≥2 heads} ⊆ {≥1 heads}, so the intersection equals the smaller event.<br>P(A₂|A₁) = P(A₂∩A₁)/P(A₁) = <strong>P(A₂)/P(A₁)</strong> = (4/8)/(7/8) = 4/7</div>
+  </div>
+</section>
+
+<!-- ══ DISTRIBUTIONS ══ -->
+<section class="concept-section" id="s-distributions">
+  <div class="concept-header">
+    <div class="concept-tag">Distributions · appears every exam</div>
+    <div class="concept-title">Key distributions</div>
+  </div>
+
+  <table class="ref-table">
+    <tr><th>Distribution</th><th>Parameter</th><th>E[X]</th><th>Var(X)</th><th>When to use</th></tr>
+    <tr><td><span class="hl">Binomial(n,p)</span></td><td>n trials, p success</td><td class="hl">np</td><td>np(1−p)</td><td>Fixed n independent trials, count successes</td></tr>
+    <tr><td><span class="hl">Geometric(p)</span></td><td>p success prob</td><td class="hl">1/p</td><td>(1−p)/p²</td><td>Wait for first success. PMF: P(X=k)=(1−p)^{k-1}·p</td></tr>
+    <tr><td><span class="hl">Poisson(λ)</span></td><td>λ = avg rate</td><td class="hl">λ</td><td>λ</td><td>Count events in time/space. PMF: e^{-λ}λ^k/k!</td></tr>
+    <tr><td><span class="hl">Exponential(λ)</span></td><td>λ = rate</td><td class="hl">1/λ</td><td>1/λ²</td><td>Time between events. MLE: λ̂ = 1/x̄</td></tr>
+    <tr><td><span class="hl">Uniform(a,b)</span></td><td>a,b endpoints</td><td class="hl">(a+b)/2</td><td>(b−a)²/12</td><td>All values equally likely. PDF=1/(b−a)</td></tr>
+    <tr><td><span class="hl">Normal(μ,σ²)</span></td><td>μ mean, σ² var</td><td class="hl">μ</td><td>σ²</td><td>Continuous, bell-shaped. Standardise: Z=(X−μ)/σ</td></tr>
+    <tr><td><span class="hl">Pascal(r,p)</span></td><td>r successes, p prob</td><td class="hl">r/p</td><td>r(1−p)/p²</td><td>Wait for r-th success. P(X=k) = C(k−1,r−1)p^r(1−p)^{k-r}</td></tr>
+  </table>
+
+  <div class="pitfall">
+    <div class="pitfall-label">N(μ, σ²) vs N(μ, σ) — read carefully</div>
+    <div class="pitfall-body">Some questions write N(3,4) meaning <strong>μ=3, σ²=4 → σ=2</strong>. Others write N(3,1) meaning σ=1 (same thing since σ²=1). The standardisation step Z=(X−μ)/σ always uses σ (the standard deviation), not σ². Always take the square root before standardising.</div>
+  </div>
+</section>
+
+<!-- ══ NORMAL ══ -->
+<section class="concept-section" id="s-normal">
+  <div class="concept-header">
+    <div class="concept-tag">Distributions · appears every exam</div>
+    <div class="concept-title">Normal distribution & standardising</div>
+  </div>
+
+  <div class="card-row">
+    <div class="card">
+      <div class="card-label">The core move</div>
+      <div class="card-body">Any N(μ,σ²) question becomes a standard N(0,1) question by <strong>subtracting μ and dividing by σ</strong>. The CDF Φ only works for standard normal.</div>
+    </div>
+    <div class="card">
+      <div class="card-label">The symmetry trick</div>
+      <div class="card-body">Φ(−z) = 1 − Φ(z)<br><br>P(Z > z) = 1 − Φ(z)<br>P(Z > −z) = Φ(z)<br><br>You only ever need the upper half of the table.</div>
+    </div>
+  </div>
+
+  <div class="formula">
+    <div class="formula-label">Standardisation</div>
+    <div class="formula-body">
+      X ~ N(<span class="hl">μ</span>, <span class="hl2">σ²</span>)<br>
+      P(X > c) = P(Z > (c − <span class="hl">μ</span>) / <span class="hl2">σ</span>) = 1 − Φ((c − <span class="hl">μ</span>) / <span class="hl2">σ</span>)<br><br>
+      e.g. X~N(3,4): P(X>4) = P(Z>(4−3)/2) = P(Z>0.5) = 1−Φ(0.5)
+    </div>
+  </div>
+
+  <div class="section-label">Linear transforms</div>
+  <div class="formula">
+    <div class="formula-label">Y = aX + b, where X ~ N(μ, σ²)</div>
+    <div class="formula-body">
+      E[Y] = a·<span class="hl">μ</span> + b<br>
+      Var[Y] = a²·<span class="hl2">σ²</span><br>
+      σ_Y = |a|·σ<br><br>
+      e.g. Y=2X−1, X~N(2,1): E[Y]=3, Var[Y]=4, so Y~N(3,4)
+    </div>
+  </div>
+
+  <div class="formula">
+    <div class="formula-label">Sum of independent normals</div>
+    <div class="formula-body">
+      X~N(μ₁,σ₁²), Y~N(μ₂,σ₂²) independent<br>
+      X+Y ~ N(<span class="hl">μ₁+μ₂</span>, <span class="hl2">σ₁²+σ₂²</span>)<br><br>
+      Variances add — not standard deviations!
+    </div>
+  </div>
+
+  <div class="pitfall">
+    <div class="pitfall-label">σ² adds, σ doesn't</div>
+    <div class="pitfall-body">If X~N(3,1) and Y~N(−3,2) where 2 is σ (not σ²), then Var[X+Y] = 1² + 2² = 5, so Z=X+Y~N(0,5). Read carefully whether the parameter is σ or σ².</div>
+  </div>
+</section>
+
+<!-- ══ EXPECTATION ══ -->
+<section class="concept-section" id="s-expectation">
+  <div class="concept-header">
+    <div class="concept-tag">Distributions · appears every exam</div>
+    <div class="concept-title">Expectation & LOTUS</div>
+  </div>
+
+  <div class="card-row">
+    <div class="card">
+      <div class="card-label">Intuition — E[X]</div>
+      <div class="card-body">The long-run average. Weight each possible value by its probability and sum up. It's the <strong>centre of mass</strong> of the distribution.</div>
+    </div>
+    <div class="card">
+      <div class="card-label">LOTUS intuition</div>
+      <div class="card-body">To find E[g(X)], you don't need the distribution of g(X). Just <strong>plug g(x) into the expectation integral/sum directly</strong>, using the original distribution of X.</div>
+    </div>
+  </div>
+
+  <div class="formula">
+    <div class="formula-label">LOTUS — Law of the Unconscious Statistician</div>
+    <div class="formula-body">
+      E[<span class="hl">g(X)</span>] = ∫ <span class="hl">g(x)</span> · f_X(x) dx  <span style="color:var(--dim)">[continuous]</span><br>
+      E[<span class="hl">g(X)</span>] = Σ <span class="hl">g(x)</span> · P(X=x)  <span style="color:var(--dim)">[discrete]</span><br><br>
+      Most common: g(X) = X², so E[X²] = ∫ <span class="hl">x²</span> · f_X(x) dx
+    </div>
+  </div>
+
+  <div class="formula warn">
+    <div class="formula-label">Variance from LOTUS</div>
+    <div class="formula-body">
+      Var(X) = E[X²] − (E[X])²<br>
+      So: E[X²] = Var(X) + (E[X])²<br><br>
+      e.g. X~Bin(10,0.2): E[X]=2, Var(X)=1.6, so E[X²]=1.6+4=5.6
+    </div>
+  </div>
+
+  <div class="section-label">Computing E[X] for continuous distributions</div>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-body">Write E[X] = ∫ x · f(x) dx over the support of X.</div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body">Multiply: x · f(x), then integrate. Use power rule: ∫ xⁿ dx = xⁿ⁺¹/(n+1).</div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body">Evaluate bounds. If support is [1,∞), upper bound gives 0 for negative powers (e.g. [x⁻¹]₁^∞ = 0 − (−1) = 1).</div></div>
+  </div>
+
+  <div class="formula warn">
+    <div class="formula-label">Worked — f(x)=3x⁻⁴ for x>1</div>
+    <div class="formula-body">
+      E[X] = ∫₁^∞ x · 3x⁻⁴ dx = 3∫₁^∞ x⁻³ dx<br>
+      = 3 · [x⁻²/(−2)]₁^∞ = 3 · (0 − (−1/2)) = <span class="hl">3/2 = 1.5</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CDF/PDF ══ -->
+<section class="concept-section" id="s-cdf-pdf">
+  <div class="concept-header">
+    <div class="concept-tag">Distributions · appears every exam</div>
+    <div class="concept-title">PDF, PMF, and CDF</div>
+  </div>
+
+  <div class="card-row three">
+    <div class="card">
+      <div class="card-label">PDF (continuous)</div>
+      <div class="card-body"><strong>f(x)</strong> — height of the density curve. Area under it = probability.<br><br>Must satisfy: f(x)≥0 and ∫f(x)dx = 1.</div>
+    </div>
+    <div class="card">
+      <div class="card-label">PMF (discrete)</div>
+      <div class="card-body"><strong>P(X=k)</strong> — direct probability of each value.<br><br>Must satisfy: Σ P(X=k) = 1.</div>
+    </div>
+    <div class="card">
+      <div class="card-label">CDF (both)</div>
+      <div class="card-body"><strong>F(x) = P(X≤x)</strong><br><br>For continuous: F(x) = ∫₋∞ˣ f(t)dt<br>For discrete: F(x) = Σ_{k≤x} P(X=k)</div>
+    </div>
+  </div>
+
+  <div class="formula">
+    <div class="formula-label">CDF properties — always true</div>
+    <div class="formula-body">
+      1. Non-decreasing (never goes down)<br>
+      2. Right-continuous (not left-continuous)<br>
+      3. lim_{x→−∞} F(x) = 0,   lim_{x→+∞} F(x) = <span class="hl">1</span><br>
+      4. For continuous: F'(x) = f(x)  (PDF is derivative of CDF)
+    </div>
+  </div>
+
+  <div class="section-label">Geometric CDF — classic exam trap</div>
+  <div class="formula warn">
+    <div class="formula-label">F_X(2.5) for Geometric(p)</div>
+    <div class="formula-body">
+      CDF at non-integer: F(2.5) = P(X≤2) = P(X=1) + P(X=2)<br>
+      = p + (1−p)·p<br><br>
+      e.g. p=0.2: F(2.5) = 0.2 + 0.8·0.2 = <span class="hl">0.36</span>
+    </div>
+  </div>
+
+  <div class="section-label">Finding c to normalise a PDF</div>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-body">Set ∫ c·g(x) dx = 1 over the support.</div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body">Compute ∫ g(x) dx (the integral without c).</div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body">c = 1 / (that integral).</div></div>
+  </div>
+
+  <div class="formula warn">
+    <div class="formula-label">f(x) = ce⁻ˣ for 1 &lt; x &lt; 2</div>
+    <div class="formula-body">
+      ∫₁² e⁻ˣ dx = [−e⁻ˣ]₁² = e⁻¹ − e⁻² = (e−1)/e²<br>
+      c = e²/(e−1) ≈ 3.16
+    </div>
+  </div>
+</section>
+
+<!-- ══ CI ══ -->
+<section class="concept-section" id="s-ci">
+  <div class="concept-header">
+    <div class="concept-tag">Inference · appears every exam</div>
+    <div class="concept-title">Confidence intervals</div>
+  </div>
+
+  <div class="card-row">
+    <div class="card">
+      <div class="card-label">Intuition</div>
+      <div class="card-body">If you repeated this experiment 100 times and built a CI each time, <strong>about 95 of those intervals would contain the true parameter</strong>. It's a statement about the procedure, not the specific interval.</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Width vs. confidence</div>
+      <div class="card-body"><strong>Larger n</strong> → narrower CI (more data → more precision).<br><strong>Higher confidence</strong> (99% vs 95%) → wider CI (you need a bigger net to be more sure).<br>These two facts appear as true/false on every paper.</div>
+    </div>
+  </div>
+
+  <div class="formula">
+    <div class="formula-label">CI for mean — σ known</div>
+    <div class="formula-body">
+      X̄ ± z_{α/2} · <span class="hl">σ/√n</span><br><br>
+      90% → z=1.645,  95% → z=<span class="hl">1.96</span>,  99% → z=<span class="hl2">2.58</span>
+    </div>
+  </div>
+
+  <div class="formula">
+    <div class="formula-label">CI for proportion</div>
+    <div class="formula-body">
+      p̂ ± z_{α/2} · √(<span class="hl">p̂(1−p̂)/n</span>)<br><br>
+      where p̂ = x/n (sample proportion)<br><br>
+      e.g. 240/400, 99%: 0.6 ± 2.58·√(0.24/400) = 0.6 ± 0.063 = (0.54, 0.66)
+    </div>
+  </div>
+
+  <div class="formula">
+    <div class="formula-label">CI for σ² (chi-square)</div>
+    <div class="formula-body">
+      [<span class="hl">(n−1)s²/χ²_{α/2,n−1}</span>,  (n−1)s²/χ²_{1−α/2,n−1}]<br><br>
+      e.g. n=16, s²=0.04: (n−1)s²=0.6<br>
+      95% CI = [0.6/27.49,  0.6/6.26] = [0.022, 0.096]
+    </div>
+  </div>
+
+  <div class="section-label">Sample size calculation</div>
+  <div class="formula warn">
+    <div class="formula-label">Minimum n for margin of error m</div>
+    <div class="formula-body">
+      n ≥ (z_{α/2} / m)² · p̂(1−p̂)<br><br>
+      Conservative: use p̂(1−p̂) ≤ 0.25 (maximised at p̂=0.5)<br><br>
+      90%, m=3%: n ≥ (1.645/0.03)² · 0.25 ≈ 752 → round up to <span class="hl">n=800</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ HYP TESTING ══ -->
+<section class="concept-section" id="s-hyp">
+  <div class="concept-header">
+    <div class="concept-tag">Inference · appears every exam</div>
+    <div class="concept-title">Hypothesis testing</div>
+  </div>
+
+  <div class="card-row">
+    <div class="card">
+      <div class="card-label">Intuition</div>
+      <div class="card-body">Assume H₀ is true. Compute how surprising your data would be under that assumption. If the data is <strong>too surprising</strong> (p-value small), you reject H₀.</div>
+    </div>
+    <div class="card">
+      <div class="card-label">p-value</div>
+      <div class="card-body">The probability of seeing data <strong>as or more extreme</strong> than what you observed, assuming H₀ is true.<br><br><strong>p ≤ α → reject H₀.</strong><br><strong>p > α → fail to reject H₀.</strong> (Never "accept".)</div>
+    </div>
+  </div>
+
+  <div class="formula">
+    <div class="formula-label">Test statistic (z-test, σ known)</div>
+    <div class="formula-body">
+      W = (X̄ − μ₀) / (<span class="hl">σ/√n</span>)<br><br>
+      Left-tail (H₁: μ&lt;μ₀): p = Φ(W)<br>
+      Right-tail (H₁: μ&gt;μ₀): p = 1−Φ(W)<br>
+      Two-tail (H₁: μ≠μ₀): p = 2·min(Φ(W), 1−Φ(W))
+    </div>
+  </div>
+
+  <div class="formula">
+    <div class="formula-label">Test statistic (t-test, σ unknown)</div>
+    <div class="formula-body">
+      T = (X̄ − μ₀) / (<span class="hl">S/√n</span>)  ~  t(n−1)<br><br>
+      S is the sample standard deviation.<br>
+      e.g. n=9, X̄=165.8, μ₀=170, S=8.25: T=(165.8−170)/(8.25/3)=−1.53
+    </div>
+  </div>
+
+  <div class="section-label">Computing a p-value from scratch</div>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Compute the test statistic</strong> W = (X̄ − μ₀)/(σ/√n). Note the sign — it matters for the tail.</div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Identify the tail</strong> from H₁. H₁:μ&lt;μ₀ → left tail. H₁:μ&gt;μ₀ → right tail.</div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Convert to Φ</strong>. Left tail: p = Φ(W). Right tail: p = 1−Φ(W). If W is negative: Φ(negative) is a small number.</div></div>
+  </div>
+
+  <div class="formula warn">
+    <div class="formula-label">Exam pattern</div>
+    <div class="formula-body">
+      H₀:μ=25, H₁:μ&lt;25. X̄=24, n=36, σ=6.<br>
+      W = √36·(24−25)/6 = 6·(−1)/6 = <span class="hl3">−1</span><br>
+      Left-tail: p = Φ(−1)
+    </div>
+  </div>
+</section>
+
+<!-- ══ ERRORS ══ -->
+<section class="concept-section" id="s-errors">
+  <div class="concept-header">
+    <div class="concept-tag">Inference · appears every exam</div>
+    <div class="concept-title">Type I & Type II errors</div>
+  </div>
+
+  <div class="card-row">
+    <div class="card">
+      <div class="card-label">Type I error (α)</div>
+      <div class="card-body"><strong>False positive.</strong> You reject H₀ when H₀ is actually true. You fired an innocent person. Also called the significance level α.</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Type II error (β)</div>
+      <div class="card-body"><strong>False negative.</strong> You fail to reject H₀ when H₀ is actually false. You let a guilty person go free. Power = 1−β.</div>
+    </div>
+  </div>
+
+  <div class="section-label">Memory device</div>
+  <table class="ref-table">
+    <tr><th>Reality \ Decision</th><th>Don't reject H₀</th><th>Reject H₀</th></tr>
+    <tr><td>H₀ is TRUE</td><td><span class="pill pill-g">Correct ✓</span></td><td><span class="pill pill-o">Type I error (α)</span></td></tr>
+    <tr><td>H₀ is FALSE</td><td><span class="pill pill-o">Type II error (β)</span></td><td><span class="pill pill-g">Correct ✓ (Power)</span></td></tr>
+  </table>
+
+  <div class="section-label">Computing Type I error probability directly</div>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Assume H₀ is true.</strong> Use the value μ₀ given in H₀.</div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Find P(reject H₀ | μ=μ₀)</strong>. This is P(X̄ falls in rejection region | μ=μ₀).</div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Standardise X̄:</strong> Z = (X̄ − μ₀)/(σ/√n) and express as Φ.</div></div>
+  </div>
+
+  <div class="formula warn">
+    <div class="formula-label">Exam pattern — P(Type I)</div>
+    <div class="formula-body">
+      X₁,...,X₉~N(μ,1). Reject if X̄&gt;1.5. H₀:μ=1.<br>
+      P_{μ=1}(X̄&gt;1.5) = P(Z &gt; (1.5−1)/(1/√9)) = P(Z&gt;1.5) = 1−Φ(3/2)
+    </div>
+  </div>
+
+  <div class="tip">
+    <div class="tip-label">True/false patterns on this topic</div>
+    <div class="tip-body">
+      <strong>"Rejected at α=0.025 → must reject at α=0.05"</strong> — TRUE (p≤0.025 &lt; 0.05).<br>
+      <strong>"Rejected at α=0.025 → must reject at α=0.01"</strong> — FALSE (p could be between 0.01 and 0.025).<br>
+      <strong>"Larger rejection region → smaller Type II error"</strong> — TRUE (easier to reject → less missed positives).<br>
+      <strong>"P(Type II) = P(not rejecting H₀ when H₀ true)"</strong> — FALSE (that's just a correct decision).
+    </div>
+  </div>
+</section>
+
+<!-- ══ MLE ══ -->
+<section class="concept-section" id="s-mle">
+  <div class="concept-header">
+    <div class="concept-tag">Inference · appears every exam</div>
+    <div class="concept-title">Maximum likelihood estimation</div>
+  </div>
+
+  <div class="card-row">
+    <div class="card">
+      <div class="card-label">Intuition</div>
+      <div class="card-body">Find the parameter value that makes the <strong>observed data most probable</strong>. Ask: "For which θ is it most likely I would have seen these exact observations?"</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Strategy</div>
+      <div class="card-body">1. Write L(θ) = ∏ f(xᵢ; θ)<br>2. Take log: ℓ(θ) = Σ log f(xᵢ; θ)<br>3. Differentiate wrt θ, set = 0<br>4. Solve for θ̂</div>
+    </div>
+  </div>
+
+  <div class="formula">
+    <div class="formula-label">Key MLE results to memorise</div>
+    <div class="formula-body">
+      Exponential(λ):  λ̂ = <span class="hl">1/x̄</span>  (not x̄ itself)<br>
+      Normal(μ,σ²):   μ̂ = <span class="hl">x̄</span>,  σ̂² = Σ(xᵢ−x̄)²/n<br>
+      Binomial(n,θ):  θ̂ = <span class="hl">x̄/n</span> = sample proportion<br>
+      Geometric(θ):   θ̂ = <span class="hl">1/x̄</span>  (= n/Σxᵢ)<br>
+      Poisson(λ):     λ̂ = <span class="hl">x̄</span>
+    </div>
+  </div>
+
+  <div class="section-label">Computing from a given likelihood function</div>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-body">Take ℓ(θ) = log L(θ). For L=θᵃ(1−θ)ᵇ: ℓ = a·log(θ) + b·log(1−θ).</div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body">Differentiate: dℓ/dθ = a/θ − b/(1−θ).</div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body">Set = 0 and solve: a(1−θ) = bθ → θ̂ = a/(a+b).</div></div>
+  </div>
+
+  <div class="formula warn">
+    <div class="formula-label">L(θ) = 12θ³(1−θ)⁵  →  MLE</div>
+    <div class="formula-body">
+      a=3, b=5 → θ̂ = 3/(3+5) = <span class="hl">3/8 = 0.375 ≈ 0.38</span>
+    </div>
+  </div>
+
+  <div class="pitfall">
+    <div class="pitfall-label">Exponential MLE trap</div>
+    <div class="pitfall-body">For Exponential(λ), the MLE is <strong>λ̂ = 1/x̄</strong>. The exam asks "does MLE equal the sample mean?" — the answer is <strong>no</strong> for Exponential. The sample mean estimates 1/λ, not λ itself.</div>
+  </div>
+</section>
+
+<!-- ══ CLT ══ -->
+<section class="concept-section" id="s-clt">
+  <div class="concept-header">
+    <div class="concept-tag">Limit theorems · appears every exam</div>
+    <div class="concept-title">CLT & sample mean</div>
+  </div>
+
+  <div class="card-row">
+    <div class="card">
+      <div class="card-label">Intuition</div>
+      <div class="card-body">No matter what distribution your Xᵢ come from, if you <strong>average enough of them</strong>, the average becomes approximately normal. The bell curve emerges from chaos.</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Why it matters</div>
+      <div class="card-body">It's why we can use z-scores for CIs and hypothesis tests on any population — we just need n large enough (usually n≥30) for the CLT to kick in.</div>
+    </div>
+  </div>
+
+  <div class="formula">
+    <div class="formula-label">CLT statement</div>
+    <div class="formula-body">
+      X₁,...,Xₙ iid with mean <span class="hl">μ</span> and variance <span class="hl2">σ²</span><br><br>
+      X̄ ≈ N(<span class="hl">μ</span>, <span class="hl2">σ²/n</span>)  for large n<br><br>
+      Equivalently: √n·(X̄−μ)/σ → N(0,1)<br><br>
+      Var(X̄) = <span class="hl2">σ²/n</span>  (always exact, regardless of n)
+    </div>
+  </div>
+
+  <div class="formula">
+    <div class="formula-label">CLT for sums</div>
+    <div class="formula-body">
+      Sₙ = X₁+…+Xₙ ≈ N(<span class="hl">nμ</span>, <span class="hl2">nσ²</span>)<br><br>
+      Standardise: Z = (Sₙ − nμ) / (σ√n)<br><br>
+      e.g. n=1000, μ=0.4, σ²=1:<br>
+      P(S≤400) = P(Z≤(400−400)/√1000) = Φ(0) = <span class="hl">0.5</span>
+    </div>
+  </div>
+
+  <div class="section-label">CLT for Binomial approximation</div>
+  <div class="formula warn">
+    <div class="formula-label">X~Bin(n,p), approximate P(X&gt;k) via CLT</div>
+    <div class="formula-body">
+      μ=np, σ²=np(1−p)<br>
+      Z = (k − μ)/σ, then P(X&gt;k) ≈ 1−Φ(Z)<br><br>
+      e.g. X~Bin(20,1/5): μ=4, σ²=16/5<br>
+      P(X&gt;8) ≈ 1−Φ((8−4)/√(16/5)) = 1−Φ(√5)
+    </div>
+  </div>
+
+  <div class="tip">
+    <div class="tip-label">Unbiasedness — always true</div>
+    <div class="tip-body">E[X̄] = μ always (for any n, any distribution). The sample mean is <strong>always an unbiased estimator</strong> of the population mean. This appears as a true/false in every exam.</div>
+  </div>
+</section>
+
+<!-- ══ Z VALUES ══ -->
+<section class="concept-section" id="s-zvalues">
+  <div class="concept-header">
+    <div class="concept-tag">Reference sheet</div>
+    <div class="concept-title">Critical values to memorise</div>
+  </div>
+
+  <div class="section-label">z-values (standard normal)</div>
+  <table class="ref-table">
+    <tr><th>α (upper tail)</th><th>z_α</th><th>Use case</th></tr>
+    <tr><td>0.100</td><td class="hl">1.28</td><td>80% CI (two-sided)</td></tr>
+    <tr><td>0.050</td><td class="hl">1.645</td><td>90% CI (two-sided) / one-sided 95% test</td></tr>
+    <tr><td>0.025</td><td class="hl">1.96</td><td>95% CI (two-sided)</td></tr>
+    <tr><td>0.010</td><td class="hl">2.33</td><td>98% CI (two-sided)</td></tr>
+    <tr><td>0.005</td><td class="hl">2.58</td><td>99% CI (two-sided)</td></tr>
+  </table>
+
+  <div class="tip">
+    <div class="tip-label">How to use the table</div>
+    <div class="tip-body">For a 95% CI, α=0.05, so α/2=0.025 → use z=1.96.<br>For a 99% CI, α=0.01, so α/2=0.005 → use z=2.58.<br>The CI formula uses z_{α/2} (the two-sided cutoff).</div>
+  </div>
+
+  <div class="section-label">Φ values to know by heart</div>
+  <table class="ref-table">
+    <tr><th>Φ(z)</th><th>Value</th><th>So P(Z&gt;z)</th></tr>
+    <tr><td>Φ(0)</td><td class="hl">0.5</td><td>0.5</td></tr>
+    <tr><td>Φ(1)</td><td class="hl">0.841</td><td>0.159</td></tr>
+    <tr><td>Φ(1.5)</td><td class="hl">0.933</td><td>0.067</td></tr>
+    <tr><td>Φ(1.645)</td><td class="hl">0.95</td><td>0.05</td></tr>
+    <tr><td>Φ(1.96)</td><td class="hl">0.975</td><td>0.025</td></tr>
+    <tr><td>Φ(2.58)</td><td class="hl">0.995</td><td>0.005</td></tr>
+  </table>
+
+  <div class="section-label">Symmetry rules — use these constantly</div>
+  <div class="formula">
+    <div class="formula-label">Φ symmetry identities</div>
+    <div class="formula-body">
+      Φ(−z) = 1 − Φ(z)<br>
+      P(Z&gt;z) = 1 − Φ(z)<br>
+      P(Z&gt;−z) = Φ(z)<br>
+      P(−z ≤ Z ≤ z) = 2Φ(z) − 1<br><br>
+      e.g. Φ(−1) = 1−Φ(1) ≈ 0.159
+    </div>
+  </div>
+
+  <div class="section-label">χ² values (CI for variance, n−1 degrees of freedom)</div>
+  <div class="formula">
+    <div class="formula-label">95% CI for σ²</div>
+    <div class="formula-body">
+      [(n−1)s² / χ²_{0.025,n−1},  (n−1)s² / χ²_{0.975,n−1}]<br><br>
+      These are given in the exam. Note: χ²_{0.025,15}=27.49 and χ²_{0.975,15}=6.26.<br>
+      <span style="color:var(--dim)">The smaller χ² value gives the larger bound.</span>
+    </div>
+  </div>
+</section>
+
+</main>
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.concept-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('s-'+id).classList.add('active');
+  event.currentTarget.classList.add('active');
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>

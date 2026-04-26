@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Probability & Statistics — Exam Notes</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #13161e;
+    --surface2: #1a1e29;
+    --border: #252a38;
+    --accent: #e8c97a;
+    --accent2: #7ab8e8;
+    --accent3: #e87ab8;
+    --text: #dde3f0;
+    --muted: #7a84a0;
+    --green: #7ae8b8;
+    --red: #e87a7a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* LAYOUT */
+  .shell { display: flex; min-height: 100vh; }
+
+  nav {
+    width: 240px;
+    min-width: 240px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 28px 0 40px;
+    scrollbar-width: thin;
+  }
+  nav::-webkit-scrollbar { width: 4px; }
+  nav::-webkit-scrollbar-thumb { background: var(--border); }
+
+  .nav-brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 13px;
+    font-weight: 900;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0 20px 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 16px;
+    line-height: 1.4;
+  }
+
+  nav a {
+    display: block;
+    padding: 6px 20px;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 12.5px;
+    transition: color 0.15s, background 0.15s;
+    border-left: 2px solid transparent;
+  }
+  nav a:hover { color: var(--text); background: var(--surface2); }
+  nav a.section-link {
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    padding-top: 16px;
+    border-left: none;
+    cursor: default;
+  }
+  nav a.section-link:hover { background: none; }
+  nav a.sub { padding-left: 32px; }
+
+  main {
+    flex: 1;
+    max-width: 900px;
+    padding: 48px 52px 80px;
+    overflow-x: hidden;
+  }
+
+  /* HEADER */
+  .page-header {
+    margin-bottom: 52px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+  }
+  .page-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    font-weight: 900;
+    color: var(--accent);
+    line-height: 1.15;
+    margin-bottom: 10px;
+  }
+  .page-header p { color: var(--muted); font-size: 14px; }
+
+  /* SECTIONS */
+  .chapter {
+    margin-bottom: 60px;
+    scroll-margin-top: 24px;
+  }
+  .chapter-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .chapter-title span {
+    font-size: 14px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--accent);
+    font-weight: 400;
+    margin-right: 10px;
+  }
+
+  .section {
+    margin-top: 36px;
+    scroll-margin-top: 24px;
+  }
+  .section-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--accent2);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  p { margin-bottom: 12px; }
+
+  /* DEFINITION BOXES */
+  .def {
+    background: var(--surface2);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 16px 20px;
+    margin: 18px 0;
+  }
+  .def-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+
+  /* FORMULA BOXES */
+  .formula {
+    background: #0a0c10;
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--accent2);
+    border-radius: 0 0 8px 8px;
+    padding: 16px 20px;
+    margin: 18px 0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+    color: var(--accent2);
+    overflow-x: auto;
+  }
+  .formula-label {
+    background: var(--accent2);
+    color: #0a0c10;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 4px 4px 0 0;
+    display: inline-block;
+    margin-top: 18px;
+    margin-bottom: 0;
+  }
+
+  /* EXAMPLE BOXES */
+  .example {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--green);
+    border-radius: 0 8px 8px 0;
+    padding: 18px 20px;
+    margin: 20px 0;
+  }
+  .example-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 8px;
+  }
+  .solution {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+  .solution-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* WARNING / KEY INSIGHT */
+  .insight {
+    background: #1a1500;
+    border: 1px solid #3d3000;
+    border-left: 3px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  .insight-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 5px;
+  }
+
+  .warning {
+    background: #1a0a0a;
+    border: 1px solid #3d1a1a;
+    border-left: 3px solid var(--red);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  .warning-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 5px;
+  }
+
+  /* TABLE */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 13.5px;
+  }
+  th {
+    background: var(--surface2);
+    color: var(--accent);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: var(--surface); }
+
+  /* MATH INLINE */
+  .m { font-family: 'IBM Plex Mono', monospace; color: var(--accent2); font-size: 13.5px; }
+  .mb { font-family: 'IBM Plex Mono', monospace; color: var(--accent); font-size: 13.5px; font-weight: 600; }
+
+  /* STEP LIST */
+  .steps {
+    counter-reset: step;
+    list-style: none;
+    margin: 14px 0;
+  }
+  .steps li {
+    counter-increment: step;
+    padding: 8px 0 8px 44px;
+    position: relative;
+    border-bottom: 1px solid var(--border);
+  }
+  .steps li:last-child { border-bottom: none; }
+  .steps li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 26px;
+    height: 26px;
+    background: var(--accent);
+    color: var(--bg);
+    border-radius: 50%;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* PILL TAGS */
+  .pill {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    margin: 0 3px 3px 0;
+  }
+  .pill-blue { background: #0d2035; color: var(--accent2); border: 1px solid #1a3a5c; }
+  .pill-gold { background: #1a1400; color: var(--accent); border: 1px solid #3d3000; }
+  .pill-green { background: #0d1a14; color: var(--green); border: 1px solid #1a3d28; }
+  .pill-red { background: #1a0d0d; color: var(--red); border: 1px solid #3d1a1a; }
+
+  /* COMPARE GRID */
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border-radius: 8px; overflow: hidden; margin: 18px 0; }
+  .compare-col { background: var(--surface); padding: 18px; }
+  .compare-head { font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  .compare-col:first-child .compare-head { color: var(--accent2); }
+  .compare-col:last-child .compare-head { color: var(--accent3); }
+
+  /* SUMMARY CARD */
+  .summary-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 22px 24px;
+    margin: 24px 0;
+  }
+  .summary-card h4 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 14px;
+    letter-spacing: 0.05em;
+  }
+
+  ul { padding-left: 20px; margin-bottom: 12px; }
+  li { margin-bottom: 5px; }
+
+  .mono { font-family: 'IBM Plex Mono', monospace; }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- SIDEBAR NAV -->
+<nav>
+  <div class="nav-brand">P&amp;S Exam<br>Notes 2026</div>
+  <a class="section-link" href="#">Chapter 4</a>
+  <a href="#ch4-intro" class="sub">Intro to CRVs</a>
+  <a href="#ch4-pdf" class="sub">PDF &amp; CDF</a>
+  <a href="#ch4-ev" class="sub">E(X) &amp; Var(X)</a>
+  <a href="#ch4-functions" class="sub">Functions of CRVs</a>
+  <a href="#ch4-uniform" class="sub">Uniform</a>
+  <a href="#ch4-exp" class="sub">Exponential</a>
+  <a href="#ch4-normal" class="sub">Normal / Gaussian</a>
+  <a class="section-link" href="#">Chapter 7</a>
+  <a href="#ch7-lln" class="sub">WLLN</a>
+  <a href="#ch7-clt" class="sub">Central Limit Theorem</a>
+  <a href="#ch7-applying" class="sub">Applying the CLT</a>
+  <a href="#ch7-cc" class="sub">Continuity Correction</a>
+  <a class="section-link" href="#">Chapter 8</a>
+  <a href="#ch8-intro" class="sub">Random Samples</a>
+  <a href="#ch8-point" class="sub">Point Estimation</a>
+  <a href="#ch8-bias" class="sub">Bias, MSE, Consistency</a>
+  <a href="#ch8-variance" class="sub">Sample Variance</a>
+  <a href="#ch8-mle" class="sub">MLE</a>
+  <a href="#ch8-ci" class="sub">Confidence Intervals</a>
+  <a href="#ch8-hyp" class="sub">Hypothesis Testing</a>
+  <a href="#ch8-pval" class="sub">P-values</a>
+  <a href="#ch8-lrt" class="sub">Likelihood Ratio Test</a>
+  <a class="section-link" href="#">Quick Ref</a>
+  <a href="#quickref" class="sub">Distributions table</a>
+  <a href="#testref" class="sub">Test selector</a>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main>
+  <div class="page-header">
+    <h1>Probability &amp; Statistics</h1>
+    <p>Complete exam notes — Chapters 4, 7, 8 &nbsp;·&nbsp; Continuous RVs · Limit Theorems · Statistical Inference</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════ CHAPTER 4 ═══════════════ -->
+  <div class="chapter" id="ch4-intro">
+    <div class="chapter-title"><span>Ch. 4</span>Continuous Random Variables</div>
+
+    <div class="section">
+      <div class="section-title">Introduction</div>
+      <p>Unlike discrete RVs (countable values), <strong>continuous random variables</strong> take values over intervals on ℝ. Because they can take uncountably many values, <span class="m">P(X = x) = 0</span> for every single point — so there's no PMF. Instead we use the <strong>PDF</strong>.</p>
+
+      <div class="def">
+        <div class="def-label">Definition — Continuous RV</div>
+        A random variable <span class="m">X</span> with CDF <span class="m">F<sub>X</sub></span> is <strong>continuous</strong> if <span class="m">F<sub>X</sub>(x)</span> is continuous for all <span class="m">x ∈ ℝ</span> (no jumps). The key consequence: <span class="m">P(X = x) = 0</span> for all <span class="m">x</span>.
+      </div>
+
+      <div class="def">
+        <div class="def-label">Definition — Range R<sub>X</sub></div>
+        The range of a continuous RV is <span class="m">R<sub>X</sub> = {x : f<sub>X</sub>(x) > 0}</span> — the set of all values where the PDF is positive.
+      </div>
+    </div>
+  </div>
+
+  <!-- PDF & CDF -->
+  <div class="section" id="ch4-pdf">
+    <div class="section-title">PDF &amp; CDF</div>
+
+    <div class="def">
+      <div class="def-label">Definition — PDF</div>
+      The <strong>probability density function</strong> is the derivative of the CDF:
+      <div class="formula-label">Formula</div>
+      <div class="formula">f<sub>X</sub>(x) = dF<sub>X</sub>(x)/dx = F'<sub>X</sub>(x)</div>
+    </div>
+
+    <p>Three essential properties that every valid PDF must satisfy:</p>
+    <ul>
+      <li><span class="m">f<sub>X</sub>(x) ≥ 0</span> for all <span class="m">x ∈ ℝ</span></li>
+      <li><span class="m">∫<sub>−∞</sub><sup>∞</sup> f<sub>X</sub>(u) du = 1</span> (integrates to 1)</li>
+      <li><span class="m">P(a &lt; X ≤ b) = ∫<sub>a</sub><sup>b</sup> f<sub>X</sub>(u) du = F<sub>X</sub>(b) − F<sub>X</sub>(a)</span></li>
+    </ul>
+
+    <div class="insight">
+      <div class="insight-label">⚡ Key Insight</div>
+      <strong>CDF → PDF:</strong> Differentiate. &nbsp;&nbsp;<strong>PDF → CDF:</strong> Integrate from −∞. <br>
+      <span class="m">F<sub>X</sub>(x) = ∫<sub>−∞</sub><sup>x</sup> f<sub>X</sub>(u) du</span>
+    </div>
+
+    <div class="example">
+      <div class="example-label">📋 Worked Example — Finding c and the CDF</div>
+      Let <span class="m">f<sub>X</sub>(x) = ce<sup>−x</sup></span> for <span class="m">x ≥ 0</span>, zero otherwise. Find <span class="m">c</span> and <span class="m">F<sub>X</sub>(x)</span>.
+      <div class="solution">
+        <div class="solution-label">Solution</div>
+        Since <span class="m">∫<sub>0</sub><sup>∞</sup> ce<sup>−x</sup>dx = c[−e<sup>−x</sup>]<sub>0</sub><sup>∞</sup> = c = 1</span>, so <span class="mb">c = 1</span>.<br><br>
+        For <span class="m">x ≥ 0</span>: <span class="m">F<sub>X</sub>(x) = ∫<sub>0</sub><sup>x</sup> e<sup>−u</sup>du = 1 − e<sup>−x</sup></span>. For <span class="m">x &lt; 0</span>: <span class="m">F<sub>X</sub>(x) = 0</span>.
+      </div>
+    </div>
+  </div>
+
+  <!-- E(X) AND VAR(X) -->
+  <div class="section" id="ch4-ev">
+    <div class="section-title">Expected Value &amp; Variance</div>
+
+    <div class="compare">
+      <div class="compare-col">
+        <div class="compare-head">Discrete</div>
+        <span class="m">E(X) = Σ x · P<sub>X</sub>(x)</span><br><br>
+        <span class="m">E[g(X)] = Σ g(x) P<sub>X</sub>(x)</span>
+      </div>
+      <div class="compare-col">
+        <div class="compare-head">Continuous</div>
+        <span class="m">E(X) = ∫<sub>−∞</sub><sup>∞</sup> x f<sub>X</sub>(x) dx</span><br><br>
+        <span class="m">E[g(X)] = ∫<sub>−∞</sub><sup>∞</sup> g(x) f<sub>X</sub>(x) dx</span>
+      </div>
+    </div>
+
+    <div class="def">
+      <div class="def-label">LOTUS — Law of the Unconscious Statistician</div>
+      To compute <span class="m">E[g(X)]</span>, you do NOT need to find the distribution of <span class="m">g(X)</span> — just integrate <span class="m">g(x)</span> against <span class="m">f<sub>X</sub>(x)</span>:
+      <div class="formula-label">Formula</div>
+      <div class="formula">E[g(X)] = ∫<sub>−∞</sub><sup>∞</sup> g(x) f<sub>X</sub>(x) dx</div>
+    </div>
+
+    <div class="def">
+      <div class="def-label">Variance formulas</div>
+      <div class="formula-label">Formula</div>
+      <div class="formula">Var(X) = E[(X − μ)²] = E(X²) − [E(X)]²
+Var(aX + b) = a² Var(X)
+E(aX + b) = a E(X) + b</div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">📋 Worked Example — E(X) for Uniform(a, b)</div>
+      <span class="m">f<sub>X</sub>(x) = 1/(b−a)</span> for <span class="m">a &lt; x &lt; b</span>.
+      <div class="solution">
+        <div class="solution-label">Solution</div>
+        <span class="m">E(X) = ∫<sub>a</sub><sup>b</sup> x/(b−a) dx = (1/(b−a)) · [x²/2]<sub>a</sub><sup>b</sup> = (a+b)/2</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- FUNCTIONS OF CRVs -->
+  <div class="section" id="ch4-functions">
+    <div class="section-title">Functions of Continuous RVs</div>
+
+    <p>If <span class="m">X</span> is a continuous RV and <span class="m">Y = g(X)</span>, to find the distribution of <span class="m">Y</span>:</p>
+    <ol class="steps">
+      <li>Find the range <span class="m">R<sub>Y</sub></span></li>
+      <li>Find the CDF: <span class="m">F<sub>Y</sub>(y) = P(Y ≤ y) = P(g(X) ≤ y)</span> — rewrite in terms of <span class="m">X</span></li>
+      <li>Differentiate to get <span class="m">f<sub>Y</sub>(y) = F'<sub>Y</sub>(y)</span></li>
+    </ol>
+
+    <div class="example">
+      <div class="example-label">📋 Worked Example — Y = e<sup>X</sup>, X ~ Uniform(0,1)</div>
+      Find the CDF and PDF of <span class="m">Y</span>.
+      <div class="solution">
+        <div class="solution-label">Solution</div>
+        Range: <span class="m">R<sub>Y</sub> = [1, e]</span>. For <span class="m">1 ≤ y &lt; e</span>:<br>
+        <span class="m">F<sub>Y</sub>(y) = P(e<sup>X</sup> ≤ y) = P(X ≤ ln y) = ln y</span><br>
+        Differentiate: <span class="m">f<sub>Y</sub>(y) = 1/y</span> for <span class="m">1 ≤ y &lt; e</span>.<br><br>
+        Using LOTUS: <span class="m">E(Y) = E(e<sup>X</sup>) = ∫<sub>0</sub><sup>1</sup> e<sup>x</sup> dx = e − 1</span>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">📋 Worked Example — Y = X², X ~ Uniform(−1, 1)</div>
+      <div class="solution">
+        <div class="solution-label">Solution</div>
+        Range: <span class="m">R<sub>Y</sub> = [0, 1]</span>. For <span class="m">0 ≤ y ≤ 1</span>:<br>
+        <span class="m">F<sub>Y</sub>(y) = P(X² ≤ y) = P(−√y ≤ X ≤ √y) = √y</span><br>
+        Differentiate: <span class="m">f<sub>Y</sub>(y) = 1/(2√y)</span> for <span class="m">0 ≤ y ≤ 1</span>.
+      </div>
+    </div>
+  </div>
+
+  <!-- UNIFORM -->
+  <div class="section" id="ch4-uniform">
+    <div class="section-title">Uniform Distribution</div>
+
+    <div class="summary-card">
+      <h4>X ~ Uniform(a, b)</h4>
+      <table>
+        <tr><th>Property</th><th>Formula</th></tr>
+        <tr><td>PDF</td><td><span class="m">f<sub>X</sub>(x) = 1/(b−a)</span> for <span class="m">a &lt; x &lt; b</span>, else 0</td></tr>
+        <tr><td>CDF</td><td><span class="m">F<sub>X</sub>(x) = (x−a)/(b−a)</span> for <span class="m">a ≤ x ≤ b</span></td></tr>
+        <tr><td>E(X)</td><td><span class="m">(a+b)/2</span></td></tr>
+        <tr><td>Var(X)</td><td><span class="m">(b−a)²/12</span></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- EXPONENTIAL -->
+  <div class="section" id="ch4-exp">
+    <div class="section-title">Exponential Distribution</div>
+
+    <p>Models the time between events (e.g. customer arrivals, radioactive decay). Continuous analogue of the Geometric distribution.</p>
+
+    <div class="summary-card">
+      <h4>X ~ Exponential(λ),  λ > 0 (rate parameter)</h4>
+      <table>
+        <tr><th>Property</th><th>Formula</th></tr>
+        <tr><td>PDF</td><td><span class="m">f<sub>X</sub>(x) = λe<sup>−λx</sup></span> for <span class="m">x > 0</span>, else 0</td></tr>
+        <tr><td>CDF</td><td><span class="m">F<sub>X</sub>(x) = 1 − e<sup>−λx</sup></span> for <span class="m">x ≥ 0</span></td></tr>
+        <tr><td>E(X)</td><td><span class="m">1/λ</span></td></tr>
+        <tr><td>Var(X)</td><td><span class="m">1/λ²</span></td></tr>
+      </table>
+    </div>
+
+    <div class="def">
+      <div class="def-label">Memoryless Property</div>
+      <div class="formula-label">Formula</div>
+      <div class="formula">P(X > x + a | X > a) = P(X > x)    for a, x ≥ 0</div>
+      <p style="margin-top:10px">If you've been waiting <span class="m">a</span> seconds with no arrival, the distribution of <em>remaining</em> wait time is the same as the original — as if you started fresh.</p>
+    </div>
+
+    <div class="insight">
+      <div class="insight-label">⚡ Proof technique</div>
+      <span class="m">P(X > x+a | X > a) = P(X > x+a) / P(X > a) = e<sup>−λ(x+a)</sup> / e<sup>−λa</sup> = e<sup>−λx</sup> = P(X > x)</span>
+    </div>
+  </div>
+
+  <!-- NORMAL -->
+  <div class="section" id="ch4-normal">
+    <div class="section-title">Normal (Gaussian) Distribution</div>
+
+    <div class="def">
+      <div class="def-label">Standard Normal Z ~ N(0, 1)</div>
+      <div class="formula-label">PDF</div>
+      <div class="formula">f<sub>Z</sub>(z) = (1/√(2π)) · e^(−z²/2)</div>
+      CDF: <span class="m">Φ(x) = P(Z ≤ x)</span> — no closed form, use tables/software.<br>
+      Key: <span class="m">E(Z) = 0</span>, <span class="m">Var(Z) = 1</span>
+    </div>
+
+    <div class="def">
+      <div class="def-label">General Normal X ~ N(μ, σ²)</div>
+      <div class="formula-label">Definition via Z</div>
+      <div class="formula">X = σZ + μ   where Z ~ N(0,1)</div>
+      <span class="m">E(X) = μ</span>, &nbsp;<span class="m">Var(X) = σ²</span>
+    </div>
+
+    <div class="summary-card">
+      <h4>Calculating Normal Probabilities — Standardise!</h4>
+      <div class="formula-label">CDF formula</div>
+      <div class="formula">P(X ≤ x) = Φ((x − μ)/σ)
+P(a &lt; X ≤ b) = Φ((b−μ)/σ) − Φ((a−μ)/σ)</div>
+      <p style="margin-top:12px">Symmetry rules you <em>must</em> know:</p>
+      <div class="formula-label">Symmetry</div>
+      <div class="formula">Φ(−x) = 1 − Φ(x)
+Φ(0) = 1/2</div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">📋 Worked Example — X ~ N(−5, 4)</div>
+      Find <span class="m">P(X &lt; 0)</span> and <span class="m">P(X > −3 | X > −5)</span>. Note: <span class="m">σ = √4 = 2</span>.
+      <div class="solution">
+        <div class="solution-label">Solution</div>
+        <span class="m">P(X &lt; 0) = P(Z &lt; (0−(−5))/2) = P(Z &lt; 2.5) = Φ(2.5) ≈ 0.994</span><br><br>
+        <span class="m">P(X > −3 | X > −5) = P(X > −3)/P(X > −5)</span><br>
+        <span class="m">= P(Z > 1) / P(Z > 0) = (1−Φ(1))/(1−Φ(0)) ≈ 0.1587/0.5 ≈ 0.317</span>
+      </div>
+    </div>
+
+    <div class="insight">
+      <div class="insight-label">⚡ Linear Transformations of Normals</div>
+      If <span class="m">X ~ N(μ<sub>X</sub>, σ<sub>X</sub>²)</span> and <span class="m">Y = aX + b</span>, then <span class="m">Y ~ N(aμ<sub>X</sub> + b, a²σ<sub>X</sub>²)</span>. Linear transforms of normals stay normal!
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════ CHAPTER 7 ═══════════════ -->
+  <div class="chapter" id="ch7-lln">
+    <div class="chapter-title"><span>Ch. 7</span>Limit Theorems &amp; Convergence</div>
+
+    <div class="section">
+      <div class="section-title">The Sample Mean</div>
+      <p>Let <span class="m">X<sub>1</sub>, …, X<sub>n</sub></span> be iid with mean <span class="m">μ</span> and variance <span class="m">σ²</span>. The <strong>sample mean</strong> is:</p>
+      <div class="formula-label">Definition</div>
+      <div class="formula">X̄<sub>n</sub> = (1/n) Σ X<sub>i</sub></div>
+      <p style="margin-top:12px">Key properties of the sample mean:</p>
+      <div class="formula-label">Properties</div>
+      <div class="formula">E(X̄<sub>n</sub>) = μ          ← unbiased
+Var(X̄<sub>n</sub>) = σ²/n      ← variance shrinks with n</div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Weak Law of Large Numbers (WLLN)</div>
+      <div class="def">
+        <div class="def-label">Theorem — WLLN</div>
+        Let <span class="m">X<sub>1</sub>, …, X<sub>n</sub></span> be iid with finite mean <span class="m">μ</span>. For any <span class="m">ε > 0</span>:
+        <div class="formula-label">Statement</div>
+        <div class="formula">lim<sub>n→∞</sub> P(|X̄<sub>n</sub> − μ| ≥ ε) = 0</div>
+        Equivalently: <span class="m">lim<sub>n→∞</sub> P(μ − ε &lt; X̄<sub>n</sub> &lt; μ + ε) = 1</span>
+      </div>
+      <p><strong>In plain English:</strong> As you take more samples, the sample average converges in probability to the true mean. Relative frequencies converge to probabilities. Histograms converge to the true distribution.</p>
+      <div class="insight">
+        <div class="insight-label">Proof sketch</div>
+        Apply Chebyshev's inequality to <span class="m">X̄<sub>n</sub></span>: <span class="m">P(|X̄<sub>n</sub> − μ| ≥ ε) ≤ Var(X̄<sub>n</sub>)/ε² = σ²/(nε²) → 0</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="ch7-clt">
+    <div class="section-title">Central Limit Theorem (CLT)</div>
+
+    <div class="def">
+      <div class="def-label">Theorem — CLT</div>
+      Let <span class="m">X<sub>1</sub>, …, X<sub>n</sub></span> be iid with mean <span class="m">μ</span> and variance <span class="m">σ²</span>. Define:
+      <div class="formula-label">Standardised average</div>
+      <div class="formula">Z<sub>n</sub> = (X̄<sub>n</sub> − μ) / (σ/√n)</div>
+      Then <span class="m">lim<sub>n→∞</sub> P(Z<sub>n</sub> ≤ x) = Φ(x)</span>.<br><br>
+      In other words: <span class="mb">X̄<sub>n</sub> ~ N(μ, σ²/n) approximately for large n.</span>
+    </div>
+
+    <p>In terms of the <strong>sum</strong> <span class="m">Y = X<sub>1</sub> + ⋯ + X<sub>n</sub></span>:</p>
+    <div class="formula-label">Sum version</div>
+    <div class="formula">E(Y) = nμ,    Var(Y) = nσ²
+(Y − nμ) / (σ√n) ~ N(0, 1) approximately</div>
+  </div>
+
+  <div class="section" id="ch7-applying">
+    <div class="section-title">Applying the CLT — Step-by-Step</div>
+
+    <ol class="steps">
+      <li>Write <span class="m">Y = X<sub>1</sub> + ⋯ + X<sub>n</sub></span> where the <span class="m">X<sub>i</sub></span> are iid. Identify <span class="m">μ = E(X<sub>i</sub>)</span> and <span class="m">σ² = Var(X<sub>i</sub>)</span>.</li>
+      <li>Standardise: <span class="m">Z = (Y − nμ) / (σ√n) ~ N(0,1)</span></li>
+      <li>Convert the probability: <span class="m">P(y<sub>1</sub> ≤ Y ≤ y<sub>2</sub>) ≈ Φ((y<sub>2</sub>−nμ)/(σ√n)) − Φ((y<sub>1</sub>−nμ)/(σ√n))</span></li>
+    </ol>
+
+    <div class="example">
+      <div class="example-label">📋 Worked Example — Bit errors</div>
+      1000 bits, each has error probability 0.1 independently. Find <span class="m">P(Y > 120)</span>.
+      <div class="solution">
+        <div class="solution-label">Solution</div>
+        Each bit: <span class="m">X<sub>i</sub> ~ Bernoulli(0.1)</span>, so <span class="m">μ = 0.1</span>, <span class="m">σ² = 0.09</span>.<br>
+        <span class="m">P(Y > 120) = P(Z > (120 − 100)/√90) = P(Z > 20/√90) ≈ 1 − Φ(2.11) ≈ 0.0175</span>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">📋 Worked Example — Sandwiches (finding quantile)</div>
+      64 guests, each needs 0/1/2 sandwiches with prob 1/4, 1/2, 1/4. Find <span class="m">y</span> so <span class="m">P(Y ≤ y) = 0.95</span>.
+      <div class="solution">
+        <div class="solution-label">Solution</div>
+        <span class="m">μ = 1</span>, <span class="m">σ² = 1/2</span>, <span class="m">n = 64</span>. <br>
+        <span class="m">P(Y ≤ y) ≈ Φ((y − 64)/(4√2)) = 0.95</span><br>
+        So <span class="m">(y − 64)/(4√2) = Φ<sup>−1</sup>(0.95) ≈ 1.645</span><br>
+        <span class="mb">y = 64 + 1.645 × 4√2 ≈ 73.3 → make 74 sandwiches</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="ch7-cc">
+    <div class="section-title">Continuity Correction</div>
+
+    <p>When <span class="m">Y</span> is a <em>discrete</em> RV (sum of integer-valued iid RVs), the CLT normal approximation improves with continuity correction:</p>
+
+    <div class="def">
+      <div class="def-label">Continuity Correction Rule</div>
+      <div class="formula-label">Formula</div>
+      <div class="formula">P(l ≤ Y ≤ u) ≈ P(l − 1/2 ≤ Y ≤ u + 1/2)   [use normal approx on right]</div>
+    </div>
+
+    <div class="insight">
+      <div class="insight-label">When to use it</div>
+      Use continuity correction when the <span class="m">X<sub>i</sub></span> are integer-valued (Bernoulli, Poisson, etc.) and <span class="m">n</span> is not huge. It shifts the boundary by 0.5 to account for the discrete→continuous mismatch.
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════ CHAPTER 8 ═══════════════ -->
+  <div class="chapter" id="ch8-intro">
+    <div class="chapter-title"><span>Ch. 8</span>Statistical Inference I: Classical Methods</div>
+
+    <div class="section">
+      <div class="section-title">Setup &amp; Random Samples</div>
+      <div class="def">
+        <div class="def-label">Definition — Random Sample</div>
+        <span class="m">X<sub>1</sub>, …, X<sub>n</sub></span> is a <strong>random sample</strong> of size <span class="m">n</span> if the <span class="m">X<sub>i</sub></span> are independent and identically distributed (iid). We always assume finite <span class="m">E(X<sub>i</sub>)</span> and <span class="m">Var(X<sub>i</sub>)</span>.
+      </div>
+      <p><strong>The core idea:</strong> Observations = realisations of RVs. Reformulate research questions as questions about unknown parameters <span class="m">θ</span> of the distribution.</p>
+    </div>
+  </div>
+
+  <div class="section" id="ch8-point">
+    <div class="section-title">Point Estimation</div>
+
+    <div class="def">
+      <div class="def-label">Definition — Point Estimator</div>
+      A <strong>point estimator</strong> <span class="m">Θ̂ = h(X<sub>1</sub>, …, X<sub>n</sub>)</span> is any function of the sample used to estimate parameter <span class="m">θ</span>. It is a <em>random variable</em>.
+    </div>
+
+    <p>Example: estimating <span class="m">θ = E(X)</span> — natural estimator is the sample mean <span class="m">Θ̂ = X̄<sub>n</sub></span>.</p>
+  </div>
+
+  <div class="section" id="ch8-bias">
+    <div class="section-title">Bias, MSE &amp; Consistency</div>
+
+    <div class="def">
+      <div class="def-label">Bias</div>
+      <div class="formula-label">Definition</div>
+      <div class="formula">B(Θ̂) = E(Θ̂) − θ</div>
+      If <span class="m">B(Θ̂) = 0</span> for all <span class="m">θ</span>: <strong>unbiased</strong>. Otherwise: <strong>biased</strong>.
+    </div>
+
+    <div class="def">
+      <div class="def-label">Mean Squared Error (MSE) — Bias-Variance Tradeoff</div>
+      <div class="formula-label">Decomposition</div>
+      <div class="formula">MSE(Θ̂) = E[(Θ̂ − θ)²] = Var(Θ̂) + [B(Θ̂)]²</div>
+      <p style="margin-top:10px">Better estimator = lower MSE. Two unbiased estimators? Compare by variance.</p>
+    </div>
+
+    <div class="def">
+      <div class="def-label">Consistent Estimator</div>
+      <div class="formula-label">Definition</div>
+      <div class="formula">lim<sub>n→∞</sub> P(|Θ̂<sub>n</sub> − θ| &lt; ε) = 1   for all ε > 0</div>
+      <strong>Sufficient condition:</strong> If <span class="m">lim<sub>n→∞</sub> MSE(Θ̂<sub>n</sub>) = 0</span>, then <span class="m">Θ̂<sub>n</sub></span> is consistent.
+    </div>
+
+    <div class="example">
+      <div class="example-label">📋 Worked Example — Bias of max estimator</div>
+      <span class="m">X ~ Uniform(0, θ)</span>. Estimator <span class="m">Θ̂<sub>2</sub> = max{X<sub>1</sub>, …, X<sub>n</sub>}</span>. Find bias.
+      <div class="solution">
+        <div class="solution-label">Solution</div>
+        CDF of max: <span class="m">F<sub>Θ̂₂</sub>(y) = (y/θ)^n</span>. PDF: <span class="m">f(y) = ny^(n-1)/θ^n</span>.<br>
+        <span class="m">E(Θ̂<sub>2</sub>) = ∫<sub>0</sub><sup>θ</sup> y · ny<sup>n-1</sup>/θ<sup>n</sup> dy = n/(n+1) · θ</span><br>
+        <span class="mb">Bias = −θ/(n+1)</span>. Biased (underestimates). Bias → 0 as n → ∞.
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">📋 Worked Example — X̄<sub>n</sub> beats X<sub>1</sub></div>
+      Both <span class="m">X<sub>1</sub></span> and <span class="m">X̄<sub>n</sub></span> are unbiased for <span class="m">μ</span>. Compare MSE for <span class="m">n > 1</span>.
+      <div class="solution">
+        <div class="solution-label">Solution</div>
+        Unbiased → MSE = Variance. <span class="m">Var(X<sub>1</sub>) = σ²</span> vs <span class="m">Var(X̄<sub>n</sub>) = σ²/n</span>.<br>
+        Since <span class="m">n > 1</span>: <span class="mb">X̄<sub>n</sub> is better</span> (lower MSE).
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="ch8-variance">
+    <div class="section-title">Sample Variance</div>
+
+    <div class="def">
+      <div class="def-label">Definition — Sample Variance S²</div>
+      <div class="formula-label">Definition</div>
+      <div class="formula">S² = (1/(n−1)) Σ<sub>i=1</sub><sup>n</sup> (X<sub>i</sub> − X̄)²</div>
+      <span class="m">S²</span> is an <strong>unbiased</strong> estimator for <span class="m">σ²</span>: <span class="m">E(S²) = σ²</span>.
+    </div>
+
+    <div class="warning">
+      <div class="warning-label">⚠ Common Mistake</div>
+      The "naive" estimator <span class="m">S̄² = (1/n) Σ(X<sub>i</sub> − X̄)²</span> is <strong>biased</strong>: <span class="m">E(S̄²) = (n−1)/n · σ²</span>. Always use <span class="m">n−1</span> (Bessel's correction) for unbiasedness. Sample SD <span class="m">S = √S²</span> is biased for <span class="m">σ</span> (but still the standard estimator).
+    </div>
+  </div>
+
+  <!-- MLE -->
+  <div class="section" id="ch8-mle">
+    <div class="section-title">Maximum Likelihood Estimation (MLE)</div>
+
+    <div class="def">
+      <div class="def-label">Likelihood Function</div>
+      <div class="formula-label">For discrete X<sub>i</sub></div>
+      <div class="formula">L(x<sub>1</sub>,…,x<sub>n</sub>; θ) = P(X<sub>1</sub>=x<sub>1</sub>) · … · P(X<sub>n</sub>=x<sub>n</sub>)</div>
+      <div class="formula-label">For continuous X<sub>i</sub></div>
+      <div class="formula">L(x<sub>1</sub>,…,x<sub>n</sub>; θ) = f<sub>X</sub>(x<sub>1</sub>) · … · f<sub>X</sub>(x<sub>n</sub>)</div>
+    </div>
+
+    <div class="def">
+      <div class="def-label">MLE — Maximum Likelihood Estimate</div>
+      <span class="m">θ̂<sub>ML</sub></span> = value of <span class="m">θ</span> that maximises <span class="m">L(x<sub>1</sub>,…,x<sub>n</sub>; θ)</span>.<br><br>
+      In practice: maximise <strong>log L</strong> instead (log is monotone, so same argmax). Set <span class="m">d(log L)/dθ = 0</span> and solve.
+    </div>
+
+    <ol class="steps">
+      <li>Write the likelihood <span class="m">L(θ)</span> as a product of the PDFs/PMFs</li>
+      <li>Take <span class="m">log L(θ)</span> — turns products into sums</li>
+      <li>Differentiate w.r.t. <span class="m">θ</span> and set equal to 0</li>
+      <li>Verify it's a maximum (check second derivative or endpoint behaviour)</li>
+    </ol>
+
+    <div class="example">
+      <div class="example-label">📋 MLE for Exponential(λ)</div>
+      Sample <span class="m">x<sub>1</sub>, …, x<sub>n</sub></span> from <span class="m">Exp(λ)</span>.
+      <div class="solution">
+        <div class="solution-label">Solution</div>
+        <span class="m">L(λ) = λ<sup>n</sup> e<sup>−λΣx<sub>i</sub></sup></span><br>
+        <span class="m">log L = n log λ − λ Σx<sub>i</sub></span><br>
+        <span class="m">d(log L)/dλ = n/λ − Σx<sub>i</sub> = 0</span><br>
+        <span class="mb">λ̂<sub>ML</sub> = n/Σx<sub>i</sub> = 1/x̄</span>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">📋 MLE for Binomial(m, θ)</div>
+      Sample <span class="m">x<sub>1</sub>, …, x<sub>n</sub></span> from <span class="m">Binomial(m, θ)</span>.
+      <div class="solution">
+        <div class="solution-label">Solution</div>
+        <span class="m">L(θ) ∝ θ<sup>s</sup>(1−θ)<sup>mn−s</sup></span> where <span class="m">s = Σx<sub>i</sub></span><br>
+        <span class="m">log L = s log θ + (mn−s) log(1−θ)</span><br>
+        Setting derivative to 0: <span class="mb">θ̂<sub>ML</sub> = s/(mn) = x̄/m</span>
+      </div>
+    </div>
+
+    <div class="insight">
+      <div class="insight-label">MLE asymptotic properties</div>
+      For large <span class="m">n</span>, <span class="m">Θ̂<sub>ML</sub></span> is: (1) consistent, (2) asymptotically unbiased, (3) approximately <span class="m">N(θ, Var(Θ̂<sub>ML</sub>))</span>.
+    </div>
+  </div>
+
+  <!-- CONFIDENCE INTERVALS -->
+  <div class="section" id="ch8-ci">
+    <div class="section-title">Confidence Intervals</div>
+
+    <div class="def">
+      <div class="def-label">Definition — (1−α)100% Confidence Interval</div>
+      Estimators <span class="m">Θ̂<sub>l</sub></span> and <span class="m">Θ̂<sub>h</sub></span> such that:
+      <div class="formula-label">Definition</div>
+      <div class="formula">P(Θ̂<sub>l</sub> ≤ θ ≤ Θ̂<sub>h</sub>) ≥ 1 − α</div>
+    </div>
+
+    <div class="warning">
+      <div class="warning-label">⚠ Interpretation — This is critical!</div>
+      <strong>WRONG:</strong> "The interval [2.1, 3.7] contains θ with 95% probability." (<span class="m">θ</span> is fixed, not random!)<br>
+      <strong>CORRECT:</strong> "In 95% of repeated experiments, the computed interval contains the true θ." The <em>interval</em> is random, not <span class="m">θ</span>.
+    </div>
+
+    <div class="def">
+      <div class="def-label">Pivot Method — General Recipe</div>
+      <ol class="steps">
+        <li>Find a <strong>pivotal quantity</strong> <span class="m">Q(X<sub>1</sub>,…,X<sub>n</sub>,θ)</span> whose distribution doesn't depend on <span class="m">θ</span></li>
+        <li>Find <span class="m">q<sub>l</sub>, q<sub>h</sub></span> such that <span class="m">P(q<sub>l</sub> ≤ Q ≤ q<sub>h</sub>) = 1−α</span></li>
+        <li>Rearrange to isolate <span class="m">θ</span> between <span class="m">Θ̂<sub>l</sub></span> and <span class="m">Θ̂<sub>h</sub></span></li>
+      </ol>
+    </div>
+
+    <div class="summary-card">
+      <h4>📐 CI for the Mean — Quick Reference</h4>
+      <table>
+        <tr><th>Situation</th><th>Pivot distribution</th><th>CI formula</th></tr>
+        <tr>
+          <td>Normal pop., <span class="m">σ²</span> known</td>
+          <td><span class="m">Z = (X̄ − μ)/(σ/√n) ~ N(0,1)</span></td>
+          <td><span class="m">X̄ ± z<sub>α/2</sub> · σ/√n</span></td>
+        </tr>
+        <tr>
+          <td>Any pop., large <span class="m">n</span>, <span class="m">σ²</span> unknown</td>
+          <td><span class="m">Z ≈ (X̄ − μ)/(S/√n) ~ N(0,1)</span> (CLT)</td>
+          <td><span class="m">X̄ ± z<sub>α/2</sub> · S/√n</span></td>
+        </tr>
+        <tr>
+          <td>Normal pop., small <span class="m">n</span>, <span class="m">σ²</span> unknown</td>
+          <td><span class="m">T = (X̄ − μ)/(S/√n) ~ t<sub>n−1</sub></span></td>
+          <td><span class="m">X̄ ± t<sub>α/2, n−1</sub> · S/√n</span></td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="def">
+      <div class="def-label">Upper Quantiles — z<sub>α</sub> and t<sub>α,n</sub></div>
+      <span class="m">z<sub>α</sub></span>: value where <span class="m">P(Z ≥ z<sub>α</sub>) = α</span>, i.e. <span class="m">z<sub>α</sub> = Φ<sup>−1</sup>(1−α)</span>.<br>
+      Key values: <span class="m">z<sub>0.025</sub> = 1.96</span> (95% CI), <span class="m">z<sub>0.05</sub> = 1.645</span> (90% CI).<br><br>
+      Symmetry: <span class="m">z<sub>1−α</sub> = −z<sub>α</sub></span>, &nbsp;<span class="m">t<sub>1−p,n</sub> = −t<sub>p,n</sub></span>
+    </div>
+
+    <div class="def">
+      <div class="def-label">t-distribution</div>
+      Bell-shaped, symmetric about 0, heavier tails than normal. <span class="m">E(T) = 0</span> (n≥2), <span class="m">Var(T) = n/(n−2)</span> (n≥3). As <span class="m">n → ∞</span>, t-distribution → N(0,1). Used when <span class="m">n</span> is small and <span class="m">σ²</span> unknown (must assume normality).
+    </div>
+
+    <div class="summary-card">
+      <h4>📐 CI for the Variance σ²</h4>
+      <p>Assumes <span class="m">X<sub>1</sub>,…,X<sub>n</sub></span> from <span class="m">N(μ, σ²)</span>. Pivot:</p>
+      <div class="formula-label">Chi-squared pivot</div>
+      <div class="formula">(n−1)S² / σ²  ~  χ²(n−1)</div>
+      <div class="formula-label">CI for σ²</div>
+      <div class="formula">[(n−1)S² / χ²<sub>α/2, n−1</sub> ,  (n−1)S² / χ²<sub>1−α/2, n−1</sub>]</div>
+    </div>
+
+    <div class="insight">
+      <div class="insight-label">χ² distribution</div>
+      <span class="m">Y ~ χ²(n)</span>: defined as <span class="m">Z<sub>1</sub>² + ⋯ + Z<sub>n</sub>²</span> where <span class="m">Z<sub>i</sub> ~ N(0,1)</span> iid. <span class="m">E(Y) = n</span>, <span class="m">Var(Y) = 2n</span>. Right-skewed, positive support.
+    </div>
+
+    <div class="example">
+      <div class="example-label">📋 Worked Example — Watermelons</div>
+      10 watermelons: X̄ = 9.26, S² = 3.96. Find 95% CIs for μ and σ².
+      <div class="solution">
+        <div class="solution-label">Solution</div>
+        <strong>For μ</strong> (<span class="m">t<sub>0.025, 9</sub> = 2.262</span>): &nbsp;<span class="m">9.26 ± 2.262 · √(3.96/10) = [7.84, 10.68]</span><br><br>
+        <strong>For σ²</strong> (<span class="m">χ²<sub>0.025,9</sub> = 19.02</span>, <span class="m">χ²<sub>0.975,9</sub> = 2.70</span>):<br>
+        <span class="m">[(9 × 3.96)/19.02, (9 × 3.96)/2.70] = [1.87, 13.20]</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- HYPOTHESIS TESTING -->
+  <div class="section" id="ch8-hyp">
+    <div class="section-title">Hypothesis Testing</div>
+
+    <div class="def">
+      <div class="def-label">Setup &amp; Definitions</div>
+      <ul>
+        <li><strong>Null hypothesis H<sub>0</sub>:</strong> default assumption (θ ∈ S<sub>0</sub>)</li>
+        <li><strong>Alternative hypothesis H<sub>1</sub>:</strong> what we're trying to show (θ ∈ S<sub>1</sub>)</li>
+        <li><strong>Test statistic W:</strong> a function of the data</li>
+        <li><strong>Acceptance region A:</strong> values of W where we don't reject H<sub>0</sub></li>
+        <li><strong>Rejection region R:</strong> values of W where we reject H<sub>0</sub></li>
+        <li><strong>Significance level α:</strong> P(Type I error) ≤ α</li>
+      </ul>
+    </div>
+
+    <div class="compare">
+      <div class="compare-col">
+        <div class="compare-head" style="color:var(--red)">Type I Error</div>
+        Reject H<sub>0</sub> when H<sub>0</sub> is true.<br>
+        P(Type I error) = P(W ∈ R | H<sub>0</sub>) ≤ α.<br>
+        α = significance level. We <em>control</em> this.
+      </div>
+      <div class="compare-col">
+        <div class="compare-head" style="color:var(--accent3)">Type II Error</div>
+        Accept H<sub>0</sub> when H<sub>1</sub> is true.<br>
+        P(Type II error) = P(W ∈ A | H<sub>1</sub>).<br>
+        Harder to control — depends on the specific alternative.
+      </div>
+    </div>
+
+    <div class="warning">
+      <div class="warning-label">⚠ Careful — "Accepting" H<sub>0</sub></div>
+      We never truly "prove" H<sub>0</sub>. When we fail to reject, it means the data is not statistically contradictory to H<sub>0</sub> — not that H<sub>0</sub> is confirmed true.
+    </div>
+
+    <div class="summary-card">
+      <h4>📐 Tests for the Mean — Three Types</h4>
+      Test statistic (same for all three): 
+      <div class="formula-label">Test statistic</div>
+      <div class="formula">W = (X̄ − μ<sub>0</sub>) / (σ/√n)   [use S if σ unknown and n large, t-dist if small n]</div>
+      <table>
+        <tr><th>Type</th><th>H<sub>0</sub></th><th>H<sub>1</sub></th><th>Rejection region R</th></tr>
+        <tr>
+          <td><span class="pill pill-blue">Two-sided</span></td>
+          <td><span class="m">μ = μ<sub>0</sub></span></td>
+          <td><span class="m">μ ≠ μ<sub>0</sub></span></td>
+          <td><span class="m">|W| > z<sub>α/2</sub></span></td>
+        </tr>
+        <tr>
+          <td><span class="pill pill-green">Right-sided</span></td>
+          <td><span class="m">μ ≤ μ<sub>0</sub></span></td>
+          <td><span class="m">μ > μ<sub>0</sub></span></td>
+          <td><span class="m">W > z<sub>α</sub></span></td>
+        </tr>
+        <tr>
+          <td><span class="pill pill-red">Left-sided</span></td>
+          <td><span class="m">μ ≥ μ<sub>0</sub></span></td>
+          <td><span class="m">μ &lt; μ<sub>0</sub></span></td>
+          <td><span class="m">W &lt; −z<sub>α</sub></span></td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="insight">
+      <div class="insight-label">Which test to use?</div>
+      <strong>Large n, any distribution:</strong> z-test (CLT). Use <span class="m">S</span> if <span class="m">σ</span> unknown.<br>
+      <strong>Small n, normal distribution, σ unknown:</strong> t-test with <span class="m">W ~ t<sub>n−1</sub></span> under H<sub>0</sub>.
+    </div>
+
+    <div class="example">
+      <div class="example-label">📋 Worked Example — Two-sided test, n=4</div>
+      <span class="m">X<sub>1</sub>,X<sub>2</sub>,X<sub>3</sub>,X<sub>4</sub> ~ N(μ, 1)</span>. Observed: 2.82, 2.71, 3.22, 2.67. Test <span class="m">H<sub>0</sub>: μ = 2</span> vs <span class="m">H<sub>1</sub>: μ ≠ 2</span> at α = 0.1.
+      <div class="solution">
+        <div class="solution-label">Solution</div>
+        <span class="m">X̄ = (2.82 + 2.71 + 3.22 + 2.67)/4 = 2.855</span><br>
+        <span class="m">W = (X̄ − μ<sub>0</sub>)/(σ/√n) = (2.855 − 2)/(1/2) = 1.70</span><br>
+        Rejection region: <span class="m">|W| > z<sub>0.05</sub> = 1.645</span>. Since <span class="m">1.70 > 1.645</span>: <span class="mb">Reject H<sub>0</sub></span>.
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">📋 Worked Example — Right-sided test, large n</div>
+      <span class="m">n = 100</span>, <span class="m">X̄ = 21.32</span>, <span class="m">S² = 27.6</span>. Test <span class="m">H<sub>0</sub>: μ = 20</span> vs <span class="m">H<sub>1</sub>: μ > 20</span>, <span class="m">α = 0.05</span>.
+      <div class="solution">
+        <div class="solution-label">Solution</div>
+        Large <span class="m">n</span>, unknown <span class="m">σ</span>: use z-test with <span class="m">S</span>.<br>
+        <span class="m">W = (21.32 − 20) / √(27.6/100) = 1.32/0.525 = 2.51</span><br>
+        <span class="m">z<sub>0.05</sub> = 1.645</span>. Since <span class="m">2.51 > 1.645</span>: <span class="mb">Reject H<sub>0</sub></span>.
+      </div>
+    </div>
+  </div>
+
+  <!-- P-VALUES -->
+  <div class="section" id="ch8-pval">
+    <div class="section-title">P-values</div>
+
+    <div class="def">
+      <div class="def-label">Definition — P-value</div>
+      The <strong>p-value</strong> is the lowest significance level α for which H<sub>0</sub> can be rejected, given the observed data. Equivalently: the probability of observing a test statistic at least as extreme as <span class="m">w</span>, assuming H<sub>0</sub> is true.
+    </div>
+
+    <div class="summary-card">
+      <h4>P-value formulas</h4>
+      <table>
+        <tr><th>Test type</th><th>P-value (observed statistic = w)</th></tr>
+        <tr><td>Two-sided</td><td><span class="m">p = 2P(Z > |w|) = 2(1 − Φ(|w|))</span></td></tr>
+        <tr><td>Right-sided</td><td><span class="m">p = P(Z > w) = 1 − Φ(w)</span></td></tr>
+        <tr><td>Left-sided</td><td><span class="m">p = P(Z &lt; w) = Φ(w)</span></td></tr>
+      </table>
+    </div>
+
+    <div class="insight">
+      <div class="insight-label">Decision rule</div>
+      Reject H<sub>0</sub> if <span class="m">p &lt; α</span>. The p-value tells you the strength of evidence against H<sub>0</sub>. Very small p → strong evidence against H<sub>0</sub>.
+    </div>
+
+    <div class="example">
+      <div class="example-label">📋 P-value from the previous example</div>
+      Right-sided test, observed <span class="m">w = 2.51</span>.
+      <div class="solution">
+        <div class="solution-label">Solution</div>
+        <span class="m">p = P(Z > 2.51) = 1 − Φ(2.51) ≈ 0.006</span><br>
+        Since <span class="m">0.006 &lt; 0.05 = α</span>: reject. Also would reject at <span class="m">α = 0.01</span> since <span class="m">0.006 &lt; 0.01</span>.
+      </div>
+    </div>
+  </div>
+
+  <!-- LIKELIHOOD RATIO TEST -->
+  <div class="section" id="ch8-lrt">
+    <div class="section-title">Likelihood Ratio Test (LRT)</div>
+
+    <p>For testing between two simple hypotheses <span class="m">H<sub>0</sub>: θ = θ<sub>0</sub></span> vs <span class="m">H<sub>1</sub>: θ = θ<sub>1</sub></span>:</p>
+
+    <div class="def">
+      <div class="def-label">Likelihood Ratio</div>
+      <div class="formula-label">Definition</div>
+      <div class="formula">λ(x<sub>1</sub>,…,x<sub>n</sub>) = L(x<sub>1</sub>,…,x<sub>n</sub>; θ<sub>0</sub>) / L(x<sub>1</sub>,…,x<sub>n</sub>; θ<sub>1</sub>)</div>
+      Accept H<sub>0</sub> if <span class="m">λ ≥ c</span>, reject if <span class="m">λ &lt; c</span>. Choose <span class="m">c</span> to achieve significance level <span class="m">α</span>: <span class="m">P(λ &lt; c | θ = θ<sub>0</sub>) ≤ α</span>.
+    </div>
+
+    <div class="example">
+      <div class="example-label">📋 Worked Example — Radar LRT</div>
+      <span class="m">X = θ + W</span>, <span class="m">W ~ N(0, 1/9)</span>. <span class="m">H<sub>0</sub>: θ = 0</span>, <span class="m">H<sub>1</sub>: θ = 1</span>. Level 0.05.
+      <div class="solution">
+        <div class="solution-label">Solution</div>
+        <span class="m">λ(x) = exp(9/2 · (1 − 2x))</span>. Accept H<sub>0</sub> when <span class="m">λ ≥ c ⟺ x ≤ c'</span>.<br>
+        <span class="m">P(X > c' | θ=0) = P(3X > 3c') = 1 − Φ(3c') = 0.05</span><br>
+        <span class="mb">c' = Φ<sup>−1</sup>(0.95)/3 ≈ 1.645/3 ≈ 0.548</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUICK REFERENCE TABLES -->
+  <div class="chapter" id="quickref">
+    <div class="chapter-title"><span>Ref</span>Quick Reference</div>
+
+    <div class="section">
+      <div class="section-title">All Distributions at a Glance</div>
+      <table>
+        <tr><th>Distribution</th><th>PDF/PMF</th><th>E(X)</th><th>Var(X)</th><th>Notes</th></tr>
+        <tr>
+          <td><span class="pill pill-blue">Uniform(a,b)</span></td>
+          <td><span class="m">1/(b−a)</span></td>
+          <td><span class="m">(a+b)/2</span></td>
+          <td><span class="m">(b−a)²/12</span></td>
+          <td>Flat PDF</td>
+        </tr>
+        <tr>
+          <td><span class="pill pill-green">Exponential(λ)</span></td>
+          <td><span class="m">λe<sup>−λx</sup></span>, x>0</td>
+          <td><span class="m">1/λ</span></td>
+          <td><span class="m">1/λ²</span></td>
+          <td>Memoryless</td>
+        </tr>
+        <tr>
+          <td><span class="pill pill-gold">N(μ, σ²)</span></td>
+          <td><span class="m">(1/σ√2π)e<sup>−(x−μ)²/(2σ²)</sup></span></td>
+          <td><span class="m">μ</span></td>
+          <td><span class="m">σ²</span></td>
+          <td>Standardise: Z=(X−μ)/σ</td>
+        </tr>
+        <tr>
+          <td><span class="pill pill-red">t<sub>n</sub></span></td>
+          <td>Heavy-tailed</td>
+          <td><span class="m">0</span> (n≥2)</td>
+          <td><span class="m">n/(n−2)</span></td>
+          <td>→ N(0,1) as n→∞</td>
+        </tr>
+        <tr>
+          <td><span class="pill pill-blue">χ²(n)</span></td>
+          <td>Right-skewed, y>0</td>
+          <td><span class="m">n</span></td>
+          <td><span class="m">2n</span></td>
+          <td>= sum of n squared N(0,1)s</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="section" id="testref">
+      <div class="section-title">Hypothesis Test Decision Tree</div>
+
+      <div class="summary-card">
+        <h4>Which test to run?</h4>
+        <table>
+          <tr><th>Population</th><th>σ known?</th><th>n</th><th>Test</th><th>Distribution under H<sub>0</sub></th></tr>
+          <tr><td>Any</td><td>Yes</td><td>Any (large n)</td><td>z-test</td><td><span class="m">W ~ N(0,1)</span></td></tr>
+          <tr><td>Any</td><td>No (use S)</td><td>Large</td><td>z-test (CLT)</td><td><span class="m">W ≈ N(0,1)</span></td></tr>
+          <tr><td>Normal</td><td>No (use S)</td><td>Small</td><td>t-test</td><td><span class="m">W ~ t<sub>n−1</sub></span></td></tr>
+        </table>
+      </div>
+
+      <div class="summary-card">
+        <h4>Master formula sheet</h4>
+        <div class="formula-label">Z-test statistic</div>
+        <div class="formula">W = (X̄ − μ<sub>0</sub>) / (σ/√n)    [or S/√n if σ unknown, large n]</div>
+        <div class="formula-label">T-test statistic</div>
+        <div class="formula">T = (X̄ − μ<sub>0</sub>) / (S/√n)    ~ t<sub>n−1</sub>  under H<sub>0</sub></div>
+        <div class="formula-label">CI for mean (known σ)</div>
+        <div class="formula">X̄ ± z<sub>α/2</sub> · σ/√n</div>
+        <div class="formula-label">CI for mean (unknown σ, large n)</div>
+        <div class="formula">X̄ ± z<sub>α/2</sub> · S/√n</div>
+        <div class="formula-label">CI for mean (unknown σ, small n, normal)</div>
+        <div class="formula">X̄ ± t<sub>α/2, n−1</sub> · S/√n</div>
+        <div class="formula-label">CI for variance (normal pop.)</div>
+        <div class="formula">[(n−1)S² / χ²<sub>α/2, n−1</sub>  ,  (n−1)S² / χ²<sub>1−α/2, n−1</sub>]</div>
+        <div class="formula-label">CLT approximation</div>
+        <div class="formula">X̄<sub>n</sub> ~ N(μ, σ²/n)    [approximately, large n]
+Sum Y = Σ X<sub>i</sub> ~ N(nμ, nσ²)</div>
+        <div class="formula-label">MSE decomposition</div>
+        <div class="formula">MSE(Θ̂) = Var(Θ̂) + [Bias(Θ̂)]²</div>
+        <div class="formula-label">Sample variance (unbiased)</div>
+        <div class="formula">S² = 1/(n−1) · Σ(X<sub>i</sub> − X̄)²</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+</div>
+</body>
+</html>

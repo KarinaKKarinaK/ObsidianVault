@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ML Exam Study Guide</title>
+<style>
+  :root {
+    --bg: #fafaf8;
+    --bg2: #f1efe8;
+    --card: #ffffff;
+    --border: rgba(0,0,0,0.12);
+    --text: #1a1a18;
+    --text2: #5a5a56;
+    --text3: #888780;
+    --purple: #7F77DD; --purple-l: #EEEDFE; --purple-d: #3C3489;
+    --teal: #1D9E75; --teal-l: #E1F5EE; --teal-d: #085041;
+    --coral: #D85A30; --coral-l: #FAECE7; --coral-d: #712B13;
+    --amber: #BA7517; --amber-l: #FAEEDA; --amber-d: #633806;
+    --blue: #185FA5; --blue-l: #E6F1FB; --blue-d: #0C447C;
+    --green: #3B6D11; --green-l: #EAF3DE; --green-d: #27500A;
+    --gray: #5F5E5A; --gray-l: #F1EFE8; --gray-d: #444441;
+    --pink: #993556; --pink-l: #FBEAF0; --pink-d: #72243E;
+    --red: #A32D2D; --red-l: #FCEBEB; --red-d: #791F1F;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1a18; --bg2: #2c2c2a; --card: #2c2c2a; --border: rgba(255,255,255,0.12);
+      --text: #e8e6de; --text2: #b4b2a9; --text3: #888780;
+      --purple-l: #26215C; --teal-l: #04342C; --coral-l: #4A1B0C;
+      --amber-l: #412402; --blue-l: #042C53; --green-l: #173404;
+      --gray-l: #2C2C2A; --pink-l: #4B1528; --red-l: #501313;
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.6; }
+  
+  .header { background: var(--card); border-bottom: 1px solid var(--border); padding: 20px 24px; position: sticky; top: 0; z-index: 100; }
+  .header h1 { font-size: 18px; font-weight: 600; }
+  .header p { font-size: 13px; color: var(--text2); margin-top: 2px; }
+  
+  .nav { display: flex; gap: 6px; flex-wrap: wrap; padding: 12px 24px; background: var(--bg2); border-bottom: 1px solid var(--border); position: sticky; top: 69px; z-index: 99; }
+  .nav-btn { font-size: 12px; padding: 4px 10px; border-radius: 20px; border: 1px solid var(--border); background: var(--card); color: var(--text2); cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+  .nav-btn:hover, .nav-btn.active { background: var(--text); color: var(--bg); border-color: var(--text); }
+  
+  .main { max-width: 900px; margin: 0 auto; padding: 24px; }
+  
+  .section { display: none; }
+  .section.active { display: block; }
+  
+  .section-title { font-size: 22px; font-weight: 600; margin-bottom: 4px; }
+  .section-subtitle { font-size: 14px; color: var(--text2); margin-bottom: 24px; }
+  
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  @media (max-width: 600px) { .grid2, .grid3 { grid-template-columns: 1fr; } }
+  
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+  .card h3 { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+  .card p, .card li { font-size: 13px; color: var(--text2); line-height: 1.6; }
+  .card ul { padding-left: 16px; }
+  .card li { margin-bottom: 4px; }
+  
+  .tag { display: inline-block; font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 10px; margin-bottom: 8px; }
+  .tag-purple { background: var(--purple-l); color: var(--purple-d); }
+  .tag-teal { background: var(--teal-l); color: var(--teal-d); }
+  .tag-coral { background: var(--coral-l); color: var(--coral-d); }
+  .tag-amber { background: var(--amber-l); color: var(--amber-d); }
+  .tag-blue { background: var(--blue-l); color: var(--blue-d); }
+  .tag-green { background: var(--green-l); color: var(--green-d); }
+  .tag-red { background: var(--red-l); color: var(--red-d); }
+  .tag-pink { background: var(--pink-l); color: var(--pink-d); }
+  
+  .formula { background: var(--bg2); border-radius: 8px; padding: 10px 14px; font-family: 'Courier New', monospace; font-size: 13px; color: var(--text); margin: 8px 0; border-left: 3px solid var(--purple); }
+  
+  .highlight { background: var(--amber-l); border-radius: 6px; padding: 10px 14px; margin: 8px 0; font-size: 13px; color: var(--amber-d); border-left: 3px solid var(--amber); }
+  
+  .warn { background: var(--coral-l); border-radius: 6px; padding: 10px 14px; margin: 8px 0; font-size: 13px; color: var(--coral-d); border-left: 3px solid var(--coral); }
+  
+  .ok { background: var(--teal-l); border-radius: 6px; padding: 10px 14px; margin: 8px 0; font-size: 13px; color: var(--teal-d); border-left: 3px solid var(--teal); }
+  
+  .full { grid-column: 1 / -1; }
+  
+  .steps { counter-reset: step; }
+  .step { display: flex; gap: 12px; margin-bottom: 10px; align-items: flex-start; }
+  .step-num { background: var(--purple-l); color: var(--purple-d); border-radius: 50%; width: 22px; height: 22px; min-width: 22px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; }
+  .step-text { font-size: 13px; color: var(--text2); line-height: 1.5; }
+  
+  .quiz-btn { background: var(--purple-l); color: var(--purple-d); border: 1px solid var(--purple); border-radius: 8px; padding: 8px 16px; font-size: 13px; cursor: pointer; transition: all 0.15s; margin-top: 10px; }
+  .quiz-btn:hover { background: var(--purple); color: white; }
+  
+  .answer { display: none; background: var(--teal-l); border-radius: 8px; padding: 10px 14px; margin-top: 8px; font-size: 13px; color: var(--teal-d); }
+  .answer.show { display: block; }
+  
+  .connect-box { background: var(--purple-l); border: 1px solid var(--purple); border-radius: 10px; padding: 14px; margin-bottom: 14px; }
+  .connect-box h4 { font-size: 13px; font-weight: 600; color: var(--purple-d); margin-bottom: 6px; }
+  .connect-box p { font-size: 13px; color: var(--purple-d); opacity: 0.85; }
+  
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 8px 0; }
+  th { background: var(--bg2); font-weight: 600; padding: 8px 10px; text-align: left; font-size: 12px; }
+  td { padding: 7px 10px; border-top: 1px solid var(--border); color: var(--text2); }
+  tr:hover td { background: var(--bg2); }
+  
+  .flow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 10px 0; }
+  .flow-box { background: var(--purple-l); color: var(--purple-d); border-radius: 8px; padding: 5px 12px; font-size: 12px; font-weight: 500; }
+  .flow-arrow { color: var(--text3); font-size: 16px; }
+  
+  .big-formula { background: var(--bg2); border-radius: 10px; padding: 16px; margin: 12px 0; font-family: 'Courier New', monospace; font-size: 14px; text-align: center; border: 1px solid var(--border); }
+  
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 8px 0; }
+  @media (max-width: 500px) { .two-col { grid-template-columns: 1fr; } }
+  
+  .mini-card { background: var(--bg2); border-radius: 8px; padding: 10px 12px; }
+  .mini-card h5 { font-size: 12px; font-weight: 600; margin-bottom: 4px; }
+  .mini-card p { font-size: 12px; color: var(--text2); }
+  
+  code { font-family: 'Courier New', monospace; background: var(--bg2); padding: 1px 5px; border-radius: 4px; font-size: 12px; }
+  
+  .exam-tip { background: var(--blue-l); border-left: 3px solid var(--blue); border-radius: 0 8px 8px 0; padding: 10px 14px; margin: 8px 0; font-size: 13px; color: var(--blue-d); }
+  
+  .concept-map { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 12px 0; }
+  @media (max-width: 500px) { .concept-map { grid-template-columns: 1fr 1fr; } }
+  .cm-node { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; font-size: 12px; text-align: center; cursor: pointer; transition: all 0.15s; }
+  .cm-node:hover { border-color: var(--purple); background: var(--purple-l); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Machine Learning — Exam Study Guide</h1>
+  <p>Based on practice exams A &amp; B, homeworks 4–6, cheat sheet, and review slides</p>
+</div>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="show('overview')">Overview</button>
+  <button class="nav-btn" onclick="show('methodology')">Methodology</button>
+  <button class="nav-btn" onclick="show('linear')">Linear Models</button>
+  <button class="nav-btn" onclick="show('probability')">Probability &amp; Bayes</button>
+  <button class="nav-btn" onclick="show('backprop')">Backprop</button>
+  <button class="nav-btn" onclick="show('trees')">Decision Trees</button>
+  <button class="nav-btn" onclick="show('svm')">SVMs</button>
+  <button class="nav-btn" onclick="show('markov')">Markov / Naive Bayes</button>
+  <button class="nav-btn" onclick="show('generative')">Generative Models</button>
+  <button class="nav-btn" onclick="show('sequences')">Sequences &amp; Embeddings</button>
+  <button class="nav-btn" onclick="show('ensembles')">Ensembles &amp; RL</button>
+  <button class="nav-btn" onclick="show('connections')">Concept Map</button>
+</div>
+
+<div class="main">
+
+<!-- OVERVIEW -->
+<div id="s-overview" class="section active">
+  <div class="section-title">Course overview</div>
+  <div class="section-subtitle">How everything connects — the mental model first</div>
+
+  <div class="highlight">
+    The #1 rule: <strong>never judge performance on training data</strong>. Breaking this = overfitting / inflated estimates.
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <span class="tag tag-purple">Core ML pipeline</span>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-text">Abstract problem → standard task (classification, regression, generation…)</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-text">Choose instances &amp; features; choose target for supervised</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-text">Choose model class (linear, tree, NN, probabilistic…)</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-text">Search for good model (gradient descent, EM, ID3…)</div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-text">Evaluate on withheld test set — never on training data</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-teal">Task taxonomy</span>
+      <table>
+        <tr><th>Task</th><th>Supervision</th><th>Output</th></tr>
+        <tr><td>Classification</td><td>Supervised</td><td>Discrete class</td></tr>
+        <tr><td>Regression</td><td>Supervised</td><td>Continuous value</td></tr>
+        <tr><td>Clustering</td><td>Unsupervised</td><td>Group assignment</td></tr>
+        <tr><td>Density estimation</td><td>Unsupervised</td><td>p(x)</td></tr>
+        <tr><td>Generative modeling</td><td>Unsupervised</td><td>New samples</td></tr>
+        <tr><td>Reinforcement learning</td><td>Env. feedback</td><td>Policy / actions</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-coral">Two key spaces</span>
+      <p><strong>Model space</strong>: each point = one model (a specific set of parameters). Search happens here.</p>
+      <p style="margin-top:8px"><strong>Feature space</strong>: each point = one instance. Dimensionality = number of features. Classification draws a boundary here.</p>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-amber">Search methods</span>
+      <ul>
+        <li><strong>Random search</strong> — no gradient needed; slow; works for discrete/non-differentiable models</li>
+        <li><strong>Gradient descent</strong> — fast; needs differentiable loss; can get stuck in local minima</li>
+        <li><strong>EM algorithm</strong> — alternating optimization; used in GMMs and VAEs</li>
+        <li><strong>ID3 (greedy)</strong> — decision trees; picks best split at each step</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <span class="tag tag-blue">Exam format reminder</span>
+    <p>40 questions × 1pt. Three equal categories: <strong>Recall</strong> (memorize definitions), <strong>Combination</strong> (reason across concepts, often phrased negatively — "which is NOT…"), <strong>Application</strong> (compute: entropy, backprop, rankings, Naive Bayes, SVM, Markov). Application questions follow fixed patterns — master the 10 types.</p>
+  </div>
+</div>
+
+<!-- METHODOLOGY -->
+<div id="s-methodology" class="section">
+  <div class="section-title">Methodology</div>
+  <div class="section-subtitle">Evaluation, validation, performance metrics — frequently tested</div>
+
+  <div class="grid2">
+    <div class="card">
+      <span class="tag tag-purple">Train / validation / test split</span>
+      <p><strong>Why?</strong> Reusing the test set inflates performance estimates and overfits to random effects (Rob's mistake with k=17).</p>
+      <div class="ok" style="margin-top:10px">
+        During model/hyperparam selection: train on <em>train</em>, evaluate on <em>validation</em>.<br>
+        Final report: train on train+val, test on <em>withheld test set</em> — only once.
+      </div>
+      <p style="margin-top:8px; font-size:13px; color:var(--text2)">Hyperparameters (e.g. k in kNN, max depth in trees) are tuned using the validation set — never the test set.</p>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-teal">Performance metrics</span>
+      <table>
+        <tr><th>Metric</th><th>Formula</th><th>Needs ranking?</th></tr>
+        <tr><td>Accuracy</td><td>(TP+TN)/total</td><td>No</td></tr>
+        <tr><td>Precision</td><td>TP/(TP+FP)</td><td>No</td></tr>
+        <tr><td>Recall / TPR</td><td>TP/(TP+FN)</td><td>No</td></tr>
+        <tr><td>FPR</td><td>FP/(TN+FP)</td><td>No</td></tr>
+        <tr><td>Confusion matrix</td><td>—</td><td>No</td></tr>
+        <tr><td>ROC AUC</td><td>—</td><td><strong>Yes</strong></td></tr>
+        <tr><td>Bias</td><td>—</td><td>Cannot compute from confusion matrix</td></tr>
+      </table>
+      <div class="exam-tip">ROC AUC always needs a ranking classifier. Everything else doesn't.</div>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-coral">Ranking &amp; coverage — application type</span>
+      <p>For a linear classifier, rank by <strong>distance to decision boundary</strong> (the raw score w·x + b).</p>
+      <div class="formula">Ranking error = a (pos, neg) pair where neg is ranked above pos</div>
+      <div class="formula">Coverage = ranking errors / (# pos × # neg)</div>
+      <p style="margin-top:8px; font-size:13px">E.g. 4 pos, 4 neg → max 16 possible ranking errors. If 2 errors → coverage = 2/16 = 1/8.</p>
+      <div class="exam-tip">Common pitfall: students confuse total pairs with ranking errors. Draw the coverage matrix to be safe.</div>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-amber">Class &amp; cost imbalance</span>
+      <p><strong>Class imbalance</strong>: unequal numbers of pos/neg instances in data.</p>
+      <p style="margin-top:6px"><strong>Cost imbalance</strong>: misclassifying different classes has different real-world costs (e.g. spam classifier that <em>deletes</em> — a false positive is catastrophic). Accuracy alone is misleading here.</p>
+      <div class="warn">Accuracy optimization is dangerous when costs differ, even if the class distribution is balanced.</div>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-blue">Preprocessing</span>
+      <ul>
+        <li><strong>Normalization / standardization</strong> — rescale features to similar range; needed for gradient-based &amp; distance-based methods</li>
+        <li><strong>PCA</strong> — can also normalize (whitening); primarily for dimensionality reduction</li>
+        <li><strong>Imputation</strong> — handle missing values; NOT for normalization (common trick-question!)</li>
+        <li><strong>Outlier removal</strong> — remove from training if they distort the model; keep in test set for realistic eval</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-green">Overfitting &amp; regularization</span>
+      <ul>
+        <li><strong>Overfitting</strong>: model memorizes training data, fails on test data</li>
+        <li><strong>L1 regularization</strong>: adds |w| penalty → sparse weights</li>
+        <li><strong>L2 regularization</strong>: adds w² penalty → small weights</li>
+        <li><strong>Dropout</strong>: randomly zero out nodes during training</li>
+        <li><strong>Max depth</strong> in trees: limits model complexity, reduces overfitting</li>
+      </ul>
+      <p style="margin-top:8px; font-size:13px; color:var(--text2)">L1/L2 require real-valued parameter vectors — can't apply to decision trees (discrete model space).</p>
+    </div>
+  </div>
+</div>
+
+<!-- LINEAR MODELS -->
+<div id="s-linear" class="section">
+  <div class="section-title">Linear models &amp; loss functions</div>
+  <div class="section-subtitle">Hyperplanes, gradient descent, and which loss to use when</div>
+
+  <div class="grid2">
+    <div class="card">
+      <span class="tag tag-purple">Linear model anatomy</span>
+      <div class="formula">f(x) = w·x + b = Σᵢ wᵢxᵢ + b</div>
+      <ul>
+        <li><strong>w</strong>: weight vector — perpendicular to decision boundary</li>
+        <li><strong>b</strong>: bias — shifts boundary from origin</li>
+        <li><strong>Decision boundary</strong>: set of x where w·x + b = 0</li>
+        <li>Classification: predict Pos if w·x+b &gt; 0, else Neg</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-teal">Gradient descent</span>
+      <div class="formula">w ← w − η∇loss(w)</div>
+      <ul>
+        <li><strong>η (learning rate)</strong>: typically 0.0001 – 0.1</li>
+        <li>Requires differentiable loss</li>
+        <li>Convex loss → guaranteed global minimum</li>
+        <li>Non-convex → local minima possible</li>
+        <li><strong>SGD</strong>: one instance at a time; noisy but fast</li>
+        <li><strong>Minibatch GD</strong>: compromise between GD and SGD</li>
+      </ul>
+    </div>
+
+    <div class="card full">
+      <span class="tag tag-coral">Loss function comparison</span>
+      <table>
+        <tr><th>Loss</th><th>Formula</th><th>Labels</th><th>Best for</th><th>Gradient?</th></tr>
+        <tr><td>Accuracy (0-1)</td><td>1[ŷ≠y]</td><td>0/1</td><td>Eval only</td><td>No ✗</td></tr>
+        <tr><td>Least squares</td><td>½Σ(f(xᵢ)−yᵢ)²</td><td>±1</td><td>Regression</td><td>Yes</td></tr>
+        <tr><td>Cross-entropy (log loss)</td><td>ΣH(yᵢ, σ(w·xᵢ+b))</td><td>0/1</td><td>Non-separable data</td><td>Yes</td></tr>
+        <tr><td>Hinge (SVM)</td><td>½||w|| + CΣmax(0, yᵢf(xᵢ)−1)</td><td>±1</td><td>High-dim, separable</td><td>Yes</td></tr>
+      </table>
+      <div class="exam-tip">Least squares: large errors count heavily; used in regression. Cross-entropy: points near boundary count most. Hinge: maximizes margin.</div>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-amber">Find the gradient — application type</span>
+      <p>Always use the chain rule step by step. For model y = f(x; θ), loss = ½Σ(yᵢ−tᵢ)²:</p>
+      <div class="formula">∂loss/∂θ = Σᵢ (yᵢ−tᵢ) · ∂yᵢ/∂θ</div>
+      <p style="margin-top:8px; font-size:13px">The ½ cancels with the 2 from the power rule. Remember:</p>
+      <ul>
+        <li>Sum rule: move sum outside derivative</li>
+        <li>Chain rule: ∂f(g)/∂x = ∂f/∂g · ∂g/∂x</li>
+        <li>Constant factor rule: ∂(cf)/∂x = c · ∂f/∂x</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-blue">Maximum likelihood principle</span>
+      <p>Choose parameters θ that maximize p(data | θ).</p>
+      <p style="margin-top:6px">In practice: maximize <strong>log-likelihood</strong> ln p(data | θ) — log turns products into sums, making optimization easier.</p>
+      <p style="margin-top:6px">Deep learning minimizes <strong>−ln p(data | θ)</strong> because frameworks expect a loss to minimize.</p>
+      <div class="connect-box" style="margin-top:10px">
+        <h4>Connection: MLE → Least squares</h4>
+        <p>Assuming normally distributed errors, MLE derivation gives you exactly the least squares loss. The squaring is a consequence of the Gaussian assumption.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROBABILITY -->
+<div id="s-probability" class="section">
+  <div class="section-title">Probability &amp; information theory</div>
+  <div class="section-subtitle">Entropy, cross-entropy, KL divergence, Bayes' rule — all tested heavily</div>
+
+  <div class="grid2">
+    <div class="card">
+      <span class="tag tag-purple">Probability basics</span>
+      <div class="formula">p(A|B) = p(A,B) / p(B)</div>
+      <div class="formula">p(B|A) = p(A|B)·p(B) / p(A)  [Bayes' rule]</div>
+      <div class="formula">p(B) = Σₐ p(A=a, B)  [marginalization]</div>
+      <div class="formula">p(A,B) = p(A|B)·p(B) = p(B|A)·p(A)  [chain rule]</div>
+      <p style="margin-top:8px; font-size:13px; color:var(--text2)">Conditional probability table: p(A=1|B=a) = cell(row=1, col=a) / sum of column a.</p>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-teal">Entropy — application type</span>
+      <div class="formula">H(p) = −Σₓ p(x) log₂ p(x)</div>
+      <div class="formula">H(p,q) = −Σₓ p(x) log₂ q(x)  [cross-entropy]</div>
+      <div class="formula">KL(p,q) = H(p,q) − H(p)  [bits wasted]</div>
+      <ul style="margin-top:8px">
+        <li>H(p) = 0: distribution is certain (one outcome has prob 1)</li>
+        <li>H(p) = 1: perfectly uniform over 2 outcomes</li>
+        <li>H(p) max = log₂(n): uniform over n outcomes</li>
+        <li>H(p,q) undefined if q(x)=0 but p(x)&gt;0</li>
+        <li>KL(p,q) ≥ 0 always; KL(p,q) ≠ KL(q,p)</li>
+      </ul>
+      <div class="exam-tip">Compute −H (positive sum) to avoid sign errors. Check answer intuitively: must be between 0 and log₂(n).</div>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-coral">Information gain (decision trees)</span>
+      <div class="formula">I(F) = H(S) − Σᵥ (|Sᵥ|/|S|) H(Sᵥ)</div>
+      <p style="margin-top:8px; font-size:13px">S = current set; v = values of feature F; Sᵥ = instances with value v.</p>
+      <p style="margin-top:6px; font-size:13px">Since H(S) is the same for all features in a given split, just minimize the weighted post-split entropy.</p>
+      <div class="ok">Shortcut: if any subset after split has entropy 0 (all same class), that feature is very good.</div>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-amber">Intuition: what entropy measures</span>
+      <p><strong>Entropy = expected codelength</strong> when using optimal code for that distribution.</p>
+      <p style="margin-top:6px">Low probability → long codeword. If p(x)=0 but we use it as a decoder, codelength → ∞. This is why H(p,q) is undefined when q has zeros where p doesn't.</p>
+      <div class="connect-box" style="margin-top:10px">
+        <h4>KL divergence intuition</h4>
+        <p>KL(p,q): you're sampling from p but using q's code. The extra bits per sample (compared to optimal) = KL divergence. It's a distance but not symmetric.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BACKPROP -->
+<div id="s-backprop" class="section">
+  <div class="section-title">Backpropagation</div>
+  <div class="section-subtitle">Scalar, matrix, and multivariate chain rule — always on the exam</div>
+
+  <div class="grid2">
+    <div class="card">
+      <span class="tag tag-purple">Scalar backprop — application type</span>
+      <p>Break function into modules. Work out local derivatives symbolically. Fill in numerically.</p>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-text">Decompose: write f as a chain of simple operations</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-text">Draw computation graph — identify diamond shapes</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-text">Write local derivatives ∂(output)/∂(input) for each module</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-text">Use chain rule (+ multivariate chain rule for diamonds) to combine</div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-text">Fill in numeric values</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-teal">Multivariate chain rule</span>
+      <p>When x influences f along two paths (diamond in compute graph):</p>
+      <div class="formula">∂f/∂x = Σ over all paths from x to f</div>
+      <div class="formula">= ∂f/∂a · ∂a/∂x + ∂f/∂b · ∂b/∂x</div>
+      <p style="margin-top:8px; font-size:13px">For f = sin(sin(x)cos(x)):</p>
+      <div class="formula">∂f/∂x = cos(c)[b·cos(x) − a·sin(x)]</div>
+      <p style="margin-top:6px; font-size:13px">where a=sin(x), b=cos(x), c=ab.</p>
+      <div class="exam-tip">Key: you don't need the MV chain rule when taking derivative wrt a weight that only appears on one path (even if x appears on two paths).</div>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-coral">Common local derivatives</span>
+      <table>
+        <tr><th>Module</th><th>Local derivative</th></tr>
+        <tr><td>σ(x) [sigmoid]</td><td>σ(x)(1−σ(x))</td></tr>
+        <tr><td>sin(x)</td><td>cos(x)</td></tr>
+        <tr><td>cos(x)</td><td>−sin(x)</td></tr>
+        <tr><td>xⁿ</td><td>nxⁿ⁻¹</td></tr>
+        <tr><td>eˣ</td><td>eˣ</td></tr>
+        <tr><td>ln(x)</td><td>1/x</td></tr>
+        <tr><td>1/x</td><td>−1/x²</td></tr>
+        <tr><td>ReLU(x)</td><td>1 if x&gt;0, else 0</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-amber">Matrix backprop — application type</span>
+      <p>For module y = Wx + b, given upstream gradient y∇:</p>
+      <div class="formula">b∇ = y∇</div>
+      <div class="formula">x∇ = y∇ᵀ W  (= Wᵀ y∇ as column vector)</div>
+      <div class="formula">W∇ = y∇ xᵀ</div>
+      <p style="margin-top:8px; font-size:13px">For f(x) = x²w (Practice Exam A):</p>
+      <div class="formula">∂fₖ/∂x = 2x·wₖ</div>
+      <div class="formula">∂L/∂x = 2x·f∇ᵀw</div>
+      <div class="formula">w∇ = x²·f∇</div>
+      <p style="margin-top:6px; font-size:13px">Key insight: AD engines don't compute full Jacobians (too expensive). Instead, they compute vector-Jacobian products directly.</p>
+    </div>
+
+    <div class="card full">
+      <span class="tag tag-blue">Lazy vs eager execution</span>
+      <div class="two-col">
+        <div class="mini-card">
+          <h5>Lazy (static graph)</h5>
+          <p>Computation graph compiled and fixed before training. Faster to run. Harder to debug.</p>
+        </div>
+        <div class="mini-card">
+          <h5>Eager (dynamic graph)</h5>
+          <p>Graph built fresh for each forward pass. Easier to debug. More flexible (PyTorch default).</p>
+        </div>
+      </div>
+      <div class="connect-box" style="margin-top:10px">
+        <h4>Why ReLU over Sigmoid in hidden layers?</h4>
+        <p>Sigmoid derivative approaches 0 for large |x| → vanishing gradients → slow learning deep in the network. ReLU derivative is 0 or 1 → no vanishing gradient problem (for positive activations).</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DECISION TREES -->
+<div id="s-trees" class="section">
+  <div class="section-title">Decision trees</div>
+  <div class="section-subtitle">ID3 algorithm, information gain, overfitting — application type on exam</div>
+
+  <div class="grid2">
+    <div class="card">
+      <span class="tag tag-purple">ID3 algorithm</span>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-text">Start with all data at root node</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-text">For each feature, compute information gain I(F)</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-text">Split on feature with highest I(F)</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-text">Recurse on each subset</div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-text">Stop when: all same class, no features left, or pruning condition met</div></div>
+        <div class="step"><div class="step-num">6</div><div class="step-text">Label leaf with majority class</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-teal">Information gain shortcut</span>
+      <div class="formula">I(F) = H(S) − Σᵥ (|Sᵥ|/|S|) H(Sᵥ)</div>
+      <p style="margin-top:8px; font-size:13px"><strong>H(S) is constant for all features at a given node</strong> — just find the feature that minimizes weighted post-split entropy.</p>
+      <p style="margin-top:6px; font-size:13px"><strong>Intuition shortcut</strong>: find the feature that makes the splits most uneven (most one class on each side). If a split gives all-one-class leaves → entropy = 0 → maximal gain.</p>
+      <div class="exam-tip">Check tallies for symmetry before calculating. If two features have identical (or mirrored) distributions, they have equal information gain.</div>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-coral">Overfitting &amp; pruning</span>
+      <p>Without pruning, ID3 keeps splitting until all leaves are pure → memorizes training data.</p>
+      <p style="margin-top:8px"><strong>Solutions:</strong></p>
+      <ul>
+        <li><strong>Post-pruning</strong>: grow full tree, then remove nodes that don't improve validation performance</li>
+        <li><strong>Max depth</strong>: hyperparameter → tune via validation set</li>
+        <li><strong>Min instances</strong>: stop if fewer than N instances reach a node</li>
+      </ul>
+      <div class="warn">L1/L2 regularization does NOT apply — decision tree model space is discrete, not a real-valued parameter vector.</div>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-amber">Practice: tally method</span>
+      <p>For each feature, tabulate class counts per value:</p>
+      <div class="formula">Feature X=A: {Yes: 3, No: 1}  X=B: {Yes: 1, No: 3}</div>
+      <p style="margin-top:8px; font-size:13px">Check margins: column sums = instances per feature value; row sums = total class counts. If any post-split subset has only one class, entropy is 0 — that feature is likely best.</p>
+      <div class="ok">Fill in margins first, then only tally one cell per sub-table. The rest follows from margins.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SVM -->
+<div id="s-svm" class="section">
+  <div class="section-title">Support Vector Machines</div>
+  <div class="section-subtitle">Maximum margin hyperplane, support vectors, kernel trick</div>
+
+  <div class="grid2">
+    <div class="card">
+      <span class="tag tag-purple">SVM key definitions</span>
+      <div class="formula">Decision boundary: w·x + b = 0</div>
+      <div class="formula">Margin edges: w·x + b = ±1</div>
+      <div class="formula">Margin width = 2/||w||</div>
+      <p style="margin-top:8px; font-size:13px"><strong>Support vectors</strong>: points exactly on the margin. Condition:</p>
+      <div class="formula">w·xᵢ + b = yᵢ  (where yᵢ = ±1)</div>
+      <p style="font-size:13px; color:var(--text2)">Positive points: w·x+b = +1. Negative points: w·x+b = −1.</p>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-teal">Classification rule</span>
+      <div class="formula">Predict Pos if w·x + b > 0</div>
+      <div class="formula">Predict Neg if w·x + b < 0</div>
+      <p style="margin-top:8px; font-size:13px">This is the same for all linear classifiers — not SVM-specific. SVMs just find the maximum-margin hyperplane.</p>
+      <div class="exam-tip">To check if x is a support vector: compute w·x+b and compare to yᵢ. Support vector ↔ w·x+b = yᵢ exactly (not just same sign).</div>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-coral">Soft margin SVM objective</span>
+      <div class="formula">min ½||w|| + C Σᵢ max(0, yᵢ(w·xᵢ+b)−1)</div>
+      <ul>
+        <li><strong>C</strong>: regularization parameter. Large C → smaller margin, fewer violations. Small C → larger margin, more violations allowed.</li>
+        <li>Equivalent to hinge loss + regularization</li>
+        <li>Dual form enables the kernel trick</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-amber">Kernel trick &amp; non-linearity</span>
+      <p>SVMs are famous for the <strong>kernel trick</strong>: the dual optimization only depends on dot products x·x'. Replace with k(x,x') to get non-linear boundaries without explicit feature expansion.</p>
+      <div class="two-col" style="margin-top:8px">
+        <div class="mini-card"><h5>Jack (partly right)</h5><p>SVMs are used for non-linear functions via kernel trick.</p></div>
+        <div class="mini-card"><h5>Jill (partly right)</h5><p>Base SVM = linear classifier with max-margin loss.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MARKOV / NAIVE BAYES -->
+<div id="s-markov" class="section">
+  <div class="section-title">Naive Bayes &amp; Markov models</div>
+  <div class="section-subtitle">Two application types — both on every exam. Master the calculation flow.</div>
+
+  <div class="grid2">
+    <div class="card">
+      <span class="tag tag-purple">Naive Bayes — application type</span>
+      <p><strong>Generative</strong> model: models p(features | class), then uses Bayes' rule.</p>
+      <div class="formula">p(c|x) ∝ p(c) · Π p(xᵢ|c)</div>
+      <p style="margin-top:8px; font-size:13px"><strong>Assumption</strong>: features are conditionally independent given the class.</p>
+      <div class="steps" style="margin-top:10px">
+        <div class="step"><div class="step-num">1</div><div class="step-text">Estimate p(c) = count(c) / total instances</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-text">Estimate p(xᵢ=v | c) = count(xᵢ=v, class=c) / count(c)</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-text">Multiply: score(c) = p(c) · Π p(xᵢ|c) for each class</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-text">Normalize: p(c|x) = score(c) / Σ score(c')</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-teal">Laplace smoothing</span>
+      <p>Problem: if a feature value was never seen with a class → zero probability → whole product = 0.</p>
+      <p style="margin-top:8px"><strong>Solution</strong>: add pseudo-observations. The exam specifies adding enough so every value appears once per class per feature (4 pseudo-obs total for a binary 2-feature dataset: FF, TT for each class).</p>
+      <div class="formula">P(xᵢ=v | c) = (count(xᵢ=v, c) + 1) / (count(c) + |values|)</div>
+      <div class="exam-tip">Check: smoothing should change some classifications. If it doesn't, you may have made an error. Trust your calculation over intuition.</div>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-coral">Markov model classification — application type</span>
+      <p>For sequence e = w₁w₂…wₙ and first-order Markov:</p>
+      <div class="formula">p(e|class) = p(w₁|class) · Π p(wᵢ|wᵢ₋₁, class)</div>
+      <div class="formula">p(wᵢ|wᵢ₋₁,c) = count(bigram wᵢ₋₁wᵢ in c) / count(wᵢ₋₁ in c)</div>
+      <p style="margin-top:8px; font-size:13px">Then apply Bayes: p(class|e) ∝ p(e|class) · p(class).</p>
+      <p style="margin-top:6px; font-size:13px">Since denominator p(e) is same for all classes, just compare numerators.</p>
+      <div class="exam-tip">To get full probability: p(spam|e) = p(e|spam)p(spam) / [p(e|spam)p(spam) + p(e|ham)p(ham)]. A lot of factors cancel if you keep fractions!</div>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-amber">Probability ratio trick</span>
+      <div class="formula">p(spam|e) / p(ham|e) = [p(e|spam)·p(spam)] / [p(e|ham)·p(ham)]</div>
+      <p style="margin-top:8px; font-size:13px">Denominator p(e) cancels. Ratio &gt; 1 → spam wins. Use this before computing full probabilities to check classification.</p>
+      <div class="connect-box" style="margin-top:10px">
+        <h4>Prosecutor's fallacy</h4>
+        <p>p(evidence | suspect) ≠ p(suspect | evidence). Bayes' rule handles the reversal. Prior matters: with a 1% spam prior, even strong evidence for spam can yield &lt;50% posterior spam probability.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- GENERATIVE MODELS -->
+<div id="s-generative" class="section">
+  <div class="section-title">Generative models: VAE, GAN, ELBO</div>
+  <div class="section-subtitle">Conceptually heavy — and the ELBO derivation is always tested</div>
+
+  <div class="grid2">
+    <div class="card">
+      <span class="tag tag-purple">ELBO derivation — application type</span>
+      <div class="formula">ln p(x|θ) = L(q,θ) + KL(q,p)</div>
+      <p style="margin-top:8px; font-size:13px">Since KL(q,p) ≥ 0:</p>
+      <div class="formula">ln p(x|θ) ≥ L(q,θ)  [L is the lower bound]</div>
+      <p style="margin-top:8px; font-size:13px"><strong>Key identity used in derivation</strong>:</p>
+      <div class="formula">p(x,z) = p(z|x)·p(x)  [chain rule of probability]</div>
+      <p style="margin-top:6px; font-size:13px">The derivation always ends with Eq[ln p(x|θ)] = ln p(x|θ) because p(x|θ) is constant w.r.t. z.</p>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-teal">EM algorithm</span>
+      <p>Uses the ELBO decomposition. Since ln p(x) = L(q,θ) + KL(q,p):</p>
+      <ul style="margin-top:8px">
+        <li><strong>E step</strong>: set q = p(z|x,θ) → KL term = 0 → L = ln p(x)</li>
+        <li><strong>M step</strong>: maximize L(q,θ) w.r.t. θ with q fixed</li>
+      </ul>
+      <p style="margin-top:8px; font-size:13px">Alternate between E and M until convergence. Used for GMMs (Gaussian Mixture Models).</p>
+      <div class="warn">In VAEs, we can't do the E step exactly (inverting the decoder is intractable) — so we approximate q with a neural network.</div>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-coral">VAE vs regular autoencoder</span>
+      <table>
+        <tr><th>Autoencoder</th><th>VAE adds</th></tr>
+        <tr><td>Encoder → single z</td><td>Encoder → distribution on z (μ, σ)</td></tr>
+        <tr><td>—</td><td>Sampling step (reparameterization trick)</td></tr>
+        <tr><td>Reconstruction loss only</td><td>+KL(q(z|x), N(0,I)) loss term</td></tr>
+        <tr><td>Latent space not regular</td><td>Latent space ≈ standard normal</td></tr>
+      </table>
+      <div class="formula">VAE loss = −Eq[ln p(x|z)] + KL(q(z|x), N(0,I))</div>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-amber">GAN</span>
+      <p><strong>Problem</strong>: if you pair random input with random target, generator doesn't know which z maps to which x → mode collapse.</p>
+      <p style="margin-top:8px"><strong>GAN solution</strong>: train a discriminator to tell real from fake. Generator tries to fool discriminator.</p>
+      <ul style="margin-top:8px">
+        <li><strong>Vanilla GAN</strong>: unconditional generation</li>
+        <li><strong>Conditional GAN</strong>: input-conditioned generation (e.g. colorization — want stochastic output given input)</li>
+        <li><strong>CycleGAN</strong>: unpaired image translation; uses cycle-consistency loss</li>
+      </ul>
+      <div class="exam-tip">VAE has no discriminator. GAN has no encoder sampling step or KL loss. Don't mix them up.</div>
+    </div>
+
+    <div class="card full">
+      <span class="tag tag-blue">Discriminative vs generative models</span>
+      <div class="two-col">
+        <div class="mini-card">
+          <h5>Discriminative</h5>
+          <p>Models p(y|x) directly. Logistic regression, SVMs, neural classifiers. Better for classification when you have labeled data.</p>
+        </div>
+        <div class="mini-card">
+          <h5>Generative</h5>
+          <p>Models p(x,y) or p(x). Naive Bayes, GMMs, VAEs, GANs. Can generate new samples; can handle missing features naturally.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SEQUENCES -->
+<div id="s-sequences" class="section">
+  <div class="section-title">Sequences, embeddings &amp; recommenders</div>
+  <div class="section-subtitle">RNNs, LSTMs, Word2Vec, matrix factorization</div>
+
+  <div class="grid2">
+    <div class="card">
+      <span class="tag tag-purple">Markov models for sequences</span>
+      <p>Model sequence data by conditioning each token on the previous <em>n</em> tokens.</p>
+      <ul style="margin-top:8px">
+        <li><strong>0th order</strong>: p(wᵢ) — bag of words</li>
+        <li><strong>1st order</strong>: p(wᵢ|wᵢ₋₁) — bigrams</li>
+        <li><strong>n-th order</strong>: p(wᵢ|wᵢ₋₁…wᵢ₋ₙ)</li>
+      </ul>
+      <p style="margin-top:8px; font-size:13px">Good for text generation, spam classification. Limited by fixed-size context window.</p>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-teal">RNNs &amp; LSTMs</span>
+      <p><strong>RNN</strong>: hidden state hₜ = f(hₜ₋₁, xₜ). Processes sequences token by token. Suffers from vanishing gradients over long sequences.</p>
+      <p style="margin-top:8px"><strong>LSTM inductive biases</strong>:</p>
+      <ul>
+        <li>Data is a sequence</li>
+        <li>Each token depends on preceding tokens</li>
+        <li>Many tokens can be forgotten (gating mechanism)</li>
+      </ul>
+      <p style="margin-top:8px; font-size:13px">LSTM adds input/forget/output gates → can remember long-range dependencies.</p>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-coral">Embeddings: Word2Vec &amp; matrix factorization</span>
+      <p>Both embed featureless objects (words, users, movies) into Euclidean space as vectors, where proximity = similarity.</p>
+      <div class="formula">v(king) + v(woman) − v(man) ≈ v(queen)</div>
+      <p style="margin-top:8px; font-size:13px">Each object → one vector. Learn by predicting co-occurrence (Word2Vec) or factorizing interaction matrix (collaborative filtering).</p>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-amber">Recommender systems</span>
+      <p><strong>Collaborative filtering</strong>: user–item interaction matrix. Matrix factorization learns latent user and item vectors.</p>
+      <div class="two-col" style="margin-top:8px">
+        <div class="mini-card"><h5>Explicit feedback</h5><p>User gives a rating (1–5 stars).</p></div>
+        <div class="mini-card"><h5>Implicit feedback</h5><p>Inferred from behavior (clicks, views, purchases). More common in practice.</p></div>
+      </div>
+      <p style="margin-top:8px; font-size:13px"><strong>Exploration vs exploitation</strong>: show recommended items (exploit) vs discover user's new preferences (explore) → connects to RL.</p>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-blue">Inductive biases — key concept</span>
+      <p>What assumptions does the model bake in about the data structure?</p>
+      <table style="margin-top:8px">
+        <tr><th>Model</th><th>Inductive bias</th></tr>
+        <tr><td>MLP</td><td>Any smooth function; permutation invariant</td></tr>
+        <tr><td>CNN</td><td>Grid structure; translation invariance; local features</td></tr>
+        <tr><td>LSTM</td><td>Sequential; can forget; gated memory</td></tr>
+        <tr><td>Transformer</td><td>All-pairs attention; position via encoding</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-green">Sequential data evaluation</span>
+      <p><strong>Crucial</strong>: test data must be strictly AFTER training data in time. Never mix temporal order — future data cannot inform the past.</p>
+      <p style="margin-top:8px; font-size:13px">Cross-validation with random splits is invalid for time series. Use walk-forward validation instead.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ENSEMBLES & RL -->
+<div id="s-ensembles" class="section">
+  <div class="section-title">Ensembles &amp; reinforcement learning</div>
+  <div class="section-subtitle">Bagging, boosting, Q-learning, policy gradients</div>
+
+  <div class="grid2">
+    <div class="card">
+      <span class="tag tag-purple">Bagging vs boosting</span>
+      <div class="two-col">
+        <div class="mini-card">
+          <h5>Bagging (e.g. Random Forest)</h5>
+          <p>Train models on bootstrap samples. Average/vote. Reduces variance. Models train in parallel.</p>
+        </div>
+        <div class="mini-card">
+          <h5>Boosting (e.g. AdaBoost)</h5>
+          <p>Train models sequentially, each fixing previous model's errors. Reduces bias and variance. Models train in series.</p>
+        </div>
+      </div>
+      <div class="warn" style="margin-top:10px">Boosting rarely used in research: you'd need to boost the baseline too for a fair comparison. Complicates head-to-head evaluation.</div>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-teal">Reinforcement learning basics</span>
+      <p>Agent takes actions, receives rewards from environment. Goal: learn a policy that maximizes cumulative reward.</p>
+      <div class="two-col" style="margin-top:8px">
+        <div class="mini-card"><h5>Offline learning</h5><p>Learn from fixed dataset. No interaction with environment.</p></div>
+        <div class="mini-card"><h5>RL (online)</h5><p>Agent acts, observes reward, updates. No fixed dataset.</p></div>
+      </div>
+      <div class="formula" style="margin-top:10px">Key difference from supervised: labels are reinforcement signals from the environment, not pre-provided</div>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-coral">Why gradient descent is hard in RL</span>
+      <div class="warn">There is a non-differentiable step between the model output (action probabilities) and the reward (environment response).</div>
+      <p style="margin-top:8px; font-size:13px"><strong>Policy gradient trick</strong>: ∇E[r(a)] = E[r(a)·∇ln p(a)] — rewrites gradient of expected reward as an expectation, enabling Monte Carlo estimation.</p>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-amber">Exploration vs exploitation</span>
+      <p>Always exploiting → get stuck in local optima (never discover better actions).</p>
+      <p style="margin-top:8px">Always exploring → never use what you've learned.</p>
+      <p style="margin-top:8px; font-size:13px"><strong>ε-greedy</strong>: take greedy action with prob 1−ε, random action with prob ε.</p>
+      <p style="margin-top:6px; font-size:13px"><strong>Q-learning</strong>: learn Q(s,a) = expected future reward. Model-free, off-policy.</p>
+    </div>
+  </div>
+</div>
+
+<!-- CONCEPT MAP / CONNECTIONS -->
+<div id="s-connections" class="section">
+  <div class="section-title">Concept connections &amp; quick-fire review</div>
+  <div class="section-subtitle">Cross-topic links that often show up as combination questions</div>
+
+  <div class="card" style="margin-bottom:16px">
+    <span class="tag tag-purple">Key connections to memorize</span>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px">
+      <div class="connect-box">
+        <h4>MLE → Loss functions</h4>
+        <p>Normal errors → least squares. Bernoulli errors → cross-entropy/logistic regression. Both derived from maximum likelihood.</p>
+      </div>
+      <div class="connect-box">
+        <h4>ELBO → EM &amp; VAE</h4>
+        <p>Both optimize L(q,θ). EM does exact E-step (sets q=p(z|x)). VAE approximates it with encoder network qᵥ(z|x).</p>
+      </div>
+      <div class="connect-box">
+        <h4>Entropy → decision trees</h4>
+        <p>Information gain = drop in entropy after split. Optimal split = minimal post-split entropy = most informative feature.</p>
+      </div>
+      <div class="connect-box">
+        <h4>Bayes → Naive Bayes → Markov</h4>
+        <p>All apply p(c|x) ∝ p(x|c)p(c). Naive Bayes: features independent. Markov: sequence, tokens depend on previous.</p>
+      </div>
+      <div class="connect-box">
+        <h4>Cross-entropy → logistic regression</h4>
+        <p>Log loss = cross-entropy between true label and sigmoid output. Gradient = (ŷ−y)x — same form as least squares but different loss surface.</p>
+      </div>
+      <div class="connect-box">
+        <h4>KL divergence → VAE</h4>
+        <p>VAE loss term KL(q(z|x), N(0,I)) forces latent space to be approximately standard normal → enables sampling at test time.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <span class="tag tag-teal">Quick-fire: "Which is NOT…" traps</span>
+      <ul>
+        <li><strong>Imputation is NOT normalization</strong> — it handles missing values</li>
+        <li><strong>ROC AUC DOES need a ranking</strong>; confusion matrix doesn't</li>
+        <li><strong>VAE has no discriminator</strong> — that's GAN</li>
+        <li><strong>Boosting reduces bias</strong>, not just variance</li>
+        <li><strong>Chaining perceptrons</strong> is still linear (composition of linear = linear)</li>
+        <li><strong>Batch normalization</strong> normalizes over the current batch, not uniform</li>
+        <li><strong>L1/L2 can't apply to trees</strong> (discrete model space)</li>
+        <li><strong>Cost imbalance ≠ class imbalance</strong></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-coral">10 application question types</span>
+      <ol style="padding-left:16px; font-size:13px; color:var(--text2); line-height:1.8">
+        <li>Find the gradient (chain rule on polynomial model)</li>
+        <li>Find a ranking + count ranking errors + coverage</li>
+        <li>Entropy + cross-entropy computation</li>
+        <li>Scalar backpropagation (break into modules)</li>
+        <li>Decision trees (find best split, information gain)</li>
+        <li>ELBO derivation (fill in blanks)</li>
+        <li>Naive Bayes (with and without smoothing)</li>
+        <li>SVMs (find support vectors, classify points)</li>
+        <li>Markov models (classify email, compute probability)</li>
+        <li>Matrix backpropagation (b∇, x∇, W∇)</li>
+      </ol>
+    </div>
+
+    <div class="card full">
+      <span class="tag tag-amber">Common calculation mistakes to avoid</span>
+      <table>
+        <tr><th>Mistake</th><th>Fix</th></tr>
+        <tr><td>Forgetting the minus in entropy</td><td>Compute −H(p) as positive sum, then negate</td></tr>
+        <tr><td>H(p,q) with q(x)=0 when p(x)&gt;0</td><td>Recognize this is undefined → "something goes wrong"</td></tr>
+        <tr><td>Ranking errors vs total pairs</td><td>Errors = pairs where neg ranked above pos (subset of all pos-neg pairs)</td></tr>
+        <tr><td>Support vector: wrong condition</td><td>Must satisfy w·x+b = y exactly (not just same sign as y)</td></tr>
+        <tr><td>Naive Bayes: multiplying wrong probs</td><td>p(class) × Π p(featureᵢ|class) — prior once, each feature once</td></tr>
+        <tr><td>Markov: forgetting prior</td><td>p(class|e) ∝ p(e|class) × p(class) — both needed</td></tr>
+        <tr><td>Backprop: forgetting ½ cancels with 2</td><td>Loss = ½Σ(y−t)²; ∂loss/∂y = (y−t) not ½(y−t)</td></tr>
+        <tr><td>Info gain: computing H(S) for every feature</td><td>H(S) is constant per node — only compute once, or skip entirely</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('s-' + id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo(0, 0);
+}
+function toggleAnswer(btn) {
+  const ans = btn.nextElementSibling;
+  ans.classList.toggle('show');
+  btn.textContent = ans.classList.contains('show') ? 'Hide answer' : 'Show answer';
+}
+</script>
+</body>
+</html>

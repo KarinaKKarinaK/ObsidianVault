@@ -38,10 +38,11 @@ Melissa Wittmayer (a design leader at orq.ai or partner company) proposes **3-La
    - **Flow state enablement** (Csíkszentmihályi's concept)
 
 3. **Sentiment Layer**: How is the user feeling?
-   - Trajectory (improving, stable, degrading)
-   - Emotional volatility
+   - **Trajectory (improving, stable, degrading)**
+   - **Emotional volatility**
    - Early warning system (diagnostic, not primary metric)
 
+reserch repo --> create branch with Linear name --> create new directory & index, intasll orquesta-web evaluator into local env and then use it to test
 ### Why Step Counter Fits Into This
 
 **Step counter is a BUILDING BLOCK for Momentum evaluation.**

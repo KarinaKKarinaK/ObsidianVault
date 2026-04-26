@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>P&S Formula Sheet — XB_0115</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f7f4;
+  --surface: #ffffff;
+  --surface2: #f2f0ec;
+  --border: #e5e2db;
+  --border2: #ccc9c0;
+  --text: #1c1b18;
+  --text2: #4b4840;
+  --muted: #928e86;
+  --orange: #c4571f;
+  --orange-bg: #fdf3ed;
+  --orange-border: #f2c4a8;
+  --blue: #2856b8;
+  --blue-bg: #edf2fc;
+  --blue-border: #b8caef;
+  --green: #1f7a4a;
+  --green-bg: #edf7f2;
+  --green-border: #a6d9be;
+  --red: #b82828;
+  --red-bg: #fef2f2;
+  --red-border: #f4bbbb;
+  --purple: #6d28d9;
+  --purple-bg: #f5f0ff;
+  --purple-border: #d8c5f8;
+  --col: 3;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:13.5px;line-height:1.6;}
+
+/* HEADER */
+.header {
+  background: var(--text);
+  color: white;
+  padding: 18px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.header h1 { font-size: 16px; font-weight: 600; letter-spacing: -.01em; }
+.header p { font-family: 'DM Mono', monospace; font-size: 11px; color: #aaa; margin-top: 2px; }
+.header-right { display: flex; gap: 8px; align-items: center; }
+.hbadge {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  padding: 3px 9px;
+  border-radius: 20px;
+  border: 1px solid #444;
+  color: #bbb;
+}
+
+/* TOC */
+.toc {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 28px;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.toc-label { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); margin-right: 4px; text-transform: uppercase; letter-spacing: .08em; }
+.toc a {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  text-decoration: none;
+  color: var(--text2);
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  transition: all .1s;
+}
+.toc a:hover { border-color: var(--orange); color: var(--orange); background: var(--orange-bg); }
+
+/* MAIN */
+main { max-width: 1100px; margin: 0 auto; padding: 24px 24px 60px; }
+
+/* SECTION */
+.section { margin-bottom: 22px; scroll-margin-top: 56px; }
+.sec-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--text);
+}
+.sec-icon {
+  width: 26px; height: 26px;
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.sec-title { font-size: 14px; font-weight: 600; letter-spacing: -.01em; }
+
+/* GRID */
+.grid {
+  display: grid;
+  gap: 8px;
+}
+.g2 { grid-template-columns: 1fr 1fr; }
+.g3 { grid-template-columns: 1fr 1fr 1fr; }
+.g4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+/* FORMULA CARD */
+.fc {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 11px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.fc-name {
+  font-family: 'DM Mono', monospace;
+  font-size: 9.5px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--muted);
+}
+.fc-formula {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.55;
+  background: var(--surface2);
+  padding: 7px 10px;
+  border-radius: 5px;
+  border: 1px solid var(--border);
+}
+.fc-note {
+  font-size: 11.5px;
+  color: var(--text2);
+  line-height: 1.45;
+}
+.fc-note em { color: var(--muted); font-style: normal; }
+.fc-note strong { color: var(--text); font-weight: 600; }
+
+/* COLOUR VARIANTS */
+.fc-blue { border-color: var(--blue-border); }
+.fc-blue .fc-formula { background: var(--blue-bg); border-color: var(--blue-border); color: var(--blue); }
+.fc-blue .fc-name { color: var(--blue); }
+
+.fc-orange { border-color: var(--orange-border); }
+.fc-orange .fc-formula { background: var(--orange-bg); border-color: var(--orange-border); color: var(--orange); }
+.fc-orange .fc-name { color: var(--orange); }
+
+.fc-green { border-color: var(--green-border); }
+.fc-green .fc-formula { background: var(--green-bg); border-color: var(--green-border); color: var(--green); }
+.fc-green .fc-name { color: var(--green); }
+
+.fc-purple { border-color: var(--purple-border); }
+.fc-purple .fc-formula { background: var(--purple-bg); border-color: var(--purple-border); color: var(--purple); }
+.fc-purple .fc-name { color: var(--purple); }
+
+.fc-red { border-color: var(--red-border); }
+.fc-red .fc-formula { background: var(--red-bg); border-color: var(--red-border); color: var(--red); }
+.fc-red .fc-name { color: var(--red); }
+
+/* SPAN */
+.span2 { grid-column: span 2; }
+.span3 { grid-column: span 3; }
+.span4 { grid-column: span 4; }
+
+/* TABLE */
+.tw { overflow-x: auto; grid-column: 1/-1; }
+table { width: 100%; border-collapse: collapse; font-size: 12.5px; background: var(--surface); border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+th { background: var(--surface2); font-family: 'DM Mono', monospace; font-size: 9.5px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); padding: 7px 10px; text-align: left; border-bottom: 1px solid var(--border2); font-weight: 500; }
+td { padding: 7px 10px; border-bottom: 1px solid var(--border); vertical-align: top; color: var(--text2); }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--surface2); }
+td:first-child { font-weight: 600; color: var(--text); }
+td code { font-family: 'DM Mono', monospace; font-size: 11.5px; background: var(--surface2); padding: 1px 4px; border-radius: 3px; border: 1px solid var(--border); color: var(--text); }
+
+/* WARN */
+.warn {
+  grid-column: 1/-1;
+  background: var(--red-bg);
+  border: 1px solid var(--red-border);
+  border-left: 3px solid var(--red);
+  border-radius: 7px;
+  padding: 9px 13px;
+  font-size: 12.5px;
+  color: var(--text2);
+  line-height: 1.5;
+}
+.warn strong { color: var(--red); }
+
+.tip {
+  grid-column: 1/-1;
+  background: var(--orange-bg);
+  border: 1px solid var(--orange-border);
+  border-left: 3px solid var(--orange);
+  border-radius: 7px;
+  padding: 9px 13px;
+  font-size: 12.5px;
+  color: var(--text2);
+  line-height: 1.5;
+}
+.tip strong { color: var(--orange); }
+
+/* QUANTILE TABLE */
+.qtable { grid-column: 1/-1; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.qtable-head { background: var(--surface2); padding: 7px 12px; font-family: 'DM Mono', monospace; font-size: 9.5px; font-weight: 500; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); border-bottom: 1px solid var(--border2); }
+.qtable-body { display: grid; grid-template-columns: repeat(5, 1fr); }
+.qt-cell { padding: 8px 10px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.qt-cell:nth-child(5n) { border-right: none; }
+.qt-cell:nth-last-child(-n+5) { border-bottom: none; }
+.qt-label { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--muted); text-transform: uppercase; }
+.qt-val { font-family: 'DM Mono', monospace; font-size: 15px; font-weight: 500; color: var(--blue); margin-top: 2px; }
+.qt-ci { font-size: 11px; color: var(--muted); margin-top: 1px; }
+
+@media print {
+  .header { position: static; }
+  .toc { display: none; }
+  .section { break-inside: avoid; }
+  .fc { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>Probability &amp; Statistics — Formula Sheet</h1>
+    <p>XB_0115 · VU Amsterdam · Built from past exams</p>
+  </div>
+  <div class="header-right">
+    <span class="hbadge">Oct 2024</span>
+    <span class="hbadge">Jan 2025</span>
+    <span class="hbadge">Mar 2025</span>
+    <span class="hbadge">Oct 2025</span>
+  </div>
+</div>
+
+<div class="toc">
+  <span class="toc-label">Jump to:</span>
+  <a href="#prob">Probability</a>
+  <a href="#discrete">Discrete Distributions</a>
+  <a href="#continuous">Continuous RVs</a>
+  <a href="#special">Special Distributions</a>
+  <a href="#lln-clt">LLN &amp; CLT</a>
+  <a href="#estimation">Estimation</a>
+  <a href="#ci">Confidence Intervals</a>
+  <a href="#testing">Hypothesis Testing</a>
+  <a href="#quantiles">Quantile Table</a>
+</div>
+
+<main>
+
+<!-- ══════════════ PROBABILITY ══════════════ -->
+<div class="section" id="prob">
+  <div class="sec-head">
+    <div class="sec-icon" style="background:#edf2fc">🎲</div>
+    <div class="sec-title">Probability Rules</div>
+  </div>
+  <div class="grid g3">
+
+    <div class="fc fc-blue">
+      <div class="fc-name">Addition Rule</div>
+      <div class="fc-formula">P(A∪B) = P(A) + P(B) − P(A∩B)</div>
+      <div class="fc-note">For any two events. If disjoint (A∩B=∅): <strong>P(A∪B) = P(A)+P(B)</strong></div>
+    </div>
+
+    <div class="fc fc-blue">
+      <div class="fc-name">Complement</div>
+      <div class="fc-formula">P(Aᶜ) = 1 − P(A)</div>
+      <div class="fc-note">Aᶜ = "A does not happen". Always use this to find "at least one" probabilities.</div>
+    </div>
+
+    <div class="fc fc-blue">
+      <div class="fc-name">Triple Union — De Morgan</div>
+      <div class="fc-formula">P(A∪B∪C) = 1 − P(Aᶜ∩Bᶜ∩Cᶜ)</div>
+      <div class="fc-note">If independent: <strong>= 1 − P(Aᶜ)·P(Bᶜ)·P(Cᶜ)</strong>. Fastest method on exam.</div>
+    </div>
+
+    <div class="fc fc-orange">
+      <div class="fc-name">Conditional Probability</div>
+      <div class="fc-formula">P(A|B) = P(A∩B) / P(B)</div>
+      <div class="fc-note"><em>A|B</em> = "A given B". Restrict sample space to B, then ask about A.</div>
+    </div>
+
+    <div class="fc fc-orange">
+      <div class="fc-name">Multiplication Rule</div>
+      <div class="fc-formula">P(A∩B) = P(A|B) · P(B)
+             = P(B|A) · P(A)</div>
+      <div class="fc-note">If independent: <strong>P(A∩B) = P(A)·P(B)</strong></div>
+    </div>
+
+    <div class="fc fc-orange">
+      <div class="fc-name">Independence Check</div>
+      <div class="fc-formula">A,B independent ⟺ P(A∩B) = P(A)·P(B)
+                        ⟺ P(A|B) = P(A)</div>
+      <div class="fc-note"><strong>Independent ≠ Disjoint.</strong> Disjoint means P(A∩B)=0.</div>
+    </div>
+
+    <div class="fc fc-green">
+      <div class="fc-name">Bayes' Rule</div>
+      <div class="fc-formula">P(A|B) = P(B|A) · P(A) / P(B)</div>
+      <div class="fc-note"><em>P(A)</em> = prior, <em>P(B|A)</em> = likelihood, <em>P(B)</em> = total prob of B. Use when you need to "flip" the conditioning.</div>
+    </div>
+
+    <div class="fc fc-green">
+      <div class="fc-name">Law of Total Probability</div>
+      <div class="fc-formula">P(B) = P(B|A)·P(A) + P(B|Aᶜ)·P(Aᶜ)</div>
+      <div class="fc-note">Used to find P(B) when B can happen via two cases (e.g. two machines). Always the first step before Bayes.</div>
+    </div>
+
+    <div class="fc">
+      <div class="fc-name">Always True</div>
+      <div class="fc-formula">P(A∩B) ≤ P(A∪B)
+P(C|C) = 1
+P(A∪B∪C) = 1−P(Aᶜ∩Bᶜ∩Cᶜ)</div>
+      <div class="fc-note"><strong>P(A∪B|C) = P(A|C)+P(B|C) only if A∩B=∅.</strong> Not generally true.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════ DISCRETE DISTRIBUTIONS ══════════════ -->
+<div class="section" id="discrete">
+  <div class="sec-head">
+    <div class="sec-icon" style="background:#edf7f2">📊</div>
+    <div class="sec-title">Discrete Distributions</div>
+  </div>
+  <div class="grid g2">
+    <div class="tw">
+      <table>
+        <tr>
+          <th>Distribution</th>
+          <th>PMF P(X=k)</th>
+          <th>E(X)</th>
+          <th>Var(X)</th>
+          <th>CDF / Notes</th>
+        </tr>
+        <tr>
+          <td>Bernoulli(p)</td>
+          <td><code>p^k (1−p)^(1−k)</code>, k∈{0,1}</td>
+          <td><code>p</code></td>
+          <td><code>p(1−p)</code></td>
+          <td>Single trial. Building block for Binomial.</td>
+        </tr>
+        <tr>
+          <td>Binomial(n, p)</td>
+          <td><code>C(n,k) p^k (1−p)^(n−k)</code></td>
+          <td><code>np</code></td>
+          <td><code>np(1−p)</code></td>
+          <td>Sum of n independent Bernoulli(p). Use CLT for large n.</td>
+        </tr>
+        <tr>
+          <td>Geometric(p)</td>
+          <td><code>p(1−p)^(k−1)</code>, k=1,2,…</td>
+          <td><code>1/p</code></td>
+          <td><code>(1−p)/p²</code></td>
+          <td>Waiting for 1st success. <code>F(k) = 1−(1−p)^k</code>. <strong>F(2.5) = P(1)+P(2)</strong></td>
+        </tr>
+        <tr>
+          <td>Pascal(m, p)</td>
+          <td><code>C(k−1,m−1) p^m (1−p)^(k−m)</code></td>
+          <td><code>m/p</code></td>
+          <td><code>m(1−p)/p²</code></td>
+          <td>Waiting for m-th success. Geometric is Pascal with m=1.</td>
+        </tr>
+        <tr>
+          <td>Poisson(λ)</td>
+          <td><code>e^(−λ) λ^k / k!</code>, k=0,1,…</td>
+          <td><code>λ</code></td>
+          <td><code>λ</code></td>
+          <td>Events per interval. Scale: λ = rate × time. <strong>P(X>1.8) = P(X≥2)</strong></td>
+        </tr>
+      </table>
+    </div>
+    <div class="tip">
+      <strong>CDF of discrete RV at non-integer x:</strong> F(x) = sum of all PMF values at integers ≤ x.<br>
+      e.g. X ~ Geometric(0.2): F(2.5) = P(X=1) + P(X=2) = 0.2 + 0.2×0.8 = 0.36<br><br>
+      <strong>Poisson scaling:</strong> if rate = 10/hr and window = 1.5 hrs → λ = 15.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ CONTINUOUS RVs ══════════════ -->
+<div class="section" id="continuous">
+  <div class="sec-head">
+    <div class="sec-icon" style="background:#fdf3ed">∫</div>
+    <div class="sec-title">Continuous Random Variables</div>
+  </div>
+  <div class="grid g3">
+
+    <div class="fc fc-orange">
+      <div class="fc-name">PDF → Probability</div>
+      <div class="fc-formula">P(a ≤ X ≤ b) = ∫ₐᵇ f(x) dx</div>
+      <div class="fc-note"><em>f(x)</em> = PDF. Probability = area under the curve. Always: f(x)≥0 and ∫f=1.</div>
+    </div>
+
+    <div class="fc fc-orange">
+      <div class="fc-name">CDF from PDF</div>
+      <div class="fc-formula">F(x) = P(X≤x) = ∫₋∞ˣ f(u) du</div>
+      <div class="fc-note">CDF is non-decreasing, right-continuous, F(−∞)=0, F(∞)=1. <strong>Not necessarily differentiable or strictly increasing.</strong></div>
+    </div>
+
+    <div class="fc fc-orange">
+      <div class="fc-name">PDF from CDF</div>
+      <div class="fc-formula">f(x) = F'(x) = dF(x)/dx</div>
+      <div class="fc-note">Differentiate the CDF to get the PDF. Works wherever F is differentiable.</div>
+    </div>
+
+    <div class="fc fc-blue">
+      <div class="fc-name">Finding Constant c</div>
+      <div class="fc-formula">∫₋∞^∞ f(x) dx = 1  →  solve for c</div>
+      <div class="fc-note">Set total integral = 1 and solve. Integrate only over the range where f(x) > 0.</div>
+    </div>
+
+    <div class="fc fc-blue">
+      <div class="fc-name">Expected Value E(X)</div>
+      <div class="fc-formula">E(X) = ∫₋∞^∞ x · f(x) dx</div>
+      <div class="fc-note">Integrate over the range only. Linearity: <strong>E(aX+b) = aE(X)+b</strong></div>
+    </div>
+
+    <div class="fc fc-blue">
+      <div class="fc-name">LOTUS — E[g(X)]</div>
+      <div class="fc-formula">E[g(X)] = ∫₋∞^∞ g(x) · f(x) dx</div>
+      <div class="fc-note"><strong>E[X²] = ∫ x²·f(x) dx</strong> — NOT (∫xf dx)². Just swap x for g(x) inside the integral.</div>
+    </div>
+
+    <div class="fc fc-green">
+      <div class="fc-name">Variance</div>
+      <div class="fc-formula">Var(X) = E(X²) − [E(X)]²
+       = E[(X−μ)²]</div>
+      <div class="fc-note"><em>μ = E(X)</em>. Shortcut: compute E(X²) via LOTUS, subtract [E(X)]². <strong>Var(aX+b) = a²Var(X)</strong></div>
+    </div>
+
+    <div class="fc fc-green">
+      <div class="fc-name">Functions of RVs — CDF Method</div>
+      <div class="fc-formula">F_Y(y) = P(g(X) ≤ y)
+          → rearrange for X
+          → express via F_X</div>
+      <div class="fc-note">Then differentiate to get f_Y(y). Works for Y = eˣ, Y = X², Y = √X, etc.</div>
+    </div>
+
+    <div class="fc">
+      <div class="fc-name">Sum of Independent RVs</div>
+      <div class="fc-formula">E(X+Y) = E(X) + E(Y)
+Var(X+Y) = Var(X) + Var(Y)  [if indep.]</div>
+      <div class="fc-note">Variances add for <strong>independent</strong> RVs — regardless of distribution. Means always add.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════ SPECIAL DISTRIBUTIONS ══════════════ -->
+<div class="section" id="special">
+  <div class="sec-head">
+    <div class="sec-icon" style="background:#f5f0ff">★</div>
+    <div class="sec-title">Special Continuous Distributions</div>
+  </div>
+  <div class="grid g3">
+
+    <div class="fc fc-purple">
+      <div class="fc-name">Uniform(a, b)</div>
+      <div class="fc-formula">f(x) = 1/(b−a)   for a < x < b
+
+F(x) = (x−a)/(b−a)
+
+E(X) = (a+b)/2
+Var(X) = (b−a)²/12</div>
+      <div class="fc-note">Flat PDF — all values equally likely. If X~U(0,1): F(x) = x.</div>
+    </div>
+
+    <div class="fc fc-purple">
+      <div class="fc-name">Exponential(λ)</div>
+      <div class="fc-formula">f(x) = λe^(−λx)   for x > 0
+
+F(x) = 1 − e^(−λx)
+
+E(X) = 1/λ
+Var(X) = 1/λ²</div>
+      <div class="fc-note"><em>λ</em> = rate (events per unit time). <strong>Memoryless:</strong> P(X>x+a|X>a) = P(X>x).</div>
+    </div>
+
+    <div class="fc fc-purple">
+      <div class="fc-name">Normal N(μ, σ²)</div>
+      <div class="fc-formula">f(x) = (1/σ√2π) e^(−(x−μ)²/2σ²)
+
+E(X) = μ,   Var(X) = σ²
+
+Standardise: Z = (X−μ)/σ ~ N(0,1)
+P(X≤x) = Φ((x−μ)/σ)</div>
+      <div class="fc-note"><em>μ</em> = mean, <em>σ²</em> = variance, <em>σ</em> = std dev. <strong>Always standardise first</strong>, then use Φ table.</div>
+    </div>
+
+    <div class="fc">
+      <div class="fc-name">Φ Symmetry Rules</div>
+      <div class="fc-formula">Φ(−x) = 1 − Φ(x)
+Φ(0) = 0.5
+P(X > a) = 1 − Φ((a−μ)/σ)</div>
+      <div class="fc-note">Use symmetry when you get a negative z-score. <strong>Φ(−1) = 1−Φ(1)</strong> — they're equal.</div>
+    </div>
+
+    <div class="fc">
+      <div class="fc-name">Linear Transform of Normal</div>
+      <div class="fc-formula">X ~ N(μ,σ²), Y = aX+b
+→ Y ~ N(aμ+b, a²σ²)</div>
+      <div class="fc-note">Linear transforms of normals stay normal. <em>σ_Y = |a|·σ_X</em>. Sum of independent normals is also normal.</div>
+    </div>
+
+    <div class="fc">
+      <div class="fc-name">Sum of Independent Normals</div>
+      <div class="fc-formula">X~N(μ_X,σ²_X), Y~N(μ_Y,σ²_Y) indep.
+Z = X+Y → N(μ_X+μ_Y, σ²_X+σ²_Y)</div>
+      <div class="fc-note">Variances add (not standard deviations!). Subtract: Z=X−Y has variance σ²_X + σ²_Y.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════ LLN & CLT ══════════════ -->
+<div class="section" id="lln-clt">
+  <div class="sec-head">
+    <div class="sec-icon" style="background:#edf7f2">∞</div>
+    <div class="sec-title">Law of Large Numbers &amp; Central Limit Theorem</div>
+  </div>
+  <div class="grid g3">
+
+    <div class="fc fc-green">
+      <div class="fc-name">Sample Mean</div>
+      <div class="fc-formula">X̄ₙ = (X₁+…+Xₙ)/n
+
+E(X̄ₙ) = μ
+Var(X̄ₙ) = σ²/n</div>
+      <div class="fc-note"><em>μ, σ²</em> = mean/variance of each Xᵢ. Var shrinks with n — taking more data reduces uncertainty.</div>
+    </div>
+
+    <div class="fc fc-green">
+      <div class="fc-name">Weak Law of Large Numbers</div>
+      <div class="fc-formula">X̄ₙ → μ  as n → ∞
+
+lim P(|X̄ₙ−μ| ≥ ε) = 0</div>
+      <div class="fc-note">The sample average converges to the true mean. More data = closer estimate. Applies to any distribution with finite mean.</div>
+    </div>
+
+    <div class="fc fc-green">
+      <div class="fc-name">Central Limit Theorem (CLT)</div>
+      <div class="fc-formula">X̄ₙ ~ N(μ, σ²/n)  approximately
+
+Sum Y=ΣXᵢ ~ N(nμ, nσ²)
+
+Z = (X̄ₙ−μ)/(σ/√n) ~ N(0,1)</div>
+      <div class="fc-note">Requires: X₁,…,Xₙ iid with mean μ, variance σ². Works for <strong>any</strong> distribution if n is large.</div>
+    </div>
+
+    <div class="fc fc-blue span3">
+      <div class="fc-name">Applying CLT — Step by Step</div>
+      <div class="fc-formula">1. Identify μ=E(Xᵢ), σ²=Var(Xᵢ)
+2. Write Y = X₁+…+Xₙ → Y ~ N(nμ, nσ²)
+3. Standardise: Z = (Y−nμ)/(σ√n) ~ N(0,1)
+4. P(Y≤c) = Φ((c−nμ)/(σ√n))</div>
+      <div class="fc-note"><strong>Binomial shortcut:</strong> X~Bin(n,p) → μ=np, σ²=np(1−p), then use CLT. &nbsp;&nbsp; <strong>For quantile problems:</strong> set Φ(z)=0.95 → z=1.645, then solve for the unknown.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════ ESTIMATION ══════════════ -->
+<div class="section" id="estimation">
+  <div class="sec-head">
+    <div class="sec-icon" style="background:#fdf3ed">θ̂</div>
+    <div class="sec-title">Point Estimation &amp; MLE</div>
+  </div>
+  <div class="grid g3">
+
+    <div class="fc fc-orange">
+      <div class="fc-name">Bias</div>
+      <div class="fc-formula">Bias(Θ̂) = E(Θ̂) − θ</div>
+      <div class="fc-note">If Bias=0: <strong>unbiased</strong>. <strong>X̄ is always unbiased for μ.</strong> S² (with n−1) is unbiased for σ².</div>
+    </div>
+
+    <div class="fc fc-orange">
+      <div class="fc-name">MSE — Bias-Variance Tradeoff</div>
+      <div class="fc-formula">MSE(Θ̂) = E[(Θ̂−θ)²]
+        = Var(Θ̂) + [Bias(Θ̂)]²</div>
+      <div class="fc-note">If unbiased: MSE = Var(Θ̂). For X̄: <strong>MSE = Var(X̄) = σ²/n.</strong></div>
+    </div>
+
+    <div class="fc fc-orange">
+      <div class="fc-name">Consistency</div>
+      <div class="fc-formula">Θ̂ₙ consistent ⟺
+lim P(|Θ̂ₙ−θ| < ε) = 1
+
+Sufficient: MSE(Θ̂ₙ) → 0</div>
+      <div class="fc-note">X̄ₙ is consistent for μ because Var(X̄ₙ)=σ²/n→0.</div>
+    </div>
+
+    <div class="fc fc-blue">
+      <div class="fc-name">Sample Variance S²</div>
+      <div class="fc-formula">S² = 1/(n−1) · Σᵢ(Xᵢ−X̄)²
+
+E(S²) = σ²  ← unbiased</div>
+      <div class="fc-note">Use <strong>n−1</strong> (Bessel's correction). The biased version uses n: E(S̄²) = (n−1)/n · σ².</div>
+    </div>
+
+    <div class="fc fc-blue">
+      <div class="fc-name">Likelihood Function</div>
+      <div class="fc-formula">Discrete: L(θ) = Π P(Xᵢ=xᵢ; θ)
+Continuous: L(θ) = Π f(xᵢ; θ)</div>
+      <div class="fc-note">Product of PDFs/PMFs evaluated at your data. Measures how likely the data is under parameter θ.</div>
+    </div>
+
+    <div class="fc fc-blue">
+      <div class="fc-name">MLE — Maximum Likelihood</div>
+      <div class="fc-formula">1. Write L(θ) = Π f(xᵢ; θ)
+2. Take log: ℓ(θ) = Σ log f(xᵢ; θ)
+3. Solve: dℓ/dθ = 0</div>
+      <div class="fc-note">Log doesn't change the argmax. <strong>MLE for Exp(λ): λ̂ = 1/x̄.</strong> MLE for Binomial(m,θ): θ̂ = x̄/m.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════ CONFIDENCE INTERVALS ══════════════ -->
+<div class="section" id="ci">
+  <div class="sec-head">
+    <div class="sec-icon" style="background:#edf2fc">[·]</div>
+    <div class="sec-title">Confidence Intervals</div>
+  </div>
+  <div class="grid g2">
+
+    <div class="tw span2">
+      <table>
+        <tr>
+          <th>What to estimate</th>
+          <th>Conditions</th>
+          <th>Formula</th>
+          <th>Pivot distribution</th>
+        </tr>
+        <tr>
+          <td>Mean μ</td>
+          <td>σ² known, any n</td>
+          <td><code>X̄ ± z_{α/2} · σ/√n</code></td>
+          <td>Z = (X̄−μ)/(σ/√n) ~ N(0,1)</td>
+        </tr>
+        <tr>
+          <td>Mean μ</td>
+          <td>σ² unknown, large n</td>
+          <td><code>X̄ ± z_{α/2} · S/√n</code></td>
+          <td>Z ≈ N(0,1) by CLT</td>
+        </tr>
+        <tr>
+          <td>Mean μ</td>
+          <td>Normal pop., σ² unknown, small n</td>
+          <td><code>X̄ ± t_{α/2, n−1} · S/√n</code></td>
+          <td>T = (X̄−μ)/(S/√n) ~ t_{n−1}</td>
+        </tr>
+        <tr>
+          <td>Proportion p</td>
+          <td>Large n (Bernoulli data)</td>
+          <td><code>p̂ ± z_{α/2} · √(p̂(1−p̂)/n)</code></td>
+          <td>Z ≈ N(0,1) by CLT, p̂ = X̄</td>
+        </tr>
+        <tr>
+          <td>Variance σ²</td>
+          <td>Normal population, μ unknown</td>
+          <td><code>[ (n−1)S²/χ²_{α/2,n−1} , (n−1)S²/χ²_{1−α/2,n−1} ]</code></td>
+          <td>(n−1)S²/σ² ~ χ²_{n−1}</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="warn">
+      <strong>WRONG interpretation:</strong> "There's a 95% chance μ lies in [a,b]." — θ is fixed, not random.<br>
+      <strong>CORRECT:</strong> "If we repeated this experiment many times, 95% of computed intervals would contain μ." The interval is random, θ is not.
+    </div>
+
+    <div class="tip">
+      <strong>CI width:</strong> Larger n → <em>narrower</em> CI (σ/√n shrinks). Higher confidence level → <em>wider</em> CI (larger z). So: 99% CI is wider than 95% CI. &nbsp;|&nbsp; <strong>Sample size for margin m:</strong> n ≥ (z_{α/2} · σ / m)²
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════ HYPOTHESIS TESTING ══════════════ -->
+<div class="section" id="testing">
+  <div class="sec-head">
+    <div class="sec-icon" style="background:#fef2f2">H</div>
+    <div class="sec-title">Hypothesis Testing</div>
+  </div>
+  <div class="grid g3">
+
+    <div class="fc fc-red">
+      <div class="fc-name">Error Types</div>
+      <div class="fc-formula">Type I:  reject H₀ when H₀ TRUE
+         P(Type I) = α  ← you control this
+
+Type II: accept H₀ when H₁ TRUE
+         P(Type II) = β</div>
+      <div class="fc-note">Larger rejection region → smaller β but larger α. <strong>Bigger R → fewer missed detections.</strong></div>
+    </div>
+
+    <div class="fc fc-red">
+      <div class="fc-name">Test Statistic for Mean</div>
+      <div class="fc-formula">W = (X̄ − μ₀) / (σ/√n)   [z-test]
+T = (X̄ − μ₀) / (S/√n)   [t-test]</div>
+      <div class="fc-note"><em>μ₀</em> = null value. Use z-test if σ known or n large. Use t-test (t_{n−1}) if σ unknown + small n + normal pop.</div>
+    </div>
+
+    <div class="fc fc-red">
+      <div class="fc-name">Rejection Regions</div>
+      <div class="fc-formula">Two-sided (H₁: μ≠μ₀): |W| > z_{α/2}
+Right-sided (H₁: μ>μ₀):  W > z_{α}
+Left-sided  (H₁: μ<μ₀):  W < −z_{α}</div>
+      <div class="fc-note">Reject H₀ if W falls in rejection region. P(Type I error) = α — set this before the test.</div>
+    </div>
+
+    <div class="fc fc-orange">
+      <div class="fc-name">P-value</div>
+      <div class="fc-formula">Two-sided:   p = 2·(1−Φ(|w|))
+Right-sided: p = 1−Φ(w) = P(Z>w)
+Left-sided:  p = Φ(w) = P(Z<w)</div>
+      <div class="fc-note"><em>w</em> = observed test statistic. <strong>Reject H₀ if p &lt; α.</strong> Smaller p = stronger evidence against H₀.</div>
+    </div>
+
+    <div class="fc fc-orange">
+      <div class="fc-name">Computing Type I Error Probability</div>
+      <div class="fc-formula">P(Type I) = P(reject H₀ | H₀ true)
+ = P(X̄ > c | μ=μ₀)
+ = P(Z > (c−μ₀)/(σ/√n))</div>
+      <div class="fc-note">Standardise X̄ under H₀, then use Φ. <strong>Example:</strong> reject if X̄>1.5, n=9, σ=1, μ₀=1: P(Type I) = 1−Φ(3/2).</div>
+    </div>
+
+    <div class="fc fc-orange">
+      <div class="fc-name">Likelihood Ratio Test (LRT)</div>
+      <div class="fc-formula">λ(x) = L(x; θ₀) / L(x; θ₁)
+
+Accept H₀ if λ ≥ c
+Reject H₀ if λ < c</div>
+      <div class="fc-note">For simple H₀:θ=θ₀ vs H₁:θ=θ₁. Choose c so P(Type I) ≤ α. Reduces to comparing which θ makes data more likely.</div>
+    </div>
+
+    <div class="warn">
+      <strong>α and p-value relationship:</strong> If rejected at α=0.025, it IS also rejected at α=0.05 (since 0.025 &lt; 0.05). But it may NOT be rejected at α=0.01. Rule: rejected at α ⟺ p-value &lt; α.
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════ QUANTILE TABLE ══════════════ -->
+<div class="section" id="quantiles">
+  <div class="sec-head">
+    <div class="sec-icon" style="background:#f5f0ff">z</div>
+    <div class="sec-title">Quantile Reference</div>
+  </div>
+  <div class="grid g2">
+
+    <div>
+      <div class="qtable">
+        <div class="qtable-head">Standard Normal Upper Quantiles — Z ~ N(0,1), P(Z > z_α) = α</div>
+        <div class="qtable-body">
+          <div class="qt-cell"><div class="qt-label">α = 0.005</div><div class="qt-val">2.58</div><div class="qt-ci">99% CI</div></div>
+          <div class="qt-cell"><div class="qt-label">α = 0.01</div><div class="qt-val">2.33</div><div class="qt-ci">98% CI</div></div>
+          <div class="qt-cell"><div class="qt-label">α = 0.025</div><div class="qt-val">1.96</div><div class="qt-ci">95% CI</div></div>
+          <div class="qt-cell"><div class="qt-label">α = 0.05</div><div class="qt-val">1.645</div><div class="qt-ci">90% CI</div></div>
+          <div class="qt-cell"><div class="qt-label">α = 0.1</div><div class="qt-val">1.28</div><div class="qt-ci">80% CI</div></div>
+        </div>
+      </div>
+      <div style="margin-top:8px;font-size:11.5px;color:var(--muted);font-family:'DM Mono',monospace;">For CI: use z_{α/2}. For one-sided test at level α: use z_α. Φ(z_α) = 1−α.</div>
+    </div>
+
+    <div class="grid g2" style="gap:8px;align-content:start;">
+      <div class="fc">
+        <div class="fc-name">Two-Sided Test at level α</div>
+        <div class="fc-formula">Reject if |W| > z_{α/2}</div>
+        <div class="fc-note">α=0.05 → z_{0.025} = 1.96 &nbsp;&nbsp; α=0.10 → z_{0.05} = 1.645</div>
+      </div>
+      <div class="fc">
+        <div class="fc-name">One-Sided Test at level α</div>
+        <div class="fc-formula">Right: reject if W > z_α
+Left:  reject if W < −z_α</div>
+        <div class="fc-note">α=0.05 → z_{0.05} = 1.645 &nbsp;&nbsp; α=0.01 → z_{0.01} = 2.33</div>
+      </div>
+      <div class="fc span2">
+        <div class="fc-name">t-distribution — when σ unknown + small n + normal pop.</div>
+        <div class="fc-formula">T = (X̄−μ₀)/(S/√n) ~ t_{n−1} under H₀</div>
+        <div class="fc-note">t_{n−1} has heavier tails than N(0,1). As n→∞, t_{n−1}→N(0,1). CI: X̄ ± t_{α/2, n−1}·S/√n</div>
+      </div>
+    </div>
+
+    <div class="tw" style="grid-column:1/-1">
+      <table>
+        <tr><th>Confidence Level</th><th>α</th><th>α/2</th><th>z_{α/2} (use for CI)</th><th>Interpretation</th></tr>
+        <tr><td>80%</td><td>0.20</td><td>0.10</td><td>1.28</td><td>80 out of 100 computed CIs contain true θ</td></tr>
+        <tr><td>90%</td><td>0.10</td><td>0.05</td><td>1.645</td><td>90 out of 100 computed CIs contain true θ</td></tr>
+        <tr><td>95%</td><td>0.05</td><td>0.025</td><td>1.96</td><td>95 out of 100 computed CIs contain true θ</td></tr>
+        <tr><td>99%</td><td>0.01</td><td>0.005</td><td>2.58</td><td>99 out of 100 computed CIs contain true θ</td></tr>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+</main>
+</body>
+</html>

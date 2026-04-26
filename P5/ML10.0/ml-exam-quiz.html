@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ML Exam Practice</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0f11;
+    --surface: #18181c;
+    --surface2: #222228;
+    --border: #2e2e38;
+    --accent: #6ee7b7;
+    --accent2: #818cf8;
+    --danger: #f87171;
+    --warning: #fbbf24;
+    --text: #e8e8f0;
+    --muted: #8888a8;
+    --correct: #6ee7b7;
+    --wrong: #f87171;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* LANDING */
+  #landing {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 40px 24px;
+    text-align: center;
+  }
+
+  .logo {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    opacity: 0.8;
+  }
+
+  h1 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, var(--text) 0%, var(--muted) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 48px;
+  }
+
+  .exam-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    width: 100%;
+    max-width: 800px;
+    margin-bottom: 32px;
+  }
+
+  .exam-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .exam-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.2s ease;
+  }
+
+  .exam-card:hover {
+    border-color: var(--accent);
+    background: var(--surface2);
+    transform: translateY(-2px);
+  }
+
+  .exam-card:hover::before { transform: scaleX(1); }
+
+  .exam-card.selected {
+    border-color: var(--accent);
+    background: var(--surface2);
+  }
+
+  .exam-card.selected::before { transform: scaleX(1); }
+
+  .card-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .card-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .card-meta {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .check-mark {
+    position: absolute;
+    top: 12px; right: 12px;
+    width: 18px; height: 18px;
+    background: var(--accent);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px;
+    color: var(--bg);
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+
+  .exam-card.selected .check-mark { opacity: 1; }
+
+  .all-btn {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 32px;
+  }
+
+  .btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    padding: 10px 22px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-weight: 500;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: var(--bg);
+  }
+
+  .btn-primary:hover { background: #a7f3d0; transform: translateY(-1px); }
+  .btn-primary:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+
+  .btn-secondary:hover { border-color: var(--muted); color: var(--text); }
+
+  /* QUIZ */
+  #quiz { display: none; }
+
+  .quiz-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .quiz-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .quiz-progress-text {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .progress-bar-wrap {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    height: 4px;
+  }
+
+  .progress-bar-inner {
+    height: 4px;
+    background: var(--accent);
+    transition: width 0.3s ease;
+    border-radius: 0 2px 2px 0;
+  }
+
+  .quiz-body {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  .question-block {
+    display: none;
+    animation: fadeUp 0.2s ease;
+  }
+
+  .question-block.active { display: block; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .question-source {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .question-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--accent2);
+    margin-bottom: 12px;
+  }
+
+  .question-text {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text);
+    margin-bottom: 28px;
+  }
+
+  .question-text code, .question-text .math-inline {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    background: var(--surface2);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: var(--accent);
+  }
+
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0 24px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+  }
+
+  .data-table th {
+    background: var(--surface2);
+    color: var(--accent);
+    padding: 8px 12px;
+    text-align: left;
+    border: 1px solid var(--border);
+    font-weight: 500;
+  }
+
+  .data-table td {
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+
+  .data-table tr:nth-child(even) td { background: var(--surface); }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .option {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: all 0.12s ease;
+    user-select: none;
+  }
+
+  .option:hover:not(.locked) {
+    border-color: var(--accent2);
+    background: var(--surface2);
+  }
+
+  .option.selected:not(.locked) {
+    border-color: var(--accent2);
+    background: var(--surface2);
+  }
+
+  .option.correct {
+    border-color: var(--correct);
+    background: rgba(110, 231, 183, 0.07);
+  }
+
+  .option.wrong {
+    border-color: var(--wrong);
+    background: rgba(248, 113, 113, 0.07);
+  }
+
+  .option-letter {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    min-width: 18px;
+    padding-top: 1px;
+    transition: color 0.12s;
+  }
+
+  .option.selected .option-letter { color: var(--accent2); }
+  .option.correct .option-letter { color: var(--correct); }
+  .option.wrong .option-letter { color: var(--wrong); }
+
+  .option-text {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--text);
+  }
+
+  .option.correct .option-text { color: var(--correct); }
+  .option.wrong .option-text { color: var(--wrong); }
+
+  .feedback {
+    margin-top: 18px;
+    padding: 14px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    display: none;
+  }
+
+  .feedback.correct {
+    background: rgba(110, 231, 183, 0.08);
+    border: 1px solid rgba(110, 231, 183, 0.3);
+    color: var(--correct);
+    display: block;
+  }
+
+  .feedback.wrong {
+    background: rgba(248, 113, 113, 0.08);
+    border: 1px solid rgba(248, 113, 113, 0.3);
+    color: #fca5a5;
+    display: block;
+  }
+
+  .nav-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 28px;
+    align-items: center;
+  }
+
+  .btn-check {
+    background: var(--accent2);
+    color: white;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    padding: 10px 20px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.06em;
+  }
+
+  .btn-check:hover { background: #a5b4fc; }
+  .btn-check:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .btn-next {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.06em;
+  }
+
+  .btn-next:hover { border-color: var(--accent); color: var(--accent); }
+
+  .skip-btn {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 12px;
+    cursor: pointer;
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 0.06em;
+  }
+
+  .skip-btn:hover { color: var(--text); }
+
+  /* RESULTS */
+  #results { display: none; }
+
+  .results-wrap {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 60px 24px;
+    text-align: center;
+  }
+
+  .score-ring {
+    width: 140px;
+    height: 140px;
+    margin: 0 auto 32px;
+    position: relative;
+  }
+
+  .score-ring svg { transform: rotate(-90deg); }
+
+  .score-num {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .score-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .result-grade {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 32px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .result-grade.pass { color: var(--correct); }
+  .result-grade.borderline { color: var(--warning); }
+  .result-grade.fail { color: var(--wrong); }
+
+  .result-detail {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 40px;
+  }
+
+  .breakdown {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 28px;
+    text-align: left;
+  }
+
+  .breakdown-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  .brow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+
+  .brow:last-child { border-bottom: none; }
+  .brow-name { color: var(--muted); }
+  .brow-score { font-family: 'IBM Plex Mono', monospace; color: var(--text); font-size: 12px; }
+
+  .result-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+  /* Inline note blocks */
+  .note-block {
+    background: var(--surface2);
+    border-left: 3px solid var(--accent);
+    padding: 10px 14px;
+    border-radius: 0 6px 6px 0;
+    font-size: 13px;
+    color: var(--muted);
+    margin: 12px 0 20px;
+    font-style: italic;
+  }
+
+  .formula-block {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin: 12px 0 20px;
+    color: var(--accent);
+    overflow-x: auto;
+    line-height: 1.8;
+  }
+</style>
+</head>
+<body>
+
+<!-- LANDING -->
+<div id="landing">
+  <div class="logo">VU Amsterdam · Machine Learning</div>
+  <h1>Practice Exams</h1>
+  <p class="subtitle">Select exams to include, then start your quiz</p>
+
+  <div class="exam-grid" id="examGrid"></div>
+
+  <div class="all-btn">
+    <button class="btn btn-secondary" onclick="selectAll()">Select all</button>
+    <button class="btn btn-secondary" onclick="selectNone()">Clear</button>
+  </div>
+
+  <button class="btn btn-primary" id="startBtn" onclick="startQuiz()" disabled>Start quiz →</button>
+</div>
+
+<!-- QUIZ -->
+<div id="quiz">
+  <div class="quiz-header">
+    <div class="quiz-title" id="quizTitle">ML Practice</div>
+    <div class="quiz-progress-text" id="progressText">0 / 0</div>
+  </div>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-inner" id="progressBar" style="width:0%"></div>
+  </div>
+  <div class="quiz-body" id="quizBody"></div>
+</div>
+
+<!-- RESULTS -->
+<div id="results">
+  <div class="results-wrap">
+    <div class="score-label">Your score</div>
+    <div class="score-ring">
+      <svg width="140" height="140" viewBox="0 0 140 140">
+        <circle cx="70" cy="70" r="60" fill="none" stroke="#2e2e38" stroke-width="10"/>
+        <circle cx="70" cy="70" r="60" fill="none" stroke="#6ee7b7" stroke-width="10"
+          stroke-dasharray="376.99" stroke-dashoffset="376.99" id="scoreCircle"
+          stroke-linecap="round"/>
+      </svg>
+      <div class="score-num" id="scoreNum">0%</div>
+    </div>
+
+    <div class="result-grade" id="resultGrade">—</div>
+    <div class="result-detail" id="resultDetail"></div>
+
+    <div class="breakdown" id="breakdown"></div>
+
+    <div class="result-actions">
+      <button class="btn btn-primary" onclick="restartSame()">Retry same questions</button>
+      <button class="btn btn-secondary" onclick="goHome()">Back to exams</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// =====================
+// EXAM DATA
+// =====================
+
+const EXAMS = [
+  {
+    id: 'prac2020',
+    tag: 'Practice',
+    title: 'Practice Exam B',
+    date: 'Feb 2020',
+    questions: [
+      {q: "Which answer contains only unsupervised methods and tasks?", opts: ["Clustering, Linear regression, Generative modeling","k-Means, Clustering, Density estimation","Classification, Clustering, Expectation-Maximization","Logistic regression, Density estimation, Clustering"], ans: 1},
+      {q: "The two most important conceptual spaces in machine learning are the model space and the feature space. Which is true?", opts: ["Every point in the model space represents a loss function that we can choose for our task.","Every point in the model space represents a single instance in the dataset.","Every point in the feature space represents a single feature of a single instance in the dataset.","Every point in the feature space represents a single instance in the dataset."], ans: 3},
+      {q: "The ALVINN system from 1995 was a self-driving car system implemented as a classifier: a grayscale camera was pointed at the road and a classifier was trained to predict the correct position of the steering wheel based on the behavior of a human driver. In this example, which are the instances and which are the features?", opts: ["The instances are the different cars the system is deployed in and the features are the angles of the steering wheel.","The instances are the angles of the steering wheel and the features are the different cars the system is deployed in.","The instances are the frames produced by the camera and the features are the pixel values.","The instances are the pixel values and the features are the frames produced by the camera."], ans: 2},
+      {q: "What is the relation between the loss landscape and its gradient?", opts: ["The gradient points in the direction that the loss increases the fastest.","The gradient points in the direction that the loss decreases the fastest.","The gradient is the region of the loss landscape where the loss is the lowest.","The gradient is the region of the loss landscape where the loss is the highest."], ans: 0},
+      {q: "Which is a legitimate reason to prefer random search over gradient descent as a search method?", opts: ["The loss surface is complicated, so I want the size of the steps to change as I approach a minimum.","I need to be sure that I've found a global minimum.","My model has multiple layers, so I want to use backpropagation.","My model is not differentiable."], ans: 3},
+      {q: "What is the benefit of a convex loss surface?", opts: ["It allows us to use the backpropagation algorithm.","It allows us to use evolutionary methods.","It ensures that there are no local minima other than the global minimum.","It allows gradient descent to escape local maxima."], ans: 2},
+      {q: "Rob trains a k-nearest neighbors classifier. He withholds 20% of his data as a test set and uses the rest as his training data. He runs the training algorithm twenty times, for k = 1 to k = 20. For each, he computes the accuracy on the test set. He gets the best accuracy for k = 17, so he reports this accuracy as an estimate of the performance of k-nearest neighbors on his data. What fundamental mistake has Rob made?", opts: ["Rob is checking a linear range of values for hyperparameter k when a logarithmic range would be better.","He is using arbitrary values for k. He should use a grid search.","The test set should always be bigger than the training set.","By reusing his test set, he may be inflating his performance estimate and overfitting to an arbitrary value of k."], ans: 3},
+      {q: "Accuracy is a very simple and effective performance metric, but in certain cases, we should be careful. Imagine a spam classifier that automatically deletes emails detected as spam. The user receives about one spam email for every legitimate email. Why should we be careful optimizing for accuracy?", opts: ["Because we have very high class imbalance.","Because we have very high cost imbalance.","Because the data arrives irregularly.","Because this is an online learning problem."], ans: 1},
+      {q: "Maria is fitting a regression model to predict the year in which a particular piece of instrumental music was written. The prediction is based on various features like average and variance of loudness, rhythm, key etc. She realizes that she has many outliers: for instance, the atonal music of the 1920s produces extreme variations in loudness, and John Cage's piece 4'33\" from 1952 is entirely silent. What should she do?", opts: ["She should remove these instances entirely. Removing outliers will make it easier to fit the data with a normal distribution.","She should remove these instances from the training data, but leave them in the test data.","She should leave these instances in the training data, but remove them from the test data.","She should leave these instances in. They are important examples of the data distribution."], ans: 3},
+      {q: "When we want to model the throwing of a single die, using probability theory, we define a sample space and an event space. Which is true?", opts: ['"Rolling an even number" is an element of the event space. "Rolling a 1" is an element of the sample space.','"Rolling an even number" is an element of the sample space. "Rolling a 1" is an element of the event space.',"For this example, the event space is continuous, the sample space is discrete.","For this example, the sample space is continuous, the event space is discrete."], ans: 0},
+      {q: "Let f(x) = σ(wx + b) be a logistic regression model. We interpret f(x) as the probability that x has the positive class. If x actually has the negative class, what is the cross-entropy loss for this single example?", opts: ["− log f(x)","− log(1 − f(x))","− log f(x) − log(1 − f(x))","log f(x) − log(1 − f(x))"], ans: 1},
+      {q: "Frank is a researcher in the 1960s. He's just read about a new model called the perceptron, which is a highly simplified simulation of a single brain cell. Frank decides that if a brain is powerful because it chains together multiple brain cells, he should try to chain together multiple perceptrons, to make a network that is more powerful than a single perceptron. Why won't chaining perceptrons together work in this way?", opts: ["A GPU is needed to compute the output of such a function.","The perceptron is a linear function, and the composition of linear functions is still a linear function.","Such a model would suffer from vanishing gradients.","This is equivalent to hypothesis boosting, which has been proven to be impossible."], ans: 1},
+      {q: "In a support vector machine, what are the support vectors?", opts: ["The parameters wᵀ that are multiplied by the input x to produce a classification.","The parameters b that are added to the input x to produce a classification.","The positive and negative data points that are allowed to fall inside the margin.","The positive and negative data points that are closest to the decision boundary."], ans: 3},
+      {q: "In deep learning, what is the difference between lazy and eager execution (or evaluation)?", opts: ["In lazy execution, the computation graph is compiled and kept static during training. In eager execution, it is built up for each forward pass.","In eager execution, the computation graph is compiled and kept static during training. In lazy execution, it is built up for each forward pass.","In lazy execution, the gradient is computed by numeric approximation, while eager execution uses the backpropagation algorithm.","In eager execution, the gradient is computed by numeric approximation, while lazy execution uses the backpropagation algorithm."], ans: 0},
+      {q: "Why is the ReLU activation function often preferred over the sigmoid activation function, for hidden nodes?", opts: ["It causes more vanishing gradients, which help learning.","The sigmoid function cannot be used with gradient descent.","Its derivative is almost always either 0 or 1, reducing vanishing gradients.","The sigmoid function contains a point where the gradient is not defined."], ans: 2},
+      {q: "When we apply the chain rule to a complex operation involving tensors, the local derivatives might be something like the derivative of a vector with respect to a matrix — a 3-tensor, complex to work out and expensive to store. How do modern ML frameworks avoid this problem in their implementation of backpropagation?", opts: ["They approximate the local derivative using random search.","They approximate the local derivative using the EM algorithm.","They don't compute the local derivative, but the product of the upstream derivative (the loss over the module outputs) with the local derivative.","They don't compute the local derivative, but the product of the downstream derivative (the module inputs over the network inputs) with the local derivative."], ans: 2},
+      {q: "How is the log-likelihood like a loss function?", opts: ["The log-likelihood is an approximation of the loss function.","The loss function is an approximation of the log-likelihood.","When we train a model, we minimize the loss, and when we fit a distribution, we often minimize the log-likelihood.","When we train a model, we minimize the loss, and when we fit a distribution, we often maximize the log-likelihood."], ans: 3},
+      {q: "If we train a generator network by comparing a random output to a random target example from the data and backpropagating the difference, we get mode collapse. The problem is that we don't know which random input corresponds to which item in the dataset. How do GANs solve this problem?", opts: ["By training a second network to map the target example to a distribution on the input space.","By adding a KL-loss term on the random inputs of the generator network.","By training the generator to generate outputs that a second network recognizes as real, and training the second network to distinguish generated outputs from real data.","By adding a cycle-consistency loss-term."], ans: 2},
+      {q: "Sometimes we want to learn a model that maps some input to some output, but in some aspects we also want the model to behave like a generator. For instance, if we train a model to colorize photographs, we don't want it to be purely deterministic. Which GAN approach is designed to accomplish this?", opts: ["Vanilla GAN","Conditional GAN","CycleGAN","StyleGAN"], ans: 1},
+      {q: "The Variational Autoencoder (VAE) differs from a regular autoencoder in several aspects. Which is NOT one of them?", opts: ["It includes a discriminator, which tries to tell the difference between data points and samples from the generator.","It has an added loss term that ensures that the data looks like a standard normal distribution in the latent space.","For a given instance, the encoder produces a distribution on the latent space, instead of a single point.","It includes a sampling step in the middle, where a latent vector is sampled from the distribution provided by the encoder."], ans: 0},
+      {q: "The standard decision tree algorithm doesn't stop adding nodes until all leaves either contain no data instances, or only instances with the same label (or all features have been used). Why is this a problem, and what is the default solution?", opts: ["It's a problem because the algorithm may never terminate. To solve it, we can use a validation set to see if removing nodes improves performance.","It's a problem because the algorithm may never terminate. To solve it, we can remove features from the data, so that fewer splits are available.","It's a problem because we may be overfitting on the training set. To solve it, we can use a validation set to see if removing nodes improves performance.","It's a problem because we may be overfitting on the training set. To solve it, we can add features to the data, so that more splits are available."], ans: 2},
+      {q: "Boosting is a popular method to improve a model's performance. Why do we rarely see boosting used in research settings (unless specifically studying ensembling methods)?", opts: ["In research we want to measure the relative performance with respect to the baseline. If we apply boosting to our model, we should apply boosting to the baseline as well.","Boosting cannot be applied in combination with a validation split, which is required in research.","Boosting makes it difficult to compute a confidence interval over the accuracy, which is required in research.","Boosting requires some information from the test set to be used in training, which is not allowed in research."], ans: 0},
+      {q: "In recommender systems, what is implicit feedback?", opts: ["Ratings given by a single 'like' button rather than a more fine-grained system.","Recommendations that take the temporal structure of the data into account.","Associations between users and items assumed from user behavior.","Recommendations derived from manually crafted item features rather than learned ones."], ans: 2},
+      {q: "Word2Vec and matrix factorization are both embedding methods that make it possible to learn about a large set of featureless objects. How do they do this?", opts: ["By taking known features for each object and mapping these to a low-dimensional representation.","By taking known features for each object and mapping these to a high-dimensional representation.","By embedding these objects into a Euclidean space, with each object represented by a vector.","By embedding these objects into a Euclidean space, with each object represented by a scalar."], ans: 2},
+      {q: "What is batch normalization?", opts: ["An operation in a neural network that normalizes the output of a layer so that it is normally distributed over the current batch.","An operation in a neural network that normalizes the output of a layer so that it is uniformly distributed over the batch.","A hyperparameter selection technique that sets the batch size to ensure a normal distribution in gradients.","A hyperparameter selection technique that sets the batch size to ensure a uniform distribution in gradients."], ans: 0},
+      {q: "To get from line (1) to line (2) in the gradient derivation (moving the sum out), we use the:", opts: ["Exponent rule","Product rule","Constant factor rule","Sum rule"], ans: 3},
+      {q: "To get from line (3) to line (4) in the gradient derivation (differentiating the squared term), we use the:", opts: ["Exponent rule","Product rule","Constant factor rule","Sum rule"], ans: 0},
+      {q: "For the model f(xᵢ) = −vxᵢ + wxᵢ², fill in the definition and work out the derivative with respect to v. Which is the correct result?", opts: ["−½ Σᵢ (−vxᵢ² + wxᵢ + b − tᵢ)","−Σᵢ (−vxᵢ² + wxᵢ + b − tᵢ)","−½ Σᵢ xᵢ(−vxᵢ + wxᵢ² + b − tᵢ)","−Σᵢ xᵢ(−vxᵢ + wxᵢ² + b − tᵢ)"], ans: 3},
+      {q: "For the dataset and linear classifier c(x₁,x₂) = Pos if x₁ + 0·x₂ + 2 > 0, if we turn c into a ranking classifier, how does it rank the points from most Negative to most Positive?", opts: ["a b c d e f g h","a b g c d e h f","a b g c d h e f","a c b e d g f h"], ans: 0},
+      {q: "For the same classifier and dataset (Q28), how many ranking errors does the classifier make?", opts: ["None","1","2","3"], ans: 0},
+      {q: "For the same classifier and dataset (Q28-29), if we draw a coverage matrix, what proportion of the cells will be red?", opts: ["3/15","6/15","1/8","1/16"], ans: 0},
+      {q: "For distributions p = (4/8, 2/8, 1/8, 1/8) and q = (1/8, 4/8, 2/8, 1/8) on X = {a,b,c,d}, what are their entropies (binary)?", opts: ["H(p) = 2.25, H(q) = 1.75","H(p) = 1.75, H(q) = 2.25","H(p) = 2.25, H(q) = 2.25","H(p) = 1.75, H(q) = 1.75"], ans: 1},
+      {q: "For the same distributions p and q (Q31), what are their cross-entropies?", opts: ["H(p,q) = 2 + 3/8, H(q,p) = 2 + 1/4","H(p,q) = 2 + 1/4, H(q,p) = 2 + 3/8","H(p,q) = 2, H(q,p) = 2 + 1/4","H(p,q) = 2 + 1/4, H(q,p) = 2"], ans: 1},
+      {q: "The KL divergence is strongly related to entropy. Which statement is FALSE?", opts: ["KL(p,q) is the bits wasted by using p as a compressor for elements sampled from q.","KL(p,q) is the bits wasted by using q as a compressor for elements sampled from p.","KL(p,q) is H(p,q) with H(p) subtracted so that the divergence is zero if the arguments are equal.","KL(p,q) is H(p,q) with H(p) subtracted so that we measure compression relative to the optimum."], ans: 0},
+      {q: "For f(x) = (x²+1)/(x³+2), we break it up into modules. What should go in the dots: a = ?, b = ?, f = ?", opts: ["a = x³, b = x², f = c/d","a = x², b = x³, f = c/d","a = x³+2, b = x²+1, f = d/c","a = x²+1, b = x³+2, f = d/c"], ans: 1},
+      {q: "For f(x) = (x²+1)/(x³+2) decomposed as a=x², b=x³, c=a+1, d=b+2, f=c/d. Which is the correct expression for ∂f/∂x?", opts: ["2xd⁻¹ − 3x²c⁻²","2xd⁻¹ + 3x²c⁻²","2xd⁻¹ − 3cx²d⁻²","2xd⁻¹ + 3cx²d⁻²"], ans: 2},
+      {q: "For the decision tree question with features x1–x4 and 12 binary instances, in standard decision tree learning (no pruning), which feature would be chosen first for a split?", opts: ["x1","x2","x3","x4"], ans: 0},
+      {q: "If we remove the first-chosen feature from Q36, which feature would be chosen next?", opts: ["x1","x2","x3","x4"], ans: 2},
+      {q: "The EM and VAE algorithms are both based on the decomposition L(q,θ) + KL(q,p) = ⟨a⟩ + ⟨b⟩. What should be in place of ⟨a⟩ and ⟨b⟩?", opts: ["⟨a⟩ = Eq ln p(x,z|θ)/q(z|x), ⟨b⟩ = −Eq ln p(z|x,θ)/q(z|x)","⟨a⟩ = Eq ln p(x,z|θ)/q(z|x), ⟨b⟩ = Eq ln p(z|x,θ)/q(z|x)","⟨a⟩ = Eq ln p(x,z|θ)/p(z|x), ⟨b⟩ = −Eq ln p(z|x,θ)/p(z|x)","⟨a⟩ = Eq ln p(x,z|θ)/p(z|x), ⟨b⟩ = Eq ln p(z|x,θ)/p(z|x)"], ans: 0},
+      {q: "Why does the EM/VAE decomposition L(q,θ) + KL(q,p) = ln p(x|θ) help us?", opts: ["It eliminates q, which we cannot compute.","It shows that L(q,θ) is a lower bound on the quantity we want to maximize.","It eliminates expectations, which we cannot compute.","It shows that p(x|θ) is a lower bound on the KL divergence."], ans: 1},
+    ]
+  },
+  {
+    id: 'resit2024',
+    tag: 'Resit 2024',
+    title: 'Resit Exam 2024',
+    date: 'June 2024',
+    questions: [
+      {q: 'The most important rule in machine learning is "never judge your performance on the training data." If we break this rule, what can happen as a consequence?', opts: ["The loss surface no longer provides an informative gradient.","We get cost imbalance.","We end up choosing a model that overfits.","We commit multiple testing."], ans: 2},
+      {q: "What is a valid reason to prefer gradient descent over random search?", opts: ["My model is easily differentiable.","I need to be sure that I find the global minimum.","My loss function is not smooth.","There is some computation between the output of my model and my loss function, which I do not control."], ans: 0},
+      {q: 'In the slides, we get the advice that "sometimes your loss function should not be the same as your evaluation function." Why not?', opts: ["The evaluation function may provide a smooth loss surface.","The loss surface resulting from the evaluation function may have a shape that makes searching for the minimum difficult.","The evaluation function may not be linear, and a loss function must be linear.","The evaluation function may not be a polynomial, and the loss function must be a polynomial."], ans: 1},
+      {q: "There are many classification problems that are not linearly separable. Which trick often allows us to still separate the classes with a linear classifier?", opts: ["Adding a regularizer.","Using least-squares-loss instead of log-loss.","Reducing the dimensionality with PCA.","Deriving new features from the existing ones."], ans: 3},
+      {q: "We are training a classification model by gradient descent, and we want to figure out which learning rate to use, before comparing the model to other classifiers. We try five learning rate values, resulting in five different models. How do we choose among these five models?", opts: ["We measure the accuracy of each model on the training set.","We measure the accuracy of each model on the validation set.","We measure the accuracy of each model on the test set.","We measure the accuracy of each model on the full dataset."], ans: 1},
+      {q: "In the naive Bayes classifier, what does the word naive refer to?", opts: ["The fact that prior probabilities are not taken into account.","The fact that the resulting classifier does not usually work very well in practice, and is only useful as a baseline.","The fact that the classifier makes an assumption of conditional independence that is not usually true.","The fact that the classifier makes an assumption of independence that is not usually true."], ans: 2},
+      {q: "The slides mention two ways to adapt a categoric feature for a classifier that only accepts numeric features: integer coding and one-hot coding. Which is true?", opts: ["Integer coding always turns one categoric feature into multiple numeric features.","One-hot coding always turns one categoric feature into multiple numeric features.","Integer coding becomes inefficient if there are too many categories.","One-hot coding becomes inefficient if there are too few categories."], ans: 1},
+      {q: "How does dropout help with the overfitting problem?", opts: ["By propagating the gradient of the loss back down the network.","By randomly disabling nodes in a neural network, to eliminate solutions that require highly specific configurations.","By ensuring that the output distribution of a neural network is normally distributed if the input distribution is.","By converting the scalar backpropagation algorithm to work with tensors."], ans: 1},
+      {q: "What is the main idea of instruction tuning?", opts: ["To finetune the instructions in the dataset on which a large language model is trained. This allows us to train more quickly on less data.","To finetune a large language model on a dataset of natural language instructions. The model will then generalize to types of instructions it hasn't seen before.","In a reinforcement learning setting, to take human instructions in natural language, and to use them to help the agent solve complex planning problems.","In a reinforcement learning setting, to slowly increase the difficulty of the training problems, so that the agent learns to solve simple tasks first."], ans: 1},
+      {q: "What is the Markov assumption? Does the LSTM make the Markov assumption?", opts: ["That the probability of a word depends only on a fixed number of words before it. The LSTM makes a Markov assumption.","That the probability of a word depends only on a fixed number of words before it. The LSTM does not make a Markov assumption.","That it is more likely that a word should be forgotten than that it should be remembered. The LSTM makes a Markov assumption.","That it is more likely that a word should be forgotten than that it should be remembered. The LSTM does not make a Markov assumption."], ans: 1},
+      {q: "By what method do variational autoencoders avoid mode collapse?", opts: ["By training the 'decoder' network through a discriminator.","By using a regularizer to steer the network toward the data average.","By feeding the discriminator network pairs of inputs.","By learning the latent representation of an instance through an 'encoder' network."], ans: 3},
+      {q: "In some machine learning settings it is said that we must make a trade-off between exploration and exploitation. What do we mean by this?", opts: ["That hyperparameter selection (exploration) uses computational resources that can also be used in training the model (exploitation).","That an insufficiently carefully trained model may be biased against minorities.","That a reinforcement learning algorithm needs to balance optimization of its expected reward with exploring to learn more about its environment.","The problem of balancing the loss function with the regularization terms in matrix factorization."], ans: 2},
+      {q: "You want to search for a model in a discrete model space. Which search method is the LEAST applicable?", opts: ["Random search","Simulated annealing","Evolutionary methods","Gradient descent"], ans: 3},
+      {q: "Which is (primarily) a supervised machine learning method?", opts: ["Principal Component Analysis","Support Vector Machines","Variational Autoencoders","k-Means clustering"], ans: 1},
+      {q: "Which statement is true?", opts: ["The average error of many models with high bias can be low.","The average error of many models with high variance can be low.","A model with high bias must have low variance.","High bias is an indication of overfitting."], ans: 1},
+      {q: "Which metric can you NOT compute from the confusion matrix?", opts: ["Accuracy","True positive rate","Recall","Area under the curve"], ans: 3},
+      {q: "Why is the ReLU activation function often preferred over the sigmoid activation function, for hidden nodes?", opts: ["It causes more vanishing gradients, which help learning.","The sigmoid function cannot be used with gradient descent.","Its derivative is almost always either 0 or 1, reducing vanishing gradients.","The sigmoid function contains a point where the gradient is not defined."], ans: 2},
+      {q: "One piece of advice we give in the course is that the mean is sensitive to outliers. What does this mean, and why is it the case?", opts: ["It means one instance can affect the mean much more than the others if its value is unusually large. This happens because the mean minimizes the absolute magnitude of the distances to all instances.","It means one instance can affect the mean much more than the others if its value is unusually large. This happens because the mean minimizes the squares of the distances to all instances.","It means it can be a poor representation of the data if all instances are far from the average. This happens because the mean minimizes the absolute magnitude of the distances to all instances.","It means it can be a poor representation of the data if all instances are far from the average. This happens because the mean minimizes the squares of the distances to all instances."], ans: 1},
+      {q: "To make the backpropagation algorithm more broadly applicable, we introduced the multivariate chain rule. What was the main reason for this?", opts: ["To allow us to use backpropagation on functions that are expressed in terms of computation graphs.","To allow us to apply backpropagation to computation graphs where the output depends on the input along multiple paths.","To allow us to apply backpropagation to computation graphs where the output depends on the input only along a single path.","To make backpropagation a fully symbolic algorithm instead of a mixture of symbolic and numeric computation."], ans: 1},
+      {q: "In a maximum-margin loss, which is NOT an advantage of using soft margins?", opts: ["It allows some points to fall inside the margin.","It allows some points to be misclassified.","It allows us to use gradient descent for optimization, which a hard margin doesn't.","It finds better decision boundaries even for linearly-separable classes."], ans: 2},
+      {q: "The Variational Autoencoder (VAE) differs from a regular autoencoder in several aspects. Which is NOT one of them?", opts: ["It includes a discriminator, which tries to tell the difference between data points and samples from the generator.","It has an added loss term that ensures that the data looks like a standard normal distribution in the latent space.","For a given instance, the encoder produces a distribution on the latent space, instead of a single point.","It includes a sampling step in the middle, where a latent vector is sampled from the distribution provided by the encoder."], ans: 0},
+      {q: "Which GAN approach is designed to colorize photographs in a non-deterministic way (mapping input to output while behaving like a generator)?", opts: ["Vanilla GAN","Conditional GAN","CycleGAN","StyleGAN"], ans: 1},
+      {q: "When we say that self-attention combines the best properties of RNNs and Convolutions, what do we mean?", opts: ["Like an RNN, it can look at any point in the input to compute the current output, and like a Convolution, each output can be computed in parallel.","Like a Convolution, it can look at any point in the input to compute the current output, and like an RNN, each output can be computed in parallel.","Like a Convolution, it's an entirely linear operation, and like an RNN it can theoretically work on an arbitrarily long sequence with a finite memory.","Like an RNN, it's an entirely linear operation, and like a Convolution it can theoretically work on an arbitrarily long sequence with a finite memory."], ans: 0},
+      {q: "The standard decision tree algorithm doesn't stop adding nodes until all leaves contain only instances with the same label. Why is this a problem, and what is the default solution?", opts: ["It's a problem because the algorithm may never terminate. We can use a validation set to see if removing nodes improves performance.","It's a problem because the algorithm may never terminate. We can remove features from the data.","It's a problem because we may be overfitting on the training set. We can use a validation set to see if removing nodes improves performance.","It's a problem because we may be overfitting on the training set. We can add features computed from original features."], ans: 2},
+      {q: "What problem, if it exists for a single model, CANNOT be solved by training an ensemble of those models?", opts: ["High training time.","High bias.","High variance.","High overfitting."], ans: 0},
+      {q: "For the dataset (x1, x2, label) and classifier c(x₁,x₂) = Pos if x₁ − 0·x₂ > 3, if we turn c into a ranking classifier, how does it rank the points from most Negative to most Positive? (points: g(−3,−7), f(0,6), d(1,4), a(2,5), c(3,1), b(4,2), e(5,5))", opts: ["f a b e g a c","g f d a c b e","e b c a d f g","g d c f a b e"], ans: 1},
+      {q: "For the same classifier (Q26), how many ranking errors does the classifier make?", opts: ["1","2","3","4"], ans: 0},
+      {q: "For the same classifier (Q26-27), if we draw a coverage matrix, what proportion of the cells will be red?", opts: ["1/10","1/6","1/4","1/3"], ans: 0},
+      {q: "For f(x) = 9x²(5x−2)², broken into: a = 5x−2, b = 3x², c = 3a², f = bc. What should be in the place of the dots?", opts: ["c = 3a², b = 3x²","c = 3a², b = x²","c = 3a, b = 3x²","c = 3a, b = x³"], ans: 0},
+      {q: "For f(x) = 9x²(5x−2)² decomposed as a=5x−2, b=3x², c=3a², f=bc. Which is the correct expression for ∂f/∂x?", opts: ["6cx + 30ab","18c + 30ab","18cx + 90ab","6c + 30ab"], ans: 0},
+      {q: "For distributions p = (4/16, 2/16, 2/16, 8/16) and q = (4/16, 8/16, 4/16, 0) on X = {a,b,c,d}, what are their entropies (binary)?", opts: ["H(p) = 2.25, H(q) = 1.25","H(p) = 2.25, H(q) = 1.50","H(p) = 1.75, H(q) = 1.50","H(p) = 1.75, H(q) = 1.25"], ans: 2},
+      {q: "For the same distributions p and q (Q31), what are their cross-entropies?", opts: ["H(p,q) is undefined, H(q,p) is undefined.","H(p,q) = 0.875, H(q,p) = 2.75","H(p,q) is undefined, H(q,p) = 2.75.","H(p,q) = 0.875, H(q,p) is undefined."], ans: 2},
+      {q: "Spam/Ham Markov model: total words spam=10,000, ham=100,000. Email: 'pay your invoice today'. How is the email classified under the two priors (Prior 1: equal probability spam/ham; Prior 2: P(spam)=90%)?", opts: ["With both priors as ham.","With both priors as spam.","Under prior 1 as spam, under prior 2 as ham.","Under prior 1 as ham, under prior 2 as spam."], ans: 3},
+      {q: "For the same spam model, under prior 1, what is the probability that the email 'pay your invoice today' is spam?", opts: ["1/8","7/8","1/5","4/5"], ans: 2},
+      {q: "For the same spam model, under prior 2, what is the probability ratio of ham over spam for the email 'pay your invoice today'?", opts: ["7/8","8/7","4/9","9/4"], ans: 2},
+      {q: "For the 12-instance decision tree dataset with features x1–x4, in standard decision tree learning (no pruning), which feature is chosen first?", opts: ["x1","x2","x3","x4"], ans: 1},
+      {q: "If we remove that first feature from the previous question, which feature is chosen next?", opts: ["x1","x2","x3","x4"], ans: 3},
+      {q: "For a partial decision tree with x1 at root and x3 at one branch, we can place x2 or x4 on the open node. What is the information gain for x4 at this point?", opts: ["-1","0","0.5","1"], ans: 3},
+      {q: "For the vector function y = 2x^(1/2) + b (element-wise), work out the scalar derivative ∂yᵢ/∂xⱼ. Which is correct?", opts: ["∂yᵢ/∂xⱼ = 2/√xᵢ if i=j, else 0","∂yᵢ/∂xⱼ = 2/√xᵢ if i≠j, else 0","∂yᵢ/∂xⱼ = 1/√xᵢ if i=j, else 0","∂yᵢ/∂xⱼ = 1/√xᵢ if i≠j, else 0"], ans: 2},
+      {q: "For the same function y = 2x^(1/2) + b, given y∇ such that y∇ᵢ = ∂l/∂yᵢ, which operation computes x∇ where x∇ᵢ = ∂l/∂xᵢ?", opts: ["x∇ = y∇ ⊗ x∇","x∇ = y∇ ⊗ x^(−1/2)","x∇ = y∇ ⊗ x∇^(1/2) + b","x∇ = y∇ ⊗ x^(−1/2) + b"], ans: 1},
+    ]
+  },
+  {
+    id: 'final2022',
+    tag: 'Final 2022',
+    title: 'Final Exam 2022',
+    date: 'March 2022',
+    questions: [
+      {q: "What is the difference between classification and regression?", opts: ["Classification predicts an item from a finite set, regression predicts a numeric value.","Regression predicts an item from a finite set, classification predicts a numeric value.","Classification is unsupervised, regression is supervised.","Regression is unsupervised, classification is supervised."], ans: 0},
+      {q: "What is a valid reason to prefer gradient descent over random search?", opts: ["My model is easily differentiable.","I need to be sure that I find the global minimum.","My loss function is not smooth.","There is some computation between the output of my model and my loss function, which I do not control."], ans: 0},
+      {q: "We are training a classification model by gradient descent, and we want to figure out which learning rate to use. We try five learning rate values, resulting in five different models. How do we choose among these five models?", opts: ["We measure the accuracy of each model on the training set.","We measure the accuracy of each model on the validation set.","We measure the accuracy of each model on the test set.","We measure the accuracy of each model on the full dataset."], ans: 1},
+      {q: "Undersampling and oversampling are ways to deal with imbalanced classes. Which is true?", opts: ["You oversample your majority class.","You undersample your minority class.","Undersampling leads to duplicate instances in your data.","Oversampling leads to duplicate instances in your data."], ans: 3},
+      {q: "The slides mention two ways to adapt a categoric feature: integer coding and one-hot coding. Which is true?", opts: ["Integer coding always turns one categoric feature into multiple numeric features.","One-hot coding always turns one categoric feature into multiple numeric features.","Integer coding becomes inefficient if there are too many categories.","One-hot coding becomes inefficient if there are too few categories."], ans: 1},
+      {q: 'If somebody says: "There is a high probability that the mean height of Italian women is below 2 meters." Which is true?', opts: ["A strict subjectivist would consider this an improper use of the term probability.","A strict Bayesian would consider this an improper use of the term probability.","A strict frequentist would consider this an improper use of the term probability.","In machine learning, we would consider this an improper use of the term probability."], ans: 2},
+      {q: "How does dropout help with the overfitting problem?", opts: ["By propagating the gradient of the loss back down the network.","By randomly disabling nodes in a neural network, to eliminate solutions that require highly specific configurations.","By ensuring that the output distribution of a neural network is normally distributed if the input distribution is.","By converting the scalar backpropagation algorithm to work with tensors."], ans: 1},
+      {q: "The soft margin SVM loss is defined as a constrained optimization objective. We can rewrite this in two ways. Which is true?", opts: ["We can rewrite to an unconstrained problem. This allows us to use the kernel trick.","We can rewrite to an unconstrained problem. This expresses the solution purely in terms of the dot product between pairs of instances.","We can rewrite using KKT multipliers. This allows us to use the kernel trick.","We can rewrite using KKT multipliers. This allows some instances to fall inside the margin."], ans: 2},
+      {q: "Neural networks usually contain activation functions. What is their purpose?", opts: ["They are used to compute a local approximation of the gradient.","They are applied after a linear transformation, so that the network can learn nonlinear functions.","They control the magnitude of the step taken during an iteration of gradient descent.","They function as a regularizer, to combat overfitting."], ans: 1},
+      {q: "By what method do variational autoencoders avoid mode collapse?", opts: ["By training the 'decoder' network through a discriminator.","By using a regularizer to steer the network toward the data average.","By feeding the discriminator network pairs of inputs.","By learning the latent representation of an instance through an 'encoder' network."], ans: 3},
+      {q: "I am training a generator network to generate faces. I take a random sample, compare it to a randomly chosen image from the data, and backpropagate the error. When training is finished, all samples from the network look like the average over all faces in the dataset. What name do we have for this phenomenon?", opts: ["Multiple testing","Overfitting","Dropout","Mode collapse"], ans: 3},
+      {q: "In some machine learning settings it is said that we must make a trade-off between exploration and exploitation. What do we mean by this?", opts: ["That hyperparameter selection (exploration) uses computational resources that can also be used in training the model (exploitation).","That an online algorithm needs to balance optimization of its expected reward with exploring to learn more about its environment.","That an insufficiently thoroughly trained model may be biased against minorities.","This refers to the problem of balancing the loss function with the regularization terms in matrix factorization."], ans: 1},
+      {q: "Which is FALSE about decision trees?", opts: ["To use decision trees on data with categorical features, we must convert those features to one-hot vectors.","To use decision trees on data with numeric features, we must choose a threshold value to split on, for every split.","When training a decision tree on only categorical features, there's no use in splitting again on a feature you've already split on.","When training a decision tree on numeric features, it can often be useful to split on a feature you've already used before."], ans: 0},
+      {q: "Some models are built on the Markov assumption. What do we mean by this?", opts: ["We can apply backpropagation to neural networks by unrolling them.","The probability of a word does not depend on the current class for which we are predicting the probability.","The operation of an LSTM cell depends only on its predecessors through two inputs.","A word is conditionally dependent only on a finite number of words preceding it."], ans: 3},
+      {q: "Which is (primarily) a supervised machine learning method?", opts: ["Principal Component Analysis","Support Vector Machines","Variational Autoencoders","None of the above"], ans: 1},
+      {q: "We are fitting a regression model using the least squares loss. We have seen two forms: Σᵢ(yᵢ−tᵢ)² and ½Σᵢ(yᵢ−tᵢ)². Which is true?", opts: ["The global minima of these two loss functions occur at different points in the model space.","If we work out the solution analytically, the constant factor ½ changes the parameters of the optimal solution.","If we use these loss functions with gradient descent, it makes no difference which we use, the behavior is exactly the same.","If we use these loss functions with gradient descent, there is a small difference, but if we scale the learning rate appropriately, the difference will disappear."], ans: 3},
+      {q: "We are choosing a new basis for our data and decide to use an orthonormal basis. What is the advantage?", opts: ["It ensures that the basis vectors are equal to the principal components.","It ensures that the inverse of the basis matrix is equal to its transpose.","It ensures that the basis vectors are orthogonal to the principal components.","It ensures that the data is automatically whitened in the new basis."], ans: 1},
+      {q: "We are considering using either gradient descent or random search for a problem. Which is true?", opts: ["For both, which optimum they find depends on the initial starting point.","Gradient descent can get stuck in a local optimum, random search cannot.","Gradient descent cannot get stuck in a local optimum, random search can.","Gradient descent is more efficient than random search and can always be applied, so we always prefer gradient descent."], ans: 0},
+      {q: "Which property is common to both logistic regression and support vector machines?", opts: ["For both, the decision boundary is chosen by minimizing the number of misclassified examples.","Both are usually optimized by alternating optimization.","Both require backpropagation to work out the gradient efficiently.","They both focus mostly or only on the points closest to the decision boundary."], ans: 3},
+      {q: "Imagine we have a naive Bayes classifier with two binary features and two classes. How many pseudo-observations do we need to add if we want to apply Laplace smoothing?", opts: ["1","2","4","8"], ans: 2},
+      {q: "One can choose between the likelihood function or the log likelihood function as a loss function. Which is usually preferred, and why?", opts: ["Both result in a maximum at the same point in model space, but the log-likelihood is often easier to work with.","The likelihood function. When this is maximised we have the best fitting model whereas the log likelihood results in a worse model.","The log likelihood function. The squared errors are minimized only when the log-likelihood is maximized.","The likelihood function. The squared errors are minimized only when the likelihood is maximized."], ans: 0},
+      {q: "We have a logistic regression model for binary classification that predicts class probabilities q. The slides mention two loss functions: logarithmic loss and binary cross-entropy. Which is true?", opts: ["Log-loss does not lead to a smooth loss landscape, so we approximate it by cross-entropy.","Cross-entropy loss does not lead to a smooth loss landscape, so we approximate it by log-loss.","Log-loss is equal to the binary cross-entropy H(p,q).","Log-loss is equal to the binary cross-entropy H(q,p)."], ans: 2},
+      {q: "We want to represent color videos in a deep learning system. Each is a series of frames, with each frame an RGB image. Which is the most natural representation for one such video?", opts: ["As a 1-tensor.","As a 2-tensor.","As a 3-tensor.","As a 4-tensor."], ans: 3},
+      {q: "In support vector machines, how is the maximum margin hyperplane criterion (MMC) related to the support vectors?", opts: ["The support vectors can be removed from the data once the maximum margin hyperplane has been found.","The support vectors determine the hyperplane that satisfies the MMC.","The MMC and the support vectors describe different loss functions that we can use to fit a hyperplane.","The support vectors provide an approximation to the hyperplane that satisfies the MMC."], ans: 1},
+      {q: "Which of the following is NOT a method to prevent overfitting?", opts: ["Boosting","Bagging","Dropout","L1 regularization"], ans: 0},
+      {q: "What problem, if it exists for a single model, CANNOT be solved by training an ensemble of such models?", opts: ["High bias.","High variance.","High overfitting.","High training time."], ans: 3},
+      {q: "You have a dataset of politicians and which past laws they voted for and against. You'd like to predict future votes using matrix factorization. Which is true?", opts: ["This is not a good model, because there are too many classes and not enough instances.","This is not a good model, because there are not enough classes, and too many instances.","You would have to deal with the cold start problem, because for the future laws you don't have any voting information.","You would have to deal with the cold start problem, because the voting record for past laws is incomplete."], ans: 2},
+      {q: "For the model f(xᵢ) = wxᵢ² − b, to get from line (1) to line (2) in the gradient derivation, we use the:", opts: ["chain rule.","product rule.","constant factor rule.","sum rule."], ans: 3},
+      {q: "For the same gradient derivation, to get from line (2) to line (3), we use the:", opts: ["chain rule.","product rule.","constant factor rule.","sum rule."], ans: 0},
+      {q: "For f(xᵢ) = wxᵢ² − b, finish the derivative with respect to w. Which is the correct result?", opts: ["½ Σᵢ xᵢ(wxᵢ² − b − tᵢ)","Σᵢ xᵢ(wxᵢ² − b − tᵢ)","½ Σᵢ xᵢ²(f(xᵢ) − tᵢ)","Σᵢ xᵢ²(f(xᵢ) − tᵢ)"], ans: 3},
+      {q: "For the dataset (x1,x2,label) and classifier c(x₁,x₂) = Pos if x₁ − 0·x₂ > 2, if we turn c into a ranking classifier, how does it rank the points from most Negative to most Positive? (g(1,1), a(2,8), b(3,7), c(5,6), d(6,5), e(8,4), f(9,2))", opts: ["a b c d e f g","f e d c b a g","g a b c d e f","g f e d c b a"], ans: 2},
+      {q: "For the same classifier (Q31), how many ranking errors does the classifier make?", opts: ["3","4","5","6"], ans: 1},
+      {q: "For the same classifier (Q31-32), if we draw a coverage matrix, what proportion of the cells will be red?", opts: ["3/12","4/12","3/16","4/16"], ans: 1},
+      {q: "For f(x) = (3 cos x)/(2 sin x), broken into a=sin x, b=cos x, c=2a, d=3b, f=d/c. What should be in the place of the dots?", opts: ["a = cos x, c = 2d, f = d/c","a = cos x, c = 2d, f = c/d","a = sin x, c = 2a, f = c/d","a = sin x, c = 2a, f = d/c"], ans: 3},
+      {q: "For f(x) = (3 cos x)/(2 sin x) decomposed as a=sin x, b=cos x, c=2a, d=3b, f=d/c. Which is the correct expression for ∂f/∂x?", opts: ["−(2d cos x)/c² − (3 sin x)/c","−(2d cos x)/c² + (3 sin x)/c","−(2 cos x)/d − (3 sin x)/c","−(2 cos x)/d + (3 sin x)/c"], ans: 0},
+      {q: "For y = x ⊗ v + b (element-wise), work out the scalar derivative ∂yᵢ/∂xⱼ. Which is correct?", opts: ["∂yᵢ/∂xⱼ = vⱼ if i=j, else 0","∂yᵢ/∂xⱼ = vⱼ if i≠j, else 0","∂yᵢ/∂xⱼ = bⱼ if i=j, else 0","∂yᵢ/∂xⱼ = bⱼ if i≠j, else 0"], ans: 0},
+      {q: "For y = x ⊗ v + b, given y∇ where y∇ᵢ = ∂l/∂yᵢ, which operation computes x∇ where x∇ᵢ = ∂l/∂xᵢ?", opts: ["x∇ = y∇ ⊗ v + b","x∇ = y∇ ⊗ v","x∇ = y∇ᵀv + b","x∇ = y∇ᵀv"], ans: 1},
+      {q: "For the 12-instance decision tree dataset with features x1–x4, in standard decision tree learning (no pruning), which feature is chosen first?", opts: ["x1","x2","x3","x4"], ans: 0},
+      {q: "If we remove that first feature from Q38, which feature is chosen next?", opts: ["x1","x2","x3","x4"], ans: 1},
+      {q: "For a partial decision tree (x3 at root, x4 at one node), we can place x1 or x2 on the open node. What is the information gain for x2?", opts: ["0","0.2516","0.5","0.8753"], ans: 1},
+    ]
+  },
+  {
+    id: 'resit2023',
+    tag: 'Resit 2023',
+    title: 'Resit Exam 2023',
+    date: 'June 2023',
+    questions: [
+      {q: 'The most important rule in machine learning is "never judge your performance on the training data." If we break this rule, what can happen?', opts: ["The loss surface no longer provides an informative gradient.","We get cost imbalance.","We end up choosing a model that overfits the training data.","We commit multiple testing."], ans: 2},
+      {q: "We can use gradient descent to minimize a loss function. Which statement is true?", opts: ["Gradient descent takes steps in the steepest descent direction, and this direction is the opposite of the gradient.","Gradient descent takes steps in the steepest ascent direction, and this direction is the gradient.","Gradient descent takes steps in the steepest descent direction, and this direction is the gradient.","Gradient descent takes steps in the steepest ascent direction, and this direction is the opposite of the gradient."], ans: 0},
+      {q: 'In the slides, we get the advice that "sometimes your loss function should not be the same as your evaluation function." Why not?', opts: ["The evaluation function may provide a smooth loss surface.","The loss surface resulting from the evaluation function may have a shape that makes searching for the minimum difficult.","The evaluation function may not be linear, and a loss function must be linear.","The evaluation function may not be a polynomial, and the loss function must be a polynomial."], ans: 1},
+      {q: "There are many classification problems that are not linearly separable. Which trick often allows us to still separate the classes with a linear classifier?", opts: ["Adding a regularizer.","Using least-squares-loss instead of log-loss.","Reducing the dimensionality with PCA.","Deriving new features from the existing ones."], ans: 3},
+      {q: "We try five learning rate values, resulting in five different models. How do we choose among these five models (before comparing to other classifiers)?", opts: ["We measure the accuracy of each model on the training set.","We measure the accuracy of each model on the validation set.","We measure the accuracy of each model on the test set.","We measure the accuracy of each model on the full dataset."], ans: 1},
+      {q: "Undersampling and oversampling are ways to deal with imbalanced classes. Which is true?", opts: ["You oversample your majority class.","You undersample your minority class.","Undersampling leads to duplicate instances in your data.","Oversampling leads to duplicate instances in your data."], ans: 3},
+      {q: "In the naive Bayes classifier, what does the word naive refer to?", opts: ["The fact that prior probabilities are not taken into account.","The fact that the resulting classifier does not usually work very well in practice.","The fact that the classifier makes an assumption of conditional independence that is not usually true.","The fact that the classifier makes an assumption of independence that is not usually true."], ans: 2},
+      {q: "How does dropout help with the overfitting problem?", opts: ["By propagating the gradient of the loss back down the network.","By randomly disabling nodes in a neural network, to eliminate solutions that require highly specific configurations.","By ensuring that the output distribution of a neural network is normally distributed if the input distribution is.","By converting the scalar backpropagation algorithm to work with tensors."], ans: 1},
+      {q: "What is the Markov assumption? Does the LSTM make the Markov assumption?", opts: ["That the probability of a word depends only on a fixed number of words before it. The LSTM makes a Markov assumption.","That the probability of a word depends only on a fixed number of words before it. The LSTM does not make a Markov assumption.","That it is more likely that a word should be forgotten than that it should be remembered. The LSTM makes a Markov assumption.","That it is more likely that a word should be forgotten than that it should be remembered. The LSTM does not make a Markov assumption."], ans: 1},
+      {q: "When dealing with temporal data (each instance has a timestamp), it is important to keep the data ordered in time. What method allows us to evaluate models that do this, while also letting them retrain on new data once they've seen it?", opts: ["Walk-forward validation","Cross-validation","Bootstrapping","Transductive learning"], ans: 0},
+      {q: "What is mode collapse?", opts: ["When the loss surface of a generator network flattens out, so the gradient becomes zero.","When a network has a sampling step in the middle, so we cannot backpropagate down to the input.","When the distribution in the latent space is similar to a hypersphere.","When a generator network outputs the mean of the data, instead of providing different samples with variation."], ans: 3},
+      {q: "By what method do variational autoencoders avoid mode collapse?", opts: ["By training the 'decoder' network through a discriminator.","By using a regularizer to steer the network toward the data average.","By feeding the discriminator network pairs of inputs.","By learning the latent representation of an instance through an 'encoder' network."], ans: 3},
+      {q: "What is the cold start problem?", opts: ["The situation where a neural network is initialized so that its sigmoid activations are saturated.","The situation in sequence-to-label learning where there is a long distance between the start of the sequence and the label.","The situation where we can sample from a generator network but we don't know which instance from the data to compare it to.","The situation where a new item (user, movie, etc.) is added to a recommender system, and we have no ratings to build an embedding from."], ans: 3},
+      {q: "In some machine learning settings it is said that we must make a trade-off between exploration and exploitation. What do we mean by this?", opts: ["That hyperparameter selection (exploration) uses computational resources that can also be used in training the model (exploitation).","That an insufficiently carefully trained model may be biased against minorities.","That a reinforcement learning algorithm needs to balance optimization of its expected reward with exploring to learn more about its environment.","The problem of balancing the loss function with the regularization terms in matrix factorization."], ans: 2},
+      {q: "You want to search for a model in a discrete model space. Which search method is the LEAST applicable?", opts: ["Random search","Simulated annealing","Evolutionary methods","Gradient descent"], ans: 3},
+      {q: "Jim is fitting a linear regression model to a dataset with a single feature x. He adds a second feature x². Which is true?", opts: ["This may introduce a non-global optimum to the loss curve.","This allows Jim to model a nonlinear relation using linear regression.","This means that random search can no longer be used to fit the model.","This means that gradient descent can no longer be used to fit the model."], ans: 1},
+      {q: "Which metric can you NOT compute from the confusion matrix?", opts: ["Accuracy","True positive rate","Recall","Area under the curve"], ans: 3},
+      {q: "The mean is sensitive to outliers. What does this mean, and why is it the case?", opts: ["One instance can affect the mean much more than others if its value is unusually large. This happens because the mean minimizes the absolute magnitude of the distances.","One instance can affect the mean much more than others if its value is unusually large. This happens because the mean minimizes the squares of the distances.","It means it can be a poor representation of the data if all instances are far from the average. This happens because the mean minimizes the absolute magnitude of the distances.","It means it can be a poor representation of the data if all instances are far from the average. This happens because the mean minimizes the squares of the distances."], ans: 1},
+      {q: "What happens if I build a two-layer neural network with no activation function on the units in the hidden layer?", opts: ["The whole network becomes equivalent to a linear single layer network.","It becomes impossible to backpropagate a gradient to the first layer.","The optimization problem becomes non-convex.","We must use automatic differentiation to compute the gradient."], ans: 0},
+      {q: "To make the backpropagation algorithm more broadly applicable, we introduced the multivariate chain rule. What was the main reason for this?", opts: ["To allow us to use backpropagation on functions that are expressed in terms of computation graphs.","To allow us to apply backpropagation to computation graphs where the output depends on the input along multiple paths.","To allow us to apply backpropagation to computation graphs where the output depends on the input only along a single path.","To make backpropagation a fully symbolic algorithm instead of a mixture of symbolic and numeric computation."], ans: 1},
+      {q: "We have a logistic regression model for binary classification that predicts class probabilities q. The slides mention log-loss and binary cross-entropy. Which is true?", opts: ["Log-loss does not lead to a smooth loss landscape, so we approximate it by cross-entropy.","Cross-entropy loss does not lead to a smooth loss landscape, so we approximate it by log probability.","Log-loss is equal to the binary cross-entropy H(p,q).","Log-loss is equal to the binary cross-entropy H(q,p)."], ans: 2},
+      {q: "In a maximum-margin loss, which is NOT an advantage of using soft margins?", opts: ["It allows some points to fall inside the margin.","It allows some points to be misclassified.","It allows us to use gradient descent for optimization, which a hard margin doesn't.","It finds better decision boundaries even for linearly-separable classes."], ans: 2},
+      {q: "Can we use Gaussian Mixture models (GMMs) for classification?", opts: ["Yes. One way is to split the data by class and to fit a separate GMM to the points for each class.","Yes. A hard margin support vector machine is technically equivalent to a GMM-based classifier.","No. GMMs are density estimation models.","No. GMMs are regression models."], ans: 0},
+      {q: "What connects generative adversarial networks and variational autoencoders?", opts: ["They both consist of a generator network and a discriminator network.","They both train a generator network consisting of a random input fed to a deterministic neural network.","They both require reparametrization to allow backpropagation through a sampling step.","They both use cycle-consistency loss to deal with unpaired images in the training data."], ans: 1},
+      {q: "What problem, if it exists for a single model, CANNOT be solved by training an ensemble of those models?", opts: ["High training time.","High bias.","High variance.","High overfitting."], ans: 0},
+      {q: "For the dataset and classifier c(x₁,x₂) = Pos if −0·x₁ + x₂ > −2, if we turn c into a ranking classifier, how does it rank the points from most Negative to most Positive? (c(3,1), b(2,2), a(1,3), d(6,4), e(5,5), f(4,6), g(7,7))", opts: ["c b a d e f g","g f e d a b c","g d e f c b a","a b c f e d g"], ans: 0},
+      {q: "For the same classifier (Q26), how many ranking errors does the classifier make?", opts: ["3","4","5","6"], ans: 3},
+      {q: "For the same classifier (Q26-27), if we draw a coverage matrix, what proportion of the cells will be red?", opts: ["1/2","1/3","1/4","1/6"], ans: 0},
+      {q: "For f(x) = sin(3x² + cos x), broken into a=3x², b=cos x, c=a+b, f=sin c. What should be in the place of the dots?", opts: ["b = cos x, c = a + b","b = cos x, c = sin b","b = cos a, c = a + b","b = cos a, c = sin b"], ans: 0},
+      {q: "For f(x) = sin(3x² + cos x), decomposed as a=3x², b=cos x, c=a+b, f=sin c. Which is the correct expression for ∂f/∂x?", opts: ["cos(c)(6x − sin x)","cos(c)(6x − sin a)","cos(c) 6x − sin x","cos(c) 6x − sin a"], ans: 0},
+      {q: "For a linear SVM with w = (3, 2)ᵀ and b = 0, which of the following are support vectors?", opts: ["y₁=1, x₁=(1,1); y₂=−1, x₂=(−1,−1)","y₁=1, x₁=(−1,−1); y₂=−1, x₂=(1,1)","y₁=1, x₁=(−1,1); y₂=−1, x₂=(1,−1)","y₁=1, x₁=(1,−1); y₂=−1, x₂=(−1,1)"], ans: 3},
+      {q: "For the same SVM with w = (3,2)ᵀ, b = 0. How are the two points x₁=(1,1) and x₂=(0,−1) classified?", opts: ["Both positive.","x₁ is positive, x₂ is negative.","x₁ is negative, x₂ is positive.","Both negative."], ans: 1},
+      {q: "Spam/Ham Markov model: total words spam=30,000, ham=60,000. Email: 'about that meeting tomorrow'. Prior 1: equal; Prior 2: spam 4× more likely than ham. How is the email classified?", opts: ["With both priors as ham.","With both priors as spam.","Under prior 1 as spam, under prior 2 as ham.","Under prior 1 as ham, under prior 2 as spam."], ans: 3},
+      {q: "For the same spam model, under prior 2, what is the probability that the email 'about that meeting tomorrow' is spam?", opts: ["1/3","2/3","4/7","3/7"], ans: 1},
+      {q: "For the same spam model, under prior 1, what is the probability ratio of ham over spam for the email 'about that meeting tomorrow'?", opts: ["2","1/2","3/15","5"], ans: 0},
+      {q: "For f(x,y) = xᵀWy (x,y vectors, W matrix), work out the local scalar derivative ∂f/∂xᵢ. Which is correct?", opts: ["∂f/∂xᵢ = Σⱼ Wᵢⱼyⱼ","∂f/∂xᵢ = Σⱼ Wⱼᵢyⱼ","∂f/∂xᵢ = Σⱼ xᵢWᵢⱼ","∂f/∂xᵢ = Σⱼ xᵢWⱼᵢ"], ans: 0},
+      {q: "For f(x,y) = xᵀWy, given scalar f∇ = ∂l/∂f, which operation computes x∇ where x∇ᵢ = ∂l/∂xᵢ?", opts: ["x∇ = f∇ · xW","x∇ = f∇ · xWᵀ","x∇ = f∇ · Wy","x∇ = f∇ · Wᵀy"], ans: 2},
+      {q: "For the 12-instance decision tree dataset with features x1–x4 (6 No, 6 Yes, pattern determined by x4 and x3), in standard decision tree learning, which feature is chosen first?", opts: ["x1","x2","x3","x4"], ans: 3},
+      {q: "If we remove x4 from Q38, which feature is chosen next?", opts: ["x1","x2","x3","x4"], ans: 2},
+      {q: "For a partial decision tree (x1 at root, x2 at one node), we can place x3 or x4 on the open node. What is the information gain for x3?", opts: ["0","−¼ log₂(3) + 2","−¾ log₂(3) + 2","1"], ans: 2},
+    ]
+  },
+  {
+    id: 'prac2023',
+    tag: 'Practice',
+    title: 'Practice Exam B',
+    date: 'Feb 2023',
+    questions: [
+      {q: "Which answer contains only unsupervised methods and tasks?", opts: ["Clustering, Linear regression, Generative modeling","k-Means, Clustering, Density estimation","Classification, Clustering, Expectation-Maximization","Logistic regression, Density estimation, Clustering"], ans: 1},
+      {q: "The two most important conceptual spaces in machine learning are the model space and the feature space. Which is true?", opts: ["Every point in the model space represents a loss function that we can choose for our task.","Every point in the model space represents a single instance in the dataset.","Every point in the feature space represents a single feature of a single instance in the dataset.","Every point in the feature space represents a single instance in the dataset."], ans: 3},
+      {q: "The ALVINN system from 1995 was a self-driving car system: a grayscale camera was pointed at the road and a classifier was trained to predict the steering wheel position based on a human driver. Which are the instances and which are the features?", opts: ["The instances are the different cars the system is deployed in and the features are the angles of the steering wheel.","The instances are the angles of the steering wheel and the features are the different cars the system is deployed in.","The instances are the frames produced by the camera and the features are the pixel values.","The instances are the pixel values and the features are the frames produced by the camera."], ans: 2},
+      {q: "What is the relation between the loss landscape and its gradient?", opts: ["The gradient points in the direction that the loss increases the fastest.","The gradient points in the direction that the loss decreases the fastest.","The gradient is the region of the loss landscape where the loss is the lowest.","The gradient is the region of the loss landscape where the loss is the highest."], ans: 0},
+      {q: "Which is a legitimate reason to prefer random search over gradient descent as a search method?", opts: ["The loss surface is complicated, so I want the size of the steps to change as I approach a minimum.","I need to be sure that I've found a global minimum.","My model has multiple layers, so I want to use backpropagation.","My model is not differentiable."], ans: 3},
+      {q: "What is the benefit of a convex loss surface?", opts: ["It allows us to use the backpropagation algorithm.","It allows us to use evolutionary methods.","It ensures that there are no local minima other than the global minimum.","It allows gradient descent to escape local maxima."], ans: 2},
+      {q: "Rob trains a k-nearest neighbors classifier. He withholds 20% of his data as a test set and uses the rest as training data. He runs the training algorithm twenty times (k=1 to k=20), computes test set accuracy each time, and reports the best accuracy (at k=17) as his performance estimate. What fundamental mistake has Rob made?", opts: ["Rob is checking a linear range of values for hyperparameter k when a logarithmic range would be better.","He is using arbitrary values for k. He should use a grid search.","The test set should always be bigger than the training set.","By reusing his test set, he may be inflating his performance estimate and overfitting to an arbitrary value of k."], ans: 3},
+      {q: "Accuracy is very simple and effective, but in certain cases we should be careful. Imagine a spam classifier that automatically deletes emails detected as spam. The user receives about one spam email for every legitimate email. Why should we be careful optimizing for accuracy?", opts: ["Because we have very high class imbalance.","Because we have very high cost imbalance.","Because the data arrives irregularly.","Because this is an online learning problem."], ans: 1},
+      {q: "Maria is fitting a regression model to predict the year in which a piece of instrumental music was written. She realizes that she has many outliers (e.g., atonal music of the 1920s, John Cage's 4'33\"). What should she do?", opts: ["She should remove these instances entirely. Removing outliers will make it easier to fit the data with a normal distribution.","She should remove these instances from the training data, but leave them in the test data.","She should leave these instances in the training data, but remove them from the test data.","She should leave these instances in. They are important examples of the data distribution."], ans: 3},
+      {q: "We are given a confusion matrix of a classifier. Which quantity can we NOT compute from this?", opts: ["recall","bias","precision","accuracy"], ans: 1},
+      {q: "Frank is a researcher in the 1960s. He decides to chain together multiple perceptrons. Why won't chaining perceptrons together work in the way he imagines?", opts: ["A GPU is needed to compute the output of such a function.","The perceptron is a linear function, and the composition of linear functions is still a linear function.","Such a model would suffer from vanishing gradients.","This is equivalent to hypothesis boosting, which has been proven to be impossible."], ans: 1},
+      {q: "In a support vector machine, what are the support vectors?", opts: ["The parameters wᵀ that are multiplied by the input x to produce a classification.","The parameters b that are added to the input x to produce a classification.","The positive and negative data points that are allowed to fall inside the margin.","The positive and negative data points that are closest to the decision boundary."], ans: 3},
+      {q: "In deep learning, what is the difference between lazy and eager execution?", opts: ["In lazy execution, the computation graph is compiled and kept static during training. In eager execution, it is built up for each forward pass.","In eager execution, the computation graph is compiled and kept static during training. In lazy execution, it is built up for each forward pass.","In lazy execution, the gradient is computed by numeric approximation, while eager execution uses the backpropagation algorithm.","In eager execution, the gradient is computed by numeric approximation, while lazy execution uses the backpropagation algorithm."], ans: 0},
+      {q: "Why is the ReLU activation function often preferred over the sigmoid activation function, for hidden nodes?", opts: ["It causes more vanishing gradients, which help learning.","The sigmoid function cannot be used with gradient descent.","Its derivative is almost always either 0 or 1, reducing vanishing gradients.","The sigmoid function contains a point where the gradient is not defined."], ans: 2},
+      {q: "When we apply the chain rule to complex operations involving tensors for backpropagation, the local derivatives can be expensive 3-tensors. How do modern ML frameworks avoid this problem?", opts: ["They approximate the local derivative using random search.","They approximate the local derivative using the EM algorithm.","They don't compute the local derivative, but the product of the upstream derivative with the local derivative.","They don't compute the local derivative, but the product of the downstream derivative with the local derivative."], ans: 2},
+      {q: "How is the log-likelihood like a loss function?", opts: ["The log-likelihood is an approximation of the loss function.","The loss function is an approximation of the log-likelihood.","When we train a model, we minimize the loss, and when we fit a distribution, we often minimize the log-likelihood.","When we train a model, we minimize the loss, and when we fit a distribution, we often maximize the log-likelihood."], ans: 3},
+      {q: "How do GANs solve the mode collapse problem that arises when comparing a random output to a random target example?", opts: ["By training a second network to map the target example to a distribution on the input space.","By adding a KL-loss term on the random inputs of the generator network.","By training the generator to generate outputs that a second network recognizes as real, and training the second network to distinguish generated outputs from real data.","By adding a cycle-consistency loss-term."], ans: 2},
+      {q: "Which GAN approach is designed to train a model that maps some input to some output while also behaving like a generator (e.g., colorizing photographs non-deterministically)?", opts: ["Vanilla GAN","Conditional GAN","CycleGAN","StyleGAN"], ans: 1},
+      {q: "The Variational Autoencoder (VAE) differs from a regular autoencoder in several aspects. Which is NOT one of them?", opts: ["It includes a discriminator, which tries to tell the difference between data points and samples from the generator.","It has an added loss term that ensures that the data looks like a standard normal distribution in the latent space.","For a given instance, the encoder produces a distribution on the latent space, instead of a single point.","It includes a sampling step in the middle, where a latent vector is sampled from the distribution provided by the encoder."], ans: 0},
+      {q: "The standard decision tree algorithm doesn't stop until all leaves contain only instances with the same label. Why is this a problem, and what is the default solution?", opts: ["It's a problem because the algorithm may never terminate. We can use a validation set to see if removing nodes improves performance.","It's a problem because the algorithm may never terminate. We can remove features from the data.","It's a problem because we may be overfitting on the training set. We can use a validation set to see if removing nodes improves performance.","It's a problem because we may be overfitting on the training set. We can add features to the data."], ans: 2},
+      {q: "Boosting is popular but we rarely see it in research settings unless specifically studying ensembling. Why?", opts: ["In research we want to measure the relative performance with respect to the baseline. If we apply boosting to our model, we should apply boosting to the baseline as well.","Boosting cannot be applied in combination with a validation split, which is required in research.","Boosting makes it difficult to compute a confidence interval over the accuracy, which is required in research.","Boosting requires some information from the test set to be used in training, which is not allowed in research."], ans: 0},
+      {q: "Why is gradient descent difficult to apply in a reinforcement learning setting?", opts: ["There is a non-differentiable step between the model output and the reward.","There is a non-differentiable step between the model input and the model output.","The backpropagation algorithm doesn't apply if the output of a model is a probability distribution.","The loss surface is flat in most places, so the gradient is zero almost everywhere."], ans: 0},
+      {q: "In recommender systems, what is implicit feedback?", opts: ["Ratings given by a single 'like' button rather than a more fine-grained system.","Recommendations that take the temporal structure of the data into account.","Associations between users and items assumed from user behavior.","Recommendations derived from manually crafted item features rather than learned ones."], ans: 2},
+      {q: "Word2Vec and matrix factorization are both embedding methods. How do they represent featureless objects?", opts: ["By taking known features for each object and mapping these to a low-dimensional representation.","By taking known features for each object and mapping these to a high-dimensional representation.","By embedding these objects into a Euclidean space, with each object represented by a vector.","By embedding these objects into a Euclidean space, with each object represented by a scalar."], ans: 2},
+      {q: "What is batch normalization?", opts: ["An operation in a neural network that normalizes the output of a layer so that it is normally distributed over the current batch.","An operation in a neural network that normalizes the output of a layer so that it is uniformly distributed over the batch.","A hyperparameter selection technique that sets the batch size to ensure a normal distribution in gradients.","A hyperparameter selection technique that sets the batch size to ensure a uniform distribution in gradients."], ans: 0},
+      {q: "For a linear SVM with w = (1, −1)ᵀ and b = −1, which points are support vectors?", opts: ["y₁=1, x₁=(1,1); y₂=−1, x₂=(1,1)","y₁=1, x₁=(1,1); y₂=−1, x₂=(−1,1)","y₁=1, x₁=(1,−1); y₂=−1, x₂=(1,1)","y₁=1, x₁=(1,−1); y₂=−1, x₂=(−1,1)"], ans: 3},
+      {q: "For the same SVM with w = (1,−1)ᵀ, b = −1. How are x₁=(0,3) and x₂=(3,0) classified?", opts: ["Both positive.","x₁ is positive, x₂ is negative.","x₁ is negative, x₂ is positive.","Both negative."], ans: 3},
+      {q: "For the dataset (a(0,1)Neg, b(2,2)Neg, c(1,4)Neg, d(4,5)Neg, e(3,6)Pos, f(6,8)Pos, g(5,3)Pos, h(8,7)Pos) and classifier Pos if x₁ + 0·x₂ + 2 > 0, if we turn c into a ranking classifier, how does it rank from most Negative to most Positive?", opts: ["a b c d e f g h","a b g c d e h f","a b g c d h e f","a c b e d g f h"], ans: 0},
+      {q: "For the same classifier (Q28), how many ranking errors does the classifier make?", opts: ["None","1","2","3"], ans: 0},
+      {q: "For the same classifier (Q28-29), if we draw a coverage matrix, what proportion of the cells will be red?", opts: ["3/15","6/15","1/8","1/16"], ans: 0},
+      {q: "For distributions p = (4/8, 2/8, 1/8, 1/8) and q = (1/8, 4/8, 2/8, 1/8) on X = {a,b,c,d}, what are their entropies (binary)?", opts: ["H(p) = 2.25, H(q) = 1.75","H(p) = 1.75, H(q) = 2.25","H(p) = 2.25, H(q) = 2.25","H(p) = 1.75, H(q) = 1.75"], ans: 1},
+      {q: "For the same distributions (Q31), what are their cross-entropies?", opts: ["H(p,q) = 2 + 3/8, H(q,p) = 2 + 1/4","H(p,q) = 2 + 1/4, H(q,p) = 2 + 3/8","H(p,q) = 2, H(q,p) = 2 + 1/4","H(p,q) = 2 + 1/4, H(q,p) = 2"], ans: 1},
+      {q: "The KL divergence is strongly related to entropy. Which statement is FALSE?", opts: ["KL(p,q) is the bits wasted by using p as a compressor for elements sampled from q.","KL(p,q) is the bits wasted by using q as a compressor for elements sampled from p.","KL(p,q) is H(p,q) with H(p) subtracted so that the divergence is zero if the arguments are equal.","KL(p,q) is H(p,q) with H(p) subtracted so that we measure compression relative to the optimum."], ans: 0},
+      {q: "For f(x) = (x²+1)/(x³+2), broken into a=?, b=?, c=a+1, d=b+2, f=?. What should go in the dots?", opts: ["a = x³, b = x², f = c/d","a = x², b = x³, f = c/d","a = x³+2, b = x²+1, f = d/c","a = x²+1, b = x³+2, f = d/c"], ans: 1},
+      {q: "For f(x) = (x²+1)/(x³+2) decomposed as a=x², b=x³, c=a+1, d=b+2, f=c/d. Which is the correct expression for ∂f/∂x?", opts: ["2xd⁻¹ − 3x²c⁻²","2xd⁻¹ + 3x²c⁻²","2xd⁻¹ − 3cx²d⁻²","2xd⁻¹ + 3cx²d⁻²"], ans: 2},
+      {q: "For the 12-instance decision tree dataset with features x1–x4, in standard decision tree learning (no pruning), which feature is chosen first for a split?", opts: ["x1","x2","x3","x4"], ans: 0},
+      {q: "If we remove x1 from Q36, which feature is chosen next?", opts: ["x1","x2","x3","x4"], ans: 2},
+      {q: "The EM and VAE algorithms are both based on L(q,θ) + KL(q,p) = ⟨a⟩ + ⟨b⟩. What should be in place of ⟨a⟩ and ⟨b⟩?", opts: ["⟨a⟩ = Eq ln p(x,z|θ)/q(z|x), ⟨b⟩ = −Eq ln p(z|x,θ)/q(z|x)","⟨a⟩ = Eq ln p(x,z|θ)/q(z|x), ⟨b⟩ = Eq ln p(z|x,θ)/q(z|x)","⟨a⟩ = Eq ln p(x,z|θ)/p(z|x), ⟨b⟩ = −Eq ln p(z|x,θ)/p(z|x)","⟨a⟩ = Eq ln p(x,z|θ)/p(z|x), ⟨b⟩ = Eq ln p(z|x,θ)/p(z|x)"], ans: 0},
+      {q: "Why does the EM/VAE decomposition L(q,θ) + KL(q,p) = ln p(x|θ) help us?", opts: ["It eliminates q, which we cannot compute.","It shows that L(q,θ) is a lower bound on the quantity we want to maximize.","It eliminates expectations, which we cannot compute.","It shows that p(x|θ) is a lower bound on the KL divergence."], ans: 1},
+    ]
+  }
+];
+
+// =====================
+// APP STATE
+// =====================
+let selectedExams = new Set();
+let allQuestions = [];
+let currentIdx = 0;
+let answers = {};
+let checked = {};
+
+// =====================
+// LANDING
+// =====================
+function renderLanding() {
+  const grid = document.getElementById('examGrid');
+  grid.innerHTML = EXAMS.map(e => `
+    <div class="exam-card" id="card-${e.id}" onclick="toggleExam('${e.id}')">
+      <div class="check-mark">✓</div>
+      <div class="card-tag">${e.tag}</div>
+      <div class="card-title">${e.title}</div>
+      <div class="card-meta">${e.date} · ${e.questions.length} questions</div>
+    </div>
+  `).join('');
+}
+
+function toggleExam(id) {
+  if (selectedExams.has(id)) selectedExams.delete(id);
+  else selectedExams.add(id);
+  document.querySelectorAll('.exam-card').forEach(c => c.classList.remove('selected'));
+  selectedExams.forEach(id => document.getElementById('card-' + id)?.classList.add('selected'));
+  document.getElementById('startBtn').disabled = selectedExams.size === 0;
+}
+
+function selectAll() {
+  EXAMS.forEach(e => selectedExams.add(e.id));
+  document.querySelectorAll('.exam-card').forEach(c => c.classList.add('selected'));
+  document.getElementById('startBtn').disabled = false;
+}
+
+function selectNone() {
+  selectedExams.clear();
+  document.querySelectorAll('.exam-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('startBtn').disabled = true;
+}
+
+// =====================
+// QUIZ
+// =====================
+function startQuiz() {
+  allQuestions = [];
+  selectedExams.forEach(id => {
+    const exam = EXAMS.find(e => e.id === id);
+    if (exam) {
+      exam.questions.forEach((q, i) => {
+        allQuestions.push({ ...q, examId: id, examTitle: exam.title, examDate: exam.date, localIdx: i });
+      });
+    }
+  });
+
+  currentIdx = 0;
+  answers = {};
+  checked = {};
+
+  document.getElementById('landing').style.display = 'none';
+  document.getElementById('quiz').style.display = 'block';
+  document.getElementById('results').style.display = 'none';
+
+  renderQuiz();
+  renderQuestion(0);
+}
+
+function renderQuiz() {
+  const body = document.getElementById('quizBody');
+  body.innerHTML = allQuestions.map((q, i) => {
+    const letters = ['A', 'B', 'C', 'D'];
+    return `
+      <div class="question-block" id="qblock-${i}">
+        <div class="question-source">${q.examTitle} · ${q.examDate}</div>
+        <div class="question-num">Q${i + 1} of ${allQuestions.length}</div>
+        <div class="question-text">${q.q}</div>
+        <div class="options" id="opts-${i}">
+          ${q.opts.map((opt, j) => `
+            <div class="option" id="opt-${i}-${j}" onclick="selectOpt(${i}, ${j})">
+              <div class="option-letter">${letters[j]}</div>
+              <div class="option-text">${opt}</div>
+            </div>
+          `).join('')}
+        </div>
+        <div class="feedback" id="feedback-${i}"></div>
+        <div class="nav-row">
+          <button class="btn-check" id="check-${i}" onclick="checkAnswer(${i})" disabled>Check answer</button>
+          <button class="btn-next" onclick="nextQ(${i})" style="display:none" id="next-${i}">Next →</button>
+          <button class="skip-btn" onclick="nextQ(${i})">Skip</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderQuestion(idx) {
+  document.querySelectorAll('.question-block').forEach(b => b.classList.remove('active'));
+  const block = document.getElementById('qblock-' + idx);
+  if (block) block.classList.add('active');
+
+  const total = allQuestions.length;
+  document.getElementById('progressText').textContent = `${idx + 1} / ${total}`;
+  document.getElementById('progressBar').style.width = ((idx + 1) / total * 100) + '%';
+
+  const examTitle = allQuestions[idx]?.examTitle || 'ML Practice';
+  document.getElementById('quizTitle').textContent = examTitle;
+}
+
+function selectOpt(qIdx, optIdx) {
+  if (checked[qIdx]) return;
+  answers[qIdx] = optIdx;
+  document.querySelectorAll(`#opts-${qIdx} .option`).forEach(o => o.classList.remove('selected'));
+  document.getElementById(`opt-${qIdx}-${optIdx}`).classList.add('selected');
+  document.getElementById(`check-${qIdx}`).disabled = false;
+}
+
+function checkAnswer(qIdx) {
+  if (checked[qIdx]) return;
+  checked[qIdx] = true;
+
+  const q = allQuestions[qIdx];
+  const userAns = answers[qIdx];
+  const correct = q.ans;
+  const isCorrect = userAns === correct;
+
+  // Lock all options
+  document.querySelectorAll(`#opts-${qIdx} .option`).forEach((o, j) => {
+    o.classList.add('locked');
+    if (j === correct) o.classList.add('correct');
+    else if (j === userAns && !isCorrect) o.classList.add('wrong');
+  });
+
+  const fb = document.getElementById(`feedback-${qIdx}`);
+  if (isCorrect) {
+    fb.textContent = '✓ Correct!';
+    fb.className = 'feedback correct';
+  } else {
+    const letters = ['A', 'B', 'C', 'D'];
+    fb.textContent = `✗ Incorrect. The correct answer is ${letters[correct]}.`;
+    fb.className = 'feedback wrong';
+  }
+
+  document.getElementById(`check-${qIdx}`).disabled = true;
+  document.getElementById(`next-${qIdx}`).style.display = 'inline-block';
+
+  // Hide skip when check was done
+  const navRow = document.querySelector(`#qblock-${qIdx} .skip-btn`);
+  if (navRow) navRow.style.display = 'none';
+}
+
+function nextQ(qIdx) {
+  if (currentIdx < allQuestions.length - 1) {
+    currentIdx++;
+    renderQuestion(currentIdx);
+    // Scroll to top
+    document.querySelector('.quiz-header').scrollIntoView({ behavior: 'smooth' });
+  } else {
+    showResults();
+  }
+}
+
+// =====================
+// RESULTS
+// =====================
+function showResults() {
+  document.getElementById('quiz').style.display = 'none';
+  document.getElementById('results').style.display = 'block';
+
+  let correct = 0;
+  let attempted = 0;
+
+  // Per-exam breakdown
+  const byExam = {};
+  EXAMS.forEach(e => {
+    if (selectedExams.has(e.id)) byExam[e.id] = { title: e.title, correct: 0, total: 0 };
+  });
+
+  allQuestions.forEach((q, i) => {
+    if (checked[i]) {
+      attempted++;
+      byExam[q.examId].total++;
+      if (answers[i] === q.ans) {
+        correct++;
+        byExam[q.examId].correct++;
+      }
+    }
+  });
+
+  const total = allQuestions.length;
+  const pct = total > 0 ? Math.round(correct / total * 100) : 0;
+  const attemptedPct = total > 0 ? Math.round(attempted / total * 100) : 0;
+
+  document.getElementById('scoreNum').textContent = pct + '%';
+
+  // Animate circle
+  const circle = document.getElementById('scoreCircle');
+  const circumference = 376.99;
+  setTimeout(() => {
+    circle.style.strokeDashoffset = circumference - (pct / 100) * circumference;
+    circle.style.transition = 'stroke-dashoffset 1s ease';
+  }, 100);
+
+  const grade = document.getElementById('resultGrade');
+  if (pct >= 63) { grade.textContent = 'Pass'; grade.className = 'result-grade pass'; }
+  else if (pct >= 55) { grade.textContent = 'Borderline'; grade.className = 'result-grade borderline'; }
+  else { grade.textContent = 'Not yet'; grade.className = 'result-grade fail'; }
+
+  document.getElementById('resultDetail').textContent =
+    `${correct} correct out of ${attempted} answered (${total} total questions)`;
+
+  // Breakdown
+  const bd = document.getElementById('breakdown');
+  bd.innerHTML = `<div class="breakdown-title">Per exam</div>` +
+    Object.values(byExam).map(e => `
+      <div class="brow">
+        <span class="brow-name">${e.title}</span>
+        <span class="brow-score">${e.correct}/${e.total}</span>
+      </div>
+    `).join('');
+}
+
+function restartSame() {
+  currentIdx = 0;
+  answers = {};
+  checked = {};
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('quiz').style.display = 'block';
+  renderQuiz();
+  renderQuestion(0);
+}
+
+function goHome() {
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('landing').style.display = 'flex';
+}
+
+// =====================
+// INIT
+// =====================
+renderLanding();
+</script>
+</body>
+</html>
