@@ -36,10 +36,10 @@
 
 ## Study Tools (open in browser)
 - [[HTML Study Tools/DB — Practice Tool.html|DB Practice Tool]]
-- [[HTML Study Tools/TM — Flashcard Tool.html|TM Flashcard Tool]]
-- [[HTML Study Tools/HAI — Flashcard Tool.html|HAI Flashcard Tool]]
-- [[HTML Study Tools/ML — Practice Tool.html|ML Practice Tool]]
-- [[HTML Study Tools/SP — Practice Tool.html|SP Practice Tool]]
+- [[HTML Study Tools/TM — Study Tool.html|TM Study Tool]] — flashcards + quiz + literature
+- [[HoAI/HAI_flashcard_tool.html|HAI Flashcard Tool]] — A/B/C flashcards + essay prompts
+- [[ML10.0/ML_review_website.html|ML Review Website]] — 10 lectures + 44-question quiz
+- [[Stats&Probab/SP_practice_website.html|SP Practice Website]] — past exams + autograding
 
 ## Vault Scan
 [[_vault_scan|Resource Scan — what's available per course]]

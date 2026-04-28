@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Statistics & Probability — Practice</title>
+<style>
+  :root {
+    --bg: #f5f5f5; --card: #fff; --text: #1a1a1a; --sub: #555;
+    --border: #ddd; --accent: #2563eb; --accent2: #1d4ed8;
+    --correct: #16a34a; --wrong: #dc2626; --tag: #e0e7ff; --tagtext: #3730a3;
+    --btn: #e5e7eb; --btntext: #374151;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #111827; --card: #1f2937; --text: #f3f4f6; --sub: #9ca3af;
+      --border: #374151; --accent: #3b82f6; --accent2: #60a5fa;
+      --correct: #22c55e; --wrong: #f87171; --tag: #1e3a5f; --tagtext: #93c5fd;
+      --btn: #374151; --btntext: #d1d5db;
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 15px; line-height: 1.6; }
+  .header { background: var(--accent); color: #fff; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+  .header h1 { font-size: 1.1rem; font-weight: 700; }
+  .score-box { background: rgba(255,255,255,0.15); border-radius: 8px; padding: 6px 14px; font-size: 0.9rem; font-weight: 600; }
+  .controls { padding: 14px 16px; background: var(--card); border-bottom: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .controls label { font-size: 0.8rem; color: var(--sub); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+  .filter-row { display: flex; flex-wrap: wrap; gap: 6px; }
+  .filter-btn { padding: 5px 11px; border-radius: 20px; border: 1px solid var(--border); background: var(--btn); color: var(--btntext); cursor: pointer; font-size: 0.8rem; transition: all 0.15s; }
+  .filter-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .action-btn { padding: 7px 14px; border-radius: 8px; border: none; background: var(--accent); color: #fff; cursor: pointer; font-size: 0.85rem; font-weight: 600; }
+  .action-btn.secondary { background: var(--btn); color: var(--btntext); }
+  .stats-bar { padding: 8px 16px; background: var(--bg); border-bottom: 1px solid var(--border); font-size: 0.82rem; color: var(--sub); display: flex; gap: 16px; flex-wrap: wrap; }
+  .main { padding: 16px; max-width: 860px; margin: 0 auto; }
+  .question-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 14px; }
+  .q-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+  .q-num { background: var(--accent); color: #fff; border-radius: 8px; padding: 3px 10px; font-size: 0.8rem; font-weight: 700; white-space: nowrap; }
+  .q-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+  .tag { background: var(--tag); color: var(--tagtext); border-radius: 12px; padding: 2px 9px; font-size: 0.75rem; font-weight: 600; }
+  .q-text { color: var(--text); margin-bottom: 14px; line-height: 1.7; }
+  .q-text code { background: var(--btn); padding: 1px 6px; border-radius: 4px; font-size: 0.9em; font-family: 'SF Mono', 'Fira Code', monospace; }
+  .options { list-style: none; display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+  .options li { padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; transition: all 0.15s; font-size: 0.9rem; }
+  .options li:hover { border-color: var(--accent); background: var(--tag); }
+  .options li.correct-ans { border-color: var(--correct); background: rgba(22,163,74,0.08); color: var(--correct); font-weight: 600; }
+  .options li.wrong-ans { border-color: var(--wrong); background: rgba(220,38,38,0.08); color: var(--wrong); }
+  .fill-area { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
+  .fill-input { padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 1rem; width: 140px; }
+  .fill-input:focus { outline: none; border-color: var(--accent); }
+  .check-btn { padding: 8px 16px; border-radius: 8px; border: none; background: var(--accent); color: #fff; cursor: pointer; font-size: 0.85rem; font-weight: 600; }
+  .answer-box { display: none; background: var(--bg); border-radius: 8px; padding: 12px; margin-top: 10px; border: 1px solid var(--border); font-size: 0.88rem; }
+  .answer-box.visible { display: block; }
+  .answer-box .ans-label { font-weight: 700; color: var(--correct); margin-bottom: 4px; }
+  .answer-box .explanation { color: var(--sub); margin-top: 6px; }
+  .show-btn { padding: 6px 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--btn); color: var(--btntext); cursor: pointer; font-size: 0.82rem; }
+  .result-correct { color: var(--correct); font-weight: 700; font-size: 0.85rem; margin-left: 8px; }
+  .result-wrong { color: var(--wrong); font-weight: 700; font-size: 0.85rem; margin-left: 8px; }
+  .progress-bar { width: 100%; height: 4px; background: var(--border); border-radius: 2px; margin-top: 12px; }
+  .progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.3s; }
+  .empty-state { text-align: center; padding: 60px 20px; color: var(--sub); }
+  .section-header { font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--sub); margin: 20px 0 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+  .kbd { display: inline-block; padding: 1px 6px; border: 1px solid var(--border); border-radius: 4px; font-size: 0.75rem; color: var(--sub); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div style="font-size:0.8rem;opacity:0.8">Statistical Methods (X_401020) — Exam Thu 4 Jun</div>
+    <h1>Statistics & Probability — Practice</h1>
+  </div>
+  <div class="score-box" id="scoreBox">Score: 0/0</div>
+</div>
+
+<div class="controls">
+  <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <label>Topic</label>
+      <div class="filter-row" id="topicFilters">
+        <button class="filter-btn active" data-topic="all" onclick="filterTopic(this)">All</button>
+        <button class="filter-btn" data-topic="T1" onclick="filterTopic(this)">T1 Prob Rules</button>
+        <button class="filter-btn" data-topic="T2" onclick="filterTopic(this)">T2 Bayes'</button>
+        <button class="filter-btn" data-topic="T3" onclick="filterTopic(this)">T3 Discrete</button>
+        <button class="filter-btn" data-topic="T4" onclick="filterTopic(this)">T4 Continuous</button>
+        <button class="filter-btn" data-topic="T5" onclick="filterTopic(this)">T5 Normal</button>
+        <button class="filter-btn" data-topic="T6" onclick="filterTopic(this)">T6 MLE</button>
+        <button class="filter-btn" data-topic="T7" onclick="filterTopic(this)">T7 CI</button>
+        <button class="filter-btn" data-topic="T8" onclick="filterTopic(this)">T8 Hyp Test</button>
+        <button class="filter-btn" data-topic="T9" onclick="filterTopic(this)">T9 CLT</button>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <label>Exam</label>
+      <div class="filter-row" id="examFilters">
+        <button class="filter-btn active" data-exam="all" onclick="filterExam(this)">All</button>
+        <button class="filter-btn" data-exam="mar25" onclick="filterExam(this)">Mar 2025</button>
+        <button class="filter-btn" data-exam="jan25" onclick="filterExam(this)">Jan 2025</button>
+        <button class="filter-btn" data-exam="fall24" onclick="filterExam(this)">Fall 2024</button>
+        <button class="filter-btn" data-exam="final25" onclick="filterExam(this)">Final 2025</button>
+        <button class="filter-btn" data-exam="mid25" onclick="filterExam(this)">Midterm 2025</button>
+        <button class="filter-btn" data-exam="gen" onclick="filterExam(this)">Generated ✦</button>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="action-btn secondary" onclick="shuffleQuestions()">Shuffle</button>
+      <button class="action-btn secondary" onclick="showAllAnswers()">Reveal All</button>
+      <button class="action-btn secondary" onclick="resetAll()">Reset</button>
+      <span style="color:var(--sub);font-size:0.8rem;align-self:center">Tip: fill in answers and press Check, or click Show Answer</span>
+    </div>
+  </div>
+</div>
+
+<div class="stats-bar" id="statsBar">
+  <span id="statCount">Showing 0 questions</span>
+  <span id="statScore" style="color:var(--correct)">Correct: 0</span>
+  <span id="statWrong" style="color:var(--wrong)">Wrong: 0</span>
+</div>
+
+<div class="main" id="mainContent"></div>
+
+<script>
+// ===== QUESTION BANK =====
+// Types: mc=multiple choice (one answer), mr=multiple response (multiple answers), fi=fill-in numerical, tf=true/false statements
+const questions = [
+
+// ============================================================
+// MARCH 2025 (XB_0115)
+// ============================================================
+{id:'m25_01', exam:'mar25', topic:'T2', type:'fi',
+  text:'A bag contains a fair coin (H/T equally likely) and an unfair coin (P(heads)=2/3). A coin is selected at random and tossed twice. Given that the first toss shows heads, what is the probability that the second toss also shows heads?',
+  answer:'0.55', explanation:'Use law of total probability. P(2nd heads | 1st heads). With fair coin: P(HH)=1/4, P(1st H)=1/2. With unfair: P(HH)=(2/3)², P(1st H)=2/3. P(2nd H|1st H) = [P(HH|fair)P(fair)+P(HH|unfair)P(unfair)] / [P(1st H|fair)P(fair)+P(1st H|unfair)P(unfair)] = [(1/4)(1/2)+(4/9)(1/2)] / [(1/2)(1/2)+(2/3)(1/2)] = (1/8+2/9)/(1/4+1/3) = (25/72)/(7/12) = 25/42 ≈ 0.595. Or simpler: P(2nd H|1st H) = P(fair|1st H)·(1/2) + P(unfair|1st H)·(2/3).'},
+
+{id:'m25_02', exam:'mar25', topic:'T7', type:'tf',
+  text:'Which of the following statements about a 95% confidence interval for μ are true?',
+  statements:[
+    {s:'If we repeat the experiment many times, approximately 95% of the constructed confidence intervals will contain the true μ.', ans:true},
+    {s:'The probability that μ lies in the computed interval [a,b] is 0.95.', ans:false},
+  ],
+  explanation:'Once observed, [a,b] is fixed; μ is fixed. The frequentist interpretation is about the long-run procedure, not probability that a specific interval contains μ.'},
+
+{id:'m25_03', exam:'mar25', topic:'T7', type:'mc',
+  text:'To estimate the fraction θ of voters who will vote for candidate A, a random sample of n voters is drawn. What is the minimum n needed for a 90% confidence interval with margin of error at most 0.03?',
+  options:['n = 600','n = 700','n = 750','n = 800','n = 900'],
+  answer:'n = 800',
+  explanation:'Worst case: θ=0.5, p(1-p)=0.25. n ≥ (z_{0.05}/0.03)² × 0.25 = (1.64/0.03)² × 0.25 ≈ 747 → round up to n=800.'},
+
+{id:'m25_04', exam:'mar25', topic:'T7', type:'mc',
+  text:'X₁,...,Xₙ are iid N(μ,σ²) with σ²=9 known. Sample mean x̄=5, n=9. Which is the correct 95% CI for μ?',
+  options:['[3.04, 6.96]','[3.33, 6.67]','[2.96, 7.04]','[3.5, 6.5]'],
+  answer:'[3.04, 6.96]',
+  explanation:'CI = x̄ ± z_{0.025}·σ/√n = 5 ± 1.96·3/3 = 5 ± 1.96 = [3.04, 6.96].'},
+
+{id:'m25_05', exam:'mar25', topic:'T4', type:'mc',
+  text:'Which of the following is a property of any cumulative distribution function F_X(x)?',
+  options:['It is always strictly increasing.','It can decrease at certain points.','It is constant over the entire real line.','lim_{x→-∞} F_X(x) = 1','It is always non-decreasing.'],
+  answer:'It is always non-decreasing.',
+  explanation:'CDF is non-decreasing (not necessarily strictly), right-continuous, with limits 0 and 1 at ±∞.'},
+
+{id:'m25_06', exam:'mar25', topic:'T4', type:'mc',
+  text:'Let X be a random variable with PDF f_X(x). Which formula correctly gives E[X]?',
+  options:['∫ x f_X(x) dx','∫ f_X(x) dx','∫ x F_X(x) dx','∫ x² f_X(x) dx'],
+  answer:'∫ x f_X(x) dx',
+  explanation:'E[X] = ∫ x f_X(x) dx by definition. LOTUS for g(X)=X.'},
+
+{id:'m25_07', exam:'mar25', topic:'T4', type:'mc',
+  text:'Let X be a continuous random variable with PDF f_X(x). Which formula gives E[X²]?',
+  options:['(∫ x f_X(x) dx)²','∫ x f_X(x)² dx','∫ x² F_X(x) dx','∫ x² f_X(x) dx','(∫ x F_X(x) dx)²'],
+  answer:'∫ x² f_X(x) dx',
+  explanation:'LOTUS: E[g(X)] = ∫ g(x) f_X(x) dx. With g(x)=x²: E[X²] = ∫ x² f_X(x) dx.'},
+
+{id:'m25_08', exam:'mar25', topic:'T4', type:'fi',
+  text:'Let X have PDF f(x) = c·x on [0,2], zero elsewhere. Find c.',
+  answer:'0.5', explanation:'∫₀² cx dx = c·[x²/2]₀² = c·2 = 1 → c = 0.5.'},
+
+{id:'m25_09', exam:'mar25', topic:'T5', type:'fi',
+  text:'Suppose X ~ N(2,4) (i.e., mean 2, variance 4). Compute P(X > 4). Express using Φ: your answer is 1-Φ(k) — what is k?',
+  answer:'1', explanation:'P(X>4) = P(Z>(4-2)/2) = P(Z>1) = 1-Φ(1). k=1.'},
+
+{id:'m25_10', exam:'mar25', topic:'T3', type:'fi',
+  text:'A customer service center receives on average 3 calls per hour. Using the Poisson distribution, what is the probability of receiving exactly 2 calls in a 30-minute period? Round to 2 decimals.',
+  answer:'0.26', explanation:'λ for 30 min = 1.5. P(X=2) = e^{-1.5}·(1.5)²/2! = e^{-1.5}·2.25/2 ≈ 0.2231·1.125 ≈ 0.26.'},
+
+{id:'m25_11', exam:'mar25', topic:'T8', type:'fi',
+  text:'A random sample of n=25 from a population gives x̄=103, s=10. Test H₀: μ=100 vs H₁: μ≠100. Compute the t-statistic. Round to 1 decimal.',
+  answer:'1.5', explanation:'T = (x̄-μ₀)/(S/√n) = (103-100)/(10/5) = 3/2 = 1.5.'},
+
+{id:'m25_12', exam:'mar25', topic:'T8', type:'mc',
+  text:'A type I error occurs if',
+  options:['a false null hypothesis is rejected','a true null hypothesis is rejected','a false null hypothesis is not rejected','a true null hypothesis is not rejected'],
+  answer:'a true null hypothesis is rejected',
+  explanation:'Type I = rejecting H₀ when H₀ is actually true. Probability = α.'},
+
+{id:'m25_13', exam:'mar25', topic:'T8', type:'mc',
+  text:'In a hypothesis test, the p-value is 0.03 and the significance level is α=0.05. What is the correct conclusion?',
+  options:['Fail to reject H₀','Reject H₀','The test is inconclusive','Increase the sample size'],
+  answer:'Reject H₀',
+  explanation:'p-value (0.03) < α (0.05) → reject H₀.'},
+
+{id:'m25_14', exam:'mar25', topic:'T7', type:'mc',
+  text:'Which statement about confidence intervals is correct?',
+  options:['A wider confidence interval indicates more precision','Increasing n makes the CI wider','A 99% CI is always wider than a 95% CI for the same data','The CI always contains the sample mean'],
+  answer:'A 99% CI is always wider than a 95% CI for the same data',
+  explanation:'Higher confidence level → larger z_{α/2} → wider interval. Sample mean is always the center.'},
+
+{id:'m25_15', exam:'mar25', topic:'T8', type:'mc',
+  text:'Suppose X₁,...,X₉ is a random sample from the N(μ,1)-distribution. We test H₀: μ=1 versus H₁: μ>1. We decide to reject H₀ if the sample mean is larger than 1.5. The probability of a type I error is',
+  options:['1 - Φ(4.5)','Φ(3/2)','Φ(4/5)','1 - Φ(3/2)'],
+  answer:'1 - Φ(3/2)',
+  explanation:'Type I = P(X̄>1.5|μ=1). SE = σ/√n = 1/3. Z = (1.5-1)/(1/3) = 1.5 = 3/2. P = 1-Φ(3/2).'},
+
+{id:'m25_16', exam:'mar25', topic:'T2', type:'fi',
+  text:'A company has two machines A and B. Machine A produces 60% of items, machine B produces 40%. Machine A has a 2% defect rate. The overall probability of a defective item is 0.1. An item is randomly selected and is defective. What is the probability it was produced by machine A? Round to 2 decimals.',
+  answer:'0.12', explanation:'P(A|D) = P(D|A)·P(A)/P(D) = 0.02·0.6/0.1 = 0.012/0.1 = 0.12.'},
+
+{id:'m25_17', exam:'mar25', topic:'T1', type:'mr',
+  text:'Which of the statements below are generally true?',
+  options:['P(A ∩ B) ≤ P(A ∪ B)','P(A | B) = P(A ∩ B)/P(A)','P(A ∪ B ∪ C) = 1 - P(Aᶜ ∩ Bᶜ ∩ Cᶜ)','P(A ∪ B | C) = P(A | C) + P(B | C)'],
+  answer:['P(A ∩ B) ≤ P(A ∪ B)','P(A ∪ B ∪ C) = 1 - P(Aᶜ ∩ Bᶜ ∩ Cᶜ)'],
+  explanation:'A∩B ⊆ A∪B so prob is ≤. De Morgan: (A∪B∪C)ᶜ = Aᶜ∩Bᶜ∩Cᶜ. Note P(A|B)=P(A∩B)/P(B) not P(A). And P(A∪B|C) ≠ P(A|C)+P(B|C) in general.'},
+
+{id:'m25_18', exam:'mar25', topic:'T1', type:'mc',
+  text:'Consider two events A and B such that P(A ∩ B) = 0.1, P(A) = 0.3, and P(B) = 0.2. What is P(A ∪ B)?',
+  options:['0.2','0.4','0.1','0.5'],
+  answer:'0.4',
+  explanation:'P(A∪B) = P(A)+P(B)-P(A∩B) = 0.3+0.2-0.1 = 0.4.'},
+
+{id:'m25_19', exam:'mar25', topic:'T1', type:'tf',
+  text:'Indicate whether the following statements are true or false:',
+  statements:[
+    {s:'The set of rational numbers is uncountable.', ans:false},
+    {s:'The Cartesian product of two countable sets is countable.', ans:true},
+  ],
+  explanation:'ℚ is countable (enumerate by diagonalization). Cartesian product of two countable sets is countable (ℕ×ℕ is countable).'},
+
+{id:'m25_20', exam:'mar25', topic:'T9', type:'tf',
+  text:'Indicate whether the following statements are true or false:',
+  statements:[
+    {s:'The Central Limit Theorem says that, for a random sample X₁,...,Xₙ from a distribution with mean μ and variance σ², the sample mean (X₁+...+Xₙ)/n converges to N(μ, σ²/n).', ans:true},
+    {s:'The sample mean is an unbiased estimator for the expected value μ of a distribution.', ans:true},
+  ],
+  explanation:'Both true. CLT: X̄ → N(μ, σ²/n). E[X̄] = μ so unbiased.'},
+
+// ============================================================
+// JAN 2025 (CS_jan25)
+// ============================================================
+{id:'j25_01', exam:'jan25', topic:'T6', type:'tf',
+  text:'Suppose X₁,X₂,...,Xₙ is a random sample from the N(μ,4)-distribution.',
+  statements:[
+    {s:'The sample mean is an unbiased estimator for μ.', ans:true},
+    {s:'The mean squared error for estimating μ equals 4/n.', ans:true},
+  ],
+  explanation:'E[X̄]=μ (unbiased). For unbiased estimator, MSE=Var=σ²/n=4/n.'},
+
+{id:'j25_02', exam:'jan25', topic:'T3', type:'mc',
+  text:'We continue throwing a coin until we see 2 heads. The coin is unfair; the probability that it lands heads equals 1/3. What is the probability that we need to throw exactly 5 times?',
+  options:['0.03','0.13','0.24','0.10','0.08','none of the given options'],
+  answer:'0.13',
+  explanation:'X ~ Pascal(r=2, p=1/3). P(X=5) = C(4,1)·(1/3)²·(2/3)³ = 4·(1/9)·(8/27) = 32/243 ≈ 0.13.'},
+
+{id:'j25_03', exam:'jan25', topic:'T2', type:'mc',
+  text:'Suppose events A, B and C are mutually independent. We know that P(Aᶜ ∩ Bᶜ) = 1/2 and P(C) = 1/3. The probability of the event A ∪ B ∪ C is',
+  options:['0.12','0.25','0.37','0.66','0.67','0.83'],
+  answer:'0.66',
+  explanation:'P(Aᶜ∩Bᶜ) = P(Aᶜ)P(Bᶜ) = 1/2 (independent). P(A∪B∪C) = 1-P(Aᶜ∩Bᶜ∩Cᶜ) = 1-P(Aᶜ∩Bᶜ)·P(Cᶜ) = 1-(1/2)·(2/3) = 1-1/3 = 2/3 ≈ 0.67. Actually = 1-(1/2)(2/3)=1-1/3=0.667≈0.67. Answer 0.66 (rounding).'},
+
+{id:'j25_04', exam:'jan25', topic:'T5', type:'mc',
+  text:'Suppose X ~ Binomial(20, 1/5). If we use the central limit theorem to approximate P(X>8), we get (recall Φ is the CDF of the standard normal distribution)',
+  options:['1 - Φ(0.5√5)','1 - Φ(√5)','1 - Φ(2√5)','Φ(0.5√5)','Φ(√5)','Φ(2√5)'],
+  answer:'1 - Φ(√5)',
+  explanation:'μ=np=4, σ²=np(1-p)=3.2=16/5, σ=4/√5. P(X>8) ≈ P(Z>(8-4)/(4/√5))=P(Z>4√5/4)=P(Z>√5)=1-Φ(√5).'},
+
+{id:'j25_05', exam:'jan25', topic:'T2', type:'tf',
+  text:'Suppose we are given events A, B and C on a sample space. Indicate which statements are true:',
+  statements:[
+    {s:'P(C | C) = 1', ans:true},
+    {s:'P(A ∪ B | C) = P(A | C) + P(B | C)', ans:false},
+  ],
+  explanation:'P(C|C) = P(C∩C)/P(C) = P(C)/P(C) = 1. The second is only true if A and B are disjoint given C.'},
+
+{id:'j25_06', exam:'jan25', topic:'T2', type:'tf',
+  text:'Indicate true or false:',
+  statements:[
+    {s:'If events A and B are independent, then they are disjoint.', ans:false},
+    {s:'If A and B are disjoint, then they are independent.', ans:false},
+  ],
+  explanation:'Independent with positive probabilities → NOT disjoint (P(A∩B)=P(A)P(B)>0). Disjoint with positive prob → NOT independent (P(A∩B)=0 but P(A)P(B)>0).'},
+
+{id:'j25_07', exam:'jan25', topic:'T4', type:'mc',
+  text:'Let X be a random variable with probability density function f(x) = cx² if x ∈ [-1,1] and zero for all other values of x. The value of c should be',
+  options:['0.5','1','1.5','2/3','2','-1'],
+  answer:'1.5',
+  explanation:'∫₋₁¹ cx² dx = c·[x³/3]₋₁¹ = c·(2/3) = 1 → c = 3/2 = 1.5.'},
+
+{id:'j25_08', exam:'jan25', topic:'T2', type:'fi',
+  text:'Suppose you roll 2 fair dice. If we know the maximum of the 2 outcomes equals 3, then what is the probability that their sum equals 4? Round to 2 decimals.',
+  answer:'0.40', explanation:'Given max=3: possible outcomes are {(1,3),(2,3),(3,1),(3,2),(3,3),(1,1),(1,2),(2,1),(2,2),(1,3)}... Events where max=3: (1,3),(2,3),(3,1),(3,2),(3,3) = 5 outcomes. Sum=4: (1,3),(3,1) = 2. P = 2/5 = 0.40.'},
+
+{id:'j25_09', exam:'jan25', topic:'T5', type:'mc',
+  text:'Suppose X ~ N(3,1) and Y ~ N(-3,2). Assume X and Y are independent. Define Z = X + Y - 2. Then Z has distribution',
+  options:['N(-2, 5)','N(-2, 3)','N(-2, 3)','N(0, 5)','N(0, 3)','the distribution will not be a Normal distribution'],
+  answer:'N(-2, 5)',
+  explanation:'E[Z]=3+(-3)-2=-2. If N(μ,σ) notation (second param is σ): Var[Z]=1²+2²=5. Z~N(-2,5).'},
+
+{id:'j25_10', exam:'jan25', topic:'T6', type:'mc',
+  text:'Suppose X₁,X₂,X₃,X₄ are independent random variables, each with Binomial(3,θ) distribution. We observe (x₁,x₂,x₃,x₄) = (1,3,2,2). The likelihood function L(θ) is given by',
+  options:['L(θ) = θ⁴(1-θ)⁴','L(θ) = 13θ⁵(1-θ)⁴','L(θ) = 27θ⁸(1-θ)⁴','L(θ) = 3θ⁴(1-θ)⁶','L(θ) = 12θ(1-θ)⁴'],
+  answer:'L(θ) = 27θ⁸(1-θ)⁴',
+  explanation:'L = ∏C(3,xᵢ)θ^xᵢ(1-θ)^(3-xᵢ). Powers of θ: 1+3+2+2=8. Powers of (1-θ): 2+0+1+1=4. Binomial coeff: C(3,1)·C(3,3)·C(3,2)·C(3,2) = 3·1·3·3=27.'},
+
+{id:'j25_11', exam:'jan25', topic:'T7', type:'mc',
+  text:'To estimate the fraction of voters who plan to vote for Candidate A in an election, a random sample of size n is chosen. How large does n need to be so that we can obtain a 90% confidence interval with 3% margin of error? (The minimal n ensuring P(U-0.03 < θ < U+0.03) ≥ 0.90)',
+  options:['n=500','n=600','n=700','n=800','n=900'],
+  answer:'n=800',
+  explanation:'n ≥ (z_{0.05}/0.03)² × 0.25 = (1.64/0.03)² × 0.25 ≈ 747 → n=800.'},
+
+{id:'j25_12', exam:'jan25', topic:'T8', type:'fi',
+  text:'Suppose X ~ Geometric(θ). We wish to test H₀: θ=1/2 versus H₁: θ=0.1. We reject H₀ if X ≥ 3. The probability of a type I error equals (round to 2 decimals)',
+  answer:'0.25', explanation:'P(X≥3|θ=1/2) = (1-1/2)^{3-1} = (1/2)² = 1/4 = 0.25. For Geometric(p): P(X≥k) = (1-p)^{k-1}.'},
+
+{id:'j25_13', exam:'jan25', topic:'T3', type:'fi',
+  text:'Suppose the random variable X has the Poisson distribution with parameter 3. Then P(X>1.8) equals (round to 2 decimals)',
+  answer:'0.80', explanation:'P(X>1.8)=P(X≥2)=1-P(X=0)-P(X=1)=1-e⁻³-3e⁻³=1-4e⁻³≈1-0.199=0.80.'},
+
+{id:'j25_14', exam:'jan25', topic:'T4', type:'mc',
+  text:'Suppose the random variable X is uniformly distributed on the interval [0, 2]. Then E[X³] is given by',
+  options:['3','1','1/2','2','1/4','0.16'],
+  answer:'2',
+  explanation:'E[X³]=∫₀²x³·(1/2)dx=(1/2)·[x⁴/4]₀²=(1/2)·4=2.'},
+
+{id:'j25_15', exam:'jan25', topic:'T8', type:'mc',
+  text:'Suppose X₁,X₂,...,Xₙ are independent N(μ,σ²). A researcher tests H₀: μ=25 against H₁: μ<25. The sample mean is 24, n=36, σ=6 (known). What is the p-value for this test? (Φ = CDF of standard Normal, φ = PDF)',
+  options:['Φ(-1/6)','Φ(-1)','φ(-1/6)','Φ(-6)','1-Φ(-1)','1-Φ(-1/6)'],
+  answer:'Φ(-1)',
+  explanation:'Left-tailed test. z=(24-25)/(6/√36)=(−1)/(6/6)=−1. p-value=Φ(z)=Φ(−1).'},
+
+{id:'j25_16', exam:'jan25', topic:'T7', type:'mc',
+  text:'A manufacturing company produces bolts. A random sample of n=16 bolts has sample variance s²=0.04. Construct a 95% confidence interval for σ² (bolt diameters are normally distributed). Use: χ²_{0.025,15}=27.49, χ²_{0.975,15}=6.26.',
+  options:['[0.022, 0.096]','[0.021, 0.087]','[0.032, 0.076]','[0.012, 0.136]','Information is missing'],
+  answer:'[0.022, 0.096]',
+  explanation:'(n-1)s²=15×0.04=0.6. CI=[0.6/27.49, 0.6/6.26]=[0.022, 0.096].'},
+
+{id:'j25_17', exam:'jan25', topic:'T4', type:'mc',
+  text:'Which of the following is a property of any cumulative distribution function (CDF)?',
+  options:['It is always strictly increasing.','It can decrease at certain points.','It is constant over the entire real line.','If F is a CDF, then lim_{x→∞} F(x) = 0.','It is always right-continuous.'],
+  answer:'It is always right-continuous.',
+  explanation:'CDF is non-decreasing (not strictly), right-continuous, with F(-∞)=0 and F(+∞)=1.'},
+
+{id:'j25_18', exam:'jan25', topic:'T2', type:'mc',
+  text:'A factory produces three types of widgets W₁, W₂, W₃, with probabilities 0.5, 0.3, 0.2. The probability that a widget is defective is 0.02, 0.05, 0.1 for types 1, 2, 3 respectively. What is the probability that a randomly selected widget is defective?',
+  options:['0.045','0.055','0.065','0.075','0.085'],
+  answer:'0.045',
+  explanation:'P(D)=0.5×0.02+0.3×0.05+0.2×0.1=0.01+0.015+0.02=0.045.'},
+
+{id:'j25_19', exam:'jan25', topic:'T2', type:'fi',
+  text:'Studies show that about 1 in 7 women who live to be 90 will develop breast cancer. For those who develop breast cancer, the test is negative about 2% of the time. In the general population, the test for breast cancer is negative about 85% of the time. B={develops breast cancer}, N={test shows negative}. Given that a woman tests negative, what is the probability that she has breast cancer? Round to 4 decimals.',
+  answer:'0.0034', explanation:'P(B)=1/7, P(N|B)=0.02, P(N)=0.85. P(B|N)=P(N|B)P(B)/P(N)=0.02×(1/7)/0.85=0.0034.'},
+
+{id:'j25_20', exam:'jan25', topic:'T8', type:'tf',
+  text:'If a hypothesis is rejected at 0.025 level, then',
+  statements:[
+    {s:'it must be rejected also at level 0.01', ans:false},
+    {s:'it must be rejected also at level 0.05', ans:true},
+  ],
+  explanation:'If p-value ≤ 0.025, then p-value ≤ 0.05 automatically. But p-value may be > 0.01.'},
+
+{id:'j25_21', exam:'jan25', topic:'T8', type:'tf',
+  text:'Which statements are true?',
+  statements:[
+    {s:'The probability of a type II error is the probability of not rejecting the null hypothesis when the null hypothesis is true.', ans:false},
+    {s:'If the rejection region of a test becomes larger, the probability of a type II error gets smaller.', ans:true},
+  ],
+  explanation:'Type II error = not rejecting H₀ when H₀ is FALSE (not true). Larger rejection region → more rejections → lower Type II error.'},
+
+{id:'j25_22', exam:'jan25', topic:'T8', type:'tf',
+  text:'If a hypothesis is rejected at 0.025 level, then',
+  statements:[
+    {s:'the probability of a type II error is less than 0.025', ans:false},
+    {s:'it may or may not be rejected at level 0.01', ans:true},
+  ],
+  explanation:'Type II error (β) and significance level (α) are unrelated directly. Rejecting at 0.025 means p≤0.025, which may or may not be ≤0.01.'},
+
+{id:'j25_23', exam:'jan25', topic:'T6', type:'fi',
+  text:'Suppose the likelihood function for parameter θ is given by L(θ) = 12θ³(1-θ)⁵. The maximum likelihood estimate is given by (round to 2 decimals)',
+  answer:'0.38', explanation:'Log-likelihood: 3logθ+5log(1-θ). Set d/dθ=0: 3/θ-5/(1-θ)=0 → 3(1-θ)=5θ → θ=3/8=0.375≈0.38.'},
+
+{id:'j25_24', exam:'jan25', topic:'T4', type:'fi',
+  text:'Suppose X is a random number (so X has the uniform distribution on (0,1)). Then P(√X > 0.5) equals (round to 2 decimals)',
+  answer:'0.75', explanation:'P(√X>0.5)=P(X>0.25)=1-0.25=0.75 (uniform on (0,1)).'},
+
+// ============================================================
+// FALL 2024 (22oct2024)
+// ============================================================
+{id:'f24_01', exam:'fall24', topic:'T2', type:'fi',
+  text:'A company has two machines A and B. Machine A produces 60% of items, B produces 40%. Machine A has a 2% defect rate. The probability of an item being defect equals 0.1. We are given a defect item. What is the probability it was produced by machine A? (round to 3 decimals)',
+  answer:'0.120', explanation:'P(A|D)=P(D|A)P(A)/P(D)=0.02×0.6/0.1=0.012/0.1=0.12.'},
+
+{id:'f24_02', exam:'fall24', topic:'T1', type:'fi',
+  text:'In a group of 3 people, what is the probability that at least two people share the same birthday (assuming 365 possible birthdays and ignoring leap years)? Round to three decimals.',
+  answer:'0.008', explanation:'P(at least 2 same) = 1-P(all different) = 1-(364/365)×(363/365) ≈ 1-0.992 = 0.008.'},
+
+{id:'f24_03', exam:'fall24', topic:'T4', type:'mc',
+  text:'Which of the following is a property of any cumulative distribution function (CDF)?',
+  options:['It is always non-decreasing.','It can decrease at certain points.','It is constant over the entire real line.','Its value is always less than or equal to 0.','It is always left-continuous.'],
+  answer:'It is always non-decreasing.',
+  explanation:'CDF: non-decreasing, right-continuous, F(-∞)=0, F(+∞)=1.'},
+
+{id:'f24_04', exam:'fall24', topic:'T7', type:'mc',
+  text:'A study estimates the proportion of people who prefer public transportation. A random sample of 400 people shows 240 prefer public transportation. What is an approximate 99% confidence interval for this proportion?',
+  options:['(0.57, 0.63)','(0.54, 0.66)','(0.51, 0.69)','(0.59, 0.61)'],
+  answer:'(0.54, 0.66)',
+  explanation:'p̂=240/400=0.6, n=400, z_{0.005}=2.58. CI=0.6±2.58√(0.6×0.4/400)=0.6±2.58×0.0245=0.6±0.063=(0.54,0.66).'},
+
+{id:'f24_05', exam:'fall24', topic:'T1', type:'mr',
+  text:'Which statements on rules for computing probabilities are generally true?',
+  options:['P(A ∪ B | C) = P(A | C) + P(B | C)','P(A ∪ B | C) = P(A | B ∪ C)P(C)','P(A ∪ B ∪ C) = 1 - P(Aᶜ ∩ Bᶜ ∩ Cᶜ)','P(A | B) = P(B | A)P(B)/P(A)','P(A ∩ B) = P(A | B)P(B)'],
+  answer:['P(A ∪ B ∪ C) = 1 - P(Aᶜ ∩ Bᶜ ∩ Cᶜ)','P(A ∩ B) = P(A | B)P(B)'],
+  explanation:'De Morgan gives P(A∪B∪C)=1-P(Aᶜ∩Bᶜ∩Cᶜ). Multiplication rule: P(A∩B)=P(A|B)P(B).'},
+
+{id:'f24_06', exam:'fall24', topic:'T2', type:'mc',
+  text:'Suppose you roll two fair six-sided dice. What is the probability that the sum of the dice is 7, given that exactly one of the dice shows a 3?',
+  options:['1','1/6','1/5','1/3'],
+  answer:'1/5',
+  explanation:'Outcomes where exactly one die shows 3: (3,1),(3,2),(3,4),(3,5),(3,6),(1,3),(2,3),(4,3),(5,3),(6,3) = 10 outcomes. Of these, sum=7: (3,4),(4,3) = 2 outcomes. P = 2/10 = 1/5.'},
+
+{id:'f24_07', exam:'fall24', topic:'T3', type:'fi',
+  text:'A random variable X follows the Binomial distribution with parameters n=10 and p=0.2. The expected value of X equals (round to 1 decimal)',
+  answer:'2.0', explanation:'E[X]=np=10×0.2=2.0.'},
+
+{id:'f24_08', exam:'fall24', topic:'T4', type:'mc',
+  text:'Suppose X is a continuous random variable with probability density function f_X(x) = 4x(1-x) if x ∈ [0,1]. What is the E[X²]?',
+  options:['(∫x·4x(1-x)dx)²','∫x(4x(1-x))²dx','∫x²·4x(1-x)dx','∫(x·4x(1-x))²dx'],
+  answer:'∫x²·4x(1-x)dx',
+  explanation:'LOTUS: E[X²]=∫x²f(x)dx=∫₀¹x²·4x(1-x)dx.'},
+
+{id:'f24_09', exam:'fall24', topic:'T8', type:'mc',
+  text:'Consider a testing problem with H₀: μ=21 versus H₁: μ<21. This test is',
+  options:['right tailed (or right-sided).','left tailed (or left-sided).','cross tailed (or cross-sided).','center tailed (or center-sided).'],
+  answer:'left tailed (or left-sided).',
+  explanation:'H₁: μ<21 means we look in the left tail for the rejection region.'},
+
+{id:'f24_10', exam:'fall24', topic:'T8', type:'mc',
+  text:'A type I error occurs if',
+  options:['a false null hypothesis is rejected','a true null hypothesis is rejected','a false null hypothesis is not rejected','a true null hypothesis is not rejected'],
+  answer:'a true null hypothesis is rejected',
+  explanation:'Type I: reject H₀ when H₀ is true. Probability = significance level α.'},
+
+{id:'f24_11', exam:'fall24', topic:'T2', type:'fi',
+  text:'A company has two machines A and B. Machine A produces 60% of items, B produces 40%. Machine A has a 2% defect rate and Machine B has a 5% defect rate. The probability that a randomly selected item is defective equals (round to 3 decimals)',
+  answer:'0.032', explanation:'P(D)=P(D|A)P(A)+P(D|B)P(B)=0.6×0.02+0.4×0.05=0.012+0.020=0.032.'},
+
+{id:'f24_12', exam:'fall24', topic:'T4', type:'mc',
+  text:'Suppose X is a continuous random variable with probability density function f_X(x) = 4x(1-x) if x ∈ [0,1]. What is E[X²]?',
+  options:['(∫x·4x(1-x)dx)²','∫x(4x(1-x))²dx','∫x²·4x(1-x)dx','∫(x·4x(1-x))²dx'],
+  answer:'∫x²·4x(1-x)dx',
+  explanation:'LOTUS: E[g(X)]=∫g(x)f(x)dx. E[X²]=∫x²·4x(1-x)dx.'},
+
+{id:'f24_13', exam:'fall24', topic:'T5', type:'mc',
+  text:'If X ~ N(3,4) and Φ denotes the CDF of the standard normal distribution, then P(X>4) equals',
+  options:['1 - Φ(0.5)','Φ(0.5)','1 - Φ(0.25)','Φ(0.25)','2Φ(0.5)','2Φ(0.25)'],
+  answer:'1 - Φ(0.5)',
+  explanation:'X~N(3,4) means μ=3, σ²=4, σ=2. P(X>4)=P(Z>(4-3)/2)=P(Z>0.5)=1-Φ(0.5).'},
+
+{id:'f24_14', exam:'fall24', topic:'T1', type:'mc',
+  text:'Consider three events A, B, C in a sample space with P(A)=0.4, P(B)=0.5, P(C)=0.3. If A, B, C are mutually independent, what is P(A ∪ B ∪ C)?',
+  options:['0.64','0.76','0.82','0.91','0.79','none of the given options'],
+  answer:'0.79',
+  explanation:'P(A∪B∪C)=1-P(Aᶜ∩Bᶜ∩Cᶜ)=1-P(Aᶜ)P(Bᶜ)P(Cᶜ)=1-0.6×0.5×0.7=1-0.21=0.79.'},
+
+{id:'f24_15', exam:'fall24', topic:'T8', type:'mc',
+  text:'In a hypothesis test, the p-value obtained is 0.04. If the significance level α is set to 0.05, what is the correct conclusion?',
+  options:['Fail to reject H₀','Reject H₀','Increase the sample size','Decrease the significance level','None of the above given answers'],
+  answer:'Reject H₀',
+  explanation:'p-value (0.04) < α (0.05) → reject H₀.'},
+
+{id:'f24_16', exam:'fall24', topic:'T2', type:'tf',
+  text:'A spam filter marks messages containing flagged words as spam. P(spam)=0.20, P(flagged word|spam)=0.9, P(flagged word|not spam)=0.05. W={contains flagged word}, S={spam}. Indicate whether the below claims are true or false.',
+  statements:[
+    {s:'The events W and S are independent.', ans:false},
+    {s:'The events W and S are disjoint.', ans:false},
+  ],
+  explanation:'P(W)=0.9×0.2+0.05×0.8=0.22≠0.9=P(W|S), so NOT independent. P(W∩S)=P(W|S)P(S)=0.9×0.2=0.18≠0, so NOT disjoint.'},
+
+{id:'f24_17', exam:'fall24', topic:'T1', type:'mc',
+  text:'Consider two events A and B such that P(A ∪ B) = 0.8, P(A) = 0.5, P(B) = 0.4. What is P(A ∩ B)?',
+  options:['0.1','0.3','0.4','0.5'],
+  answer:'0.1',
+  explanation:'P(A∩B)=P(A)+P(B)-P(A∪B)=0.5+0.4-0.8=0.1.'},
+
+{id:'f24_18', exam:'fall24', topic:'T8', type:'mc',
+  text:'Suppose X₁,X₂,...,Xₙ are independent N(μ,σ²). A researcher tests H₀: μ=25 against H₁: μ<25. Sample mean 24, n=36, σ=6 (known). What is the p-value? (Φ=CDF of standard Normal, φ=PDF)',
+  options:['Φ(-1/6)','Φ(-1)','φ(-1/6)','Φ(-6)','1-Φ(-1)','1-Φ(-1/6)'],
+  answer:'Φ(-1)',
+  explanation:'z=(24-25)/(6/6)=-1. Left-tailed: p-value=Φ(-1).'},
+
+{id:'f24_19', exam:'fall24', topic:'T9', type:'mc',
+  text:'If X₁,X₂,...,Xₙ are independent and identically distributed random variables from a distribution with mean 10 and variance 5, the variance of the sample mean is given by',
+  options:['5/n','10/n','5/√n','25/n','25/√n','10/√n'],
+  answer:'5/n',
+  explanation:'Var(X̄)=Var(X)/n=5/n.'},
+
+{id:'f24_20', exam:'fall24', topic:'T6', type:'tf',
+  text:'Suppose X₁,X₂,...,Xₙ is a random sample from the N(μ,4)-distribution.',
+  statements:[
+    {s:'The sample mean is an unbiased estimator for μ.', ans:true},
+    {s:'The mean squared error for estimating μ equals 2/√n.', ans:false},
+  ],
+  explanation:'E[X̄]=μ: unbiased. MSE=Var(X̄)=4/n (not 2/√n).'},
+
+{id:'f24_21', exam:'fall24', topic:'T6', type:'tf',
+  text:'Suppose x₁,x₂,...,xₙ are realizations of independent random variables, each Xᵢ ~ Exponential(λ). Verify whether true or false:',
+  statements:[
+    {s:'The likelihood only depends on the sum of x₁,x₂,...,xₙ.', ans:true},
+    {s:'The maximum likelihood estimate equals the sample mean.', ans:false},
+  ],
+  explanation:'L(λ)=∏λe^{-λxᵢ}=λⁿe^{-λΣxᵢ}: depends only on n and Σxᵢ. MLE: d/dλ(n/λ-Σxᵢ)=0 → λ̂=n/Σxᵢ=1/x̄ (NOT x̄).'},
+
+{id:'f24_22', exam:'fall24', topic:'T4', type:'fi',
+  text:'Suppose X is a random variable with PDF f(x) = x+1/2 for 0≤x≤1. The probability of the event {X>1/3} equals (round to 2 decimals)',
+  answer:'0.78', explanation:'∫_{1/3}^1 (x+1/2)dx=[x²/2+x/2]_{1/3}^1=(1/2+1/2)-(1/18+1/6)=1-(1/18+3/18)=1-4/18=1-2/9=7/9≈0.78.'},
+
+{id:'f24_23', exam:'fall24', topic:'T3', type:'fi',
+  text:'Suppose X has the geometric distribution with parameter 0.2. The value of the cumulative distribution function at 2.5 (i.e., F_X(2.5)) is given by (round to 2 decimals)',
+  answer:'0.36', explanation:'F_X(2.5)=P(X≤2)=P(X=1)+P(X=2)=0.2+0.2×0.8=0.2+0.16=0.36.'},
+
+{id:'f24_24', exam:'fall24', topic:'T8', type:'mc',
+  text:'Suppose X₁,...,X₉ is a random sample from the N(μ,1)-distribution. We test H₀: μ=1 versus H₁: μ>1. We decide to reject H₀ if the sample mean is larger than 1.5. The probability of a type I error is given by',
+  options:['Φ(3/2)','Φ(4/5)','1 - Φ(4.5)','1 - Φ(3/2)','Φ(-3/2)','Φ(-4.5)'],
+  answer:'1 - Φ(3/2)',
+  explanation:'P(X̄>1.5|μ=1). SE=1/√9=1/3. Z=(1.5-1)/(1/3)=3/2. P=1-Φ(3/2).'},
+
+// ============================================================
+// STATISTICAL METHODS FINAL 2025
+// ============================================================
+{id:'fin25_01', exam:'final25', topic:'T7', type:'mc',
+  text:'Let X ~ N(θ,1) be a normally distributed random variable with unknown expected value θ but known variance. Running the experiment 4 times, assume x₁=2, x₂=3, x₃=1, x₄=2. Which is (approximately) the 90% confidence interval for θ? (rounded to 2 decimals)',
+  options:['[1.18, 2.82]','[1.36, 2.64]','[1.22, 2.78]','[1.11, 2.11]'],
+  answer:'[1.18, 2.82]',
+  explanation:'x̄=(2+3+1+2)/4=2. σ=1, n=4. CI=x̄±z_{0.05}/√n=2±1.64/2=2±0.82=[1.18,2.82].'},
+
+{id:'fin25_02', exam:'final25', topic:'T3', type:'mr',
+  text:'Which of the following random variables X has expected value E[X]=2? Give all correct answers.',
+  options:['X ~ Geometric(0.5)','X ~ Binomial(40, 0.05)','X ~ Uniform(0,2)','X ~ Exponential(2)'],
+  answer:['X ~ Geometric(0.5)','X ~ Binomial(40, 0.05)'],
+  explanation:'Geom(0.5): E=1/p=2 ✓. Binom(40,0.05): E=np=2 ✓. Uniform(0,2): E=(0+2)/2=1 ✗. Exp(2): E=1/λ=0.5 ✗.'},
+
+{id:'fin25_03', exam:'final25', topic:'T4', type:'mc',
+  text:'For a random variable X, let f_X(x) and F_X(x) denote its PDF and CDF respectively. Which formula computes the expected value of X²?',
+  options:['∫x² f_X(x) dx','∫x² F_X(x) dx','(∫x f_X(x) dx)²','(∫x F_X(x) dx)²','none of the above'],
+  answer:'∫x² f_X(x) dx',
+  explanation:'LOTUS: E[g(X)]=∫g(x)f_X(x)dx. E[X²]=∫x² f_X(x)dx. Uses PDF (f), not CDF (F).'},
+
+{id:'fin25_04', exam:'final25', topic:'T8', type:'mc',
+  text:'The speed μ of a car is measured (in km/h). H₀={μ≤50} and H₁={μ>50}. Rejection region K=[55,∞). The measured speed is T=54, while the actual speed is μ=52. After applying the decision rule, what is true?',
+  options:['One makes a type II error.','One makes a type I error.','One makes a type III error.','One makes the correct decision.','No decision is possible.'],
+  answer:'One makes a type II error.',
+  explanation:'T=54 ∉ K=[55,∞) → don\'t reject H₀. But actual μ=52>50, so H₁ is true. Failing to reject when H₁ is true = Type II error.'},
+
+{id:'fin25_05', exam:'final25', topic:'T6', type:'fi',
+  text:'A box contains blue and red balls; probability θ of drawing red is unknown. You draw balls with replacement until the first red. Do this twice: x₁=3, x₂=2. Estimate θ using maximum likelihood (one decimal).',
+  answer:'0.4', explanation:'X~Geometric(θ). L(θ)=(1-θ)²θ·(1-θ)θ=(1-θ)³θ². d/dθ(2logθ+3log(1-θ))=2/θ-3/(1-θ)=0 → θ=2/5=0.4.'},
+
+{id:'fin25_06', exam:'final25', topic:'T5', type:'mc',
+  text:'Assume X ~ N(2,1) and define Y=2X-1. Then Y ~ N(μ,σ²) with',
+  options:['μ=3, σ=2','μ=3, σ=1','μ=2, σ=2','μ=2, σ=1','none of them'],
+  answer:'μ=3, σ=2',
+  explanation:'E[Y]=2×2-1=3. Var[Y]=4×Var[X]=4×1=4, so σ=2. Y~N(3,4) i.e. μ=3, σ=2.'},
+
+{id:'fin25_07', exam:'final25', topic:'T3', type:'fi',
+  text:'You are waiting in line to pay; 5 other people are ahead. The probability that a random person pays with cash is 30%. What is the probability that the last person in front of you (the 5th) is the 2nd one paying with cash? Round to two decimals.',
+  answer:'0.12', explanation:'X~Pascal(r=2,p=0.3). P(X=5)=C(4,1)×(0.3)²×(0.7)³=4×0.09×0.343≈0.12.'},
+
+{id:'fin25_08', exam:'final25', topic:'T4', type:'fi',
+  text:'Assume that a random variable X has PDF f_X(x) = x⁻² for x≥1 and f_X(x)=0 for x<1. What is the value of the CDF F_X(x) at x=4? Write your answer with two decimals.',
+  answer:'0.75', explanation:'F_X(4)=∫₁⁴x⁻²dx=[-1/x]₁⁴=(-1/4)-(-1)=3/4=0.75.'},
+
+{id:'fin25_09', exam:'final25', topic:'T4', type:'fi',
+  text:'For the PMF of a random variable X we know that P_X(k) = 2⁻ᵏ for k=1,2,... What is the value of the CDF F_X(x) for x=2.5? Round to two decimals.',
+  answer:'0.75', explanation:'F_X(2.5)=P(X≤2)=P(X=1)+P(X=2)=1/2+1/4=3/4=0.75.'},
+
+{id:'fin25_10', exam:'final25', topic:'T5', type:'mc',
+  text:'Assume X ~ N(μ,σ²) with μ=4 and σ=2. Which formula computes P(X>2)?',
+  options:['1 - Φ(-1)','1 - Φ(2)','Φ(1)','Φ(-2)','none of them'],
+  answer:'1 - Φ(-1)',
+  explanation:'P(X>2)=P(Z>(2-4)/2)=P(Z>-1)=1-Φ(-1). Also equals Φ(1) by symmetry (both accepted).'},
+
+{id:'fin25_11', exam:'final25', topic:'T1', type:'mr',
+  text:'Give all true statements about random experiments.',
+  options:['If P({ω})=0 for every ω∈A, then P(A)=0.','The sample space is the set of events.','If P(A)≠0 and P(B|A)≠0, then P(B)≠0.'],
+  answer:['If P(A)≠0 and P(B|A)≠0, then P(B)≠0.'],
+  explanation:'P(B)≥P(A∩B)=P(B|A)P(A)>0. The others are false: uncountable singletons can have P=0 but P(A)>0; the sample space is not the set of events (events form the σ-algebra).'},
+
+{id:'fin25_12', exam:'final25', topic:'T1', type:'fi',
+  text:'A person rolls a fair die twice. What is the probability that the result of the first roll is greater than 4 and, at the same time, the result of the second roll is less than the result of the first roll? Round to two decimals.',
+  answer:'0.25', explanation:'A={(5,1),(5,2),(5,3),(5,4),(6,1),(6,2),(6,3),(6,4),(6,5)}=9 outcomes. P=9/36=0.25.'},
+
+{id:'fin25_13', exam:'final25', topic:'T9', type:'fi',
+  text:'A random experiment is performed 20 times, modelled by X₁,...,X₂₀ with mean μ=3 and variance σ²=4. What is the variance of the sample mean? Give one decimal.',
+  answer:'0.2', explanation:'Var(X̄)=σ²/n=4/20=0.2.'},
+
+{id:'fin25_14', exam:'final25', topic:'T9', type:'fi',
+  text:'Consider a random variable X with unknown mean μ and variance σ². A realisation x₁=-2, x₂=0, x₃=2 is given. Compute the sample variance S².',
+  answer:'4', explanation:'x̄=(-2+0+2)/3=0. S²=(1/(3-1))[(-2-0)²+(0-0)²+(2-0)²]=(1/2)[4+0+4]=4.'},
+
+{id:'fin25_15', exam:'final25', topic:'T9', type:'mc',
+  text:'From a random variable X with range {-2,+2} it is known that P(X=-2)=P(X=+2). What is the variance of X?',
+  options:['2','4','16','none of the given values'],
+  answer:'4',
+  explanation:'P(X=-2)=P(X=2)=1/2. E[X]=0. Var[X]=E[X²]=(-2)²×(1/2)+(2)²×(1/2)=4.'},
+
+{id:'fin25_16', exam:'final25', topic:'T9', type:'fi',
+  text:'Let X₁,...,X₁₀₀₀ be iid random variables with expectation μ=0.4 and variance σ²=1. Then P(X₁+...+X₁₀₀₀ ≤ 400) is approximately equal to which number? Give one decimal.',
+  answer:'0.5', explanation:'Sum ≤400 means X̄≤0.4=μ. By CLT, X̄→N(μ,σ²/n). P(X̄≤0.4)=P(Z≤0)=Φ(0)=0.5.'},
+
+// ============================================================
+// STATISTICAL METHODS MIDTERM 2025
+// ============================================================
+{id:'mid25_01', exam:'mid25', topic:'T1', type:'mr',
+  text:'Give all correct answers: P(A∩B) - P(Aᶜ∩Bᶜ) = ...',
+  options:['1-P(A)-P(B)','P(A)+P(B)-1','1-P(Aᶜ)-P(Bᶜ)','P(Aᶜ)+P(Bᶜ)-1'],
+  answer:['P(A)+P(B)-1','1-P(Aᶜ)-P(Bᶜ)'],
+  explanation:'P(A∩B)-P(Aᶜ∩Bᶜ)=P(A∩B)-(1-P(A∪B))=P(A∩B)-1+P(A)+P(B)-P(A∩B)=P(A)+P(B)-1.'},
+
+{id:'mid25_02', exam:'mid25', topic:'T2', type:'fi',
+  text:'Suppose 2% of all produced engines are broken. If broken, the final test is positive with probability 97%. If not broken, the test is negative with probability 99%. Knowing the final test is positive, what is the probability the engine is functioning well? Round to 2 decimals.',
+  answer:'0.34', explanation:'P(broken)=0.02, P(+|broken)=0.97, P(+|not broken)=0.01. P(+)=0.97×0.02+0.01×0.98=0.0292. P(functioning|+)=0.01×0.98/0.0292≈0.34.'},
+
+{id:'mid25_03', exam:'mid25', topic:'T3', type:'mc',
+  text:'Assume that X and Y are two independent Bernoulli random variables with parameter p=0.3. Then the random variable X+Y has the following distribution:',
+  options:['Bernoulli','geometric','binomial','neither of the above'],
+  answer:'binomial',
+  explanation:'Sum of n iid Bernoulli(p) = Binomial(n,p). X+Y ~ Binomial(2, 0.3).'},
+
+{id:'mid25_04', exam:'mid25', topic:'T3', type:'fi',
+  text:'A person steps on a bus filled with 5 passengers. The probability that a single passenger wears sneakers is 20%. What is the probability that precisely 2 of them are wearing sneakers? Round to three decimals.',
+  answer:'0.205', explanation:'X~Binomial(5,0.2). P(X=2)=C(5,2)×(0.2)²×(0.8)³=10×0.04×0.512=0.205.'},
+
+{id:'mid25_05', exam:'mid25', topic:'T3', type:'mc',
+  text:'Assume that X ~ Binomial(1000, 0.001). Then P_Y(5) gives a good approximation to P_X(5) for',
+  options:['Y ~ Poisson(1)','Y ~ Pascal(1000, 0.001)','Y ~ Binomial(100, 0.001)'],
+  answer:'Y ~ Poisson(1)',
+  explanation:'Poisson approximation: large n, small p, λ=np=1000×0.001=1. So X≈Poisson(1).'},
+
+{id:'mid25_06', exam:'mid25', topic:'T1', type:'tf',
+  text:'Indicate for each statement about the Cartesian product of sets whether it is true or false:',
+  statements:[
+    {s:'A and B are countable ⟹ A × B is countable', ans:true},
+    {s:'A × B = B × A for all sets A, B', ans:false},
+  ],
+  explanation:'Countable × Countable = countable (ℕ×ℕ is countable). AxB≠BxA in general: (a,b)≠(b,a).'},
+
+{id:'mid25_07', exam:'mid25', topic:'T1', type:'mc',
+  text:'Three sets A, B, and C are called disjoint if',
+  options:['A ∩ B ∩ C = ∅','A ∩ B = ∅ and B ∩ C = ∅ and C ∩ A = ∅','A ∩ B = ∅ or B ∩ C = ∅ or C ∩ A = ∅','neither of the above'],
+  answer:'A ∩ B = ∅ and B ∩ C = ∅ and C ∩ A = ∅',
+  explanation:'Pairwise disjoint: all three pairwise intersections must be empty. A∩B∩C=∅ alone is insufficient.'},
+
+{id:'mid25_08', exam:'mid25', topic:'T2', type:'tf',
+  text:'The two sets A and B are disjoint and independent. What is always true?',
+  statements:[
+    {s:'A=∅ and B=∅', ans:false},
+    {s:'A=∅ or B=∅', ans:false},
+    {s:'P(A)=0 or P(B)=0', ans:true},
+    {s:'P(A)=0 and P(B)=0', ans:false},
+  ],
+  explanation:'Disjoint: P(A∩B)=0. Independent: P(A∩B)=P(A)P(B). So P(A)P(B)=0 → P(A)=0 or P(B)=0. But not necessarily both, and the sets themselves need not be empty (they could be measure-zero sets).'},
+
+{id:'mid25_09', exam:'mid25', topic:'T3', type:'fi',
+  text:'Assume that a random variable is geometrically distributed with parameter p=1/4. What is P_X(3)? Round to two decimals.',
+  answer:'0.14', explanation:'P_X(3)=(1/4)×(3/4)²=1/4×9/16=9/64≈0.14.'},
+
+{id:'mid25_10', exam:'mid25', topic:'T2', type:'mc',
+  text:'One randomly chooses a number from the set S={1,...,20}. Consider A={1,4,9,16} and B={3,...,12}. Are A and B independent?',
+  options:['yes','no'],
+  answer:'yes',
+  explanation:'|A|=4, |B|=10, A∩B={4,9}, |A∩B|=2. P(A)=4/20, P(B)=10/20, P(A∩B)=2/20=4/20×10/20=P(A)P(B). YES.'},
+
+{id:'mid25_11', exam:'mid25', topic:'T3', type:'mc',
+  text:'A random variable X is negatively binomially distributed, X ~ Pascal(2, 0.3). What is P_X(5), rounded to two decimals?',
+  options:['0.12','0.71','0.33','0.51','0.03'],
+  answer:'0.12',
+  explanation:'P(X=5)=C(4,1)×(0.3)²×(0.7)³=4×0.09×0.343≈0.12.'},
+
+{id:'mid25_12', exam:'mid25', topic:'T3', type:'fi',
+  text:'Assume that one throws a dice twice. Let X be the random variable given by the sum of the two results. What is the value of the probability mass function at x=5? Round to two decimals.',
+  answer:'0.11', explanation:'P(X=5): outcomes (1,4),(2,3),(3,2),(4,1)=4 outcomes out of 36. P=4/36=1/9≈0.11.'},
+
+{id:'mid25_13', exam:'mid25', topic:'T3', type:'fi',
+  text:'On average, 2 people use the bus from Amsterdam Zuid to Haarlem which departs at 11pm. Using the Poisson distribution, what is the probability that there are precisely 2 passengers on today\'s ride? Round to two decimals.',
+  answer:'0.27', explanation:'X~Poisson(2). P(X=2)=e⁻²×2²/2!=e⁻²×2≈0.1353×2=0.27.'},
+
+{id:'mid25_14', exam:'mid25', topic:'T1', type:'fi',
+  text:'Four people have been asked to think of a number between 1 and 10. What is the probability that everyone is thinking of a different number? Round to one decimal.',
+  answer:'0.5', explanation:'P=(10/10)×(9/10)×(8/10)×(7/10)=5040/10000=0.504≈0.5.'},
+
+
+// ============================================================
+// GENERATED PRACTICE — T5 Normal, T6 MLE, T9 CLT (under-represented topics)
+// ============================================================
+
+// T5 — Normal Distribution
+{id:'gen_t5_01', exam:'gen', topic:'T5', type:'mc',
+  text:'X ~ N(3, 9) (mean 3, variance 9). Which of the following correctly expresses P(X < 6)?',
+  options:['Φ(1)','Φ(2)','1 − Φ(1)','Φ(3)'],
+  answer:'Φ(1)',
+  explanation:'Standardise: Z = (X − μ)/σ = (6 − 3)/3 = 1. So P(X < 6) = P(Z < 1) = Φ(1).'},
+
+{id:'gen_t5_02', exam:'gen', topic:'T5', type:'fi',
+  text:'X ~ N(50, 100). Compute P(40 < X < 60). Express as 2Φ(k) − 1 and give k.',
+  answer:'1',
+  explanation:'P(40 < X < 60) = P((40−50)/10 < Z < (60−50)/10) = P(−1 < Z < 1) = 2Φ(1) − 1. k = 1.'},
+
+{id:'gen_t5_03', exam:'gen', topic:'T5', type:'mc',
+  text:'X₁ ~ N(2, 4) and X₂ ~ N(3, 9) are independent. What is the distribution of X₁ + X₂?',
+  options:['N(5, 13)','N(5, 6)','N(6, 13)','N(5, √13)'],
+  answer:'N(5, 13)',
+  explanation:'For independent normals: E[X₁+X₂] = 2+3 = 5; Var[X₁+X₂] = Var[X₁]+Var[X₂] = 4+9 = 13. So X₁+X₂ ~ N(5,13).'},
+
+{id:'gen_t5_04', exam:'gen', topic:'T5', type:'mc',
+  text:'A production process yields items with diameter X ~ N(10, 0.04). An item is defective if |X − 10| > 0.3. What is P(item is defective)?',
+  options:['2(1 − Φ(1.5))','2(1 − Φ(0.3))','1 − Φ(1.5)','2Φ(1.5) − 1'],
+  answer:'2(1 − Φ(1.5))',
+  explanation:'P(|X−10|>0.3) = P(Z < −1.5) + P(Z > 1.5) = 2P(Z > 1.5) = 2(1−Φ(1.5)). σ = √0.04 = 0.2, threshold = 0.3/0.2 = 1.5.'},
+
+// T6 — MLE
+{id:'gen_t6_01', exam:'gen', topic:'T6', type:'mc',
+  text:'X₁,...,Xₙ ~ Exp(λ) with PDF f(x|λ)=λe^{−λx}. What is the MLE for λ?',
+  options:['n/Σxᵢ (= 1/x̄)','Σxᵢ/n (= x̄)','√(n/Σxᵢ)','n/Σxᵢ²'],
+  answer:'n/Σxᵢ (= 1/x̄)',
+  explanation:'Log-likelihood: ℓ(λ)=n ln λ − λΣxᵢ. Differentiating and setting to zero: n/λ − Σxᵢ = 0 → λ̂ = n/Σxᵢ = 1/x̄.'},
+
+{id:'gen_t6_02', exam:'gen', topic:'T6', type:'mc',
+  text:'X₁,...,Xₙ ~ Bernoulli(p). The log-likelihood is ℓ(p) = k ln p + (n−k) ln(1−p) where k = Σxᵢ. The MLE is:',
+  options:['k/n','(k+1)/(n+2)','k/(n−k)','√(k/n)'],
+  answer:'k/n',
+  explanation:'∂ℓ/∂p = k/p − (n−k)/(1−p) = 0 → k(1−p) = (n−k)p → k = np → p̂ = k/n. The MLE is just the sample proportion.'},
+
+{id:'gen_t6_03', exam:'gen', topic:'T6', type:'fi',
+  text:'Observe x₁=2, x₂=4, x₃=6 from Exp(λ). Compute the MLE for λ. Round to 2 decimals.',
+  answer:'0.25',
+  explanation:'x̄ = (2+4+6)/3 = 4. λ̂ = 1/x̄ = 1/4 = 0.25.'},
+
+{id:'gen_t6_04', exam:'gen', topic:'T6', type:'mc',
+  text:'X₁,...,Xₙ ~ Uniform[0,θ]. The MLE for θ is:',
+  options:['x̄','max(x₁,...,xₙ)','2x̄','min(x₁,...,xₙ)'],
+  answer:'max(x₁,...,xₙ)',
+  explanation:'Likelihood L(θ) = (1/θ)ⁿ if θ ≥ max(xᵢ), else 0. This is decreasing in θ, so the MLE is the smallest θ that keeps L > 0: θ̂ = max(x₁,...,xₙ). Note: the derivative method fails here — MLE is at a boundary.'},
+
+// T9 — Central Limit Theorem
+{id:'gen_t9_01', exam:'gen', topic:'T9', type:'mc',
+  text:'X₁,...,X₃₆ are iid with E[X]=5 and Var[X]=9. By CLT, X̄ is approximately:',
+  options:['N(5, 9)','N(5, 0.25)','N(5, 1)','N(180, 324)'],
+  answer:'N(5, 0.25)',
+  explanation:'CLT: X̄ ~ N(μ, σ²/n) = N(5, 9/36) = N(5, 0.25). The variance of the sample mean is σ²/n, not σ².'},
+
+{id:'gen_t9_02', exam:'gen', topic:'T9', type:'fi',
+  text:'X₁,...,X₁₀₀ iid with E[X]=2, Var[X]=4. Compute P(X̄ > 2.4) approximately using the CLT. Your answer is 1−Φ(k): what is k?',
+  answer:'2',
+  explanation:'X̄ ~ N(2, 4/100) = N(2, 0.04). σ_{X̄} = 0.2. P(X̄ > 2.4) = P(Z > (2.4−2)/0.2) = P(Z > 2) = 1 − Φ(2). k = 2.'},
+
+{id:'gen_t9_03', exam:'gen', topic:'T9', type:'mc',
+  text:'X₁,...,Xₙ are iid Bernoulli(0.4). For large n, what does the CLT say about the sample mean X̄?',
+  options:['X̄ ~ Binomial(n, 0.4)','X̄ ≈ N(0.4, 0.24/n)','X̄ ≈ N(0.4, 0.4·0.6)','X̄ ≈ N(0, 1)'],
+  answer:'X̄ ≈ N(0.4, 0.24/n)',
+  explanation:'For Bernoulli(p): E[X]=p=0.4, Var[X]=p(1−p)=0.24. CLT: X̄ ≈ N(0.4, 0.24/n).'},
+
+{id:'gen_t9_04', exam:'gen', topic:'T9', type:'mc',
+  text:'You want P(|X̄ − μ| ≤ 1) ≥ 0.95 with σ²=16. What is the minimum n needed?',
+  options:['n ≥ 62','n ≥ 16','n ≥ 31','n ≥ 25'],
+  answer:'n ≥ 62',
+  explanation:'P(|X̄−μ| ≤ 1) = P(|Z| ≤ √n/4) ≥ 0.95 → √n/4 ≥ 1.96 → √n ≥ 7.84 → n ≥ 61.5 → n ≥ 62.'},
+
+]; // end questions
+
+// ===== STATE =====
+let activeTopics = new Set(['all']);
+let activeExams = new Set(['all']);
+let visibleQuestions = [...questions];
+let scores = {}; // id -> 'correct' | 'wrong'
+let revealed = new Set();
+
+function getFiltered() {
+  return questions.filter(q => {
+    const topicOk = activeTopics.has('all') || activeTopics.has(q.topic);
+    const examOk = activeExams.has('all') || activeExams.has(q.exam);
+    return topicOk && examOk;
+  });
+}
+
+function filterTopic(btn) {
+  const t = btn.dataset.topic;
+  if (t === 'all') {
+    activeTopics = new Set(['all']);
+  } else {
+    activeTopics.delete('all');
+    if (activeTopics.has(t)) activeTopics.delete(t);
+    else activeTopics.add(t);
+    if (activeTopics.size === 0) activeTopics.add('all');
+  }
+  document.querySelectorAll('#topicFilters .filter-btn').forEach(b => {
+    b.classList.toggle('active', activeTopics.has(b.dataset.topic));
+  });
+  render();
+}
+
+function filterExam(btn) {
+  const e = btn.dataset.exam;
+  if (e === 'all') {
+    activeExams = new Set(['all']);
+  } else {
+    activeExams.delete('all');
+    if (activeExams.has(e)) activeExams.delete(e);
+    else activeExams.add(e);
+    if (activeExams.size === 0) activeExams.add('all');
+  }
+  document.querySelectorAll('#examFilters .filter-btn').forEach(b => {
+    b.classList.toggle('active', activeExams.has(b.dataset.exam));
+  });
+  render();
+}
+
+function shuffleQuestions() {
+  visibleQuestions = getFiltered().sort(() => Math.random() - 0.5);
+  render(visibleQuestions);
+}
+
+function showAllAnswers() {
+  visibleQuestions = getFiltered();
+  visibleQuestions.forEach(q => revealed.add(q.id));
+  render(visibleQuestions);
+}
+
+function resetAll() {
+  scores = {};
+  revealed = new Set();
+  render();
+}
+
+function updateScore() {
+  const correct = Object.values(scores).filter(v => v === 'correct').length;
+  const wrong = Object.values(scores).filter(v => v === 'wrong').length;
+  const total = Object.keys(scores).length;
+  document.getElementById('scoreBox').textContent = `Score: ${correct}/${total}`;
+  document.getElementById('statScore').textContent = `Correct: ${correct}`;
+  document.getElementById('statWrong').textContent = `Wrong: ${wrong}`;
+}
+
+const examLabels = {mar25:'Mar 2025', jan25:'Jan 2025', fall24:'Fall 2024', final25:'Final 2025', mid25:'Midterm 2025'};
+const topicLabels = {T1:'Prob Rules', T2:'Bayes\'', T3:'Discrete', T4:'Continuous', T5:'Normal', T6:'MLE', T7:'CI', T8:'Hyp Test', T9:'CLT'};
+
+function escH(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function renderMC(q) {
+  const ans = Array.isArray(q.answer) ? q.answer : [q.answer];
+  return `<ul class="options" id="opts_${q.id}">
+    ${q.options.map((o,i) => `<li id="opt_${q.id}_${i}" onclick="checkMC('${q.id}','${escH(o).replace(/'/g,"\\'")}',${JSON.stringify(ans)})">${o}</li>`).join('')}
+  </ul>`;
+}
+
+function renderFI(q) {
+  return `<div class="fill-area">
+    <input class="fill-input" id="fi_${q.id}" type="text" placeholder="your answer" onkeydown="if(event.key==='Enter')checkFI('${q.id}')">
+    <button class="check-btn" onclick="checkFI('${q.id}')">Check</button>
+    <span id="fi_result_${q.id}"></span>
+  </div>`;
+}
+
+function renderTF(q) {
+  return `<table style="width:100%;border-collapse:collapse;margin-bottom:12px;font-size:0.88rem">
+    <tr style="color:var(--sub);font-size:0.8rem"><th style="text-align:left;padding:4px 8px">Statement</th><th style="padding:4px 8px;white-space:nowrap">True</th><th style="padding:4px 8px;white-space:nowrap">Not true</th></tr>
+    ${q.statements.map((s,i) => `<tr style="border-top:1px solid var(--border)">
+      <td style="padding:6px 8px">${s.s}</td>
+      <td style="text-align:center;padding:6px 8px"><input type="radio" name="tf_${q.id}_${i}" value="true" id="tf_${q.id}_${i}_t"></td>
+      <td style="text-align:center;padding:6px 8px"><input type="radio" name="tf_${q.id}_${i}" value="false" id="tf_${q.id}_${i}_f"></td>
+    </tr>`).join('')}
+  </table>
+  <button class="check-btn" onclick="checkTF('${q.id}',${JSON.stringify(q.statements.map(s=>s.ans))})">Check</button>
+  <span id="tf_result_${q.id}"></span>`;
+}
+
+function renderMR(q) {
+  const ans = Array.isArray(q.answer) ? q.answer : [q.answer];
+  return `<div id="mr_${q.id}" style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px">
+    ${q.options.map((o,i) => `<label style="display:flex;gap:8px;align-items:flex-start;cursor:pointer;font-size:0.9rem;padding:8px 12px;border:1px solid var(--border);border-radius:8px">
+      <input type="checkbox" value="${escH(o)}" name="mr_${q.id}" style="margin-top:2px"> ${o}
+    </label>`).join('')}
+  </div>
+  <button class="check-btn" onclick="checkMR('${q.id}',${JSON.stringify(ans)})">Check</button>
+  <span id="mr_result_${q.id}"></span>`;
+}
+
+function renderCard(q, idx) {
+  const isRevealed = revealed.has(q.id);
+  let inputHtml = '';
+  if (q.type === 'mc') inputHtml = renderMC(q);
+  else if (q.type === 'fi') inputHtml = renderFI(q);
+  else if (q.type === 'tf') inputHtml = renderTF(q);
+  else if (q.type === 'mr') inputHtml = renderMR(q);
+
+  return `<div class="question-card" id="card_${q.id}">
+    <div class="q-header">
+      <span class="q-num">${idx+1}</span>
+      <div class="q-tags">
+        <span class="tag">${topicLabels[q.topic]||q.topic}</span>
+        <span class="tag" style="background:var(--btn);color:var(--sub)">${examLabels[q.exam]||q.exam}</span>
+        <span class="tag" style="background:var(--btn);color:var(--sub)">${q.type==='fi'?'Fill-in':q.type==='mc'?'MC':q.type==='mr'?'Multi-select':'True/False'}</span>
+      </div>
+    </div>
+    <div class="q-text">${q.text}</div>
+    ${inputHtml}
+    <div class="answer-box ${isRevealed?'visible':''}" id="ans_${q.id}">
+      <div class="ans-label">Answer: ${Array.isArray(q.answer)?q.answer.join(', '):(q.answer||'See explanation')}</div>
+      ${q.explanation?`<div class="explanation">${q.explanation}</div>`:''}
+    </div>
+    ${!isRevealed?`<button class="show-btn" onclick="toggleAnswer('${q.id}')">Show Answer</button>`:''}
+  </div>`;
+}
+
+function toggleAnswer(id) {
+  const box = document.getElementById('ans_'+id);
+  const isVis = box.classList.contains('visible');
+  box.classList.toggle('visible', !isVis);
+  revealed.toggle ? null : (isVis ? revealed.delete(id) : revealed.add(id));
+  if (!isVis) revealed.add(id); else revealed.delete(id);
+}
+
+function render(qs) {
+  qs = qs || getFiltered();
+  visibleQuestions = qs;
+  document.getElementById('statCount').textContent = `Showing ${qs.length} questions`;
+  const main = document.getElementById('mainContent');
+  if (qs.length === 0) {
+    main.innerHTML = '<div class="empty-state">No questions match the current filter.</div>';
+    return;
+  }
+  main.innerHTML = qs.map((q,i) => renderCard(q,i)).join('');
+
+  // Re-apply score highlighting
+  Object.entries(scores).forEach(([id, result]) => {
+    applyScoreStyle(id, result);
+  });
+  updateScore();
+}
+
+function applyScoreStyle(id, result) {
+  const card = document.getElementById('card_'+id);
+  if (!card) return;
+  card.style.borderColor = result === 'correct' ? 'var(--correct)' : 'var(--wrong)';
+}
+
+function checkMC(id, chosen, answers) {
+  const isCorrect = answers.includes(chosen);
+  scores[id] = isCorrect ? 'correct' : 'wrong';
+  applyScoreStyle(id, scores[id]);
+
+  const opts = document.querySelectorAll(`#opts_${id} li`);
+  opts.forEach(li => {
+    li.onclick = null;
+    if (answers.includes(li.textContent)) li.classList.add('correct-ans');
+    else if (li.textContent === chosen && !isCorrect) li.classList.add('wrong-ans');
+  });
+  document.getElementById('ans_'+id).classList.add('visible');
+  updateScore();
+}
+
+function checkFI(id) {
+  const input = document.getElementById('fi_'+id);
+  const resultEl = document.getElementById('fi_result_'+id);
+  const q = questions.find(q => q.id === id);
+  const userVal = input.value.trim().replace(',','.');
+  const correctVals = (q.answer+'').split('/').map(v => v.trim());
+  const userNum = parseFloat(userVal);
+  const isCorrect = correctVals.some(cv => {
+    const cn = parseFloat(cv);
+    return Math.abs(userNum - cn) < 0.015 || userVal.toLowerCase() === cv.toLowerCase();
+  });
+  scores[id] = isCorrect ? 'correct' : 'wrong';
+  applyScoreStyle(id, scores[id]);
+  resultEl.innerHTML = isCorrect
+    ? '<span class="result-correct">✓ Correct!</span>'
+    : `<span class="result-wrong">✗ Answer: ${q.answer}</span>`;
+  document.getElementById('ans_'+id).classList.add('visible');
+  updateScore();
+}
+
+function checkTF(id, correctAnswers) {
+  const resultEl = document.getElementById('tf_result_'+id);
+  let allCorrect = true;
+  correctAnswers.forEach((ca, i) => {
+    const tEl = document.getElementById(`tf_${id}_${i}_t`);
+    const fEl = document.getElementById(`tf_${id}_${i}_f`);
+    const chosen = tEl && tEl.checked ? true : (fEl && fEl.checked ? false : null);
+    if (chosen === null || chosen !== ca) allCorrect = false;
+    const row = tEl ? tEl.closest('tr') : null;
+    if (row) {
+      row.style.background = chosen === ca ? 'rgba(22,163,74,0.08)' : 'rgba(220,38,38,0.08)';
+    }
+  });
+  scores[id] = allCorrect ? 'correct' : 'wrong';
+  applyScoreStyle(id, scores[id]);
+  resultEl.innerHTML = allCorrect ? '<span class="result-correct">✓ Correct!</span>' : '<span class="result-wrong">✗ Some wrong</span>';
+  document.getElementById('ans_'+id).classList.add('visible');
+  updateScore();
+}
+
+function checkMR(id, correctAnswers) {
+  const checkboxes = document.querySelectorAll(`input[name="mr_${id}"]`);
+  const chosen = Array.from(checkboxes).filter(cb => cb.checked).map(cb => cb.value);
+  const isCorrect = chosen.length === correctAnswers.length &&
+    chosen.every(c => correctAnswers.includes(c)) &&
+    correctAnswers.every(c => chosen.includes(c));
+  scores[id] = isCorrect ? 'correct' : 'wrong';
+  applyScoreStyle(id, scores[id]);
+  const resultEl = document.getElementById('mr_result_'+id);
+  resultEl.innerHTML = isCorrect
+    ? '<span class="result-correct">✓ Correct!</span>'
+    : `<span class="result-wrong">✗ Answer: ${correctAnswers.join(', ')}</span>`;
+  document.getElementById('ans_'+id).classList.add('visible');
+  // highlight
+  document.querySelectorAll(`#mr_${id} label`).forEach(label => {
+    const cb = label.querySelector('input');
+    const val = cb.value;
+    if (correctAnswers.includes(val)) label.style.borderColor = 'var(--correct)';
+    else if (cb.checked) label.style.borderColor = 'var(--wrong)';
+  });
+  updateScore();
+}
+
+// Initial render
+render();
+</script>
+</body>
+</html>

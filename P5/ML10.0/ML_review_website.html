@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ML Review — 35/40 Prep</title>
+<style>
+:root {
+  --bg: #1a1a2e; --surface: #16213e; --card: #0f3460;
+  --accent: #e94560; --accent2: #0f7ea6; --text: #e0e0e0;
+  --muted: #8899aa; --success: #2ecc71; --warn: #f39c12; --danger: #e74c3c;
+  --border: rgba(255,255,255,0.08);
+}
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f0f4f8; --surface: #ffffff; --card: #e8f0fe;
+    --accent: #c0392b; --accent2: #1a73e8; --text: #202124;
+    --muted: #5f6368; --border: rgba(0,0,0,0.1);
+  }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg); color: var(--text); font-size: 16px; line-height: 1.6; }
+#app { display: flex; height: 100vh; overflow: hidden; }
+/* Sidebar */
+#sidebar { width: 240px; min-width: 240px; background: var(--surface);
+  border-right: 1px solid var(--border); overflow-y: auto; padding: 16px 0; }
+#sidebar h1 { font-size: 14px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1px; color: var(--accent); padding: 0 16px 12px; }
+.nav-item { display: block; padding: 10px 16px; cursor: pointer; border-radius: 6px;
+  margin: 2px 8px; font-size: 14px; color: var(--muted); transition: all 0.15s; }
+.nav-item:hover { background: var(--border); color: var(--text); }
+.nav-item.active { background: var(--accent); color: white; }
+.nav-section { font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+  color: var(--muted); padding: 16px 16px 4px; margin-top: 4px; }
+/* Main content */
+#main { flex: 1; overflow-y: auto; padding: 32px; }
+.page { display: none; }
+.page.active { display: block; }
+h2 { font-size: 24px; margin-bottom: 8px; color: var(--text); }
+h3 { font-size: 18px; margin: 24px 0 8px; color: var(--accent2); }
+h4 { font-size: 15px; margin: 16px 0 6px; color: var(--text); font-weight: 600; }
+p { margin-bottom: 12px; color: var(--muted); }
+.subtitle { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+/* Cards */
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  padding: 20px; margin-bottom: 16px; }
+.card.gap { border-left: 4px solid var(--accent); }
+.card.success { border-left: 4px solid var(--success); }
+/* Table */
+table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 14px; }
+th { background: var(--card); padding: 10px 12px; text-align: left; font-size: 12px;
+  text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); }
+td { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+tr:last-child td { border-bottom: none; }
+/* Formula */
+.formula { background: var(--card); border-radius: 8px; padding: 12px 16px;
+  font-family: 'Courier New', monospace; font-size: 14px; margin: 8px 0;
+  border-left: 3px solid var(--accent2); overflow-x: auto; white-space: pre-wrap; }
+/* Quiz */
+.quiz-container { max-width: 780px; }
+.question-card { background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 24px; margin-bottom: 20px; }
+.question-card h4 { font-size: 14px; color: var(--muted); margin-bottom: 8px; font-weight: 400; }
+.question-text { font-size: 16px; margin-bottom: 16px; color: var(--text); line-height: 1.5; }
+.option { display: block; width: 100%; text-align: left; padding: 12px 16px;
+  margin: 6px 0; border-radius: 8px; border: 1px solid var(--border);
+  background: var(--card); color: var(--text); cursor: pointer; font-size: 15px;
+  transition: all 0.15s; min-height: 44px; }
+.option:hover { border-color: var(--accent2); }
+.option.correct { background: rgba(46,204,113,0.2); border-color: var(--success); color: var(--success); }
+.option.wrong { background: rgba(231,76,60,0.2); border-color: var(--danger); color: var(--danger); }
+.option.reveal { background: rgba(46,204,113,0.1); border-color: var(--success); }
+.explanation { background: var(--card); border-radius: 8px; padding: 12px 16px;
+  margin-top: 12px; font-size: 14px; color: var(--muted); display: none; }
+.score-bar { background: var(--card); border-radius: 50px; height: 8px; margin: 8px 0; overflow: hidden; }
+.score-fill { height: 100%; background: var(--accent2); border-radius: 50px; transition: width 0.5s; }
+/* Topic pill */
+.topic-pill { display: inline-block; font-size: 11px; padding: 3px 10px; border-radius: 50px;
+  background: var(--card); color: var(--accent2); margin-right: 6px; margin-bottom: 6px; border: 1px solid var(--border); }
+.topic-pill.gap { background: rgba(233,69,96,0.15); color: var(--accent); border-color: var(--accent); }
+/* Controls */
+.controls { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
+button.btn { padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer;
+  font-size: 14px; font-weight: 600; min-height: 44px; transition: all 0.15s; }
+.btn-primary { background: var(--accent); color: white; }
+.btn-primary:hover { opacity: 0.85; }
+.btn-secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
+.btn-secondary:hover { border-color: var(--accent2); }
+/* Section selector */
+.section-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+.stab { padding: 8px 14px; border-radius: 8px; border: 1px solid var(--border);
+  background: var(--card); color: var(--muted); cursor: pointer; font-size: 13px; min-height: 44px; }
+.stab.active { background: var(--accent2); color: white; border-color: var(--accent2); }
+/* Score display */
+#score-display { font-size: 28px; font-weight: 700; color: var(--accent2); margin: 8px 0; }
+.score-breakdown { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 16px 0; }
+.score-cell { background: var(--card); border-radius: 8px; padding: 12px; text-align: center; }
+.score-cell .label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.score-cell .value { font-size: 22px; font-weight: 700; margin-top: 4px; }
+/* Keyboard hint */
+.kb { font-size: 12px; color: var(--muted); }
+kbd { background: var(--card); border: 1px solid var(--border); border-radius: 4px;
+  padding: 2px 6px; font-size: 11px; font-family: monospace; }
+</style>
+</head>
+<body>
+<div id="app">
+<nav id="sidebar">
+  <h1>ML Review</h1>
+  <div class="nav-section">Overview</div>
+  <div class="nav-item active" data-page="home">🏠 Home</div>
+  <div class="nav-section">Lecture Notes</div>
+  <div class="nav-item" data-page="w1">§1 Intro & Methodology</div>
+  <div class="nav-item" data-page="w2">§2 Gradients & OLS</div>
+  <div class="nav-item" data-page="w3">§3 Evaluation & ROC</div>
+  <div class="nav-item" data-page="w4">§4 Naive Bayes & Entropy</div>
+  <div class="nav-item" data-page="w5">§5 SVMs & Backprop</div>
+  <div class="nav-item" data-page="w6">§6 Deep Learning 1</div>
+  <div class="nav-item" data-page="w7">§7 Generative Models</div>
+  <div class="nav-item" data-page="w8">§8 Markov & Tensor BP</div>
+  <div class="nav-item" data-page="w9">§9 Decision Trees & ELBO</div>
+  <div class="nav-item" data-page="w10">§10 Sequential / RL / Transformers</div>
+  <div class="nav-section">Practice</div>
+  <div class="nav-item" data-page="quiz">📝 Quiz (all sections)</div>
+  <div class="nav-item" data-page="gap">🎯 Gap Topics</div>
+  <div class="nav-section">Reference</div>
+  <div class="nav-item" data-page="appref">⚡ 10 Application Types</div>
+</nav>
+<main id="main">
+
+<!-- HOME -->
+<div id="page-home" class="page active">
+  <h2>Machine Learning — Exam Prep</h2>
+  <p class="subtitle">Target: 35/40 (currently 32/40) · Exam: Tue 2 Jun 08:30 · 40 MC questions, 2h, formula sheet + handwritten cheat sheet</p>
+  <div class="card gap">
+    <h4>🎯 Gap strategy: 32 → 35</h4>
+    <p>You need 3 more points. The 10 application types appear every year — mastering the procedure for each guarantees those points. Focus on types you find hardest.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-top:12px">
+      <div class="score-cell"><div class="label">Recall (~13q)</div><div class="value" style="color:var(--warn)">~9</div></div>
+      <div class="score-cell"><div class="label">Combo (~13q)</div><div class="value" style="color:var(--warn)">~11</div></div>
+      <div class="score-cell"><div class="label">Application (~13q)</div><div class="value" style="color:var(--warn)">~12</div></div>
+      <div class="score-cell"><div class="label">Target</div><div class="value" style="color:var(--success)">35</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <h4>Exam structure</h4>
+    <table>
+      <tr><th>Type</th><th>~Questions</th><th>How to improve</th></tr>
+      <tr><td>Recall</td><td>~13</td><td>Read §1–10 cards carefully; memorize definitions</td></tr>
+      <tr><td>Combination</td><td>~13</td><td>Read exam trap table; practice reasoning questions</td></tr>
+      <tr><td>Application</td><td>~13</td><td>Work through all 10 application types in §appref</td></tr>
+    </table>
+  </div>
+  <div class="card gap">
+    <h4>🔴 Known gap topics (check these first)</h4>
+    <span class="topic-pill gap">ELBO derivation</span>
+    <span class="topic-pill gap">Matrix backprop</span>
+    <span class="topic-pill gap">Markov classification (with prior)</span>
+    <span class="topic-pill gap">Decision tree full derivation</span>
+    <span class="topic-pill gap">VAE vs GAN distinction</span>
+    <span class="topic-pill gap">Self-attention properties</span>
+    <span class="topic-pill gap">Entropy cross-entropy KL</span>
+  </div>
+  <div class="card">
+    <h4>Quick navigation</h4>
+    <p>Use the sidebar to jump to any section. Use the <strong>Quiz</strong> to test yourself. <strong>10 Application Types</strong> has step-by-step procedures for every computation question.</p>
+    <p class="kb"><kbd>←</kbd><kbd>→</kbd> navigate sections · <kbd>Q</kbd> go to quiz</p>
+  </div>
+</div>
+
+<!-- §1 INTRO -->
+<div id="page-w1" class="page">
+  <h2>§1 — Introduction & Methodology</h2>
+  <div class="card">
+    <h3>Terminology</h3>
+    <table>
+      <tr><th>Term</th><th>Definition</th></tr>
+      <tr><td><strong>Instance/example</strong></td><td>One row of data (one email, one image)</td></tr>
+      <tr><td><strong>Feature/attribute</strong></td><td>One input variable describing an instance</td></tr>
+      <tr><td><strong>Feature space</strong></td><td>Each axis = one feature; each point = one instance</td></tr>
+      <tr><td><strong>Model space</strong></td><td>The space of all possible models the algorithm can produce</td></tr>
+      <tr><td><strong>Class/label</strong></td><td>The output variable we want to predict</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h3>Learning paradigms</h3>
+    <table>
+      <tr><th>Paradigm</th><th>Key property</th><th>Examples</th></tr>
+      <tr><td>Supervised (offline)</td><td>Labeled training data</td><td>SVM, Naive Bayes, neural networks</td></tr>
+      <tr><td>Reinforcement</td><td>Reward signal, no labels</td><td>Game playing, robotics</td></tr>
+      <tr><td>Unsupervised</td><td>No labels at all</td><td>k-means, clustering, density estimation</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h3>Search strategies</h3>
+    <table>
+      <tr><th>Strategy</th><th>When to use</th><th>Key property</th></tr>
+      <tr><td><strong>Gradient descent</strong></td><td>Model is differentiable</td><td>Computes direction of steepest descent</td></tr>
+      <tr><td><strong>Random search</strong></td><td>Model NOT differentiable (discrete model space)</td><td>Evaluates random candidates</td></tr>
+    </table>
+  </div>
+  <div class="card gap">
+    <h3>🔴 Overfitting — exam essentials</h3>
+    <ul style="list-style:none;line-height:2">
+      <li>✓ Test-set rule: <strong>never use test set during development</strong></li>
+      <li>✓ Hyperparameter selection → <strong>validation set</strong>, NOT test set</li>
+      <li>✓ Reusing test set = <strong>inflating performance estimate</strong></li>
+      <li>✓ High training accuracy + low validation accuracy = <strong>overfitting</strong></li>
+      <li>✓ High-variance models prone to overfitting: decision trees, neural networks</li>
+      <li>✓ Class imbalance → accuracy is misleading</li>
+      <li>✓ Outliers: <strong>leave them in</strong> — they are important examples</li>
+    </ul>
+  </div>
+</div>
+
+<!-- §2 GRADIENTS -->
+<div id="page-w2" class="page">
+  <h2>§2 — Gradients & Linear Regression</h2>
+  <div class="card">
+    <h3>Differentiation rules</h3>
+    <table>
+      <tr><th>Rule</th><th>Formula</th></tr>
+      <tr><td>Constant</td><td>∂c/∂x = 0</td></tr>
+      <tr><td>Exponent</td><td>∂xⁿ/∂x = nxⁿ⁻¹</td></tr>
+      <tr><td>Constant factor</td><td>∂(cf)/∂x = c·∂f/∂x</td></tr>
+      <tr><td>Sum</td><td>∂(f+g)/∂x = ∂f/∂x + ∂g/∂x</td></tr>
+      <tr><td>Chain</td><td>∂f(g(x))/∂x = (∂f/∂g)(∂g/∂x)</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h3>Gradient descent</h3>
+    <div class="formula">θ_new = θ − η · ∇loss(θ)
+
+where η is the learning rate (hyperparameter).
+Gradient points uphill → subtract it to go downhill.</div>
+    <p>One GD step: compute gradient at current θ, multiply by η, subtract from θ.</p>
+  </div>
+  <div class="card">
+    <h3>Linear regression — OLS</h3>
+    <div class="formula">Model:  f(a) = sa + b
+Loss:   loss(s,b) = ½ Σᵢ (saᵢ + b − hᵢ)²
+
+Gradient wrt s:  Σᵢ (aᵢs + b − hᵢ)aᵢ
+Gradient wrt b:  Σᵢ (aᵢs + b − hᵢ)
+
+Optimal parameters (set gradients = 0):
+  s = (āh − ā·h̄) / (ā² − ā²)
+  b = h̄ − s·ā</div>
+    <p>ā = mean of a, h̄ = mean of h, ā² = mean of a², āh = mean of aᵢhᵢ</p>
+  </div>
+  <div class="card gap">
+    <h3>Why squared error?</h3>
+    <p>Summing raw residuals → positive and negative errors cancel. Squaring also emerges naturally from MLE under Gaussian noise assumption. Squaring penalizes large errors more than absolute value.</p>
+    <h4>Why GD not always best?</h4>
+    <p>For many loss functions (e.g. accuracy), the gradient is zero almost everywhere → GD makes no progress. Use a smooth differentiable loss (squared error, cross-entropy) instead.</p>
+  </div>
+</div>
+
+<!-- §3 EVALUATION -->
+<div id="page-w3" class="page">
+  <h2>§3 — Evaluation: ROC, Confusion Matrix, Ranking</h2>
+  <div class="card">
+    <h3>Confusion matrix</h3>
+    <table>
+      <tr><th></th><th>Predicted Pos</th><th>Predicted Neg</th></tr>
+      <tr><td><strong>True Pos</strong></td><td>TP</td><td>FN</td></tr>
+      <tr><td><strong>True Neg</strong></td><td>FP</td><td>TN</td></tr>
+    </table>
+    <div class="formula">Accuracy  = (TP+TN)/total
+Precision = TP/(TP+FP)        — of predicted pos, how many correct?
+Recall    = TP/(TP+FN)        — of all pos, how many found?
+TPR       = TP/(TP+FN)        — same as recall
+FPR       = FP/(TN+FP)        — of all neg, how many called pos?
+F1        = 2PR/(P+R)</div>
+    <p style="color:var(--accent)">⚠ Confusion matrix CANNOT compute AUC — needs a ranking classifier.</p>
+  </div>
+  <div class="card">
+    <h3>Ranking classifiers</h3>
+    <p><strong>Linear classifier → ranking:</strong> sort by distance to decision boundary. Most negative (furthest from boundary on negative side) → most positive.</p>
+    <p><strong>Decision tree → ranking:</strong> group instances by leaf; assign P(pos) by relative frequency in that leaf; sort groups by P(pos).</p>
+  </div>
+  <div class="card">
+    <h3>Coverage matrix</h3>
+    <div class="formula">Rows    = Pos instances (y-axis, sorted most-positive at bottom)
+Columns = Neg instances (x-axis, sorted most-positive at left)
+
+Cell (pos,neg): GREEN  if pos ranked higher (correct)
+                RED    if neg ranked higher (error)
+                YELLOW if tied (0.5 error each)
+
+Ranking errors = #red + 0.5×#yellow</div>
+    <p><strong>ROC curve:</strong> normalize coverage matrix axes. AUC = probability of correctly ranking a random (Pos, Neg) pair. Convex hull for optimal ensemble.</p>
+  </div>
+</div>
+
+<!-- §4 NAIVE BAYES -->
+<div id="page-w4" class="page">
+  <h2>§4 — Naive Bayes & Entropy</h2>
+  <div class="card">
+    <h3>Naive Bayes classifier</h3>
+    <div class="formula">p̂(Y | X₁,…,Xₖ) ∝ p(X₁|Y) · p(X₂|Y) · … · p(Xₖ|Y) · p(Y)
+
+Estimate each factor from relative frequency:
+  p(Xᵢ = v | Y = c) = count(Xᵢ=v, Y=c) / count(Y=c)
+  p(Y = c) = count(Y=c) / n
+
+Classification: argmax_Y over unnormalized product.
+For actual probabilities: normalize (divide by sum over all classes).</div>
+    <p><strong>Why "naive":</strong> assumes features are conditionally independent given the class. Almost always false, but often works well.</p>
+    <p><strong>Zero-count problem:</strong> if p(Xᵢ|Y) = 0 for any feature, entire product = 0 (that class gets probability 0 even if other features strongly support it).</p>
+    <p><strong>Smoothing (pseudo-observations):</strong> add one fake observation per (feature value, class) combination. Every probability becomes nonzero.</p>
+  </div>
+  <div class="card">
+    <h3>Entropy</h3>
+    <div class="formula">H(X) = −Σₓ p(x) log₂ p(x)
+
+Properties:
+  H = 0  for deterministic distribution
+  H = log₂(n)  for uniform over n outcomes (maximum)
+  H(uniform 4) = 2 bits
+  H increases with uncertainty</div>
+  </div>
+  <div class="card">
+    <h3>Cross-entropy & KL divergence</h3>
+    <div class="formula">Cross-entropy:  H(p,q) = −Σ p(x) log₂ q(x)
+  — expected code length when using code q but true distribution is p
+  — UNDEFINED if q(x)=0 for any x where p(x)>0
+
+KL divergence:  KL(p‖q) = H(p,q) − H(p) ≥ 0
+  — extra bits paid for using q instead of p
+  — not symmetric: KL(p‖q) ≠ KL(q‖p)</div>
+  </div>
+</div>
+
+<!-- §5 SVMs -->
+<div id="page-w5" class="page">
+  <h2>§5 — SVMs & Scalar Backpropagation</h2>
+  <div class="card">
+    <h3>Support Vector Machines</h3>
+    <div class="formula">Decision function: f(x) = wᵀx + b
+Class = sign(f(x))  [positive → Pos, negative → Neg]
+
+Soft-margin training objective:
+  minimize  ½‖w‖ + C·Σᵢ pᵢ
+  s.t.      yᵢ(wᵀxᵢ + b) ≥ 1 − pᵢ,  pᵢ ≥ 0
+  where     yᵢ = +1 (Pos) or −1 (Neg)
+
+Support vectors: points where wᵀxᵢ + b = yᵢ  (exactly on the margin)</div>
+    <table>
+      <tr><th>Claim</th><th>True/False</th></tr>
+      <tr><td>SVMs learn non-linear functions via kernel trick</td><td>✓ (but base model is linear)</td></tr>
+      <tr><td>SVM is unsupervised</td><td>✗ — supervised</td></tr>
+      <tr><td>Soft margin allows gradient descent</td><td>✓ — this is the advantage</td></tr>
+      <tr><td>Support vectors = closest points to boundary</td><td>✓</td></tr>
+      <tr><td>Hard margin: can apply L1 regularization</td><td>✗ — hard margin IS the regularization</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h3>Scalar Backpropagation</h3>
+    <div class="formula">Forward pass:  compute and STORE all intermediate values
+Backward pass: compute local derivative at each module, chain together
+
+Chain rule:
+  ∂loss/∂w₁ = (∂loss/∂y)(∂y/∂h₁)(∂h₁/∂k₁)(∂k₁/∂w₁)
+
+Sigmoid derivative: σ'(k) = σ(k)(1 − σ(k))
+ReLU derivative:    r'(k) = 0 if k < 0, else 1
+
+Multivariate chain rule (diamond in computation graph):
+  ∂f/∂x = Σ_paths (product of local derivatives along path)</div>
+    <p><strong>Exam tip:</strong> break the function into named modules first, draw the graph, then chain.</p>
+  </div>
+</div>
+
+<!-- §6 DL1 -->
+<div id="page-w6" class="page">
+  <h2>§6 — Deep Learning 1</h2>
+  <div class="card">
+    <h3>Activation functions</h3>
+    <table>
+      <tr><th>Function</th><th>Formula</th><th>Derivative</th><th>Use</th></tr>
+      <tr><td>Sigmoid</td><td>1/(1+e⁻ˣ)</td><td>σ(x)(1−σ(x))</td><td>Output (binary)</td></tr>
+      <tr><td>ReLU</td><td>max(0,x)</td><td>0 or 1</td><td>Hidden layers</td></tr>
+      <tr><td>Softmax</td><td>eˣⁱ/Σeˣʲ</td><td>—</td><td>Output (multiclass)</td></tr>
+    </table>
+    <p style="color:var(--accent)">⚠ ReLU preferred over sigmoid in hidden layers: sigmoid derivative ≈ 0 for large |x| → vanishing gradients. ReLU derivative = 0 or 1 → no shrinkage.</p>
+  </div>
+  <div class="card">
+    <h3>Regularization techniques</h3>
+    <table>
+      <tr><th>Technique</th><th>Mechanism</th><th>Key fact</th></tr>
+      <tr><td>L1/L2</td><td>Add penalty to loss</td><td>Works on continuous params only</td></tr>
+      <tr><td>Dropout</td><td>Randomly disable nodes during training</td><td>Prevents co-adaptation; disabled at test time</td></tr>
+      <tr><td>Batch norm</td><td>Normalize layer output over batch</td><td>Zero mean, unit variance per batch</td></tr>
+      <tr><td>Early stopping</td><td>Stop when validation loss increases</td><td>Requires validation set</td></tr>
+    </table>
+  </div>
+  <div class="card gap">
+    <h3>Common traps</h3>
+    <ul style="line-height:2">
+      <li>Dropout disabled nodes only at <strong>training</strong> time (not test)</li>
+      <li>Perceptron = composition of linear functions = still linear → can't learn XOR</li>
+      <li>Non-linear separation → derive new features OR use non-linear activation</li>
+      <li>Loss ≠ evaluation metric: accuracy has gradient ≈ 0 everywhere → can't use as loss</li>
+      <li>Eager execution = dynamic graph (built each forward pass) — NOT static</li>
+    </ul>
+  </div>
+</div>
+
+<!-- §7 GENERATIVE -->
+<div id="page-w7" class="page">
+  <h2>§7 — Generative Models (VAE & GAN)</h2>
+  <div class="card">
+    <h3>Comparison table</h3>
+    <table>
+      <tr><th>Model</th><th>Structure</th><th>Key mechanism</th><th>Avoids mode collapse?</th></tr>
+      <tr><td>Autoencoder</td><td>Encoder → bottleneck → decoder</td><td>Point embedding</td><td>N/A</td></tr>
+      <tr><td>VAE</td><td>Encoder → distribution → sample → decoder</td><td>Reparameterization trick</td><td>Via encoder network</td></tr>
+      <tr><td>GAN</td><td>Generator vs Discriminator</td><td>Adversarial training</td><td>Via discriminator</td></tr>
+    </table>
+  </div>
+  <div class="card gap">
+    <h3>VAE — must-know facts</h3>
+    <ul style="line-height:2">
+      <li>Encoder outputs a <strong>distribution</strong> (mean + variance), NOT a point</li>
+      <li>VAE does <strong>NOT</strong> include a discriminator</li>
+      <li>VAE avoids mode collapse via the <strong>encoder network</strong></li>
+      <li>Loss = reconstruction + KL(encoder distribution, prior N(0,I))</li>
+      <li>ELBO = variational lower bound on log p(x)</li>
+      <li>Reparameterization: z = μ + σ·ε, ε~N(0,I) → allows gradient to flow</li>
+    </ul>
+  </div>
+  <div class="card gap">
+    <h3>GAN — must-know facts</h3>
+    <ul style="line-height:2">
+      <li>Discriminator solves mode collapse by training generator to cover all modes</li>
+      <li>Conditional GAN: generator conditioned on input → use for colorization, text-to-image</li>
+      <li>Use conditional GAN when generation must depend on an input condition</li>
+    </ul>
+  </div>
+</div>
+
+<!-- §8 MARKOV -->
+<div id="page-w8" class="page">
+  <h2>§8 — Markov Models & Tensor Backpropagation</h2>
+  <div class="card">
+    <h3>Markov model classification</h3>
+    <div class="formula">Goal: classify email "w₁ w₂ w₃ w₄"
+
+Bayes' rule: p(spam|E) ∝ p(E|spam) · p(spam)
+
+Chain rule:
+p(w₁,w₂,w₃,w₄|spam) = p(w₄|w₃,spam)·p(w₃|w₂,spam)·p(w₂|w₁,spam)·p(w₁|spam)
+
+First-order Markov assumption: depends only on PREVIOUS word.
+
+Estimating probabilities:
+  p(won|you,spam) = count("you won" in spam) / count("you" in spam)
+  p(w₁|spam)      = count(w₁ in spam) / total words in spam</div>
+    <p style="color:var(--warn)">⚠ A strong prior can flip the classification! Always check: p(E|class)·p(class) for each class.</p>
+  </div>
+  <div class="card">
+    <h3>Tensor (Matrix) Backpropagation</h3>
+    <p><strong>Problem:</strong> full Jacobian ∂y/∂x for tensors is too large to store (it's a 3-tensor).</p>
+    <p><strong>Solution:</strong> compute Jacobian-vector products directly — don't compute the full Jacobian.</p>
+    <div class="formula">Linear layer:  y = Wx + b
+
+Given upstream gradient y∇ (same shape as y):
+
+  b∇ = y∇                  (gradient for b)
+  x∇ = y∇ W                (row vector times W)
+  W∇ = (y∇)ᵀ xᵀ            (outer product style)
+
+Exam answer: "compute upstream × local, don't compute full Jacobian"</div>
+  </div>
+</div>
+
+<!-- §9 TREES + ELBO -->
+<div id="page-w9" class="page">
+  <h2>§9 — Decision Trees & ELBO Derivation</h2>
+  <div class="card">
+    <h3>Decision Trees (ID3)</h3>
+    <div class="formula">Information gain:
+  I(F) = H(S) − Σᵥ (|Sᵥ|/|S|) H(Sᵥ)
+
+where H(S) = entropy of class distribution in S.
+
+Algorithm:
+1. Compute class tallies for each feature value
+2. Compute weighted post-split entropy for each feature
+3. Pick feature with HIGHEST gain (= LOWEST weighted post-split entropy)
+4. Recurse on each subset (remove used feature)
+5. Stop when all instances in subset have same class
+
+Shortcut: if any split creates all-pure subsets → maximum gain, pick it.</div>
+    <table>
+      <tr><th>Overfitting prevention</th><th>How</th></tr>
+      <tr><td>Max-depth stopping</td><td>Hyperparameter, tune on validation set</td></tr>
+      <tr><td>Validation set pruning</td><td>Grow full tree, then prune branches that don't improve validation</td></tr>
+      <tr><td>L1 regularization</td><td>❌ Cannot — discrete model space</td></tr>
+    </table>
+  </div>
+  <div class="card gap">
+    <h3>ELBO Derivation</h3>
+    <div class="formula">Decomposition:
+  ln p(x|θ) = L(q,θ) + KL(q,p)
+
+Proof (start from RHS):
+  L + KL
+  = E_q ln[p(x,z|θ)/q(z|x)] − E_q ln[p(z|x,θ)/q(z|x)]
+  = E_q ln p(x,z|θ) − E_q ln q(z|x) − E_q ln p(z|x,θ) + E_q ln q(z|x)
+  = E_q ln p(x,z|θ) − E_q ln p(z|x,θ)
+  = E_q ln[p(x,z|θ)/p(z|x,θ)]
+  = E_q ln[p(z|x,θ)p(x|θ)/p(z|x,θ)]
+  = E_q ln p(x|θ) = ln p(x|θ)  ✓
+
+Since KL ≥ 0:  ln p(x|θ) ≥ L(q,θ)  →  L is the variational LOWER BOUND.
+
+VAE decomposition of L:
+  L(v,w) = E_q[ln p_w(x|z)] − KL(q_v(z|x), p_w(z))
+         = [reconstruction term] − [KL to prior]</div>
+    <p><strong>Why can't we set KL=0?</strong> Would need p(z|x,θ) = invert the decoder. Intractable for neural networks. Instead: approximate with encoder q_v(z|x).</p>
+  </div>
+</div>
+
+<!-- §10 SEQUENTIAL -->
+<div id="page-w10" class="page">
+  <h2>§10 — Sequential Models, RL & Transformers</h2>
+  <div class="card">
+    <h3>Sequential models</h3>
+    <table>
+      <tr><th>Model</th><th>Markov assumption?</th><th>Parallel?</th><th>Global access?</th></tr>
+      <tr><td>Naive Bayes</td><td>✓ (full independence)</td><td>✓</td><td>✗</td></tr>
+      <tr><td>Markov model</td><td>✓ (window)</td><td>✓</td><td>✗</td></tr>
+      <tr><td>RNN</td><td>Implicit</td><td>✗</td><td>Partial</td></tr>
+      <tr><td>LSTM</td><td>✗ (memory gates)</td><td>✗</td><td>Yes</td></tr>
+      <tr><td>Self-attention</td><td>✗</td><td>✓</td><td>✓</td></tr>
+    </table>
+    <p>Self-attention = <strong>like RNN</strong> (global access to all positions) + <strong>like CNN</strong> (parallelizable, no sequential dependency).</p>
+  </div>
+  <div class="card">
+    <h3>Reinforcement Learning</h3>
+    <ul style="line-height:2">
+      <li><strong>Exploration-exploitation:</strong> balance trying new actions vs using known good ones</li>
+      <li><strong>Why GD is hard in RL:</strong> reward signal is non-differentiable (not a smooth function of output)</li>
+      <li><strong>Use RL when:</strong> no labeled data; learning from environment interaction</li>
+      <li><strong>Boosting in research:</strong> if you apply boosting to your model, apply it to the baseline too (fair comparison)</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Transformers & LLMs</h3>
+    <ul style="line-height:2">
+      <li><strong>Instruction tuning:</strong> fine-tune LLM on natural language instructions (input-output pairs)</li>
+      <li><strong>Fine-tuning:</strong> continue training a pre-trained model on a smaller task-specific dataset</li>
+    </ul>
+    <h3>Recommender Systems</h3>
+    <table>
+      <tr><th>Type</th><th>Definition</th><th>Example</th></tr>
+      <tr><td>Explicit feedback</td><td>User directly provides preference</td><td>Star ratings, reviews</td></tr>
+      <tr><td>Implicit feedback</td><td>Inferred from behavior</td><td>Clicks, watch time, purchases</td></tr>
+    </table>
+    <p><strong>Word2Vec / Matrix factorization:</strong> embed featureless objects (users, items, words) into shared Euclidean vector space. Similar objects → nearby vectors.</p>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div id="page-quiz" class="page">
+  <h2>Practice Quiz</h2>
+  <p class="subtitle">All sections · Immediate feedback · Score tracker</p>
+  <div class="controls">
+    <button class="btn btn-primary" onclick="startQuiz('all')">All questions</button>
+    <button class="btn btn-secondary" onclick="startQuiz('recall')">Recall only</button>
+    <button class="btn btn-secondary" onclick="startQuiz('app')">Application only</button>
+    <button class="btn btn-secondary" onclick="startQuiz('gap')">Gap topics only</button>
+    <button class="btn btn-secondary" onclick="resetQuiz()">Reset</button>
+  </div>
+  <div id="quiz-score-area" style="margin-bottom:20px;display:none">
+    <div id="score-display">0 / 0</div>
+    <div class="score-bar"><div class="score-fill" id="score-fill" style="width:0%"></div></div>
+    <p class="subtitle" id="score-label">Answer questions to see your score</p>
+  </div>
+  <div class="quiz-container" id="quiz-container"></div>
+</div>
+
+<!-- GAP -->
+<div id="page-gap" class="page">
+  <h2>🎯 Gap Topics</h2>
+  <p class="subtitle">Topics most likely to give you the 3 extra points. Focus here first.</p>
+  <div class="card gap">
+    <h3>Application questions (highest ROI)</h3>
+    <p>Each application question type appears every year. Knowing the procedure = guaranteed points.</p>
+    <table>
+      <tr><th>Type</th><th>Key procedure</th><th>Exam frequency</th></tr>
+      <tr><td>Gradient computation</td><td>Chain rule step by step</td><td>Every exam</td></tr>
+      <tr><td>Ranking / coverage matrix</td><td>Sort by distance, build matrix, count errors</td><td>Every exam</td></tr>
+      <tr><td>Entropy / KL</td><td>H(p) = −Σ p log p; watch for q(x)=0</td><td>Every exam</td></tr>
+      <tr><td>Scalar backprop</td><td>Break into modules, chain rule</td><td>Every exam</td></tr>
+      <tr><td>Decision trees</td><td>Tally classes, weighted entropy, pick best feature</td><td>Every exam</td></tr>
+      <tr><td>ELBO derivation</td><td>Use p(a,b)=p(a|b)p(b); log properties; E linearity</td><td>Every exam</td></tr>
+      <tr><td>Naive Bayes</td><td>Multiply conditional probs × prior; normalize</td><td>Every exam</td></tr>
+      <tr><td>SVM support vectors</td><td>Compute wᵀx+b; support vector ↔ result = yᵢ</td><td>Every exam</td></tr>
+      <tr><td>Markov model</td><td>Chain rule + bigram estimates; multiply prior</td><td>Every exam</td></tr>
+      <tr><td>Matrix backprop</td><td>b∇=y∇; x∇=y∇W (no full Jacobian)</td><td>Every exam</td></tr>
+    </table>
+  </div>
+  <div class="card gap">
+    <h3>Common exam traps</h3>
+    <table>
+      <tr><th>Wrong statement</th><th>Correct version</th></tr>
+      <tr><td>SVM is unsupervised</td><td>SVM is supervised</td></tr>
+      <tr><td>VAE encoder → point embedding</td><td>VAE encoder → distribution (mean+variance)</td></tr>
+      <tr><td>VAE has a discriminator</td><td>That's GAN. VAE has no discriminator</td></tr>
+      <tr><td>Soft margin = better boundary</td><td>Soft margin = allows gradient descent</td></tr>
+      <tr><td>Dropout at test time</td><td>Dropout only during training</td></tr>
+      <tr><td>L1 reg on decision trees</td><td>Can't — discrete model space</td></tr>
+      <tr><td>LSTM makes Markov assumption</td><td>LSTM does NOT (memory gates)</td></tr>
+      <tr><td>Self-attention is sequential like RNN</td><td>Self-attention is parallel (like CNN) but global access (like RNN)</td></tr>
+      <tr><td>High-variance → high average error</td><td>High-variance → spread predictions, average error can still be low</td></tr>
+      <tr><td>Test set for hyperparameter search</td><td>Use validation set; test set is only for final evaluation</td></tr>
+      <tr><td>p(A|B) = p(B|A)</td><td>False in general; use Bayes' rule to reverse</td></tr>
+      <tr><td>Cross-entropy H(p,q) symmetric</td><td>Not symmetric; undefined if q(x)=0 where p(x)>0</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- APPLICATION REFERENCE -->
+<div id="page-appref" class="page">
+  <h2>⚡ 10 Application Types — Step-by-Step Reference</h2>
+  <p class="subtitle">These 10 types appear on every exam. Memorize the procedure, not just the formula.</p>
+
+  <div class="card">
+    <h3>Type 1: Find the gradient</h3>
+    <div class="formula">Given: model y = f(x; w) (polynomial)
+Find: ∂loss/∂w
+
+Step 1: Write loss = ½(y − t)²
+Step 2: ∂loss/∂w = (y−t) · ∂y/∂w   [chain rule]
+Step 3: Compute ∂y/∂w using differentiation rules
+Step 4: Optionally: w_new = w − η·∂loss/∂w
+
+Example: y = −vx² + wx + b
+  ∂loss/∂w = (y−t)·x
+  ∂loss/∂v = (y−t)·(−x²)</div>
+  </div>
+
+  <div class="card">
+    <h3>Type 2: Ranking and coverage matrix</h3>
+    <div class="formula">Step 1: Apply classifier rule to each instance → get score
+Step 2: Sort: most negative score → left; most positive → right
+         This is the ranking: [most-neg ... most-pos]
+Step 3: Build coverage matrix
+         Rows = Pos instances (sorted top=most-pos)
+         Cols = Neg instances (sorted left=most-neg)
+Step 4: Fill each cell (pos_row, neg_col):
+         - GREEN if pos ranked higher than neg
+         - RED if neg ranked higher than pos
+         - YELLOW if tied
+Step 5: Count errors = #red + 0.5 × #yellow</div>
+  </div>
+
+  <div class="card">
+    <h3>Type 3: Entropy / cross-entropy / KL</h3>
+    <div class="formula">H(p) = −Σₓ p(x) log₂ p(x)
+
+H(p,q) = −Σₓ p(x) log₂ q(x)
+  → STOP if any q(x)=0 where p(x)>0: H(p,q) = undefined (∞)
+
+KL(p‖q) = H(p,q) − H(p)
+
+Tips:
+  log₂(1/2) = −1,  log₂(1/4) = −2,  log₂(1/8) = −3
+  H(uniform over 4) = 2 bits exactly
+  H(1/2, 1/4, 1/8, 1/8) = 1/2·1 + 1/4·2 + 1/8·3 + 1/8·3 = 1.75 bits</div>
+  </div>
+
+  <div class="card">
+    <h3>Type 4: Scalar backpropagation</h3>
+    <div class="formula">Step 1: Name all intermediate variables (a, b, c, ...)
+Step 2: Draw computation graph
+Step 3: Compute local derivative at each node
+Step 4: Chain from loss back to target parameter
+
+Multivariate chain rule (diamond graph):
+  ∂f/∂x = Σ_paths (product of local derivatives along each path)
+
+Example: f = sin(x²)cos(x³)
+  Modules: a=sin(c), b=cos(d), c=x², d=x³, f=ab
+  ∂f/∂x = b·cos(c)·2x + a·(−sin(d))·3x²
+         = cos(x³)·cos(x²)·2x − sin(x²)·sin(x³)·3x²</div>
+  </div>
+
+  <div class="card">
+    <h3>Type 5: Decision trees</h3>
+    <div class="formula">Step 1: Compute H(S) = −p(Yes)log₂p(Yes) − p(No)log₂p(No)
+
+Step 2: For each feature F:
+         Tally: for each value v of F, count (Yes, No) class instances
+         Compute: post-split entropy = Σᵥ (|Sᵥ|/|S|) H(Sᵥ)
+
+Step 3: Information gain I(F) = H(S) − post-split entropy(F)
+         Pick feature with MAX I(F)
+
+Shortcut: if splitting makes all subsets pure → entropy = 0 → this feature wins.
+
+Entropy values to remember:
+  H(1/2, 1/2) = 1.0  (max for binary)
+  H(2/3, 1/3) ≈ 0.918
+  H(3/4, 1/4) ≈ 0.811
+  H(1, 0)     = 0   (pure)</div>
+  </div>
+
+  <div class="card">
+    <h3>Type 6: ELBO derivation</h3>
+    <div class="formula">To show: L(q,θ) + KL(q,p) = ln p(x|θ)
+
+Properties:
+  p(a,b) = p(a|b)p(b)
+  log(fg) = log f + log g
+  log(f/g) = log f − log g
+  E[f+g] = Ef + Eg
+  E[constant] = constant
+
+Proof:
+  L + KL = E_q ln[p(x,z|θ)/q(z|x)] − E_q ln[p(z|x,θ)/q(z|x)]
+          = E_q [ln p(x,z|θ) − ln q(z|x) − ln p(z|x,θ) + ln q(z|x)]
+          = E_q [ln p(x,z|θ) − ln p(z|x,θ)]
+          = E_q ln [p(z|x,θ)p(x|θ) / p(z|x,θ)]
+          = E_q ln p(x|θ) = ln p(x|θ)  ✓</div>
+  </div>
+
+  <div class="card">
+    <h3>Type 7: Naive Bayes classification</h3>
+    <div class="formula">WITHOUT smoothing:
+  p̂(class|x) ∝ Πᵢ p(xᵢ|class) · p(class)
+  Each factor = count(xᵢ=v, class) / count(class)
+  Normalize: divide by sum over all classes
+
+WITH smoothing:
+  Add one pseudo-observation per (feature value, class)
+  New count = original_count + 1
+  New denominator = original_total + 2 (for binary feature)
+
+Warning: if any p(xᵢ|class) = 0 → product = 0 for that class
+→ use smoothing to avoid this</div>
+  </div>
+
+  <div class="card">
+    <h3>Type 8: SVM support vectors</h3>
+    <div class="formula">Given: w, b, and points {(xᵢ, yᵢ)}
+
+Step 1: Compute f(xᵢ) = wᵀxᵢ + b for each point
+Step 2: Class = sign(f(xᵢ))  [positive result → Pos, negative → Neg]
+Step 3: Support vector ↔ f(xᵢ) = yᵢ  [exactly ±1]
+
+Decision boundary: wᵀx + b = 0
+  → x₂ = −(w₁/w₂)x₁ − b/w₂
+
+Margin edges: wᵀx + b = ±1
+  → x₂ = −(w₁/w₂)x₁ + (1−b)/w₂   [positive edge]
+  → x₂ = −(w₁/w₂)x₁ − (1+b)/w₂   [negative edge]</div>
+  </div>
+
+  <div class="card">
+    <h3>Type 9: Markov model classification</h3>
+    <div class="formula">Given: bigram/unigram frequency table per class, email, prior
+
+Step 1: p(email|spam) = Π factors using chain rule + Markov assumption
+         p(w₄|w₃,spam) = count("w₃ w₄" in spam) / count("w₃" in spam)
+         p(w₁|spam) = count("w₁" in spam) / total words in spam
+
+Step 2: p(spam|email) ∝ p(email|spam) · p(spam)
+        p(ham|email)  ∝ p(email|ham) · p(ham)
+
+Step 3: Compare — pick larger
+
+Tip: work in fractions, cancel common factors before multiplying.
+Strong prior (e.g. p(spam)=1/40) can flip classification!</div>
+  </div>
+
+  <div class="card">
+    <h3>Type 10: Matrix backpropagation</h3>
+    <div class="formula">Given: y = Wx + b, upstream gradient y∇
+
+Return:
+  b∇ = y∇                 [same shape as b]
+  x∇ = y∇ W               [row vector × matrix W → same shape as x]
+  W∇ = (y∇)ᵀ xᵀ           [outer product → same shape as W]
+
+Key rule: NEVER compute full Jacobian. Always compute the
+Jacobian-vector product directly using multivariate chain rule:
+  ∂L/∂bⱼ = Σᵢ yᵢ∇ · ∂yᵢ/∂bⱼ = yⱼ∇
+
+For exam multiple choice: "compute upstream × local, not full Jacobian" = correct.</div>
+  </div>
+</div>
+
+</main>
+</div>
+
+<script>
+// Navigation
+const navItems = document.querySelectorAll('.nav-item');
+navItems.forEach(item => {
+  item.addEventListener('click', () => {
+    navItems.forEach(n => n.classList.remove('active'));
+    item.classList.add('active');
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    const pageId = 'page-' + item.dataset.page;
+    document.getElementById(pageId).classList.add('active');
+  });
+});
+
+// Keyboard shortcut Q → quiz
+document.addEventListener('keydown', e => {
+  if (e.key === 'q' || e.key === 'Q') {
+    document.querySelector('[data-page="quiz"]').click();
+  }
+});
+
+// Quiz data
+const allQuestions = [
+  // RECALL — §1
+  {type:'recall', topic:'Methodology', q:'Which of the following is an unsupervised learning method?',
+   opts:['SVM','Naive Bayes','k-Means clustering','Linear regression'], ans:2,
+   exp:'k-Means is unsupervised (no labels). SVM, Naive Bayes, and linear regression all require labeled training data.'},
+  {type:'recall', topic:'Methodology', q:'You want to select the best hyperparameter value. Which dataset do you use?',
+   opts:['Training set','Test set','Validation set','All of the above'], ans:2,
+   exp:'Validation set is used for hyperparameter selection. Never use the test set until final evaluation.'},
+  {type:'recall', topic:'Methodology', q:'When should you prefer random search over gradient descent?',
+   opts:['When the model is differentiable','When the model space is discrete (not differentiable)','When accuracy is your loss function','When you have very large data'], ans:1,
+   exp:'Random search evaluates random candidate models — use it when the model is not differentiable (e.g. decision trees, discrete model spaces). GD requires differentiable loss.'},
+  {type:'recall', topic:'Methodology', q:'A student reuses the test set multiple times to select the best model. What is the problem?',
+   opts:['The model will underfit','The performance estimate is inflated','The training takes longer','The model is not differentiable'], ans:1,
+   exp:'Reusing the test set for model selection inflates the estimated performance — the test set "leaks" into the training process.'},
+  {type:'recall', topic:'Methodology', q:'What is the defining property of offline (supervised) learning?',
+   opts:['Learning from reward signals','Using labeled training data','Discovering hidden structure','Interacting with an environment'], ans:1,
+   exp:'Supervised/offline learning uses labeled training data (input-output pairs). Reward signals → RL. Hidden structure → unsupervised.'},
+  // RECALL — §2
+  {type:'recall', topic:'Gradients', q:'Why is accuracy a bad loss function for gradient descent?',
+   opts:['It is expensive to compute','Its gradient is zero almost everywhere','It does not work for imbalanced classes','The confidence interval is large'], ans:1,
+   exp:'Accuracy is piecewise constant — its gradient is zero almost everywhere. GD cannot make progress.'},
+  {type:'recall', topic:'Gradients', q:'What does the gradient of a function f(a,b) represent geometrically?',
+   opts:['The minimum of the function','A vector pointing in the direction of steepest descent','A vector pointing in the direction of steepest ascent','The average rate of change'], ans:2,
+   exp:'The gradient points in the direction of steepest ascent. GD subtracts the gradient to move downhill.'},
+  // RECALL — §3
+  {type:'recall', topic:'Evaluation', q:'Which metric requires a ranking classifier (not just a threshold classifier)?',
+   opts:['Accuracy','Precision','AUC (area under ROC curve)','F1 score'], ans:2,
+   exp:'ROC AUC requires a ranking classifier. Accuracy, precision, and F1 can be computed from a confusion matrix alone.'},
+  {type:'recall', topic:'Evaluation', q:'What does a cell in the coverage matrix represent?',
+   opts:['The probability that both instances are positive','Whether a positive instance is ranked above a negative instance','The confusion between two classes','The ROC curve value at that point'], ans:1,
+   exp:'Each cell (pos, neg) in the coverage matrix is green if the pos instance is ranked higher than the neg instance (correct), red otherwise.'},
+  // RECALL — §4
+  {type:'recall', topic:'Naive Bayes', q:'Why is Naive Bayes called "naive"?',
+   opts:['It uses a very simple classifier','It assumes conditional independence of features given the class','It does not use Bayes theorem','It ignores the prior probability'], ans:1,
+   exp:'Naive Bayes assumes features are conditionally independent given the class label. This assumption is almost always false but the model often works well anyway.'},
+  {type:'recall', topic:'Entropy', q:'What is the entropy H of a uniform distribution over 4 outcomes?',
+   opts:['1 bit','2 bits','4 bits','0 bits'], ans:1,
+   exp:'H(uniform over 4) = log₂(4) = 2 bits. Entropy is maximized by a uniform distribution.'},
+  {type:'recall', topic:'Entropy', q:'H(p,q) is undefined if:',
+   opts:['p and q are the same distribution','q(x) = 0 for some x where p(x) > 0','p(x) = 0 for some x','The distributions have different supports'], ans:1,
+   exp:'Cross-entropy H(p,q) = −Σ p(x)log₂q(x). If q(x)=0 where p(x)>0, then log₂(0) = −∞, making it undefined.'},
+  // RECALL — §5
+  {type:'recall', topic:'SVMs', q:'What are support vectors?',
+   opts:['All training instances','Instances that lie exactly on the decision boundary','Instances closest to the decision boundary (on the margin)','Instances that were misclassified'], ans:2,
+   exp:'Support vectors are the training instances that lie exactly on the margin (wᵀx+b = ±1). They are the closest correctly-classified points to the decision boundary.'},
+  {type:'recall', topic:'SVMs', q:'SVM is which type of learning?',
+   opts:['Unsupervised','Reinforcement','Supervised','Semi-supervised'], ans:2,
+   exp:'SVM is supervised — it requires labeled training data. It is not unsupervised.'},
+  {type:'recall', topic:'SVMs', q:'What is the key advantage of soft-margin over hard-margin SVM?',
+   opts:['Better decision boundaries for linearly separable data','Allows gradient descent to be applied','Uses fewer support vectors','Has higher accuracy'], ans:1,
+   exp:'Soft-margin SVM introduces slack variables (penalty term C·Σpᵢ) which makes the objective differentiable → allows gradient descent. Hard margin is non-differentiable.'},
+  // RECALL — §6
+  {type:'recall', topic:'Deep Learning', q:'Why is ReLU preferred over sigmoid in hidden layers of deep networks?',
+   opts:['ReLU is smoother','Sigmoid derivative becomes ~0 for large |x| (vanishing gradients); ReLU derivative is 0 or 1','ReLU produces probabilities','Sigmoid is computationally expensive'], ans:1,
+   exp:'Sigmoid derivative σ(x)(1−σ(x)) ≈ 0 for large |x|, causing vanishing gradients. ReLU derivative is exactly 0 or 1 — no shrinkage for positive inputs.'},
+  {type:'recall', topic:'Deep Learning', q:'What does dropout do during training?',
+   opts:['Removes the least useful neurons permanently','Randomly disables nodes to prevent co-adaptation','Normalizes layer outputs','Adds noise to input features'], ans:1,
+   exp:'Dropout randomly disables (sets to 0) nodes during each training step. This prevents co-adaptation — each node must learn independently useful features.'},
+  {type:'recall', topic:'Deep Learning', q:'What does batch normalization do?',
+   opts:['Normalizes the input data before training','Normalizes the weights of the network','Normalizes layer output to zero-mean unit-variance over the batch','Removes outliers from each batch'], ans:2,
+   exp:'Batch normalization normalizes the output of a layer to be approximately normally distributed (zero mean, unit variance) over the current batch. This stabilizes training.'},
+  // RECALL — §7
+  {type:'recall', topic:'Generative Models', q:'How does the VAE encoder differ from a regular autoencoder encoder?',
+   opts:['VAE encoder is larger','VAE encoder outputs a distribution (mean+variance) not a point','VAE encoder uses a discriminator','VAE encoder is not trained'], ans:1,
+   exp:'VAE encoder outputs parameters of a distribution (μ and σ), not a point. A sample is drawn from this distribution. Regular autoencoders encode to a single point.'},
+  {type:'recall', topic:'Generative Models', q:'Which model uses a discriminator to solve mode collapse?',
+   opts:['VAE','Autoencoder','GAN','Conditional GAN'], ans:2,
+   exp:'GAN uses a discriminator (trained to distinguish real from generated samples) which pushes the generator to cover all modes. VAE avoids mode collapse via the encoder network.'},
+  {type:'recall', topic:'Generative Models', q:'When should you use a conditional GAN?',
+   opts:['When you want unconditional generation','When generation must depend on an input condition','When you want a variational lower bound','When the model space is discrete'], ans:1,
+   exp:'Conditional GANs condition the generator on an input (e.g. text, label, image). Use when generation should depend on a specific input condition.'},
+  // RECALL — §8
+  {type:'recall', topic:'Markov Models', q:'What does the first-order Markov assumption say?',
+   opts:['Each word is independent of all others','Each word depends only on the previous word','Each word depends on all previous words','Each word is equally probable'], ans:1,
+   exp:'First-order Markov assumption: each word in the sequence depends only on the single word directly before it. Higher-order models use longer windows.'},
+  {type:'recall', topic:'Matrix backprop', q:'In tensor backpropagation, why do we NOT compute the full Jacobian?',
+   opts:['It is too slow to multiply matrices','The full Jacobian is a 3-tensor (too large to store) and hard to multiply','The gradient is already a scalar','Jacobians are only defined for scalar functions'], ans:1,
+   exp:'For a vector-to-vector function, the full Jacobian is a matrix. For tensor operations, it becomes a 3-tensor — too large. Instead, compute Jacobian-vector products directly.'},
+  // RECALL — §9
+  {type:'recall', topic:'Decision Trees', q:'Why can L1 regularization NOT be applied to decision tree learning?',
+   opts:['Decision trees are too large','L1 regularization requires a continuous parameter vector; decision trees have a discrete model space','Decision trees are not differentiable enough','L1 makes decision trees too small'], ans:1,
+   exp:'L1 regularization adds ‖w‖₁ to the loss and requires taking the derivative w.r.t. a real-valued parameter vector. Decision trees are defined by a set of binary splits — discrete model space.'},
+  {type:'recall', topic:'Decision Trees', q:'How do you prevent overfitting in decision trees?',
+   opts:['Apply L1 regularization','Use more training data only','Limit max depth (hyperparameter, tune on validation set) or prune using validation set','Increase entropy threshold'], ans:2,
+   exp:'Overfitting prevention: (1) max-depth stopping criterion (hyperparameter, tuned on validation set); (2) post-hoc pruning evaluated on validation set. L1 regularization is not applicable.'},
+  // RECALL — §10
+  {type:'recall', topic:'Sequential Models', q:'Which statement correctly describes self-attention?',
+   opts:['Like RNN (sequential) + like CNN (local)','Like RNN (global access) + like CNN (parallelizable)','Like CNN (global) + like RNN (sequential)','Neither RNN nor CNN'], ans:1,
+   exp:'Self-attention has global access to all positions (like RNN) but is fully parallelizable with no sequential dependency (like CNN).'},
+  {type:'recall', topic:'Sequential Models', q:'What is instruction tuning?',
+   opts:['Training a model from scratch on instructions','Fine-tuning an LLM on natural language instruction-output pairs','Regularizing a model with instructions','Pruning a model based on instructions'], ans:1,
+   exp:'Instruction tuning = fine-tuning a pre-trained LLM on examples of (instruction, desired output) pairs. This allows the model to follow diverse natural language instructions.'},
+  // APPLICATION — gradient
+  {type:'app', topic:'Gradients', q:'Given f(a,b) = 3a² + b² − ab + a, what is ∂f/∂b?',
+   opts:['6a − b + 1','2b − a','3a² + a','b − a'], ans:1,
+   exp:'∂(3a² + b² − ab + a)/∂b = 2b − a. The terms 3a² and a do not contain b, so they become 0.'},
+  {type:'app', topic:'Gradients', q:'For the linear regression model f(a) = sa + b with loss = ½Σᵢ(saᵢ+b−hᵢ)², which is the correct ∂loss/∂b?',
+   opts:['Σᵢ aᵢ','Σᵢ (aᵢs + b − hᵢ)','Σᵢ (aᵢs + b − hᵢ)·aᵢ','Σᵢ hᵢ'], ans:1,
+   exp:'Chain rule: ∂loss/∂b = Σᵢ (aᵢs+b−hᵢ)·∂(aᵢs+b−hᵢ)/∂b = Σᵢ (aᵢs+b−hᵢ)·1.'},
+  // APPLICATION — ranking
+  {type:'app', topic:'Evaluation', q:'A linear classifier has decision boundary x₁ = x₂. Points below the line are Pos, above are Neg. Which ordering gives the correct ranking (most negative to most positive)?',
+   opts:['Sort by x₁ ascending','Sort by x₂ ascending','Sort by (x₁ − x₂) ascending (most Neg to most Pos)','Sort by (x₁ + x₂) descending'], ans:2,
+   exp:'Distance from decision boundary x₁=x₂ is proportional to (x₁−x₂). Negative means above (Neg side), positive means below (Pos side). Sort ascending to get ranking from most-Neg to most-Pos.'},
+  // APPLICATION — entropy
+  {type:'app', topic:'Entropy', q:'Distribution p: (1/4, 1/4, 1/4, 1/4). Distribution q: (1/2, 1/4, 1/8, 1/8). Which statement is true?',
+   opts:['H(p) > H(q)','H(p) < H(q)','H(p) = H(q)','KL(p‖q) < 0'], ans:0,
+   exp:'H(p) = 2 bits (uniform over 4). H(q) = 1/2·1 + 1/4·2 + 1/8·3 + 1/8·3 = 1.75 bits. So H(p) > H(q). More uniform = higher entropy. KL is always ≥ 0.'},
+  {type:'app', topic:'Entropy', q:'If q(d) = 0 but p(d) = 1/4, what is H(p, q)?',
+   opts:['0','1','2','Undefined (infinite)'], ans:3,
+   exp:'H(p,q) = −Σ p(x)log₂q(x). When q(d)=0 and p(d)>0: −p(d)·log₂(0) = −(1/4)·(−∞) = +∞. Cross-entropy is undefined.'},
+  // APPLICATION — naive Bayes
+  {type:'app', topic:'Naive Bayes', q:'Spam: 4 emails total. p(pill=T|spam)=3/4, p(meeting=T|spam)=1/4, p(spam)=0.5. Ham: p(pill=T|ham)=1/4, p(meeting=T|ham)=2/4, p(ham)=0.5. Email has both words. Which class?',
+   opts:['Spam (3/4·1/4·1/2 > 1/4·2/4·1/2)','Ham (higher product)','Equal probability','Cannot determine without smoothing'], ans:0,
+   exp:'p(spam|x) ∝ 3/4·1/4·1/2 = 3/32. p(ham|x) ∝ 1/4·2/4·1/2 = 2/32. Spam wins (3/32 > 2/32).'},
+  // APPLICATION — SVMs
+  {type:'app', topic:'SVMs', q:'Given w=(1,−2), b=1. Which point is a support vector? [y=+1 for positive, y=−1 for negative]',
+   opts:['x=(2,1), y=+1  [wᵀx+b = 2−2+1=1 = y]','x=(1,2), y=+1  [wᵀx+b = 1−4+1=−2 ≠ y]','x=(2,2), y=−1  [wᵀx+b = 2−4+1=−1 = y]','Both A and C'], ans:3,
+   exp:'Support vector condition: wᵀx+b = yᵢ. Check x=(2,1),y=+1: 1·2−2·1+1=1=y✓. Check x=(2,2),y=−1: 1·2−2·2+1=−1=y✓. Both are support vectors.'},
+  // APPLICATION — decision tree
+  {type:'app', topic:'Decision Trees', q:'A dataset has 8 dogs: 3 bite (Yes) and 5 don\'t (No). What is H(Bites)?',
+   opts:['0','1','Approximately 0.954','2'], ans:2,
+   exp:'H = −(3/8)log₂(3/8) − (5/8)log₂(5/8) ≈ −0.375·(−1.415) − 0.625·(−0.678) ≈ 0.531 + 0.424 ≈ 0.954 bits.'},
+  {type:'app', topic:'Decision Trees', q:'After splitting on feature G: {Growling=Yes: 3 Yes, 1 No} and {Growling=No: 2 Yes, 2 No}. What is the weighted post-split entropy? [H(3/4,1/4)≈0.811, H(1/2,1/2)=1]',
+   opts:['0','4/8·0.811 + 4/8·1 = 0.906','0.811','1.0'], ans:1,
+   exp:'Weighted entropy = (4/8)·H(3/4,1/4) + (4/8)·H(1/2,1/2) = 0.5·0.811 + 0.5·1.0 = 0.406 + 0.5 = 0.906.'},
+  // APPLICATION — ELBO
+  {type:'app', topic:'ELBO', q:'In the ELBO derivation, which property is used to go from E_q[ln p(x,z|θ)] − E_q[ln p(z|x,θ)] to E_q[ln(p(x,z|θ)/p(z|x,θ))]?',
+   opts:['Chain rule of probability','log(f/g) = log f − log g, then take expectation','E[f+g] = Ef + Eg','KL divergence definition'], ans:1,
+   exp:'log f − log g = log(f/g). So E[ln f] − E[ln g] = E[ln f − ln g] = E[ln(f/g)].'},
+  {type:'app', topic:'ELBO', q:'The ELBO L(q,θ) satisfies ln p(x|θ) ≥ L(q,θ). Why?',
+   opts:['Because KL(q,p) ≤ 0','Because KL(q,p) ≥ 0, so L = ln p(x|θ) − KL ≤ ln p(x|θ)','Because the expectation is always bounded','Because log is a concave function'], ans:1,
+   exp:'KL divergence is always ≥ 0. Since ln p(x) = L + KL, we have L = ln p(x) − KL ≤ ln p(x). Hence L is a lower bound.'},
+  // APPLICATION — Markov
+  {type:'app', topic:'Markov Models', q:'Markov model: p(won|you,spam)=800/2000=2/5, p(you|prize,spam)=500/5000=1/10, p(prize|claim,spam)=300/2000=3/20, p(claim|spam)=2000/20000=1/10. What is p(E|spam)?',
+   opts:['3/50·10⁻³','3/5·10⁻³ (= 2/5·1/10·3/20·1/10)','1/500','1/200'], ans:1,
+   exp:'p(E|spam) = (2/5)·(1/10)·(3/20)·(1/10) = 6/10000 = 3/5·10⁻³.'},
+  // APPLICATION — matrix backprop
+  {type:'app', topic:'Matrix backprop', q:'For y = Wx + b, given upstream gradient y∇, what is the gradient for b?',
+   opts:['Wᵀy∇','y∇W','y∇ (same as upstream gradient)','(y∇)ᵀy∇'], ans:2,
+   exp:'∂L/∂bⱼ = Σᵢ yᵢ∇·∂yᵢ/∂bⱼ = yⱼ∇·1 = yⱼ∇. So b∇ = y∇ — just pass the upstream gradient through.'},
+  {type:'app', topic:'Matrix backprop', q:'For y = Wx + b, given upstream y∇, what is the gradient for x?',
+   opts:['Wy∇','y∇W (row vector × matrix W)','Wᵀy∇','(y∇)ᵀW'], ans:1,
+   exp:'∂L/∂xⱼ = Σᵢ yᵢ∇·Wᵢⱼ = y∇·(j-th column of W). This is exactly y∇W (row vector times W).'},
+  // COMBINATION — reasoning
+  {type:'recall', topic:'Methodology', q:'A model has high variance. What can we say about its average error?',
+   opts:['The average error must be high','The average error can still be low','The model is underfitting','The model is unbiased'], ans:1,
+   exp:'High variance means predictions are spread out (inconsistent), not necessarily wrong on average. A high-variance model can have low bias (low average error) but high variance across different training sets.'},
+  {type:'recall', topic:'Generative Models', q:'VAE avoids mode collapse via:',
+   opts:['Discriminator training','The encoder network producing a distribution over latent space','Conditional generation','Reparameterization of the output'], ans:1,
+   exp:'VAE encoder produces a distribution over z, not a point. This encourages the model to cover all modes. GAN uses a discriminator for mode collapse.'},
+  {type:'recall', topic:'Sequential Models', q:'Which model does NOT make the Markov assumption?',
+   opts:['First-order Markov model','Naive Bayes','LSTM','Bigram language model'], ans:2,
+   exp:'LSTM uses memory gates to retain information over long sequences — it explicitly avoids the Markov assumption. Naive Bayes, Markov models, and bigram models all make this assumption.'},
+  {type:'recall', topic:'Methodology', q:'Ensemble methods CANNOT solve which problem?',
+   opts:['High variance','Poor generalization across datasets','High training time (slow models)','Overfitting to training data'], ans:2,
+   exp:'Ensemble methods reduce variance by averaging many models. But if each model is slow to train, averaging many of them makes training even slower. Ensembles cannot reduce training time.'},
+
+  // ── Extra application-type practice: ELBO, Naive Bayes, Markov Models ──
+
+  // ELBO
+  {type:'app', topic:'ELBO', q:'In the ELBO derivation, the step ln p(x|θ) = E_q[ln p(x,z|θ)/q(z)] + KL(q‖p) uses which factorisation?',
+   opts:['p(x,z)=p(z|x)p(x)','p(x,z)=p(x|z)p(z)','p(x,z)=p(x)p(z)','p(x,z)=q(z)p(x|z)'], ans:0,
+   exp:'ln p(x|θ) is isolated by writing ln p(x|θ) = ln p(x,z|θ) − ln p(z|x,θ). We use p(x,z)=p(z|x)p(x) → ln p(x) = ln p(x,z) − ln p(z|x). Taking expectation over q(z) gives the ELBO + KL split.'},
+
+  {type:'app', topic:'ELBO', q:'Why is the ELBO called a "lower bound"?',
+   opts:['Because KL(q‖p) ≤ 0','Because KL(q‖p) ≥ 0 → ln p(x|θ) ≥ L(q,θ)','Because p(z|x) is always < 1','Because E_q[ln p(x|z)] ≤ 0'], ans:1,
+   exp:'ELBO derivation: ln p(x|θ) = L(q,θ) + KL(q‖p). Since KL ≥ 0 always, L(q,θ) ≤ ln p(x|θ). Maximising L is equivalent to minimising KL — we tighten the bound by making q closer to the true posterior.'},
+
+  {type:'app', topic:'ELBO', q:'The two terms of the ELBO are L(v,w) = E_q[ln p_w(x|z)] − KL(q_v(z|x), p_w(z)). What does the second term penalise?',
+   opts:['Poor reconstruction quality','The encoder posterior q deviating from the prior p(z)','Large weight matrices w','High variance in z samples'], ans:1,
+   exp:'The KL term KL(q_v(z|x), p_w(z)) measures how far the encoder\'s posterior q_v(z|x) is from the prior p_w(z) (usually N(0,I)). Minimising it regularises the latent space to be compact and well-structured.'},
+
+  // Naive Bayes
+  {type:'app', topic:'Naive Bayes', q:'Training set: 10 spam emails, 10 ham. In spam: word "free" appears in 6 emails. In ham: "free" in 2 emails. New email has "free". p(spam|free) ∝ ?',
+   opts:['6/10 × 0.5','6/10 / 2/10','(6/10)×(0.5) vs (2/10)×(0.5)','6/8'], ans:2,
+   exp:'p(spam|free) ∝ p(free|spam)×p(spam) = (6/10)×0.5 = 0.30. p(ham|free) ∝ (2/10)×0.5 = 0.10. Normalised: p(spam|free) = 0.30/0.40 = 0.75. The class with higher unnormalised score wins.'},
+
+  {type:'app', topic:'Naive Bayes', q:'A Naive Bayes model has p(X₁=1|Y=+) = 0.8, p(X₂=1|Y=+) = 0.6, p(Y=+) = 0.4. For instance [X₁=1, X₂=1], what is the unnormalised score for class +?',
+   opts:['0.192','0.48','0.8','0.32'], ans:0,
+   exp:'p̂(+|x) ∝ p(X₁=1|+)×p(X₂=1|+)×p(+) = 0.8×0.6×0.4 = 0.192.'},
+
+  {type:'app', topic:'Naive Bayes', q:'Zero-count smoothing: in training, word "bitcoin" never appears in ham class (0 of 20 emails). Without smoothing, p("bitcoin"|ham)=0. What does this cause in classification?',
+   opts:['The model ignores "bitcoin" entirely','Any email with "bitcoin" gets p̂(ham|e)=0, even if other features strongly suggest ham','p(ham|e)=0.5 by default','The model throws an error'], ans:1,
+   exp:'Naive Bayes multiplies all feature probabilities. If any p(xᵢ|class)=0, the whole product is 0, regardless of all other evidence. Solution: smoothing (add pseudo-count of 1 to every feature-class combination).'},
+
+  // Markov Models
+  {type:'app', topic:'Markov Models', q:'Corpus (spam only): "buy now buy again buy". Bigram estimate p("buy"|"now") = ?',
+   opts:['3/5','1/1 = 1','1/5','2/3'], ans:1,
+   exp:'Count("now buy") = 1, Count("now") = 1. p("buy"|"now") = 1/1 = 1.0. "now" is always followed by "buy" in this tiny corpus.'},
+
+  {type:'app', topic:'Markov Models', q:'Sequence "claim prize now". Spam: p(claim|spam)=0.2, p(prize|claim,spam)=0.1, p(now|prize,spam)=0.5, p(spam)=0.1. Ham: all bigrams=0.01, p(ham)=0.9. Which class wins?',
+   opts:['Spam: 0.001 vs Ham: 0.000000729 → spam wins','Ham wins because prior is much larger','Spam wins only if prior > 0.5','Cannot determine without smoothing'], ans:0,
+   exp:'p(E|spam)×p(spam) = 0.2×0.1×0.5×0.1 = 0.001. p(E|ham)×p(ham) = 0.01³×0.9 = 0.0000009. Spam unnormalised score (0.001) >> ham (0.0000009), so spam wins — even with the weak prior.'},
+
+  {type:'app', topic:'Markov Models', q:'In a Markov classification, the ham prior is p(ham)=0.99. If p(E|spam)/p(E|ham)=5, which class wins?',
+   opts:['Spam, because likelihood ratio 5 > 1','Ham, because 5 × 0.01 < 0.99','Spam, because p(E|spam) is higher','Ham always wins if prior > 0.9'], ans:1,
+   exp:'Compare unnormalised scores: spam = 5×p(E|ham)×0.01; ham = p(E|ham)×0.99. Ratio = (5×0.01)/(0.99) = 0.05/0.99 < 1 → ham wins. Strong prior can override even a 5× likelihood advantage.'},
+];
+
+let state = { questions: [], answers: {}, revealed: {}, correct: 0, total: 0 };
+
+function startQuiz(mode) {
+  let qs;
+  if (mode === 'all') qs = shuffle([...allQuestions]);
+  else if (mode === 'recall') qs = shuffle(allQuestions.filter(q => q.type === 'recall'));
+  else if (mode === 'app') qs = shuffle(allQuestions.filter(q => q.type === 'app'));
+  else qs = shuffle(allQuestions.filter(q => ['Entropy','ELBO','Markov Models','Matrix backprop','Decision Trees'].includes(q.topic)));
+  state = { questions: qs, answers: {}, revealed: {}, correct: 0, total: 0 };
+  renderQuiz();
+  document.getElementById('quiz-score-area').style.display = 'block';
+  updateScore();
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function resetQuiz() {
+  state = { questions: [], answers: {}, revealed: {}, correct: 0, total: 0 };
+  document.getElementById('quiz-container').innerHTML = '';
+  document.getElementById('quiz-score-area').style.display = 'none';
+}
+
+function renderQuiz() {
+  const container = document.getElementById('quiz-container');
+  container.innerHTML = state.questions.map((q, i) => `
+    <div class="question-card" id="qcard-${i}">
+      <h4>Q${i+1} · ${q.topic} · ${q.type}</h4>
+      <div class="question-text">${q.q}</div>
+      ${q.opts.map((opt, j) => `
+        <button class="option" id="opt-${i}-${j}" onclick="answer(${i},${j})">${String.fromCharCode(65+j)}. ${opt}</button>
+      `).join('')}
+      <div class="explanation" id="exp-${i}">✓ ${q.exp}</div>
+    </div>
+  `).join('');
+}
+
+function answer(qi, optIdx) {
+  if (state.answers[qi] !== undefined) return;
+  state.answers[qi] = optIdx;
+  const q = state.questions[qi];
+  const correct = optIdx === q.ans;
+  if (correct) state.correct++;
+  state.total++;
+
+  for (let j = 0; j < q.opts.length; j++) {
+    const btn = document.getElementById(`opt-${qi}-${j}`);
+    if (j === q.ans) btn.classList.add('correct');
+    else if (j === optIdx && !correct) btn.classList.add('wrong');
+    btn.disabled = true;
+  }
+  document.getElementById(`exp-${qi}`).style.display = 'block';
+  updateScore();
+}
+
+function updateScore() {
+  const pct = state.total > 0 ? Math.round(state.correct / state.total * 100) : 0;
+  document.getElementById('score-display').textContent = `${state.correct} / ${state.total}`;
+  document.getElementById('score-fill').style.width = pct + '%';
+  document.getElementById('score-label').textContent = state.total > 0
+    ? `${pct}% correct${pct >= 88 ? ' 🎯 On track for 35/40!' : pct >= 75 ? ' — Keep going' : ' — Review weak areas'}`
+    : 'Answer questions to see your score';
+}
+</script>
+</body>
+</html>
