@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>History of AI — Mindmap</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background: #faf8f3;
+  color: #2c2c2c;
+  height: 100vh;
+  overflow: hidden;
+  user-select: none;
+}
+
+#header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 52px;
+  background: #faf8f3;
+  border-bottom: 1px solid #e8e3d8;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 12px;
+  z-index: 100;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+#header h1 {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2c2c2c;
+  white-space: nowrap;
+  margin-right: 8px;
+}
+
+#search-box {
+  flex: 1;
+  max-width: 260px;
+  padding: 6px 12px;
+  border: 1px solid #d8d3c8;
+  border-radius: 20px;
+  background: #fff;
+  font-size: 0.82rem;
+  color: #2c2c2c;
+  outline: none;
+  transition: border-color 0.2s;
+}
+#search-box:focus { border-color: #8fbc8f; }
+#search-box::placeholder { color: #aaa; }
+
+.btn {
+  padding: 6px 14px;
+  border: 1px solid #d8d3c8;
+  border-radius: 16px;
+  background: #fff;
+  font-size: 0.78rem;
+  color: #555;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.btn:hover { background: #f0ece2; border-color: #bbb; }
+
+#canvas-wrap {
+  position: fixed;
+  top: 52px; left: 0; right: 0; bottom: 0;
+  overflow: hidden;
+  cursor: grab;
+}
+#canvas-wrap.grabbing { cursor: grabbing; }
+
+svg#mindmap {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  overflow: visible;
+}
+
+#legend {
+  position: fixed;
+  bottom: 16px;
+  left: 16px;
+  background: rgba(250,248,243,0.95);
+  border: 1px solid #e8e3d8;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 0.75rem;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+#legend h4 {
+  font-family: Georgia, serif;
+  font-size: 0.78rem;
+  margin-bottom: 6px;
+  color: #555;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 4px;
+}
+.legend-dot {
+  width: 12px; height: 12px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+#tooltip {
+  position: fixed;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px 14px;
+  max-width: 280px;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: #333;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  z-index: 200;
+  pointer-events: none;
+  display: none;
+}
+#tooltip strong { font-size: 0.83rem; display: block; margin-bottom: 3px; }
+
+#hint {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  font-size: 0.72rem;
+  color: #aaa;
+  text-align: right;
+  z-index: 100;
+  line-height: 1.6;
+}
+</style>
+</head>
+<body>
+
+<div id="header">
+  <h1>History of AI</h1>
+  <input id="search-box" type="text" placeholder="Search nodes..." />
+  <button class="btn" id="btn-expand">Expand All</button>
+  <button class="btn" id="btn-collapse">Collapse All</button>
+  <button class="btn" id="btn-reset">Reset View</button>
+</div>
+
+<div id="canvas-wrap">
+  <svg id="mindmap">
+    <defs>
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="rgba(0,0,0,0.10)"/>
+      </filter>
+    </defs>
+    <g id="root-g"></g>
+  </svg>
+</div>
+
+<div id="legend">
+  <h4>Branches</h4>
+  <div class="legend-item"><div class="legend-dot" style="background:#8fbc8f"></div><span>Computing History</span></div>
+  <div class="legend-item"><div class="legend-dot" style="background:#87ceeb"></div><span>AI History</span></div>
+  <div class="legend-item"><div class="legend-dot" style="background:#f4c842"></div><span>Key Concepts</span></div>
+  <div class="legend-item"><div class="legend-dot" style="background:#dda0dd"></div><span>Key Figures</span></div>
+</div>
+
+<div id="tooltip"></div>
+
+<div id="hint">
+  Scroll to zoom &bull; Drag to pan<br>
+  Click node to expand/collapse<br>
+  Hover for details
+</div>
+
+<script>
+// ─── DATA ───────────────────────────────────────────────────────────────────
+
+const COLORS = {
+  root:    { fill: '#fdf6e3', border: '#c9b97a', text: '#5a4a1a' },
+  branch1: { fill: '#e8f5e8', border: '#6aaa6a', text: '#1e5e1e', base: '#8fbc8f' },
+  branch2: { fill: '#e3f2fb', border: '#5badd6', text: '#1a4d6e', base: '#87ceeb' },
+  branch3: { fill: '#fef9e1', border: '#d4a800', text: '#6b4c00', base: '#f4c842' },
+  branch4: { fill: '#f9eef9', border: '#b86ab8', text: '#5c1e5c', base: '#dda0dd' },
+};
+
+const treeData = {
+  id: 'root', label: 'History of AI', desc: 'Overview of the history of artificial intelligence and computing',
+  color: 'root', expanded: true,
+  children: [
+    {
+      id: 'b1', label: 'Computing History', desc: 'The history of computing machinery, industry, and software from 1800s onward',
+      color: 'branch1', expanded: true,
+      children: [
+        {
+          id: 'b1-1', label: 'Three Traditions', desc: 'Three parallel traditions driving early computing development',
+          color: 'branch1', expanded: false,
+          children: [
+            { id: 'b1-1-1', label: 'Administration', desc: 'Census, business — Hollerith tabulating machines (1890)', color: 'branch1' },
+            { id: 'b1-1-2', label: 'Process Control', desc: 'Engineering/infrastructure — Dutch waterworks, Taylor', color: 'branch1' },
+            { id: 'b1-1-3', label: 'Science', desc: 'Physics, astronomy, military ballistics', color: 'branch1' },
+          ]
+        },
+        {
+          id: 'b1-2', label: 'Early Machines', desc: 'Mechanical computing devices from the 1820s to 1940s',
+          color: 'branch1', expanded: false,
+          children: [
+            { id: 'b1-2-1', label: 'Babbage Difference Engine (1822)', desc: 'First mechanical calculator, never completed', color: 'branch1' },
+            { id: 'b1-2-2', label: 'Analytical Engine (1837)', desc: 'First programmable machine concept; Lovelace wrote first algorithm', color: 'branch1' },
+            { id: 'b1-2-3', label: 'Hollerith Machine (1890)', desc: 'Punched-card, US Census; founded IBM predecessor', color: 'branch1' },
+            { id: 'b1-2-4', label: 'Harvard Mark I (1944)', desc: "Aiken's electromechanical; IBM collaboration", color: 'branch1' },
+          ]
+        },
+        {
+          id: 'b1-3', label: 'WWII Computers', desc: 'Electronic computers developed during and after WWII',
+          color: 'branch1', expanded: false,
+          children: [
+            { id: 'b1-3-1', label: 'ENIAC (1945)', desc: 'Moore School; first electronic general-purpose computer', color: 'branch1' },
+            { id: 'b1-3-2', label: 'EDVAC + First Draft (1945)', desc: 'Von Neumann; stored-program concept', color: 'branch1' },
+            { id: 'b1-3-3', label: 'Moore School Lectures (1946)', desc: 'Key knowledge-transfer to UK/Europe', color: 'branch1' },
+            { id: 'b1-3-4', label: 'Manchester Baby (1948)', desc: 'First stored-program run', color: 'branch1' },
+            { id: 'b1-3-5', label: 'EDSAC (1949)', desc: 'Wilkes, Cambridge; first practical stored-program', color: 'branch1' },
+          ]
+        },
+        {
+          id: 'b1-4', label: 'Dutch Dinosaurs', desc: 'Dutch contributions to early computing',
+          color: 'branch1', expanded: false,
+          children: [
+            { id: 'b1-4-1', label: 'Aad van Wijngaarden', desc: '(1916–87): Mathematisch Centrum; ARRA; ALGOL 60', color: 'branch1' },
+            { id: 'b1-4-2', label: 'ARRA (1952)', desc: 'First Dutch electronic computer', color: 'branch1' },
+            { id: 'b1-4-3', label: 'Johan van Veen', desc: '(1893–1953): Deltar analogue for flood control', color: 'branch1' },
+          ]
+        },
+        {
+          id: 'b1-5', label: 'Cold War Computing', desc: 'Computing advances driven by Cold War military needs',
+          color: 'branch1', expanded: false,
+          children: [
+            { id: 'b1-5-1', label: 'SAGE (1958–63)', desc: 'Air-defence; IBM AN/FSQ-7; huge tech spinoff', color: 'branch1' },
+            { id: 'b1-5-2', label: 'Project Whirlwind (1944–53)', desc: 'MIT; core memory; became SAGE', color: 'branch1' },
+            { id: 'b1-5-3', label: 'Polish Mathematicians', desc: 'Rejewski + Różycki + Zygalski broke Enigma (1932); precede Turing', color: 'branch1' },
+          ]
+        },
+        {
+          id: 'b1-6', label: 'Computer Industry', desc: 'The rise of the commercial computer industry',
+          color: 'branch1', expanded: false,
+          children: [
+            { id: 'b1-6-1', label: 'IBM Model 650 (1954)', desc: 'First mass-produced computer', color: 'branch1' },
+            { id: 'b1-6-2', label: 'IBM System/360 (1964)', desc: 'Compatible family; $5bn gamble; success', color: 'branch1' },
+            { id: 'b1-6-3', label: 'UNIVAC CBS (1952)', desc: 'Election prediction; public trust demo', color: 'branch1' },
+            { id: 'b1-6-4', label: 'IBM Unbundling (1968)', desc: 'Software priced separately; created software industry', color: 'branch1' },
+          ]
+        },
+        {
+          id: 'b1-7', label: 'Software Era', desc: 'The emergence of software as a discipline and industry',
+          color: 'branch1', expanded: false,
+          children: [
+            { id: 'b1-7-1', label: 'Software Crisis (1968)', desc: 'NATO conference; OS/360; Dijkstra', color: 'branch1' },
+            { id: 'b1-7-2', label: 'FORTRAN (1957)', desc: 'IBM; scientists; commercial agenda', color: 'branch1' },
+            { id: 'b1-7-3', label: 'COBOL (1959)', desc: 'Grace Hopper; business language', color: 'branch1' },
+            { id: 'b1-7-4', label: 'LISP (1958)', desc: 'McCarthy; lambda calculus; AI language', color: 'branch1' },
+            { id: 'b1-7-5', label: 'ALGOL 60', desc: 'European; van Wijngaarden; elegant but commercially rejected', color: 'branch1' },
+          ]
+        },
+        {
+          id: 'b1-8', label: 'Personal Computing', desc: 'The democratisation of computing through personal computers',
+          color: 'branch1', expanded: false,
+          children: [
+            { id: 'b1-8-1', label: 'BASIC (1963)', desc: 'Kemeny & Kurtz; first accessible language', color: 'branch1' },
+            { id: 'b1-8-2', label: 'Apple II (1977) / IBM PC (1981)', desc: 'Personal computer mass market', color: 'branch1' },
+            { id: 'b1-8-3', label: 'Apple Macintosh (1984)', desc: 'GUI; mouse; desktop metaphor', color: 'branch1' },
+          ]
+        },
+        {
+          id: 'b1-9', label: 'Internet Era', desc: 'The development of networked computing and the internet',
+          color: 'branch1', expanded: false,
+          children: [
+            { id: 'b1-9-1', label: 'ARPANET (1969)', desc: 'Packet switching; military origins', color: 'branch1' },
+            { id: 'b1-9-2', label: 'Email (1971)', desc: 'Tomlinson; unintended appropriation', color: 'branch1' },
+            { id: 'b1-9-3', label: 'World Wide Web (1989)', desc: 'Berners-Lee; CERN', color: 'branch1' },
+            { id: 'b1-9-4', label: 'Google (1998)', desc: 'PageRank; surveillance capitalism', color: 'branch1' },
+            { id: 'b1-9-5', label: 'GDPR (2018)', desc: 'EU data protection; right to erasure', color: 'branch1' },
+          ]
+        },
+      ]
+    },
+    {
+      id: 'b2', label: 'AI History', desc: 'The history of artificial intelligence as a field, from intellectual prehistory to modern deep learning',
+      color: 'branch2', expanded: true,
+      children: [
+        {
+          id: 'b2-1', label: 'Intellectual Prehistory', desc: 'Ancient and early modern foundations of logical and symbolic reasoning',
+          color: 'branch2', expanded: false,
+          children: [
+            { id: 'b2-1-1', label: 'Aristotle (350 BCE)', desc: 'Formal syllogism; first systematic reasoning', color: 'branch2' },
+            { id: 'b2-1-2', label: 'Leibniz (17th c.)', desc: 'Calculus Ratiocinator: universal logical calculus', color: 'branch2' },
+            { id: 'b2-1-3', label: 'Boole (1854)', desc: 'Boolean algebra: logic as mathematics', color: 'branch2' },
+            { id: 'b2-1-4', label: 'Russell & Whitehead (1910–13)', desc: 'Principia Mathematica: all math from logic', color: 'branch2' },
+          ]
+        },
+        {
+          id: 'b2-2', label: 'Foundations (1930s–50s)', desc: 'Mathematical and theoretical foundations of AI and computation',
+          color: 'branch2', expanded: false,
+          children: [
+            { id: 'b2-2-1', label: 'Church Lambda Calculus (1936)', desc: 'Foundation for computation → LISP', color: 'branch2' },
+            { id: 'b2-2-2', label: 'Turing Computability (1936)', desc: 'Turing machine; halting problem', color: 'branch2' },
+            { id: 'b2-2-3', label: 'Cybernetics (Wiener, 1948)', desc: 'Information + control + feedback; machine = animal', color: 'branch2' },
+            { id: 'b2-2-4', label: 'Turing Test (1950)', desc: 'Intelligence as imitation', color: 'branch2' },
+            { id: 'b2-2-5', label: 'Dartmouth Conference (1956)', desc: '"Artificial Intelligence" coined; field founded', color: 'branch2' },
+          ]
+        },
+        {
+          id: 'b2-3', label: 'Classical AI (1956–1970s)', desc: 'The first wave of AI research focused on symbolic reasoning',
+          color: 'branch2', expanded: false,
+          children: [
+            { id: 'b2-3-1', label: 'LISP (McCarthy, 1958)', desc: 'Symbolic AI language', color: 'branch2' },
+            { id: 'b2-3-2', label: 'General Problem Solver (1957)', desc: 'Newell & Simon; universal problem-solving', color: 'branch2' },
+            { id: 'b2-3-3', label: 'Expert Systems (1970s–80s)', desc: 'MYCIN, DENDRAL; knowledge-based systems', color: 'branch2' },
+            { id: 'b2-3-4', label: 'Lighthill Report (1973)', desc: 'UK evaluation → first AI winter', color: 'branch2' },
+          ]
+        },
+        {
+          id: 'b2-4', label: 'AI Winters', desc: 'Cycles of boom and bust in AI funding and enthusiasm',
+          color: 'branch2', expanded: false,
+          children: [
+            { id: 'b2-4-1', label: 'First AI Winter (1970s)', desc: 'Lighthill; machine translation failure; funding cuts', color: 'branch2' },
+            { id: 'b2-4-2', label: 'Expert Systems Boom (1980s)', desc: 'LISP machines; Japan 5th Gen project', color: 'branch2' },
+            { id: 'b2-4-3', label: 'Second AI Winter (late 1980s–90s)', desc: 'Expert systems brittle; collapse', color: 'branch2' },
+            { id: 'b2-4-4', label: 'Deep Learning Revolution (2012)', desc: 'Hinton AlexNet; ImageNet; GPU computing', color: 'branch2' },
+            { id: 'b2-4-5', label: 'Large Language Models (2017+)', desc: 'Transformer; GPT; BERT', color: 'branch2' },
+          ]
+        },
+        {
+          id: 'b2-5', label: 'AI and Science', desc: 'Neural networks and connectionist approaches',
+          color: 'branch2', expanded: false,
+          children: [
+            { id: 'b2-5-1', label: 'Perceptron (Rosenblatt, 1957)', desc: 'First neural network; Minsky critique → winter', color: 'branch2' },
+            { id: 'b2-5-2', label: 'Backpropagation (Rumelhart, 1986)', desc: 'Neural network training; second wave', color: 'branch2' },
+          ]
+        },
+        {
+          id: 'b2-6', label: 'AI and Education', desc: 'AI in learning and educational technology',
+          color: 'branch2', expanded: false,
+          children: [
+            { id: 'b2-6-1', label: 'Programmed Instruction (Skinner)', desc: 'Behaviourist; teaching machine', color: 'branch2' },
+            { id: 'b2-6-2', label: 'LOGO (Papert, 1967)', desc: 'Constructivist; child programs computer', color: 'branch2' },
+            { id: 'b2-6-3', label: 'MOOCs (2012+)', desc: 'Massive open online courses', color: 'branch2' },
+            { id: 'b2-6-4', label: 'AI Tutors (2020s)', desc: 'ChatGPT in education; Skinner vs Papert debate', color: 'branch2' },
+          ]
+        },
+      ]
+    },
+    {
+      id: 'b3', label: 'Key Concepts', desc: 'Theoretical frameworks and recurring themes in the history of AI and computing',
+      color: 'branch3', expanded: true,
+      children: [
+        {
+          id: 'b3-1', label: 'Appropriation', desc: 'Using technology for purposes beyond its original design',
+          color: 'branch3', expanded: false,
+          children: [
+            { id: 'b3-1-1', label: 'Definition', desc: 'Using technology for unintended purposes', color: 'branch3' },
+            { id: 'b3-1-2', label: 'Nim (1951)', desc: 'Scientific computer → game → AI demo', color: 'branch3' },
+            { id: 'b3-1-3', label: 'Email (1971)', desc: 'ARPANET → dominant social application', color: 'branch3' },
+            { id: 'b3-1-4', label: 'GPU', desc: 'Games graphics → deep learning (AlexNet 2012)', color: 'branch3' },
+            { id: 'b3-1-5', label: 'SAGE → SABRE', desc: 'Military defence → airline reservations', color: 'branch3' },
+          ]
+        },
+        {
+          id: 'b3-2', label: 'Agendas', desc: 'How interests and power shape historical narratives of technology',
+          color: 'branch3', expanded: false,
+          children: [
+            { id: 'b3-2-1', label: 'Definition', desc: 'Interests shaping historical narratives', color: 'branch3' },
+            { id: 'b3-2-2', label: 'Aiken invokes Babbage', desc: 'Predecessor narrative constructed for funding', color: 'branch3' },
+            { id: 'b3-2-3', label: 'Anglo-American narrative', desc: 'Ignores Polish, Dutch, Soviet contributions', color: 'branch3' },
+            { id: 'b3-2-4', label: 'FORTRAN vs ALGOL', desc: 'Commercial vs academic agendas', color: 'branch3' },
+          ]
+        },
+        {
+          id: 'b3-3', label: 'Defining Technology (Bolter)', desc: 'Technology as a lens that reshapes cultural self-understanding',
+          color: 'branch3', expanded: false,
+          children: [
+            { id: 'b3-3-1', label: 'Definition', desc: "Technology reshaping cultural self-understanding (Bolter's concept)", color: 'branch3' },
+            { id: 'b3-3-2', label: 'Clock (17th c.)', desc: 'Humans understood as clockwork machines', color: 'branch3' },
+            { id: 'b3-3-3', label: 'Steam Engine (19th c.)', desc: 'Society understood as energy system', color: 'branch3' },
+            { id: 'b3-3-4', label: 'Cybernetics (1960s)', desc: 'Brain understood as information processor', color: 'branch3' },
+            { id: 'b3-3-5', label: 'AI (21st c.)', desc: 'Intelligence understood as computation', color: 'branch3' },
+          ]
+        },
+        {
+          id: 'b3-4', label: 'Surveillance Capitalism', desc: "Zuboff's analysis of how human behaviour becomes a commodity",
+          color: 'branch3', expanded: false,
+          children: [
+            { id: 'b3-4-1', label: 'Definition', desc: 'Human behaviour as raw material → prediction products → sold', color: 'branch3' },
+            { id: 'b3-4-2', label: 'Google AdWords (2000)', desc: 'Birth of surveillance capitalism', color: 'branch3' },
+            { id: 'b3-4-3', label: 'Netflix Algorithm', desc: 'Watch behaviour → content commissioning', color: 'branch3' },
+            { id: 'b3-4-4', label: 'GDPR (2018)', desc: 'EU response; data as fundamental right', color: 'branch3' },
+          ]
+        },
+        {
+          id: 'b3-5', label: 'AI Winters', desc: 'The cyclical pattern of AI hype, disappointment, and revival',
+          color: 'branch3', expanded: false,
+          children: [
+            { id: 'b3-5-1', label: 'First Winter (1970s)', desc: 'Lighthill Report; MT failure; funding cuts', color: 'branch3' },
+            { id: 'b3-5-2', label: 'Second Winter (late 1980s)', desc: 'Expert systems collapse', color: 'branch3' },
+            { id: 'b3-5-3', label: 'Narrative Use', desc: 'Winter → spring framing for investment cycles', color: 'branch3' },
+            { id: 'b3-5-4', label: 'Babbage Parallel', desc: 'Over-promising → abandonment → revival', color: 'branch3' },
+          ]
+        },
+        {
+          id: 'b3-6', label: 'Digital Culture', desc: 'How digitisation transformed cultural industries',
+          color: 'branch3', expanded: false,
+          children: [
+            { id: 'b3-6-1', label: 'Music', desc: 'Vinyl → CD → streaming', color: 'branch3' },
+            { id: 'b3-6-2', label: 'Journalism', desc: 'Print → algorithmic virality', color: 'branch3' },
+            { id: 'b3-6-3', label: 'Banking', desc: 'Manual → ATM → algorithmic credit', color: 'branch3' },
+            { id: 'b3-6-4', label: 'Education', desc: 'Teacher → LOGO → MOOC → AI tutor', color: 'branch3' },
+          ]
+        },
+        {
+          id: 'b3-7', label: 'Technology and Trust', desc: 'How institutions and publics come to trust or distrust technologies',
+          color: 'branch3', expanded: false,
+          children: [
+            { id: 'b3-7-1', label: 'Hollerith (1890)', desc: 'Trust through speed + legible output', color: 'branch3' },
+            { id: 'b3-7-2', label: 'UNIVAC CBS (1952)', desc: 'Election prediction as public trust demo', color: 'branch3' },
+            { id: 'b3-7-3', label: 'IBM Brand', desc: '"Nobody got fired for buying IBM"', color: 'branch3' },
+            { id: 'b3-7-4', label: 'Atanasoff', desc: 'Functional but no institutional trust → passed over', color: 'branch3' },
+          ]
+        },
+      ]
+    },
+    {
+      id: 'b4', label: 'Key Figures', desc: 'The people who shaped computing and AI history',
+      color: 'branch4', expanded: true,
+      children: [
+        {
+          id: 'b4-1', label: 'Computing Pioneers', desc: 'Founders of computing hardware and software',
+          color: 'branch4', expanded: false,
+          children: [
+            { id: 'b4-1-1', label: 'Charles Babbage (1791–1871)', desc: 'Difference + Analytical Engine', color: 'branch4' },
+            { id: 'b4-1-2', label: 'Ada Lovelace (1815–1852)', desc: 'First programmer; algorithm concept', color: 'branch4' },
+            { id: 'b4-1-3', label: 'Herman Hollerith (1860–1929)', desc: 'Tabulating machine; IBM predecessor', color: 'branch4' },
+            { id: 'b4-1-4', label: 'Howard Aiken (1900–1973)', desc: 'Harvard Mark I; Babbage narrative', color: 'branch4' },
+            { id: 'b4-1-5', label: 'John von Neumann (1903–1957)', desc: 'EDVAC First Draft; stored-program architecture', color: 'branch4' },
+            { id: 'b4-1-6', label: 'Grace Hopper (1906–1992)', desc: 'First compiler; COBOL; "bug"', color: 'branch4' },
+            { id: 'b4-1-7', label: 'Edsger Dijkstra (1930–2002)', desc: 'Structured programming; "GOTO considered harmful"', color: 'branch4' },
+          ]
+        },
+        {
+          id: 'b4-2', label: 'AI Pioneers', desc: 'Founders and key figures of artificial intelligence as a field',
+          color: 'branch4', expanded: false,
+          children: [
+            { id: 'b4-2-1', label: 'Alan Turing (1912–1954)', desc: 'Computability; Turing Test; Enigma', color: 'branch4' },
+            { id: 'b4-2-2', label: 'John McCarthy (1927–2011)', desc: 'Dartmouth; "AI" coined; LISP', color: 'branch4' },
+            { id: 'b4-2-3', label: 'Norbert Wiener (1894–1964)', desc: 'Cybernetics; defining technology', color: 'branch4' },
+            { id: 'b4-2-4', label: 'Marvin Minsky (1927–2016)', desc: 'Dartmouth; perceptron critique', color: 'branch4' },
+            { id: 'b4-2-5', label: 'Seymour Papert (1928–2016)', desc: 'LOGO; constructivist education', color: 'branch4' },
+            { id: 'b4-2-6', label: 'Arthur Samuel (1901–1990)', desc: 'Checkers learning (1959); first ML demo', color: 'branch4' },
+          ]
+        },
+        {
+          id: 'b4-3', label: 'European/Dutch Figures', desc: 'European contributors often overlooked in Anglo-American histories',
+          color: 'branch4', expanded: false,
+          children: [
+            { id: 'b4-3-1', label: 'Aad van Wijngaarden (1916–1987)', desc: 'Mathematisch Centrum; ALGOL 60', color: 'branch4' },
+            { id: 'b4-3-2', label: 'Marian Rejewski (1905–1980)', desc: 'Broke Enigma (1932); absent from history', color: 'branch4' },
+            { id: 'b4-3-3', label: 'Stafford Beer (1926–2002)', desc: 'Cybernetics in management; Project Cybersyn', color: 'branch4' },
+          ]
+        },
+        {
+          id: 'b4-4', label: 'Silicon Valley', desc: 'Key figures in the US tech industry',
+          color: 'branch4', expanded: false,
+          children: [
+            { id: 'b4-4-1', label: 'Thomas Watson Jr. (1914–1993)', desc: 'IBM CEO; System/360 bet', color: 'branch4' },
+            { id: 'b4-4-2', label: 'Jay Forrester', desc: 'Whirlwind / SAGE; core memory', color: 'branch4' },
+            { id: 'b4-4-3', label: 'Brin & Page', desc: 'Google; PageRank; surveillance capitalism', color: 'branch4' },
+            { id: 'b4-4-4', label: 'Jobs & Wozniak', desc: 'Apple; Macintosh; Silicon Valley myth', color: 'branch4' },
+            { id: 'b4-4-5', label: 'Stewart Brand', desc: 'Whole Earth Catalogue; counterculture + computing', color: 'branch4' },
+          ]
+        },
+        {
+          id: 'b4-5', label: 'Historians & Theorists', desc: 'Scholars who interpret and critique the history of AI and computing',
+          color: 'branch4', expanded: false,
+          children: [
+            { id: 'b4-5-1', label: 'J. David Bolter', desc: "Turing's Man (1984); defining technology", color: 'branch4' },
+            { id: 'b4-5-2', label: 'Shoshana Zuboff', desc: 'Surveillance Capitalism (2019)', color: 'branch4' },
+            { id: 'b4-5-3', label: 'Pamela McCorduck', desc: 'Machines Who Think; AI advocacy', color: 'branch4' },
+            { id: 'b4-5-4', label: 'Eden Medina', desc: 'Cybernetic Revolutionaries; Project Cybersyn', color: 'branch4' },
+            { id: 'b4-5-5', label: 'Jonnie Penn', desc: '"Animo Nullius"; data as terra nullius', color: 'branch4' },
+          ]
+        },
+      ]
+    },
+  ]
+};
+
+// ─── LAYOUT ──────────────────────────────────────────────────────────────────
+
+const NODE_W = 168;
+const NODE_H_BASE = 42;
+const H_GAP = 52;   // horizontal gap between levels
+const V_GAP = 14;   // vertical gap between sibling nodes
+
+function measureNodeHeight(node) {
+  // Estimate wrapped text height
+  const charsPerLine = 20;
+  const lines = Math.ceil(node.label.length / charsPerLine);
+  return Math.max(NODE_H_BASE, 28 + lines * 16);
+}
+
+function getVisibleChildren(node) {
+  if (!node.children || !node.expanded) return [];
+  return node.children;
+}
+
+function subtreeHeight(node) {
+  const children = getVisibleChildren(node);
+  if (children.length === 0) return measureNodeHeight(node);
+  const childrenH = children.reduce((s, c) => s + subtreeHeight(c), 0)
+                  + (children.length - 1) * V_GAP;
+  return Math.max(measureNodeHeight(node), childrenH);
+}
+
+function layoutTree(node, x, y) {
+  const h = measureNodeHeight(node);
+  node._x = x;
+  node._y = y;
+  node._w = NODE_W;
+  node._h = h;
+
+  const children = getVisibleChildren(node);
+  if (children.length === 0) return;
+
+  const totalH = children.reduce((s, c) => s + subtreeHeight(c), 0)
+               + (children.length - 1) * V_GAP;
+  let childY = y - totalH / 2;
+  const childX = x + NODE_W + H_GAP;
+
+  for (const child of children) {
+    const ch = subtreeHeight(child);
+    layoutTree(child, childX, childY + ch / 2);
+    childY += ch + V_GAP;
+  }
+}
+
+function collectNodes(node, arr = []) {
+  arr.push(node);
+  const children = getVisibleChildren(node);
+  for (const c of children) collectNodes(c, arr);
+  return arr;
+}
+
+function collectEdges(node, arr = []) {
+  const children = getVisibleChildren(node);
+  for (const c of children) {
+    arr.push({ parent: node, child: c });
+    collectEdges(c, arr);
+  }
+  return arr;
+}
+
+// ─── RENDERING ───────────────────────────────────────────────────────────────
+
+const svg = document.getElementById('mindmap');
+const rootG = document.getElementById('root-g');
+
+let transform = { x: 80, y: 0, scale: 1 };
+let searchTerm = '';
+
+function colorScheme(colorKey) {
+  return COLORS[colorKey] || COLORS.root;
+}
+
+function makePath(p, c) {
+  const px = p._x + p._w;
+  const py = p._y + p._h / 2;
+  const cx = c._x;
+  const cy = c._y + c._h / 2;
+  const mx = (px + cx) / 2;
+  return `M ${px} ${py} C ${mx} ${py}, ${mx} ${cy}, ${cx} ${cy}`;
+}
+
+function wrapText(text, maxWidth, fontSize) {
+  // Simple word-wrap for SVG
+  const words = text.split(' ');
+  const lines = [];
+  let line = '';
+  const approxCharW = fontSize * 0.55;
+  const maxChars = Math.floor(maxWidth / approxCharW);
+  for (const w of words) {
+    if ((line + ' ' + w).trim().length > maxChars && line) {
+      lines.push(line);
+      line = w;
+    } else {
+      line = line ? line + ' ' + w : w;
+    }
+  }
+  if (line) lines.push(line);
+  return lines;
+}
+
+function render() {
+  // Layout
+  const svgRect = svg.getBoundingClientRect();
+  const centerY = (svgRect.height - 52) / 2 / transform.scale;
+  layoutTree(treeData, 0, centerY);
+
+  const nodes = collectNodes(treeData);
+  const edges = collectEdges(treeData);
+
+  rootG.innerHTML = '';
+  rootG.setAttribute('transform', `translate(${transform.x},${transform.y}) scale(${transform.scale})`);
+
+  // Draw edges first
+  const edgeG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  edgeG.setAttribute('class', 'edges');
+  for (const e of edges) {
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', makePath(e.parent, e.child));
+    const cs = colorScheme(e.child.color);
+    path.setAttribute('stroke', cs.border);
+    path.setAttribute('stroke-width', '1.8');
+    path.setAttribute('fill', 'none');
+    path.setAttribute('opacity', '0.55');
+    edgeG.appendChild(path);
+  }
+  rootG.appendChild(edgeG);
+
+  // Draw nodes
+  const nodeG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  nodeG.setAttribute('class', 'nodes');
+
+  for (const node of nodes) {
+    const cs = colorScheme(node.color);
+    const isMatch = searchTerm && node.label.toLowerCase().includes(searchTerm.toLowerCase());
+    const isRoot = node.id === 'root';
+    const hasChildren = node.children && node.children.length > 0;
+
+    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    g.setAttribute('class', 'node-group');
+    g.style.cursor = hasChildren ? 'pointer' : 'default';
+
+    // Shadow rect
+    const shadow = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    shadow.setAttribute('x', node._x + 2);
+    shadow.setAttribute('y', node._y + 3);
+    shadow.setAttribute('width', node._w);
+    shadow.setAttribute('height', node._h);
+    shadow.setAttribute('rx', '8');
+    shadow.setAttribute('fill', 'rgba(0,0,0,0.07)');
+    g.appendChild(shadow);
+
+    // Main rect
+    const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    rect.setAttribute('x', node._x);
+    rect.setAttribute('y', node._y);
+    rect.setAttribute('width', node._w);
+    rect.setAttribute('height', node._h);
+    rect.setAttribute('rx', '8');
+    rect.setAttribute('fill', isMatch ? '#fffacd' : cs.fill);
+    rect.setAttribute('stroke', isMatch ? '#f0c000' : cs.border);
+    rect.setAttribute('stroke-width', isMatch ? '2.5' : (isRoot ? '2' : '1.5'));
+    g.appendChild(rect);
+
+    // Label
+    const labelLines = wrapText(node.label, NODE_W - 16, isRoot ? 13 : 11);
+    const lineH = isRoot ? 16 : 14;
+    const totalTextH = labelLines.length * lineH;
+    const startY = node._y + node._h / 2 - totalTextH / 2 + (isRoot ? 11 : 9);
+
+    for (let i = 0; i < labelLines.length; i++) {
+      const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      txt.setAttribute('x', node._x + NODE_W / 2);
+      txt.setAttribute('y', startY + i * lineH);
+      txt.setAttribute('text-anchor', 'middle');
+      txt.setAttribute('fill', cs.text);
+      txt.setAttribute('font-size', isRoot ? '13' : '11');
+      txt.setAttribute('font-weight', (isRoot || node.children) ? '600' : '500');
+      txt.setAttribute('font-family', isRoot ? "Georgia, 'Times New Roman', serif" : 'system-ui, sans-serif');
+      txt.textContent = labelLines[i];
+      g.appendChild(txt);
+    }
+
+    // Collapse/expand indicator
+    if (hasChildren) {
+      const ind = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      ind.setAttribute('x', node._x + NODE_W - 9);
+      ind.setAttribute('y', node._y + node._h / 2 + 4);
+      ind.setAttribute('text-anchor', 'middle');
+      ind.setAttribute('fill', cs.border);
+      ind.setAttribute('font-size', '10');
+      ind.setAttribute('font-weight', '700');
+      ind.textContent = node.expanded ? '−' : '+';
+      g.appendChild(ind);
+    }
+
+    // Events
+    g.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (hasChildren) {
+        node.expanded = !node.expanded;
+        render();
+      }
+    });
+
+    g.addEventListener('mouseenter', (ev) => {
+      showTooltip(ev, node);
+    });
+    g.addEventListener('mousemove', (ev) => {
+      moveTooltip(ev);
+    });
+    g.addEventListener('mouseleave', () => {
+      hideTooltip();
+    });
+
+    nodeG.appendChild(g);
+  }
+
+  rootG.appendChild(nodeG);
+}
+
+// ─── TOOLTIP ─────────────────────────────────────────────────────────────────
+
+const tooltip = document.getElementById('tooltip');
+
+function showTooltip(ev, node) {
+  if (!node.desc) return;
+  tooltip.innerHTML = `<strong>${node.label}</strong>${node.desc}`;
+  tooltip.style.display = 'block';
+  moveTooltip(ev);
+}
+function moveTooltip(ev) {
+  let x = ev.clientX + 14;
+  let y = ev.clientY + 14;
+  if (x + 290 > window.innerWidth) x = ev.clientX - 294;
+  if (y + 100 > window.innerHeight) y = ev.clientY - 80;
+  tooltip.style.left = x + 'px';
+  tooltip.style.top = y + 'px';
+}
+function hideTooltip() {
+  tooltip.style.display = 'none';
+}
+
+// ─── PAN + ZOOM ───────────────────────────────────────────────────────────────
+
+const wrap = document.getElementById('canvas-wrap');
+let isPanning = false;
+let panStart = { x: 0, y: 0 };
+let transformStart = { x: 0, y: 0 };
+
+wrap.addEventListener('mousedown', (e) => {
+  if (e.target.closest('.node-group')) return;
+  isPanning = true;
+  panStart = { x: e.clientX, y: e.clientY };
+  transformStart = { x: transform.x, y: transform.y };
+  wrap.classList.add('grabbing');
+});
+
+window.addEventListener('mousemove', (e) => {
+  if (!isPanning) return;
+  transform.x = transformStart.x + (e.clientX - panStart.x);
+  transform.y = transformStart.y + (e.clientY - panStart.y);
+  rootG.setAttribute('transform', `translate(${transform.x},${transform.y}) scale(${transform.scale})`);
+});
+
+window.addEventListener('mouseup', () => {
+  isPanning = false;
+  wrap.classList.remove('grabbing');
+});
+
+wrap.addEventListener('wheel', (e) => {
+  e.preventDefault();
+  const delta = e.deltaY > 0 ? 0.9 : 1.1;
+  const newScale = Math.min(3, Math.max(0.2, transform.scale * delta));
+
+  // Zoom toward mouse position
+  const rect = wrap.getBoundingClientRect();
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
+
+  transform.x = mx - (mx - transform.x) * (newScale / transform.scale);
+  transform.y = my - (my - transform.y) * (newScale / transform.scale);
+  transform.scale = newScale;
+  rootG.setAttribute('transform', `translate(${transform.x},${transform.y}) scale(${transform.scale})`);
+}, { passive: false });
+
+// ─── CONTROLS ─────────────────────────────────────────────────────────────────
+
+function setAllExpanded(node, val, depth = 0) {
+  if (node.children) {
+    node.expanded = val;
+    // For collapse-all, collapse everything; for expand-all, expand everything
+    for (const c of node.children) setAllExpanded(c, val, depth + 1);
+  }
+}
+
+document.getElementById('btn-expand').addEventListener('click', () => {
+  setAllExpanded(treeData, true);
+  render();
+});
+
+document.getElementById('btn-collapse').addEventListener('click', () => {
+  // Keep root and top branches expanded, collapse sub-branches
+  treeData.expanded = true;
+  for (const branch of (treeData.children || [])) {
+    branch.expanded = false;
+    setAllExpanded(branch, false);
+  }
+  render();
+});
+
+document.getElementById('btn-reset').addEventListener('click', () => {
+  const svgRect = svg.getBoundingClientRect();
+  transform = { x: 80, y: svgRect.height / 2 - 52, scale: 1 };
+  render();
+});
+
+document.getElementById('search-box').addEventListener('input', (e) => {
+  searchTerm = e.target.value.trim();
+  // Auto-expand to show matches
+  if (searchTerm) expandToMatches(treeData, searchTerm);
+  render();
+});
+
+function nodeMatchesOrDescendantMatches(node, term) {
+  if (node.label.toLowerCase().includes(term.toLowerCase())) return true;
+  if (node.children) {
+    return node.children.some(c => nodeMatchesOrDescendantMatches(c, term));
+  }
+  return false;
+}
+
+function expandToMatches(node, term) {
+  if (!node.children) return false;
+  const anyChildMatches = node.children.some(c => nodeMatchesOrDescendantMatches(c, term));
+  if (anyChildMatches) {
+    node.expanded = true;
+    for (const c of node.children) expandToMatches(c, term);
+  }
+  return anyChildMatches;
+}
+
+// ─── INITIAL RENDER ───────────────────────────────────────────────────────────
+
+function init() {
+  const svgRect = svg.getBoundingClientRect();
+  transform.y = (svgRect.height) / 2 - 26;
+  render();
+}
+
+// Wait for DOM to settle
+requestAnimationFrame(() => requestAnimationFrame(init));
+
+window.addEventListener('resize', () => render());
+</script>
+</body>
+</html>

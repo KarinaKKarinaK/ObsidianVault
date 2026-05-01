@@ -123,6 +123,7 @@ kbd { background: var(--card); border: 1px solid var(--border); border-radius: 4
   <div class="nav-item" data-page="w10">§10 Sequential / RL / Transformers</div>
   <div class="nav-section">Practice</div>
   <div class="nav-item" data-page="quiz">📝 Quiz (all sections)</div>
+  <div class="nav-item" data-page="mockexams">🧪 Mock Exams (10×40q)</div>
   <div class="nav-item" data-page="gap">🎯 Gap Topics</div>
   <div class="nav-section">Reference</div>
   <div class="nav-item" data-page="appref">⚡ 10 Application Types</div>
@@ -795,6 +796,33 @@ For exam multiple choice: "compute upstream × local, not full Jacobian" = corre
   </div>
 </div>
 
+<!-- MOCK EXAMS -->
+<div id="page-mockexams" class="page">
+  <h2>🧪 Mock Exams</h2>
+  <p class="subtitle">10 full exams · 40 questions each · 2-hour timer · All topics covered</p>
+  <div id="mock-selector">
+    <div class="section-tabs" id="exam-grid"></div>
+  </div>
+  <div id="mock-exam-area" style="display:none">
+    <div id="mock-sticky" style="position:sticky;top:0;z-index:10;background:var(--surface);border-bottom:1px solid var(--border);padding:12px 0 10px;margin-bottom:20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+      <span id="mock-title" style="font-weight:700;font-size:16px;"></span>
+      <span id="mock-score-disp" style="color:var(--accent2);font-weight:700;">Score: —</span>
+      <span id="mock-timer" style="font-family:monospace;background:var(--card);padding:4px 10px;border-radius:6px;">2:00:00</span>
+      <button class="btn btn-secondary" style="margin-left:auto" onclick="mockReset()">Reset / Back</button>
+    </div>
+    <div id="mock-questions" class="quiz-container"></div>
+    <div style="margin:24px 0 40px;display:flex;gap:12px;">
+      <button class="btn btn-primary" onclick="mockSubmit()">Submit Exam</button>
+      <button class="btn btn-secondary" onclick="mockReset()">Back to Selector</button>
+    </div>
+    <div id="mock-result" style="display:none;margin-bottom:40px;">
+      <div id="mock-final-score" style="font-size:32px;font-weight:700;color:var(--accent2);margin-bottom:8px;"></div>
+      <div class="score-bar"><div class="score-fill" id="mock-score-fill" style="width:0%"></div></div>
+      <div id="mock-breakdown" class="score-breakdown" style="margin-top:16px;"></div>
+    </div>
+  </div>
+</div>
+
 </main>
 </div>
 
@@ -1086,6 +1114,237 @@ function updateScore() {
     ? `${pct}% correct${pct >= 88 ? ' 🎯 On track for 35/40!' : pct >= 75 ? ' — Keep going' : ' — Review weak areas'}`
     : 'Answer questions to see your score';
 }
+
+// ═══════════════════ MOCK EXAMS ═══════════════════
+// 80-question pool (8 per topic). 10 exams defined as index arrays of 40 (4 per topic).
+const mockPool = [
+// ── T1: Methodology (indices 0-7) ──
+{topic:'Methodology',q:'A model scores 99% on training data and 62% on validation. This is:',opts:['Underfitting — model is too simple','Overfitting — model has memorised the training set','A good result — training accuracy matters most','Normal — all models show this gap'],ans:1,exp:'High training + low validation = overfitting. The model has memorised training examples instead of learning generalisable patterns.'},
+{topic:'Methodology',q:'Why should outliers NOT be removed from the training set?',opts:['They increase training time','They are important examples the model must handle','They always cause overfitting','They reduce accuracy on the test set'],ans:1,exp:'Outliers represent real data. Removing them means the deployed model will fail on those inputs. Unless they are data-entry errors, keep them.'},
+{topic:'Methodology',q:'You have a continuous parameter space and a differentiable loss. Which search strategy applies?',opts:['Random search','Exhaustive search','Gradient descent','Cross-validation'],ans:2,exp:'Gradient descent is applicable when (a) the model has a continuous real-valued parameter and (b) the loss is differentiable. Random search is for discrete model spaces.'},
+{topic:'Methodology',q:'The test set is used exactly once, at the very end. Why?',opts:['To select the best model','To tune hyperparameters','To give an unbiased estimate of final performance','To compute training error'],ans:2,exp:'Using the test set for anything other than final evaluation makes it part of the training process, inflating the performance estimate.'},
+{topic:'Methodology',q:'Which of the following is an unsupervised method?',opts:['Support Vector Machine','Decision tree classifier','k-Means clustering','Naive Bayes'],ans:2,exp:'k-Means has no labels — it discovers structure by grouping similar points. All other options are supervised (need labeled examples).'},
+{topic:'Methodology',q:'Class imbalance (99% negative, 1% positive) makes accuracy misleading because:',opts:['Accuracy cannot be computed','A classifier predicting all-negative scores 99% with zero recall of positives','The gradient is always zero','The test set becomes unusable'],ans:1,exp:'A trivial classifier that always predicts negative gets 99% accuracy. This is meaningless — it catches zero positives. Use precision/recall/F1 or ROC for imbalanced problems.'},
+{topic:'Methodology',q:'What distinguishes reinforcement learning from supervised learning?',opts:['RL uses labeled input-output pairs','RL receives a reward signal and no explicit labels','RL is always unsupervised','RL cannot generalise across tasks'],ans:1,exp:'RL learns from reward signals (delayed, sparse feedback from environment interaction). Supervised learning uses explicit (input, correct-output) pairs.'},
+{topic:'Methodology',q:'High-variance models include decision trees and neural networks. What does "high variance" mean here?',opts:['They have many parameters','Their predictions change a lot with small changes to the training data','They are computationally expensive','They always overfit'],ans:1,exp:'High variance = sensitive to the specific training set. Different training sets → very different models. This is overfitting tendency, not just parameter count.'},
+
+// ── T2: Gradients & OLS (indices 8-15) ──
+{topic:'Gradients',q:'Given f(x,y) = x³ + 2xy − y², what is ∂f/∂y?',opts:['3x² + 2y','2x − 2y','x³ − 2y','2x + 2y²'],ans:1,exp:'∂/∂y(x³) = 0, ∂/∂y(2xy) = 2x, ∂/∂y(−y²) = −2y. Sum = 2x − 2y.'},
+{topic:'Gradients',q:'Gradient descent update rule: θ_new = θ − η·∇L. If η is too large, what happens?',opts:['Convergence is guaranteed but slow','The algorithm may oscillate or diverge past the minimum','The gradient becomes zero','The model underfits'],ans:1,exp:'Large learning rate → takes steps that overshoot the minimum. Can oscillate back and forth or diverge entirely. Small η → slow but stable convergence.'},
+{topic:'Gradients',q:'For linear regression f(a)=sa+b, the loss is ½Σ(saᵢ+b−hᵢ)². What is ∂loss/∂s?',opts:['Σ(aᵢs+b−hᵢ)','Σ(aᵢs+b−hᵢ)·aᵢ','Σhᵢ','Σaᵢ'],ans:1,exp:'Chain rule: derivative of ½(saᵢ+b−hᵢ)² w.r.t. s is (saᵢ+b−hᵢ)·aᵢ. Sum over all i.'},
+{topic:'Gradients',q:'Why does squaring the residuals (vs. absolute value) in the loss function emerge naturally from MLE?',opts:['Squared error is easier to minimise','MLE under Gaussian noise assumption gives squared error as the negative log-likelihood','Absolute value causes overfitting','Squared error always has a closed-form solution'],ans:1,exp:'Under Gaussian noise: p(h|a,s,b) ∝ exp(−½(sa+b−h)²/σ²). Maximising log-likelihood = minimising ½Σ(saᵢ+b−hᵢ)² = squared error loss.'},
+{topic:'Gradients',q:'The chain rule ∂f(g(x))/∂x = (∂f/∂g)(∂g/∂x) is used in:',opts:['Only linear regression','Computing gradients through composed functions (backpropagation)','Feature normalisation','Hyperparameter selection'],ans:1,exp:'Backpropagation repeatedly applies the chain rule to compute ∂L/∂θ through layers of composed functions. This is the core mathematical operation.'},
+{topic:'Gradients',q:'Optimal OLS slope s = (āh̄ − ā·h̄) / (ā² − ā²) — what does ā represent?',opts:['Sum of all aᵢ','Mean of aᵢ values','Mean of hᵢ values','Median of aᵢ'],ans:1,exp:'Bar notation = mean. ā = (1/n)Σaᵢ, h̄ = (1/n)Σhᵢ, ā² = mean of aᵢ², āh = mean of aᵢhᵢ.'},
+{topic:'Gradients',q:'At the minimum of a differentiable loss function, what is true of the gradient?',opts:['Gradient is maximum','Gradient is zero','Gradient equals the learning rate','Gradient is negative'],ans:1,exp:'At any local minimum, the gradient is zero (all partial derivatives = 0). Setting ∇L = 0 gives the OLS closed-form solution.'},
+{topic:'Gradients',q:'Stochastic gradient descent (SGD) uses one example per update instead of the whole dataset. The main advantage is:',opts:['Exact gradient computation','Faster updates that can escape local minima and handle large datasets','Smaller models','Better convergence guarantee'],ans:1,exp:'SGD is much faster per update (one example vs. N) and the noise in the gradient can help escape shallow local minima. Tradeoff: noisier updates.'},
+
+// ── T3: Evaluation (indices 16-23) ──
+{topic:'Evaluation',q:'TP=80, FP=20, FN=40, TN=860. What is precision?',opts:['80/120 = 0.667','80/100 = 0.80','80/900 = 0.089','80/960 = 0.083'],ans:1,exp:'Precision = TP/(TP+FP) = 80/(80+20) = 80/100 = 0.80. Of all predicted positives, 80% are actually positive.'},
+{topic:'Evaluation',q:'TP=80, FP=20, FN=40, TN=860. What is recall (TPR)?',opts:['80/100 = 0.80','80/120 = 0.667','80/960 = 0.083','20/880 = 0.023'],ans:1,exp:'Recall = TP/(TP+FN) = 80/(80+40) = 80/120 ≈ 0.667. Of all actual positives, 66.7% were found.'},
+{topic:'Evaluation',q:'The ROC curve plots TPR (y) vs FPR (x) at all thresholds. A random classifier gives:',opts:['A curve in the top-left corner','A diagonal line from (0,0) to (1,1) — AUC = 0.5','A horizontal line at TPR=1','AUC = 1.0'],ans:1,exp:'A random classifier assigns scores randomly — at any threshold, TPR ≈ FPR. This traces the diagonal, giving AUC = 0.5. AUC > 0.5 = better than random.'},
+{topic:'Evaluation',q:'Why can we NOT compute AUC from a single confusion matrix?',opts:['AUC requires the training set','AUC requires ranking across thresholds — a confusion matrix is only for one threshold','AUC requires more than 2 classes','The confusion matrix lacks TN'],ans:1,exp:'A confusion matrix is computed at one specific threshold. AUC integrates TPR vs FPR over ALL possible thresholds — this requires a ranking classifier, not just a binary one.'},
+{topic:'Evaluation',q:'F1 score = 2PR/(P+R). When is F1 more useful than accuracy?',opts:['Always','When classes are balanced','When classes are imbalanced or when both precision and recall matter equally','Only for binary classification'],ans:2,exp:'F1 is the harmonic mean of precision and recall. It is most useful when (1) classes are imbalanced or (2) false positives and false negatives have different costs and you want a single balanced metric.'},
+{topic:'Evaluation',q:'A coverage matrix cell (positive_i, negative_j) is GREEN if:',opts:['positive_i and negative_j have the same score','positive_i is ranked HIGHER than negative_j (correct ranking)','negative_j has a lower score than all positives','positive_i has the highest possible score'],ans:1,exp:'The coverage matrix checks: is each positive-negative pair correctly ranked? Green = positive ranked above negative (correct). The fraction of green cells = AUC.'},
+{topic:'Evaluation',q:'Precision is 1.0 but recall is 0.1. What does this mean?',opts:['The model is perfect','The model finds very few positives but all its predictions are correct','The model finds all positives but also many false positives','The model is underfitting'],ans:1,exp:'Precision 1.0 = no false positives (all predicted positives are real positives). Recall 0.1 = only 10% of all real positives were found. The model is very conservative — rarely predicts positive, but when it does, it is always right.'},
+{topic:'Evaluation',q:'FPR = FP/(TN+FP). In a spam filter, a high FPR means:',opts:['Many spam emails get through','Many legitimate emails are incorrectly marked as spam','The filter has high recall','The filter has high precision'],ans:1,exp:'FPR = fraction of actual negatives (legitimate emails) that are classified as positive (spam). High FPR = many legitimate emails falsely flagged as spam.'},
+
+// ── T4: Naive Bayes & Entropy (indices 24-31) ──
+{topic:'Naive Bayes',q:'With Laplace smoothing (add-1), feature "bitcoin" has 0 spam occurrences in 20 spam emails. Smoothed p("bitcoin"|spam) with binary feature =',opts:['0','1/20','1/22','1/21'],ans:2,exp:'Laplace smoothing: (count + 1) / (total + num_values) = (0+1)/(20+2) = 1/22. Denominator adds 2 because feature is binary (2 possible values).'},
+{topic:'Naive Bayes',q:'NB assumes features are conditionally independent given the class. This means:',opts:['Features must be uncorrelated','p(x₁,x₂,...|class) = Π p(xᵢ|class)','Features are identically distributed','The prior is uniform'],ans:1,exp:'Conditional independence: knowing the class, knowing x₁ gives no extra info about x₂. This lets us factorise the joint likelihood as a product of per-feature probabilities.'},
+{topic:'Naive Bayes',q:'H(p) = −Σ p(x)log₂p(x). For a fair coin (p=0.5, 1-p=0.5), H =',opts:['0','0.5','1','2'],ans:2,exp:'H = −0.5·log₂(0.5) − 0.5·log₂(0.5) = −0.5·(−1) − 0.5·(−1) = 0.5 + 0.5 = 1 bit. Maximum entropy for binary variable.'},
+{topic:'Naive Bayes',q:'KL divergence KL(p‖q) measures:',opts:['The distance between two distributions (symmetric)','How much info is lost when using q to approximate p (asymmetric)','The entropy of p minus entropy of q','The correlation between p and q'],ans:1,exp:'KL(p‖q) = Σ p(x) log(p(x)/q(x)) ≥ 0. It is asymmetric (KL(p‖q) ≠ KL(q‖p)) and measures the "surprise" when q is used instead of the true p.'},
+{topic:'Naive Bayes',q:'Cross-entropy H(p,q) = −Σ p(x)log₂q(x). How does it relate to KL?',opts:['H(p,q) = KL(p‖q)','H(p,q) = H(p) + KL(p‖q)','H(p,q) = H(p) − KL(p‖q)','H(p,q) = H(q) + KL(q‖p)'],ans:1,exp:'H(p,q) = −Σ p·log q = −Σ p·log p + Σ p·log(p/q) = H(p) + KL(p‖q). Minimising cross-entropy = minimising KL divergence when H(p) is fixed.'},
+{topic:'Naive Bayes',q:'Two classes: spam (prior 0.3), ham (prior 0.7). p(word|spam)=0.8, p(word|ham)=0.6. Which wins?',opts:['Spam: 0.8×0.3=0.24','Ham: 0.6×0.7=0.42','Equal','Cannot tell without more features'],ans:1,exp:'Unnormalised: spam = 0.8×0.3 = 0.24; ham = 0.6×0.7 = 0.42. Ham wins. Even though p(word|spam) is higher, the much larger ham prior dominates.'},
+{topic:'Entropy',q:'Information gain I(F) for a split is:',opts:['The entropy after splitting','The entropy before minus the weighted entropy after splitting','The sum of entropies of all subsets','log₂ of the number of outcomes'],ans:1,exp:'I(F) = H(S) − Σ (|Sᵥ|/|S|)·H(Sᵥ). We subtract the post-split entropy from the pre-split entropy. Larger IG = better split.'},
+{topic:'Entropy',q:'If a split creates two subsets where one is perfectly pure and one is 50/50, and both halves are equal size, what is the weighted post-split entropy? [H(0,1)=0, H(0.5,0.5)=1]',opts:['0','0.5','1','Cannot compute without n'],ans:1,exp:'Weighted = (1/2)·H(pure) + (1/2)·H(50/50) = (1/2)·0 + (1/2)·1 = 0.5. Information gain = H_before − 0.5.'},
+
+// ── T5: SVMs (indices 32-39) ──
+{topic:'SVMs',q:'Given w=(2,−1), b=−3. Classify point x=(3,1):',opts:['Negative (f(x)<0)','Positive (f(x)>0)','On the decision boundary','Cannot determine'],ans:1,exp:'f(x) = wᵀx + b = 2·3 + (−1)·1 + (−3) = 6 − 1 − 3 = 2 > 0. Positive class.'},
+{topic:'SVMs',q:'The SVM margin is maximised by:',opts:['Minimising ‖w‖²','Maximising ‖w‖²','Setting b=0','Maximising the number of support vectors'],ans:0,exp:'Margin = 2/‖w‖. Maximising margin ↔ minimising ‖w‖² (equivalent, more convenient to minimise). This is a constrained quadratic program.'},
+{topic:'SVMs',q:'A support vector has wᵀx+b = yᵢ (i.e., ±1). What if wᵀx+b = 2·yᵢ?',opts:['It is still a support vector','It is NOT a support vector — it is inside the margin (correctly classified but not on the boundary)','It is a misclassified point','It is on the decision boundary'],ans:1,exp:'Support vectors are exactly on the margin (wᵀx+b = ±1). Points with |wᵀx+b| > 1 are correctly classified and further from the boundary — not support vectors.'},
+{topic:'SVMs',q:'Soft-margin SVM adds slack variables ξᵢ with penalty C·Σξᵢ. Large C means:',opts:['More misclassifications allowed','Fewer misclassifications allowed (stricter)','Larger margin','Smaller ‖w‖'],ans:1,exp:'Large C = high penalty for misclassification → model tries hard to classify everything correctly → smaller margin. Small C = tolerates misclassifications → larger margin (better generalisation).'},
+{topic:'SVMs',q:'Hard-margin SVM requires linearly separable data. Soft-margin handles non-separable data via:',opts:['Kernel trick','Slack variables that allow some points inside the margin','Dimensionality reduction','Different loss function'],ans:1,exp:'Slack variables ξᵢ ≥ 0 allow constraint violations: yᵢ(wᵀxᵢ+b) ≥ 1 − ξᵢ. Points with ξᵢ > 0 are inside or on the wrong side of the margin.'},
+{topic:'SVMs',q:'Decision boundary for w=(1,2), b=−5 in 2D is the line:',opts:['x₂ = −0.5x₁ + 2.5','x₂ = x₁ + 5','x₂ = −x₁ + 5','x₁ + x₂ = 5'],ans:0,exp:'wᵀx+b=0: x₁ + 2x₂ − 5 = 0 → x₂ = (5−x₁)/2 = −0.5x₁ + 2.5.'},
+{topic:'SVMs',q:'Why is the SVM objective differentiable after adding soft-margin?',opts:['The slack variables make the model continuous','The penalty C·Σξᵢ smooths the hinge loss into a differentiable function','Both ‖w‖² and the slack penalty are differentiable w.r.t. w and ξ','The kernel makes the boundary smooth'],ans:2,exp:'‖w‖² is differentiable w.r.t. w. The slack terms ξᵢ are continuous real-valued variables. Together the objective is differentiable — allowing gradient descent (unlike hard-margin which is non-differentiable).'},
+{topic:'SVMs',q:'An SVM produces a ranking by:',opts:['Using the class label directly','Using the raw score f(x) = wᵀx + b (before applying sign)','Counting support vectors','Applying a softmax'],ans:1,exp:'The signed distance f(x) = wᵀx + b gives a continuous score. Larger positive values → more confidently positive. Sorting by f(x) gives a ranking usable for ROC analysis.'},
+
+// ── T6: Deep Learning (indices 40-47) ──
+{topic:'Deep Learning',q:'ReLU(x) = max(0,x). Its derivative is:',opts:['0 everywhere','1 for x>0, 0 for x<0 (undefined at 0)','x for x>0','sigmoid(x)'],ans:1,exp:'ReLU derivative: 1 if x>0, 0 if x<0. At x=0 it is technically undefined but conventionally set to 0. This means no gradient shrinkage for positive activations — avoiding vanishing gradients.'},
+{topic:'Deep Learning',q:'Why do sigmoid neurons in deep layers cause vanishing gradients?',opts:['Sigmoid outputs are always 0','Sigmoid derivative σ(1−σ) ≤ 0.25 — multiplied across many layers → near-zero gradient','Sigmoid is not differentiable','Sigmoid requires large weights'],ans:1,exp:'Sigmoid derivative σ(x)(1−σ(x)) has max 0.25. Multiplying 10 layers: 0.25^10 ≈ 10⁻⁶. Gradients vanish — early layers receive essentially no learning signal.'},
+{topic:'Deep Learning',q:'Dropout sets each neuron to 0 with probability p during training. At test time:',opts:['Dropout is still applied with the same probability','All neurons are active and weights are scaled by (1−p)','All neurons are active with no scaling','Only 50% of neurons are active'],ans:1,exp:'At test time, dropout is OFF (all neurons active). To compensate for the larger signal, weights are scaled by (1−p) — or equivalently, at training time, active neurons are scaled by 1/(1−p) (inverted dropout).'},
+{topic:'Deep Learning',q:'Batch normalisation normalises layer outputs to zero-mean, unit-variance. The key benefit is:',opts:['Reduces the number of parameters','Allows much higher learning rates and stabilises training','Prevents all overfitting','Removes the need for activation functions'],ans:1,exp:'BN reduces internal covariate shift — the distribution of layer inputs no longer shifts during training. This allows larger learning rates, faster convergence, and acts as mild regularisation.'},
+{topic:'Deep Learning',q:'A network has layers: Input → Linear → ReLU → Linear → Softmax. During backprop, gradients flow:',opts:['Forward through the network','Backward: Softmax → Linear → ReLU → Linear → Input','Only through the Linear layers','Independently for each layer'],ans:1,exp:'Backpropagation computes gradients in reverse order, applying the chain rule. Gradients from the loss flow backward through each layer in reverse.'},
+{topic:'Deep Learning',q:'Softmax outputs for classes A,B,C are (0.7, 0.2, 0.1). During training with cross-entropy loss and true label A, the gradient of the loss w.r.t. softmax input for A is:',opts:['0.7','0.7 − 1 = −0.3','1 − 0.7 = 0.3','−log(0.7)'],ans:1,exp:'Gradient of cross-entropy + softmax w.r.t. logit zₖ is (pₖ − yₖ): for the correct class, p_A − 1 = 0.7 − 1 = −0.3. For wrong classes: pₖ − 0.'},
+{topic:'Deep Learning',q:'What is the purpose of the skip connection in ResNet?',opts:['To skip convolutional layers entirely','To allow gradients to flow directly to earlier layers, addressing vanishing gradients','To reduce the number of parameters','To apply dropout more effectively'],ans:1,exp:'Skip connections add the input x directly to the output F(x)+x. Gradient of (F(x)+x) w.r.t. x includes a +1 term — gradients can flow directly without shrinking through many layers.'},
+{topic:'Deep Learning',q:'Which of the following is NOT a regularisation technique?',opts:['Dropout','Batch normalisation','Increasing model depth','L2 weight decay'],ans:2,exp:'Increasing depth adds parameters and generally increases overfitting risk — it is the opposite of regularisation. Dropout, BN, and weight decay all reduce overfitting.'},
+
+// ── T7: Generative Models (indices 48-55) ──
+{topic:'Generative Models',q:'In a standard autoencoder, the bottleneck layer contains:',opts:['A probability distribution','A fixed-size latent vector (deterministic encoding)','A discriminator','Dropout probabilities'],ans:1,exp:'Standard autoencoders encode to a single point z = encoder(x). VAEs encode to a distribution (mean μ and variance σ²) and sample from it.'},
+{topic:'Generative Models',q:'VAE reparameterization trick: instead of sampling z ~ N(μ,σ²), we use z = μ + σ·ε where ε ~ N(0,1). Why?',opts:['It makes sampling faster','It moves the randomness outside the computational graph, allowing backpropagation through z','It removes the need for a decoder','It ensures the prior is Gaussian'],ans:1,exp:'Sampling is non-differentiable — gradients cannot flow through a random node. Reparameterization separates the stochastic part (ε) from the learnable part (μ,σ), making z a deterministic function of the parameters.'},
+{topic:'Generative Models',q:'Mode collapse in GANs means:',opts:['The generator produces very high-quality images','The generator only produces a few types of outputs, ignoring most of the data distribution','The discriminator collapses to random guessing','The GAN converges too quickly'],ans:1,exp:'Mode collapse: the generator finds a few images that fool the discriminator and keeps generating those — ignoring the diversity of the real distribution. This is a training instability problem.'},
+{topic:'Generative Models',q:'In a GAN, the discriminator D is trained to:',opts:['Generate realistic samples','Output D(x)≈1 for real samples and D(G(z))≈0 for generated samples','Minimise the ELBO','Encode input to a latent space'],ans:1,exp:'D is a binary classifier: real or fake. It outputs high probabilities for real data, low for generated data. G is trained to fool D — making D(G(z)) close to 1.'},
+{topic:'Generative Models',q:'The ELBO L(q,θ) = E_q[ln p(x,z|θ)/q(z|x)]. When q(z|x) = p(z|x,θ), what happens to KL(q‖p)?',opts:['KL increases','KL = 0, so L = ln p(x|θ)','L decreases','The bound becomes looser'],ans:1,exp:'KL(p‖p) = 0. When q = p(z|x,θ), the variational bound is tight: L = ln p(x|θ). In practice q is an approximate posterior, so KL > 0 and L < ln p(x).'},
+{topic:'Generative Models',q:'How does a conditional GAN differ from an unconditional GAN?',opts:['It uses a VAE encoder','Both G and D receive a conditioning input y (class label, text, image)','It does not use a discriminator','It generates images only from noise'],ans:1,exp:'cGAN: G(z,y) generates a sample conditioned on y. D(x,y) judges whether x is a real sample of class y. Used for text-to-image, image-to-image translation, etc.'},
+{topic:'Generative Models',q:'VAE avoids mode collapse primarily because:',opts:['The discriminator prevents it','The encoder maps each input to a distribution, covering the latent space broadly','The ELBO has an infinite value','The prior is always uniform'],ans:1,exp:'The encoder outputs a distribution over z for each x. The KL term in the ELBO pushes all posterior distributions toward the prior N(0,I), spreading coverage across the latent space.'},
+{topic:'Generative Models',q:'What is the decoder\'s role in a VAE?',opts:['To compress input to latent z','To sample z from the prior','To reconstruct x from z (parameterise p(x|z))','To compute the KL divergence'],ans:2,exp:'Decoder = generative model p_θ(x|z). It takes a latent code z and outputs a distribution over x (e.g., mean of Gaussian). The reconstruction term in ELBO = E_q[ln p_θ(x|z)].'},
+
+// ── T8: Markov Models & Matrix Backprop (indices 56-63) ──
+{topic:'Markov Models',q:'First-order Markov: p("win"|"you","win","you") = ? (only last word matters)',opts:['p("win"|"you","win","you")','p("win"|"you") — depends only on the previous word','p("win") — marginal probability','p("you","win","you","win")'],ans:1,exp:'First-order Markov assumption: P(wₙ|w₁,...,wₙ₋₁) = P(wₙ|wₙ₋₁). Only the immediately preceding word matters.'},
+{topic:'Markov Models',q:'Corpus: "the cat sat the cat sat". Bigram p("cat"|"the") = ?',opts:['1/6','2/2 = 1','2/6','1/2'],ans:1,exp:'Count("the cat") = 2. Count("the") = 2 (appears before "cat" both times). p("cat"|"the") = 2/2 = 1.0.'},
+{topic:'Markov Models',q:'For Markov text classification, why work in fractions (not decimals) during calculation?',opts:['Fractions are more accurate','Common factors can be cancelled, simplifying multiplication of many small probabilities','The Markov assumption requires fractions','Decimals cause overflow'],ans:1,exp:'Products of many probabilities become very small (underflow risk). Working in fractions lets you cancel numerators and denominators before multiplying, making arithmetic cleaner and reducing numerical error.'},
+{topic:'Markov Models',q:'In Markov spam classification: p(E|spam)=1/800 and p(E|ham)=1/8000. Prior p(spam)=0.1. Unnormalised scores?',opts:['Spam: 1/8000, Ham: 1/80000','Spam: 1/8000, Ham: 9/80000','Spam wins because 1/800 > 1/8000','Ham wins because prior 0.9 × 1/8000 > 0.1 × 1/800'],ans:3,exp:'Spam score = (1/800)·0.1 = 1/8000. Ham score = (1/8000)·0.9 = 9/80000 = 9/80000. Compare: 1/8000 = 10/80000 > 9/80000 → spam wins narrowly.'},
+{topic:'Matrix backprop',q:'For y = Wx + b, the gradient for W is:',opts:['y∇ · x','(y∇)ᵀ · xᵀ (outer product)','x · y∇','Wᵀ · y∇'],ans:1,exp:'W∇ᵢⱼ = ∂L/∂Wᵢⱼ = yᵢ∇ · xⱼ. This is the outer product (y∇)ᵀxᵀ — same shape as W.'},
+{topic:'Matrix backprop',q:'For y = Wx + b, given y∇, what is x∇?',opts:['Wᵀy∇','y∇W','(y∇)ᵀW','Wy∇'],ans:1,exp:'x∇ⱼ = Σᵢ yᵢ∇ · Wᵢⱼ = y∇ · (column j of W). This is the row vector y∇ times matrix W, giving a row vector of same shape as x.'},
+{topic:'Matrix backprop',q:'Why NOT compute the full Jacobian in matrix backprop?',opts:['It requires too much RAM','For vector inputs/outputs, the Jacobian is a matrix → 3-tensor for tensor ops. Compute JVP directly instead.','The Jacobian is always zero','Jacobians are not defined for matrices'],ans:1,exp:'For y = f(x) with vector x (dim d), the Jacobian is d×d. For batched/tensor operations it becomes a 4D tensor — impractical. The Jacobian-vector product ∂L/∂x = y∇W is computed directly without materialising the full Jacobian.'},
+{topic:'Matrix backprop',q:'Gradient b∇ = y∇ for y = Wx + b. What shape is b∇?',opts:['Same as W','Same as x','Same as y (and y∇)','Scalar'],ans:2,exp:'b has one entry per output dimension. ∂L/∂bⱼ = Σᵢ yᵢ∇·∂yᵢ/∂bⱼ = yⱼ∇·1 = yⱼ∇. So b∇ = y∇ — same shape as the output y.'},
+
+// ── T9: Decision Trees & ELBO (indices 64-71) ──
+{topic:'Decision Trees',q:'A dataset has 6 positives and 6 negatives. What is H(S)?',opts:['0','0.5','1.0','2.0'],ans:2,exp:'H(6/12, 6/12) = H(1/2, 1/2) = −0.5·log₂(0.5) − 0.5·log₂(0.5) = 0.5 + 0.5 = 1.0 bits. Maximum entropy for binary.'},
+{topic:'Decision Trees',q:'After splitting, subset A has 4 positives 0 negative, subset B has 2 positives 6 negatives. Each has equal size (4 and 8 examples). Weighted entropy? [H(1,0)=0, H(1/4,3/4)≈0.811]',opts:['0','0.811','(4/12)·0 + (8/12)·0.811 ≈ 0.541','0.5'],ans:2,exp:'Weighted = (4/12)·H(4/4,0/4) + (8/12)·H(2/8,6/8) = (4/12)·0 + (8/12)·0.811 ≈ 0.541.'},
+{topic:'Decision Trees',q:'Why can L1 regularisation NOT be applied to decision trees?',opts:['Decision trees are too shallow','L1 requires a continuous real-valued parameter vector; decision tree splits are discrete','L1 always causes overfitting in trees','Decision trees have no loss function'],ans:1,exp:'L1 adds λ‖w‖₁ to the loss — requires gradient w.r.t. a real-valued parameter vector w. Decision trees are defined by binary splits (discrete choices), not a real-valued weight vector.'},
+{topic:'Decision Trees',q:'Max-depth stopping and pruning both prevent overfitting. What is the key difference?',opts:['They are the same technique','Max-depth stops growth early (proactive); pruning removes branches after full growth (reactive)','Pruning uses the test set; max-depth uses the training set','Max-depth requires more compute'],ans:1,exp:'Max-depth = early stopping: tree never grows beyond depth k. Pruning = grow a full tree then remove branches that do not improve validation performance. Both are tuned on the validation set.'},
+{topic:'ELBO',q:'ELBO proof final step: E_q[ln p(x|θ)] = ln p(x|θ). Why can the expectation be dropped?',opts:['Because p(x|θ) depends on z','Because p(x|θ) does NOT depend on z — E_q[constant] = constant','Because E_q = 1','Because ln is linear'],ans:1,exp:'ln p(x|θ) does not contain z — it is a constant w.r.t. the expectation over q(z). E_q[ln p(x|θ)] = ln p(x|θ) · E_q[1] = ln p(x|θ).'},
+{topic:'ELBO',q:'In VAE training, maximising the ELBO simultaneously achieves two goals:',opts:['Fast inference and small model','Good reconstruction (E term) and latent space regularisation (KL term)','Low training loss and low test loss','High precision and high recall'],ans:1,exp:'ELBO = E_q[ln p(x|z)] − KL(q(z|x)‖p(z)). The reconstruction term pushes the decoder to reconstruct x well. The KL term pushes the encoder posterior close to the prior, regularising the latent space.'},
+{topic:'Decision Trees',q:'Information gain for feature F = H(S) − H_after(F). If IG(F₁) = 0.3 and IG(F₂) = 0.5, which feature is chosen as the root?',opts:['F₁ — lower entropy change is better','F₂ — higher information gain means better split','Either — IG is not the criterion','F₁ — it is more conservative'],ans:1,exp:'Decision trees greedily pick the feature with the HIGHEST information gain at each split. F₂ (IG=0.5) removes more uncertainty than F₁ (IG=0.3).'},
+{topic:'ELBO',q:'The KL term in the ELBO: KL(q_v(z|x) ‖ p(z)) with p(z)=N(0,I). In closed form for a Gaussian encoder N(μ,σ²I):',opts:['Cannot be computed in closed form','½Σ(μⱼ² + σⱼ² − 1 − ln σⱼ²)','−½Σln σⱼ²','E[‖z−μ‖²]'],ans:1,exp:'For q=N(μ,σ²I) and p=N(0,I): KL = ½Σ(μⱼ² + σⱼ² − 1 − ln σⱼ²). This has a closed form and is differentiable w.r.t. μ and σ — making it directly optimisable.'},
+
+// ── T10: Sequential / RL / Transformers (indices 72-79) ──
+{topic:'Sequential',q:'LSTM solves the vanishing gradient problem of vanilla RNNs via:',opts:['Deeper architecture','Gating mechanisms (forget, input, output gates) that allow gradients to flow unchanged through many steps','Attention over all previous states','Batch normalisation inside the recurrent cell'],ans:1,exp:'LSTM gates control what to remember, forget, and output. The cell state C_t acts as a "highway" for gradients — the forget gate gradient can be close to 1, preventing vanishing.'},
+{topic:'Sequential',q:'Self-attention: attention(Q,K,V) = softmax(QKᵀ/√d)V. What is Q,K,V?',opts:['Query (what we look for), Key (what each position offers), Value (what we retrieve)','Question, Knowledge, Vocabulary','Q and K are the same; V differs','Trainable hyperparameters'],ans:0,exp:'Each position projects its embedding into Q, K, V via learned matrices. The dot product Q·Kᵀ scores similarity between positions. Softmax normalises, then V is aggregated with these weights.'},
+{topic:'Sequential',q:'Compared to RNNs, transformers (self-attention) are:',opts:['Sequential — process one token at a time','Fully parallelisable across positions; each position attends to all others simultaneously','Local — only look at nearby context','Less parameter-efficient'],ans:1,exp:'Self-attention computes all pairwise attention scores in parallel using matrix multiplication. No sequential dependency — unlike RNNs where step t depends on step t−1.'},
+{topic:'Sequential',q:'Instruction tuning fine-tunes a pre-trained LLM on:',opts:['Unlabelled text','Examples of (instruction, desired output) pairs','Reinforcement learning rewards only','Images paired with text'],ans:1,exp:'Instruction tuning = supervised fine-tuning on a dataset of (natural language instruction, desired output) pairs. This teaches the model to follow diverse instructions it was not specifically trained on.'},
+{topic:'Sequential',q:'In RL, the reward signal is typically:',opts:['Available for every input-output pair','Delayed and sparse — only available after taking actions in the environment','Always positive','Provided by a human label'],ans:1,exp:'RL rewards are typically delayed (e.g., win/lose at end of game) and sparse (most actions get reward 0). This contrasts with supervised learning where every example has an immediate loss signal.'},
+{topic:'Sequential',q:'Positional encoding is added to token embeddings in transformers because:',opts:['Self-attention is not translation-invariant','Self-attention is permutation-invariant — without positional info, word order is lost','Token embeddings are too small','Attention scores must be positive'],ans:1,exp:'Self-attention treats the input as a set (no order). Positional encodings inject position information so the model can distinguish "the cat sat" from "the sat cat."'},
+{topic:'Sequential',q:'RLHF (Reinforcement Learning from Human Feedback) in LLMs:',opts:['Replaces pretraining entirely','Fine-tunes the model using human preference signals as the reward, aligning outputs with human values','Uses unsupervised clustering of responses','Is the same as instruction tuning'],ans:1,exp:'RLHF: humans rank model outputs → a reward model is trained on rankings → the LLM is fine-tuned with PPO to maximise the reward model score. Used to align ChatGPT/Claude-style models.'},
+{topic:'Sequential',q:'Compared to a first-order Markov model, an LSTM:',opts:['Also only uses the previous token','Uses a fixed window of k tokens','Maintains a cell state that can theoretically retain information over arbitrarily long sequences','Requires the Markov assumption'],ans:2,exp:'LSTM cell state can propagate information indefinitely (with appropriate gate values), unlike n-gram Markov models that use a fixed window. In practice, LSTMs capture much longer dependencies.'},
+];
+
+// 10 exam definitions — each exam selects 40 questions from the pool (4 per topic)
+// Topics: T1=0-7, T2=8-15, T3=16-23, T4=24-31, T5=32-39, T6=40-47, T7=48-55, T8=56-63, T9=64-71, T10=72-79
+const mockExamDefs = [
+  [0,1,2,3, 8,9,10,11, 16,17,18,19, 24,25,26,27, 32,33,34,35, 40,41,42,43, 48,49,50,51, 56,57,58,59, 64,65,66,67, 72,73,74,75],
+  [4,5,6,7, 12,13,14,15, 20,21,22,23, 28,29,30,31, 36,37,38,39, 44,45,46,47, 52,53,54,55, 60,61,62,63, 68,69,70,71, 76,77,78,79],
+  [0,2,4,6, 8,10,12,14, 16,18,20,22, 24,26,28,30, 32,34,36,38, 40,42,44,46, 48,50,52,54, 56,58,60,62, 64,66,68,70, 72,74,76,78],
+  [1,3,5,7, 9,11,13,15, 17,19,21,23, 25,27,29,31, 33,35,37,39, 41,43,45,47, 49,51,53,55, 57,59,61,63, 65,67,69,71, 73,75,77,79],
+  [0,3,5,6, 8,11,13,14, 16,19,21,22, 24,27,29,30, 32,35,37,38, 40,43,45,46, 48,51,53,54, 56,59,61,62, 64,67,69,70, 72,75,77,78],
+  [1,2,4,7, 9,10,12,15, 17,18,20,23, 25,26,28,31, 33,34,36,39, 41,42,44,47, 49,50,52,55, 57,58,60,63, 65,66,68,71, 73,74,76,79],
+  [0,1,6,7, 8,9,14,15, 16,17,22,23, 24,25,30,31, 32,33,38,39, 40,41,46,47, 48,49,54,55, 56,57,62,63, 64,65,70,71, 72,73,78,79],
+  [2,3,4,5, 10,11,12,13, 18,19,20,21, 26,27,28,29, 34,35,36,37, 42,43,44,45, 50,51,52,53, 58,59,60,61, 66,67,68,69, 74,75,76,77],
+  [0,2,5,7, 9,11,12,15, 16,19,20,23, 25,27,28,31, 33,35,36,39, 41,43,44,47, 49,51,52,55, 57,59,60,63, 65,67,68,71, 73,75,76,79],
+  [1,3,4,6, 8,10,13,14, 17,18,21,22, 24,26,29,30, 32,34,37,38, 40,42,45,46, 48,50,53,54, 56,58,61,62, 64,66,69,70, 72,74,77,78],
+];
+
+let mockState = { examIdx: -1, answers: {}, timerInterval: null, secondsLeft: 7200 };
+
+function initMockExamGrid() {
+  const grid = document.getElementById('exam-grid');
+  grid.innerHTML = mockExamDefs.map((_,i) =>
+    `<button class="stab" onclick="startMockExam(${i})">Exam ${i+1}</button>`
+  ).join('');
+}
+
+function startMockExam(idx) {
+  mockState = { examIdx: idx, answers: {}, timerInterval: null, secondsLeft: 7200 };
+  document.getElementById('mock-selector').style.display = 'none';
+  document.getElementById('mock-exam-area').style.display = 'block';
+  document.getElementById('mock-result').style.display = 'none';
+  document.getElementById('mock-title').textContent = `Mock Exam ${idx + 1}`;
+  document.getElementById('mock-score-disp').textContent = 'Score: 0/40';
+
+  const questions = mockExamDefs[idx].map(i => mockPool[i]);
+  const container = document.getElementById('mock-questions');
+  container.innerHTML = questions.map((q, qi) => `
+    <div class="question-card" id="mq-${qi}">
+      <h4 style="font-size:12px;color:var(--muted);font-weight:400;margin-bottom:6px">Q${qi+1} · ${q.topic}</h4>
+      <div class="question-text">${q.q}</div>
+      ${q.opts.map((opt, j) => `
+        <button class="option" id="mopt-${qi}-${j}" onclick="mockAnswer(${qi},${j})">${String.fromCharCode(65+j)}. ${opt}</button>
+      `).join('')}
+      <div class="explanation" id="mexp-${qi}">✓ ${q.exp}</div>
+    </div>
+  `).join('');
+
+  startMockTimer();
+}
+
+function mockAnswer(qi, optIdx) {
+  if (mockState.answers[qi] !== undefined) return;
+  mockState.answers[qi] = optIdx;
+  const q = mockPool[mockExamDefs[mockState.examIdx][qi]];
+  const correct = optIdx === q.ans;
+  for (let j = 0; j < q.opts.length; j++) {
+    const btn = document.getElementById(`mopt-${qi}-${j}`);
+    btn.disabled = true;
+    if (j === q.ans) btn.classList.add('correct');
+    else if (j === optIdx && !correct) btn.classList.add('wrong');
+  }
+  document.getElementById(`mexp-${qi}`).style.display = 'block';
+  const answered = Object.keys(mockState.answers).length;
+  const correct_count = Object.values(mockState.answers).filter((a,i) => {
+    const realIdx = Object.keys(mockState.answers)[i];
+    return a === mockPool[mockExamDefs[mockState.examIdx][realIdx]].ans;
+  }).length;
+  // recount properly
+  let c = 0;
+  for (const [qiStr, ans] of Object.entries(mockState.answers)) {
+    if (ans === mockPool[mockExamDefs[mockState.examIdx][+qiStr]].ans) c++;
+  }
+  document.getElementById('mock-score-disp').textContent = `Score: ${c}/${answered}`;
+}
+
+function mockSubmit() {
+  clearInterval(mockState.timerInterval);
+  const questions = mockExamDefs[mockState.examIdx].map(i => mockPool[i]);
+  let total = 0, correct = 0;
+  const topicScores = {};
+  questions.forEach((q, qi) => {
+    total++;
+    const a = mockState.answers[qi];
+    if (!topicScores[q.topic]) topicScores[q.topic] = { correct: 0, total: 0 };
+    topicScores[q.topic].total++;
+    if (a === q.ans) { correct++; topicScores[q.topic].correct++; }
+  });
+  const pct = Math.round(correct / total * 100);
+  const resultEl = document.getElementById('mock-result');
+  resultEl.style.display = 'block';
+  document.getElementById('mock-final-score').textContent =
+    `${correct} / ${total} (${pct}%) — ${correct >= 35 ? '🎯 Target reached!' : correct >= 30 ? '📈 Close — review weak topics' : '📚 Keep practising'}`;
+  document.getElementById('mock-score-fill').style.width = pct + '%';
+  const breakdown = document.getElementById('mock-breakdown');
+  breakdown.innerHTML = Object.entries(topicScores).map(([topic, s]) => {
+    const p = Math.round(s.correct / s.total * 100);
+    const c = p >= 75 ? 'var(--success)' : p >= 50 ? 'var(--warn)' : 'var(--danger)';
+    return `<div class="score-cell"><div class="label">${topic}</div><div class="value" style="color:${c}">${s.correct}/${s.total}</div></div>`;
+  }).join('');
+  resultEl.scrollIntoView({ behavior: 'smooth' });
+}
+
+function mockReset() {
+  clearInterval(mockState.timerInterval);
+  mockState = { examIdx: -1, answers: {}, timerInterval: null, secondsLeft: 7200 };
+  document.getElementById('mock-selector').style.display = 'block';
+  document.getElementById('mock-exam-area').style.display = 'none';
+  document.getElementById('mock-result').style.display = 'none';
+  document.getElementById('mock-timer').textContent = '2:00:00';
+  document.getElementById('mock-timer').style.color = '';
+}
+
+function startMockTimer() {
+  mockState.secondsLeft = 7200;
+  mockState.timerInterval = setInterval(() => {
+    mockState.secondsLeft--;
+    if (mockState.secondsLeft <= 0) { clearInterval(mockState.timerInterval); mockSubmit(); return; }
+    const h = Math.floor(mockState.secondsLeft / 3600);
+    const m = Math.floor((mockState.secondsLeft % 3600) / 60);
+    const s = mockState.secondsLeft % 60;
+    const timerEl = document.getElementById('mock-timer');
+    timerEl.textContent = `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    timerEl.style.color = mockState.secondsLeft < 600 ? 'var(--accent)' : '';
+  }, 1000);
+}
+
+// Init mock exam grid on page load
+initMockExamGrid();
 </script>
 </body>
 </html>

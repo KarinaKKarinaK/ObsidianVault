@@ -61,6 +61,32 @@
   .empty-state { text-align: center; padding: 60px 20px; color: var(--sub); }
   .section-header { font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--sub); margin: 20px 0 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
   .kbd { display: inline-block; padding: 1px 6px; border: 1px solid var(--border); border-radius: 4px; font-size: 0.75rem; color: var(--sub); }
+  .mode-toggle { display: flex; gap: 0; background: var(--card); border-bottom: 2px solid var(--border); padding: 0 16px; }
+  .mode-btn { padding: 12px 22px; border: none; background: none; color: var(--sub); font-size: 0.9rem; font-weight: 600; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.15s; }
+  .mode-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .mode-btn:hover:not(.active) { color: var(--text); }
+  .session-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; padding: 20px 16px; max-width: 860px; margin: 0 auto; }
+  .session-card { background: var(--card); border: 2px solid var(--border); border-radius: 12px; padding: 18px 12px; text-align: center; cursor: pointer; transition: all 0.15s; }
+  .session-card:hover { border-color: var(--accent); background: var(--tag); }
+  .session-card.active { border-color: var(--accent); background: var(--accent); color: #fff; }
+  .session-card .s-num { font-size: 1.3rem; font-weight: 800; }
+  .session-card .s-sub { font-size: 0.75rem; opacity: 0.7; margin-top: 2px; }
+  .quiz-header { position: sticky; top: 0; z-index: 100; background: var(--accent); color: #fff; padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+  .quiz-header .qh-title { font-weight: 700; font-size: 1rem; }
+  .quiz-header .qh-score { font-size: 0.9rem; opacity: 0.9; }
+  .quiz-header .qh-timer { font-size: 1rem; font-weight: 700; font-variant-numeric: tabular-nums; background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 8px; }
+  .quiz-header .qh-timer.urgent { background: rgba(220,38,38,0.5); animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.7} }
+  .quiz-main { padding: 16px; max-width: 860px; margin: 0 auto; }
+  .quiz-footer { max-width: 860px; margin: 0 auto; padding: 16px; display: flex; justify-content: center; gap: 12px; }
+  .submit-btn { padding: 12px 32px; border-radius: 10px; border: none; background: var(--accent); color: #fff; font-size: 1rem; font-weight: 700; cursor: pointer; }
+  .submit-btn:hover { background: var(--accent2); }
+  .score-modal { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 28px; max-width: 500px; margin: 30px auto; text-align: center; }
+  .score-modal .sm-score { font-size: 3rem; font-weight: 800; color: var(--accent); }
+  .score-modal .sm-label { color: var(--sub); margin-bottom: 16px; }
+  .score-modal table { width: 100%; border-collapse: collapse; margin-top: 16px; text-align: left; font-size: 0.88rem; }
+  .score-modal td, .score-modal th { padding: 6px 10px; border-bottom: 1px solid var(--border); }
+  .score-modal th { color: var(--sub); font-size: 0.8rem; }
 </style>
 </head>
 <body>
@@ -73,6 +99,12 @@
   <div class="score-box" id="scoreBox">Score: 0/0</div>
 </div>
 
+<div class="mode-toggle">
+  <button class="mode-btn active" id="modeBtnBank" onclick="switchMode('bank')">Question Bank</button>
+  <button class="mode-btn" id="modeBtnQuiz" onclick="switchMode('quiz')">Quiz Sessions</button>
+</div>
+
+<div id="bankMode">
 <div class="controls">
   <div style="display:flex;flex-direction:column;gap:6px;width:100%">
     <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
@@ -118,6 +150,29 @@
 </div>
 
 <div class="main" id="mainContent"></div>
+</div><!-- end bankMode -->
+
+<div id="quizMode" style="display:none">
+  <div id="sessionSelector">
+    <div style="padding:20px 16px 8px;max-width:860px;margin:0 auto">
+      <div class="section-header" style="margin-top:0">Select a Session</div>
+      <p style="color:var(--sub);font-size:0.88rem;margin-bottom:4px">Each session has 20 questions covering all 9 topics. 90-minute timer.</p>
+    </div>
+    <div class="session-grid" id="sessionGrid"></div>
+  </div>
+  <div id="sessionRunner" style="display:none">
+    <div class="quiz-header" id="quizHeader">
+      <span class="qh-title" id="qhTitle">Session 1</span>
+      <span class="qh-score" id="qhScore">Score: 0/20</span>
+      <span class="qh-timer" id="qhTimer">1:30:00</span>
+    </div>
+    <div class="quiz-main" id="quizMainContent"></div>
+    <div class="quiz-footer" id="quizFooter">
+      <button class="submit-btn" onclick="submitSession()">Submit Session</button>
+      <button class="action-btn secondary" onclick="backToSelector()">&#8592; Back</button>
+    </div>
+  </div>
+</div><!-- end quizMode -->
 
 <script>
 // ===== QUESTION BANK =====
@@ -1026,6 +1081,1052 @@ function checkMR(id, correctAnswers) {
     else if (cb.checked) label.style.borderColor = 'var(--wrong)';
   });
   updateScore();
+}
+
+// ===== SESSION QUESTIONS (sq4_ through sq10_) =====
+const sessionQuestions = [
+
+// ---- SESSION 4: Alternative angles on T1-T9 ----
+{id:'sq4_01',exam:'session',topic:'T1',type:'mc',
+ text:'Events A and B satisfy P(A)=0.5, P(B)=0.6, and P(A∪B)=0.8. Which is P(A|B)?',
+ options:['1/2','1/3','1/6','1/4'],
+ answer:'1/2',
+ explanation:'P(A∩B)=P(A)+P(B)−P(A∪B)=0.3. P(A|B)=P(A∩B)/P(B)=0.3/0.6=0.5.'},
+
+{id:'sq4_02',exam:'session',topic:'T1',type:'fi',
+ text:'A card is drawn uniformly at random from a standard 52-card deck. What is P(card is a King OR a Heart)? Round to 2 decimals.',
+ answer:'0.31',
+ explanation:'P(King)=4/52, P(Heart)=13/52, P(King∩Heart)=1/52. P(King∪Heart)=(4+13−1)/52=16/52≈0.31.'},
+
+{id:'sq4_03',exam:'session',topic:'T2',type:'mc',
+ text:'A disease affects 1% of the population. A test has 95% sensitivity (true positive rate) and 90% specificity (true negative rate). Given a positive test, what is the approximate probability of having the disease?',
+ options:['0.087','0.50','0.95','0.011'],
+ answer:'0.087',
+ explanation:'P(D)=0.01, P(+|D)=0.95, P(+|Dᶜ)=0.10. P(+)=0.95×0.01+0.10×0.99=0.1085. P(D|+)=0.0095/0.1085≈0.087.'},
+
+{id:'sq4_04',exam:'session',topic:'T2',type:'fi',
+ text:'P(A)=0.4, P(B|A)=0.5, P(B|Aᶜ)=0.2. Compute P(A|B). Round to 2 decimals.',
+ answer:'0.63',
+ explanation:'P(B)=0.5×0.4+0.2×0.6=0.32. P(A|B)=P(B|A)P(A)/P(B)=0.2/0.32=0.625≈0.63.'},
+
+{id:'sq4_05',exam:'session',topic:'T3',type:'fi',
+ text:'X ~ Binomial(8, 0.25). Compute P(X=2). Round to 3 decimals.',
+ answer:'0.311',
+ explanation:'P(X=2)=C(8,2)×(0.25)²×(0.75)⁶=28×0.0625×0.1779≈0.311.'},
+
+{id:'sq4_06',exam:'session',topic:'T3',type:'mc',
+ text:'X ~ Poisson(4). Which is closest to P(X=0)+P(X=1)?',
+ options:['0.092','0.073','0.052','0.184'],
+ answer:'0.092',
+ explanation:'P(X=0)=e⁻⁴≈0.0183. P(X=1)=4e⁻⁴≈0.0733. Sum≈0.0916≈0.092.'},
+
+{id:'sq4_07',exam:'session',topic:'T4',type:'fi',
+ text:'X ~ Uniform[2,8]. Compute E[X²] using LOTUS. Round to 2 decimals.',
+ answer:'28.00',
+ explanation:'E[X²]=∫₂⁸ x²·(1/6)dx=(1/6)·[x³/3]₂⁸=(1/18)·(512−8)=504/18=28.'},
+
+{id:'sq4_08',exam:'session',topic:'T4',type:'mc',
+ text:'X ~ Exp(2) (rate 2, so mean 1/2). What is P(X > 1)?',
+ options:['e⁻²','1−e⁻²','e⁻¹','1−e⁻¹'],
+ answer:'e⁻²',
+ explanation:'For Exp(λ): P(X>t)=e^{−λt}. P(X>1)=e^{−2×1}=e⁻².'},
+
+{id:'sq4_09',exam:'session',topic:'T5',type:'fi',
+ text:'X ~ N(10,25) (mean 10, variance 25). Compute P(X < 5). Your answer is Φ(k); give k.',
+ answer:'-1',
+ explanation:'P(X<5)=P(Z<(5−10)/5)=P(Z<−1)=Φ(−1). k=−1.'},
+
+{id:'sq4_10',exam:'session',topic:'T5',type:'mc',
+ text:'X ~ N(0,1) and Y=3X+2. What is the distribution of Y?',
+ options:['N(2,9)','N(2,3)','N(2,6)','N(6,9)'],
+ answer:'N(2,9)',
+ explanation:'E[Y]=3×0+2=2. Var[Y]=9×Var[X]=9×1=9. Y~N(2,9).'},
+
+{id:'sq4_11',exam:'session',topic:'T6',type:'fi',
+ text:'Observe x₁=3, x₂=5, x₃=4 from a N(μ,1) distribution (variance known = 1). Compute the MLE for μ. Round to 1 decimal.',
+ answer:'4.0',
+ explanation:'For N(μ,σ²) with σ² known, MLE of μ = sample mean = (3+5+4)/3 = 4.0.'},
+
+{id:'sq4_12',exam:'session',topic:'T6',type:'mc',
+ text:'X₁,...,Xₙ ~ Poisson(λ). What is the MLE for λ?',
+ options:['x̄ (sample mean)','median','1/x̄','√x̄'],
+ answer:'x̄ (sample mean)',
+ explanation:'L(λ)=∏e^{−λ}λ^{xᵢ}/xᵢ!. Log-lik: −nλ+Σxᵢ·logλ. Setting dℓ/dλ=0: −n+Σxᵢ/λ=0 → λ̂=Σxᵢ/n=x̄.'},
+
+{id:'sq4_13',exam:'session',topic:'T7',type:'fi',
+ text:'n=100, x̄=50, σ=10 (known). Give the half-width (margin of error) of the 95% CI for μ. Round to 2 decimals.',
+ answer:'1.96',
+ explanation:'ME = z_{0.025}·σ/√n = 1.96×10/10 = 1.96.'},
+
+{id:'sq4_14',exam:'session',topic:'T7',type:'mc',
+ text:'A 95% CI for μ based on n=25 is [12, 18]. If n is increased to 100 (same x̄ and σ), what happens to the width?',
+ options:['Halved','Doubled','Quartered','Unchanged'],
+ answer:'Halved',
+ explanation:'Width ∝ 1/√n. Going from n=25 to n=100 multiplies √n by 2, so width is halved.'},
+
+{id:'sq4_15',exam:'session',topic:'T8',type:'mc',
+ text:'H₀: μ=5 vs H₁: μ≠5. n=16, x̄=6, σ=4 (known). The test statistic z equals:',
+ options:['1','4','0.25','2'],
+ answer:'1',
+ explanation:'z=(x̄−μ₀)/(σ/√n)=(6−5)/(4/4)=1/1=1.'},
+
+{id:'sq4_16',exam:'session',topic:'T8',type:'fi',
+ text:'The p-value for a two-sided z-test is 2(1−Φ(2.1)). Using Φ(2.1)≈0.982, give the p-value to 3 decimals.',
+ answer:'0.036',
+ explanation:'p-value=2(1−0.982)=2×0.018=0.036.'},
+
+{id:'sq4_17',exam:'session',topic:'T9',type:'mc',
+ text:'X₁,...,X₄₉ iid with E[X]=3 and Var[X]=49. What is the approximate distribution of the sum S=X₁+...+X₄₉ by CLT?',
+ options:['N(147, 2401)','N(3, 1)','N(147, 49)','N(3, 49)'],
+ answer:'N(147, 2401)',
+ explanation:'E[S]=49×3=147. Var[S]=49×49=2401. By CLT, S≈N(147,2401).'},
+
+{id:'sq4_18',exam:'session',topic:'T9',type:'fi',
+ text:'X₁,...,X₂₅ iid with mean 4 and variance 16. By CLT, P(X̄>5) ≈ 1−Φ(k). What is k?',
+ answer:'1.25',
+ explanation:'SE=σ/√n=4/5=0.8. k=(5−4)/0.8=1.25.'},
+
+{id:'sq4_19',exam:'session',topic:'T1',type:'mc',
+ text:'If P(A)=0.3 and A and B are mutually exclusive (disjoint), what is P(A∩B)?',
+ options:['0','0.3','P(A)·P(B)','undefined'],
+ answer:'0',
+ explanation:'Mutually exclusive means A∩B=∅, so P(A∩B)=0.'},
+
+{id:'sq4_20',exam:'session',topic:'T3',type:'mc',
+ text:'The number of defective items in a batch follows Poisson(2). What is the variance?',
+ options:['2','4','√2','1'],
+ answer:'2',
+ explanation:'For Poisson(λ): both mean and variance equal λ. Var[X]=λ=2.'},
+
+// ---- SESSION 5 ----
+{id:'sq5_01',exam:'session',topic:'T1',type:'mc',
+ text:'If A and B are independent events with P(A)=0.4 and P(B)=0.5, what is P(Aᶜ∩Bᶜ)?',
+ options:['0.30','0.10','0.20','0.60'],
+ answer:'0.30',
+ explanation:'P(Aᶜ)=0.6, P(Bᶜ)=0.5. By independence P(Aᶜ∩Bᶜ)=0.6×0.5=0.30.'},
+
+{id:'sq5_02',exam:'session',topic:'T1',type:'fi',
+ text:'In how many ways can 3 people be selected from a group of 10? Give the integer.',
+ answer:'120',
+ explanation:'C(10,3)=10!/(3!7!)=120.'},
+
+{id:'sq5_03',exam:'session',topic:'T2',type:'mc',
+ text:'P(B|A)=0.6, P(B|Aᶜ)=0.3, P(A)=0.5. Compute P(A|B).',
+ options:['0.67','0.50','0.60','0.40'],
+ answer:'0.67',
+ explanation:'P(B)=0.6×0.5+0.3×0.5=0.45. P(A|B)=0.6×0.5/0.45=0.3/0.45=2/3≈0.67.'},
+
+{id:'sq5_04',exam:'session',topic:'T2',type:'fi',
+ text:'A factory has 3 lines producing 50%, 30%, and 20% of output. Defect rates are 1%, 2%, 3% respectively. Given a defective item, what is P(it came from line 3)? Round to 2 decimals.',
+ answer:'0.35',
+ explanation:'P(D)=0.5×0.01+0.3×0.02+0.2×0.03=0.005+0.006+0.006=0.017. P(L3|D)=0.006/0.017≈0.353≈0.35.'},
+
+{id:'sq5_05',exam:'session',topic:'T3',type:'fi',
+ text:'X ~ Geometric(0.3). Find E[X]. Round to 2 decimals.',
+ answer:'3.33',
+ explanation:'For Geometric(p): E[X]=1/p=1/0.3=10/3≈3.33.'},
+
+{id:'sq5_06',exam:'session',topic:'T3',type:'mc',
+ text:'X ~ Binomial(10, 0.5). What is Var[X]?',
+ options:['2.5','5','10','1.58'],
+ answer:'2.5',
+ explanation:'Var[X]=np(1−p)=10×0.5×0.5=2.5.'},
+
+{id:'sq5_07',exam:'session',topic:'T4',type:'mc',
+ text:'X has PDF f(x)=3x² on [0,1]. What is E[X]?',
+ options:['3/4','1/2','2/3','1/4'],
+ answer:'3/4',
+ explanation:'E[X]=∫₀¹ x·3x² dx=3∫₀¹ x³ dx=3·[x⁴/4]₀¹=3/4.'},
+
+{id:'sq5_08',exam:'session',topic:'T4',type:'fi',
+ text:'X ~ Exp(λ) with mean 4. What is λ? Round to 2 decimals.',
+ answer:'0.25',
+ explanation:'For Exp(λ): E[X]=1/λ=4 → λ=0.25.'},
+
+{id:'sq5_09',exam:'session',topic:'T5',type:'mc',
+ text:'X ~ N(μ,σ²). What is P(μ−2σ < X < μ+2σ) expressed in Φ notation?',
+ options:['2Φ(2)−1','Φ(2)−Φ(−2)','Both previous answers','Φ(4)−1'],
+ answer:'Both previous answers',
+ explanation:'P(−2<Z<2)=Φ(2)−Φ(−2)=Φ(2)−(1−Φ(2))=2Φ(2)−1. Both expressions are equal.'},
+
+{id:'sq5_10',exam:'session',topic:'T5',type:'fi',
+ text:'X₁,...,X₁₆ iid N(5,4). Compute P(X̄>6). Your answer is 1−Φ(k); give k.',
+ answer:'2',
+ explanation:'X̄~N(5,4/16)=N(5,0.25). SE=0.5. k=(6−5)/0.5=2.'},
+
+{id:'sq5_11',exam:'session',topic:'T6',type:'fi',
+ text:'L(θ)=θ^5·(1−θ)^3. Find the MLE for θ. Round to 2 decimals.',
+ answer:'0.63',
+ explanation:'ℓ=5logθ+3log(1−θ). dℓ/dθ=5/θ−3/(1−θ)=0 → 5(1−θ)=3θ → θ=5/8=0.625≈0.63.'},
+
+{id:'sq5_12',exam:'session',topic:'T6',type:'mc',
+ text:'For Uniform[0,θ] with observations 2, 5, 4, 7, 3: what is the MLE for θ?',
+ options:['7','4.2','2','5'],
+ answer:'7',
+ explanation:'L(θ)=(1/θ)⁵ for θ≥max(xᵢ)=7. L is maximized at smallest valid θ=7.'},
+
+{id:'sq5_13',exam:'session',topic:'T7',type:'mc',
+ text:'n=9, x̄=12, s=3 (sample std). σ unknown. What is the 95% t-interval for μ? (t_{0.025,8}=2.306)',
+ options:['[9.69, 14.31]','[10.04, 13.96]','[9, 15]','[11, 13]'],
+ answer:'[9.69, 14.31]',
+ explanation:'CI=x̄±t_{0.025,8}·s/√n=12±2.306×3/3=12±2.306=[9.694,14.306]≈[9.69,14.31].'},
+
+{id:'sq5_14',exam:'session',topic:'T7',type:'fi',
+ text:'For a 99% CI for a proportion, what is the minimum n so the margin of error is at most 0.05? Use z_{0.005}=2.576. Round up to nearest integer.',
+ answer:'664',
+ explanation:'n≥(z/ME)²×0.25=(2.576/0.05)²×0.25=2654.0×0.25=663.5 → n=664.'},
+
+{id:'sq5_15',exam:'session',topic:'T8',type:'mc',
+ text:'A two-sided t-test gives t=2.8 with df=15. Given t_{0.025,15}=2.131 and t_{0.005,15}=2.947, what can you conclude at α=0.05?',
+ options:['Reject H₀','Fail to reject H₀','Cannot determine','Need p-value'],
+ answer:'Reject H₀',
+ explanation:'|t|=2.8>t_{0.025,15}=2.131, so p-value<0.05. We reject H₀ at α=0.05.'},
+
+{id:'sq5_16',exam:'session',topic:'T8',type:'fi',
+ text:'Type II error β=0.2 for a test. What is the power of the test? Round to 1 decimal.',
+ answer:'0.8',
+ explanation:'Power=1−β=1−0.2=0.8.'},
+
+{id:'sq5_17',exam:'session',topic:'T9',type:'fi',
+ text:'X₁,...,X₆₄ iid with mean 10 and std 8. By CLT, P(X̄<11) ≈ Φ(k). Give k.',
+ answer:'1',
+ explanation:'SE=8/√64=1. k=(11−10)/1=1. P(X̄<11)=Φ(1).'},
+
+{id:'sq5_18',exam:'session',topic:'T9',type:'mc',
+ text:'Which of the following does the CLT NOT require?',
+ options:['Finite variance','Large n','Identically distributed variables','Normal population distribution'],
+ answer:'Normal population distribution',
+ explanation:'CLT works for any distribution with finite mean and variance for large n — the population does NOT need to be normal.'},
+
+{id:'sq5_19',exam:'session',topic:'T2',type:'mc',
+ text:'If A and B are independent, which is always true?',
+ options:['P(A|B)=P(A)','P(A∩B)=0','P(A∪B)=P(A)+P(B)','A and B are disjoint'],
+ answer:'P(A|B)=P(A)',
+ explanation:'Independence means knowing B gives no information about A: P(A|B)=P(A).'},
+
+{id:'sq5_20',exam:'session',topic:'T3',type:'mc',
+ text:'X ~ Poisson(λ). Which formula gives P(X=k)?',
+ options:['e^{−λ}λᵏ/k!','λᵏ(1−λ)^{n−k}','(1−λ)^{k−1}λ','C(n,k)λᵏ(1−λ)^{n−k}'],
+ answer:'e^{−λ}λᵏ/k!',
+ explanation:'This is the PMF of the Poisson distribution. The Poisson arises as a limit of Binomial with large n and small p.'},
+
+// ---- SESSION 6 ----
+{id:'sq6_01',exam:'session',topic:'T1',type:'fi',
+ text:'Roll two fair dice. P(sum ≥ 10) = ? Round to 2 decimals.',
+ answer:'0.17',
+ explanation:'Outcomes with sum≥10: (4,6),(5,5),(5,6),(6,4),(6,5),(6,6)=6 outcomes. P=6/36=1/6≈0.17.'},
+
+{id:'sq6_02',exam:'session',topic:'T1',type:'mc',
+ text:'Which formula is the inclusion-exclusion principle for three events?',
+ options:['P(A)+P(B)+P(C)−P(A∩B)−P(A∩C)−P(B∩C)+P(A∩B∩C)','P(A)+P(B)+P(C)−P(A∩B∩C)','P(A)P(B)P(C)','P(A)+P(B)+P(C)'],
+ answer:'P(A)+P(B)+P(C)−P(A∩B)−P(A∩C)−P(B∩C)+P(A∩B∩C)',
+ explanation:'Inclusion-exclusion: add singles, subtract pairwise intersections, add triple intersection.'},
+
+{id:'sq6_03',exam:'session',topic:'T2',type:'fi',
+ text:'P(A)=0.6, P(B)=0.5, P(A∩B)=0.3. Are A and B independent? Answer 1 for yes, 0 for no.',
+ answer:'1',
+ explanation:'P(A)·P(B)=0.6×0.5=0.30=P(A∩B). Yes, they are independent.'},
+
+{id:'sq6_04',exam:'session',topic:'T2',type:'mc',
+ text:'Using total probability: P(B)=P(B|A₁)P(A₁)+P(B|A₂)P(A₂)+P(B|A₃)P(A₃) requires that A₁,A₂,A₃ form a',
+ options:['partition of Ω','set of independent events','set of disjoint events only','set with equal probabilities'],
+ answer:'partition of Ω',
+ explanation:'Total probability requires A₁,...,Aₙ to be a partition: pairwise disjoint and exhaustive (union = Ω).'},
+
+{id:'sq6_05',exam:'session',topic:'T3',type:'mc',
+ text:'X ~ Binomial(n,p). For which values of n and p is the Poisson approximation most appropriate?',
+ options:['Large n, small p, np moderate','Small n, large p','Any n and p','n=p'],
+ answer:'Large n, small p, np moderate',
+ explanation:'The Poisson approximation to Binomial works best when n is large, p is small, and λ=np is a moderate fixed constant.'},
+
+{id:'sq6_06',exam:'session',topic:'T3',type:'fi',
+ text:'X ~ Geometric(0.4). Compute P(X≥3). Round to 2 decimals.',
+ answer:'0.36',
+ explanation:'P(X≥3)=(1−p)^{3−1}=(0.6)²=0.36.'},
+
+{id:'sq6_07',exam:'session',topic:'T4',type:'mc',
+ text:'X has PDF f(x)=2e^{−2x} for x>0. What is E[X]?',
+ options:['1/2','2','1/4','1'],
+ answer:'1/2',
+ explanation:'This is Exp(2). E[X]=1/λ=1/2.'},
+
+{id:'sq6_08',exam:'session',topic:'T4',type:'fi',
+ text:'X has CDF F(x)=1−e^{−3x} for x≥0. Compute P(1<X<2). Round to 3 decimals.',
+ answer:'0.049',
+ explanation:'P(1<X<2)=F(2)−F(1)=(1−e⁻⁶)−(1−e⁻³)=e⁻³−e⁻⁶≈0.0498−0.00248≈0.0473≈0.049.'},
+
+{id:'sq6_09',exam:'session',topic:'T5',type:'mc',
+ text:'X ~ N(0,1). Which is P(−1.5 < X < 1.5)?',
+ options:['2Φ(1.5)−1','Φ(1.5)','1−2Φ(1.5)','2Φ(1.5)'],
+ answer:'2Φ(1.5)−1',
+ explanation:'By symmetry: P(−a<Z<a)=2Φ(a)−1. Here a=1.5.'},
+
+{id:'sq6_10',exam:'session',topic:'T5',type:'fi',
+ text:'X ~ N(100,225). Compute P(X>130). Your answer is 1−Φ(k); give k.',
+ answer:'2',
+ explanation:'σ=√225=15. k=(130−100)/15=2. P(X>130)=1−Φ(2).'},
+
+{id:'sq6_11',exam:'session',topic:'T6',type:'mc',
+ text:'L(θ)=θ²(1−θ)⁸. The MLE is:',
+ options:['0.2','0.5','0.8','0.1'],
+ answer:'0.2',
+ explanation:'ℓ=2logθ+8log(1−θ). dℓ/dθ=2/θ−8/(1−θ)=0 → 2(1−θ)=8θ → θ=2/10=0.2.'},
+
+{id:'sq6_12',exam:'session',topic:'T6',type:'fi',
+ text:'x₁=1,x₂=3,x₃=2 from Poisson(λ). Compute the MLE for λ. Round to 2 decimals.',
+ answer:'2.00',
+ explanation:'λ̂=x̄=(1+3+2)/3=2.00.'},
+
+{id:'sq6_13',exam:'session',topic:'T7',type:'mc',
+ text:'n=36, x̄=20, s=6, σ unknown. Construct a 90% CI for μ using t_{0.05,35}≈1.690.',
+ options:['[18.31, 21.69]','[17.61, 22.39]','[19, 21]','[18.04, 21.96]'],
+ answer:'[18.31, 21.69]',
+ explanation:'ME=1.690×6/6=1.690. CI=[20−1.690, 20+1.690]=[18.31,21.69].'},
+
+{id:'sq6_14',exam:'session',topic:'T7',type:'fi',
+ text:'A 95% CI for μ gives [14,20]. What is the sample mean x̄?',
+ answer:'17',
+ explanation:'The CI is symmetric around x̄. x̄=(14+20)/2=17.'},
+
+{id:'sq6_15',exam:'session',topic:'T8',type:'mc',
+ text:'H₀: μ=10, H₁: μ>10. n=25, x̄=11, s=5. The t-statistic is:',
+ options:['1','2','0.5','4'],
+ answer:'1',
+ explanation:'t=(x̄−μ₀)/(s/√n)=(11−10)/(5/5)=1.'},
+
+{id:'sq6_16',exam:'session',topic:'T8',type:'mc',
+ text:'The significance level α=0.05 for a test means:',
+ options:['P(Type I error)=0.05','P(Type II error)=0.05','Power=0.05','P(correct)=0.95'],
+ answer:'P(Type I error)=0.05',
+ explanation:'The significance level α is defined as the probability of making a Type I error (rejecting H₀ when it is true).'},
+
+{id:'sq6_17',exam:'session',topic:'T9',type:'mc',
+ text:'X₁,...,Xₙ iid with Var[X]=σ². What is Var[X̄]?',
+ options:['σ²/n','σ/n','σ²','σ²/√n'],
+ answer:'σ²/n',
+ explanation:'Var[X̄]=Var[(1/n)ΣXᵢ]=(1/n²)·nσ²=σ²/n.'},
+
+{id:'sq6_18',exam:'session',topic:'T9',type:'fi',
+ text:'X₁,...,X₃₆ iid Bernoulli(0.5). By CLT, P(S≥21) where S=ΣXᵢ. Use P(S≥21)=P(Z≥k). Give k. Round to 2 decimals.',
+ answer:'1.00',
+ explanation:'E[S]=36×0.5=18, Var[S]=36×0.25=9, SD=3. k=(21−18)/3=1.00.'},
+
+{id:'sq6_19',exam:'session',topic:'T1',type:'mc',
+ text:'P(A)=0.5, P(B)=0.4, and A,B disjoint. What is P(A∪B)?',
+ options:['0.9','0.2','0.5','0.7'],
+ answer:'0.9',
+ explanation:'Disjoint: P(A∪B)=P(A)+P(B)=0.9.'},
+
+{id:'sq6_20',exam:'session',topic:'T4',type:'mc',
+ text:'For X ~ Uniform[a,b], what is Var[X]?',
+ options:['(b−a)²/12','(b−a)/2','(b−a)²/4','(b+a)²/12'],
+ answer:'(b−a)²/12',
+ explanation:'Var[X]=(b−a)²/12 for Uniform[a,b]. Mean=(a+b)/2.'},
+
+// ---- SESSION 7 ----
+{id:'sq7_01',exam:'session',topic:'T1',type:'mc',
+ text:'P(A)=0.7, P(Aᶜ∩B)=0.1. What is P(B|Aᶜ)?',
+ options:['1/3','1/7','1/10','1/3'],
+ answer:'1/3',
+ explanation:'P(Aᶜ)=0.3. P(B|Aᶜ)=P(Aᶜ∩B)/P(Aᶜ)=0.1/0.3=1/3.'},
+
+{id:'sq7_02',exam:'session',topic:'T1',type:'fi',
+ text:'P(A)=1/3, P(B|A)=1/2. Compute P(A∩B). Round to 2 decimals.',
+ answer:'0.17',
+ explanation:'P(A∩B)=P(B|A)·P(A)=(1/2)(1/3)=1/6≈0.17.'},
+
+{id:'sq7_03',exam:'session',topic:'T2',type:'mc',
+ text:'Medical test: P(D)=0.05, sensitivity=0.99, specificity=0.95. Compute P(D|+) approximately.',
+ options:['0.51','0.99','0.05','0.34'],
+ answer:'0.51',
+ explanation:'P(+)=0.99×0.05+0.05×0.95=0.0495+0.0475=0.097. P(D|+)=0.0495/0.097≈0.510.'},
+
+{id:'sq7_04',exam:'session',topic:'T2',type:'fi',
+ text:'P(A)=0.3, P(Aᶜ)=0.7, P(B|A)=0.8, P(B|Aᶜ)=0.4. Compute P(B). Round to 2 decimals.',
+ answer:'0.52',
+ explanation:'P(B)=0.8×0.3+0.4×0.7=0.24+0.28=0.52.'},
+
+{id:'sq7_05',exam:'session',topic:'T3',type:'fi',
+ text:'X ~ Pascal(r=3, p=0.5). What is E[X]? Round to 1 decimal.',
+ answer:'6.0',
+ explanation:'E[X]=r/p=3/0.5=6.0.'},
+
+{id:'sq7_06',exam:'session',topic:'T3',type:'mc',
+ text:'X ~ Poisson(3). What is P(X=3)? Round to 3 decimals.',
+ options:['0.224','0.149','0.423','0.050'],
+ answer:'0.224',
+ explanation:'P(X=3)=e⁻³×3³/3!=e⁻³×27/6=4.5e⁻³≈4.5×0.0498=0.224.'},
+
+{id:'sq7_07',exam:'session',topic:'T4',type:'fi',
+ text:'X has PDF f(x)=4x³ for 0≤x≤1. Find P(X>0.5). Round to 2 decimals.',
+ answer:'0.94',
+ explanation:'P(X>0.5)=∫_{0.5}^1 4x³dx=[x⁴]_{0.5}^1=1−(0.5)⁴=1−0.0625=0.9375≈0.94.'},
+
+{id:'sq7_08',exam:'session',topic:'T4',type:'mc',
+ text:'X ~ Exp(λ). What is the CDF F(x) for x≥0?',
+ options:['1−e^{−λx}','e^{−λx}','λe^{−λx}','1−λe^{−λx}'],
+ answer:'1−e^{−λx}',
+ explanation:'CDF of Exp(λ): F(x)=∫₀ˣ λe^{−λt}dt=1−e^{−λx} for x≥0.'},
+
+{id:'sq7_09',exam:'session',topic:'T5',type:'mc',
+ text:'X ~ N(5,4) and Y ~ N(3,9) independent. What is the distribution of X−Y?',
+ options:['N(2,13)','N(2,5)','N(8,13)','N(2,√13)'],
+ answer:'N(2,13)',
+ explanation:'E[X−Y]=5−3=2. Var[X−Y]=Var[X]+Var[Y]=4+9=13. X−Y~N(2,13).'},
+
+{id:'sq7_10',exam:'session',topic:'T5',type:'fi',
+ text:'X ~ N(μ,σ²). Express P(X < μ−σ) using Φ. Your answer is Φ(k); give k.',
+ answer:'-1',
+ explanation:'P(X<μ−σ)=P(Z<−1)=Φ(−1). k=−1.'},
+
+{id:'sq7_11',exam:'session',topic:'T6',type:'mc',
+ text:'For n iid observations from N(μ,σ²) with σ² known, the log-likelihood for μ is:',
+ options:['−(1/2σ²)Σ(xᵢ−μ)²+const','−σ²Σ(xᵢ−μ)+const','Σ(xᵢ−μ)²+const','−nlogσ+const'],
+ answer:'−(1/2σ²)Σ(xᵢ−μ)²+const',
+ explanation:'ℓ(μ)=Σlog f(xᵢ)=Σ[−log(σ√2π)−(xᵢ−μ)²/(2σ²)]=−(1/2σ²)Σ(xᵢ−μ)²+const.'},
+
+{id:'sq7_12',exam:'session',topic:'T6',type:'fi',
+ text:'x₁=0,x₂=1,x₃=0,x₄=1,x₅=1 from Bernoulli(p). Compute the MLE p̂. Round to 1 decimal.',
+ answer:'0.6',
+ explanation:'p̂=Σxᵢ/n=3/5=0.6.'},
+
+{id:'sq7_13',exam:'session',topic:'T7',type:'fi',
+ text:'n=16, x̄=50, σ=8 (known). Give the 99% CI lower bound. Use z_{0.005}=2.576. Round to 1 decimal.',
+ answer:'44.8',
+ explanation:'ME=2.576×8/4=5.152. Lower=50−5.152≈44.8.'},
+
+{id:'sq7_14',exam:'session',topic:'T7',type:'mc',
+ text:'Which factor does NOT affect the width of a CI?',
+ options:['Sample size n','Confidence level','Population mean μ','Population variance σ²'],
+ answer:'Population mean μ',
+ explanation:'Width=2·z_{α/2}·σ/√n. It depends on n, confidence level (z_{α/2}), and σ², but NOT on the true mean μ.'},
+
+{id:'sq7_15',exam:'session',topic:'T8',type:'mc',
+ text:'Reject H₀ if |T|≥t_{α/2,n−1}. This is a:',
+ options:['Two-sided t-test','Right-sided t-test','Left-sided t-test','z-test'],
+ answer:'Two-sided t-test',
+ explanation:'Rejecting when |T|≥t_{α/2} (both tails) defines a two-sided test.'},
+
+{id:'sq7_16',exam:'session',topic:'T8',type:'fi',
+ text:'n=25, x̄=101, s=5. Test H₀:μ=100 vs H₁:μ>100. Compute t. Round to 1 decimal.',
+ answer:'1.0',
+ explanation:'t=(101−100)/(5/5)=1/1=1.0.'},
+
+{id:'sq7_17',exam:'session',topic:'T9',type:'mc',
+ text:'By CLT, (X̄−μ)/(σ/√n) converges in distribution to:',
+ options:['N(0,1)','N(μ,σ²)','t(n−1)','N(0,σ²)'],
+ answer:'N(0,1)',
+ explanation:'The standardized sample mean (X̄−μ)/(σ/√n) converges in distribution to the standard normal N(0,1).'},
+
+{id:'sq7_18',exam:'session',topic:'T9',type:'fi',
+ text:'X₁,...,X₁₀₀ iid with E[X]=2, Var[X]=9. Compute SD(X̄). Round to 1 decimal.',
+ answer:'0.3',
+ explanation:'SD(X̄)=σ/√n=3/√100=3/10=0.3.'},
+
+{id:'sq7_19',exam:'session',topic:'T3',type:'fi',
+ text:'X ~ Binomial(5,0.3). Compute P(X≥1)=1−P(X=0). Round to 3 decimals.',
+ answer:'0.832',
+ explanation:'P(X=0)=(0.7)⁵=0.16807. P(X≥1)=1−0.16807≈0.832.'},
+
+{id:'sq7_20',exam:'session',topic:'T5',type:'mc',
+ text:'Z ~ N(0,1). What is E[Z²]?',
+ options:['1','0','2','π'],
+ answer:'1',
+ explanation:'E[Z²]=Var[Z]+(E[Z])²=1+0=1 for N(0,1).'},
+
+// ---- SESSION 8 ----
+{id:'sq8_01',exam:'session',topic:'T1',type:'mc',
+ text:'If P(A)=0.6, P(B|A)=0.4, P(B|Aᶜ)=0.3, what is P(A∪B)?',
+ options:['0.72','0.70','0.82','0.60'],
+ answer:'0.72',
+ explanation:'P(A∩B)=P(B|A)·P(A)=0.4×0.6=0.24. P(B)=0.24+P(B|Aᶜ)·P(Aᶜ)=0.24+0.3×0.4=0.36. P(A∪B)=P(A)+P(B)−P(A∩B)=0.6+0.36−0.24=0.72.'},
+
+{id:'sq8_02',exam:'session',topic:'T1',type:'fi',
+ text:'Ω={1,2,...,10}. A={2,4,6,8,10}, B={1,2,3,4,5}. Find P(A∩B). Round to 1 decimal.',
+ answer:'0.2',
+ explanation:'A∩B={2,4}. P(A∩B)=2/10=0.2.'},
+
+{id:'sq8_03',exam:'session',topic:'T2',type:'mc',
+ text:'Events A and B have P(A)=0.5, P(B)=0.5, P(A∩B)=0.25. Then P(A|Bᶜ) is:',
+ options:['0.5','0.25','0.75','0.1'],
+ answer:'0.5',
+ explanation:'P(A∩Bᶜ)=P(A)−P(A∩B)=0.25. P(Bᶜ)=0.5. P(A|Bᶜ)=0.25/0.5=0.5.'},
+
+{id:'sq8_04',exam:'session',topic:'T2',type:'fi',
+ text:'Box 1 has 3 red, 2 blue. Box 2 has 1 red, 4 blue. Pick a box with equal probability, draw one ball. P(Red) = ? Round to 2 decimals.',
+ answer:'0.40',
+ explanation:'P(R)=0.5×(3/5)+0.5×(1/5)=0.5×0.6+0.5×0.2=0.30+0.10=0.40.'},
+
+{id:'sq8_05',exam:'session',topic:'T3',type:'mc',
+ text:'X ~ Geometric(0.2). What is P(X=1)?',
+ options:['0.2','0.8','0.04','0.16'],
+ answer:'0.2',
+ explanation:'P(X=1)=p×(1−p)^{1−1}=p=0.2.'},
+
+{id:'sq8_06',exam:'session',topic:'T3',type:'fi',
+ text:'X ~ Binomial(6, 0.5). Compute P(X=3). Round to 4 decimals.',
+ answer:'0.3125',
+ explanation:'P(X=3)=C(6,3)×(0.5)⁶=20×(1/64)=20/64=0.3125.'},
+
+{id:'sq8_07',exam:'session',topic:'T4',type:'mc',
+ text:'X has PDF f(x)=1/2 for 0<x<2. What is P(0.5<X<1.5)?',
+ options:['0.5','1','0.25','0.75'],
+ answer:'0.5',
+ explanation:'P(0.5<X<1.5)=∫_{0.5}^{1.5}(1/2)dx=(1/2)×1=0.5.'},
+
+{id:'sq8_08',exam:'session',topic:'T4',type:'fi',
+ text:'X ~ Exp(0.5) (rate=0.5). Compute E[X²] using E[X²]=Var[X]+(E[X])². Round to 1 decimal.',
+ answer:'8.0',
+ explanation:'E[X]=1/0.5=2. Var[X]=1/λ²=4. E[X²]=4+4=8.0.'},
+
+{id:'sq8_09',exam:'session',topic:'T5',type:'mc',
+ text:'X ~ N(3,1) and Y ~ N(2,4) independent. P(X+Y>7) = ?',
+ options:['1−Φ(√5/√5)','1−Φ(2/√5)','1−Φ(1)','Φ(−2/√5)'],
+ answer:'1−Φ(2/√5)',
+ explanation:'X+Y~N(5,5). P(X+Y>7)=P(Z>(7−5)/√5)=P(Z>2/√5)=1−Φ(2/√5).'},
+
+{id:'sq8_10',exam:'session',topic:'T5',type:'fi',
+ text:'X ~ N(0,1). What is E[X²]? (Integer answer)',
+ answer:'1',
+ explanation:'For N(0,1): Var[X]=1, E[X]=0, so E[X²]=Var[X]+(E[X])²=1.'},
+
+{id:'sq8_11',exam:'session',topic:'T6',type:'mc',
+ text:'For n iid Exponential(λ) observations, the MLE λ̂ = 1/x̄. Is this estimator unbiased?',
+ options:['No, but asymptotically unbiased','Yes, exactly unbiased','Cannot determine','Only for large n'],
+ answer:'No, but asymptotically unbiased',
+ explanation:'1/x̄ is biased in small samples (by Jensen\'s inequality, E[1/X̄]≥1/E[X̄]). However as n→∞, it is consistent and asymptotically unbiased.'},
+
+{id:'sq8_12',exam:'session',topic:'T6',type:'fi',
+ text:'Observations 1,0,1,1,0 from Bernoulli(p). Find MLE p̂. Round to 1 decimal.',
+ answer:'0.6',
+ explanation:'p̂=Σxᵢ/n=3/5=0.6.'},
+
+{id:'sq8_13',exam:'session',topic:'T7',type:'mc',
+ text:'n=100, x̄=75, σ=10 (known). Compute the 90% CI lower bound. z_{0.05}=1.645.',
+ options:['73.36','73.64','72.1','74.0'],
+ answer:'73.36',
+ explanation:'ME=1.645×10/10=1.645. Lower=75−1.645=73.355≈73.36.'},
+
+{id:'sq8_14',exam:'session',topic:'T7',type:'fi',
+ text:'For estimating a proportion with ME≤0.04 and 95% confidence, find minimum n. Use z=1.96. Round up.',
+ answer:'601',
+ explanation:'n≥(1.96/0.04)²×0.25=2401×0.25=600.25→n=601.'},
+
+{id:'sq8_15',exam:'session',topic:'T8',type:'mc',
+ text:'p-value=0.08. We test at α=0.05 and α=0.10. What is the conclusion?',
+ options:['Reject at α=0.10, fail to reject at α=0.05','Reject at both','Fail to reject at both','Reject at α=0.05, fail at α=0.10'],
+ answer:'Reject at α=0.10, fail to reject at α=0.05',
+ explanation:'p=0.08 < 0.10 → reject at α=0.10. p=0.08 > 0.05 → fail to reject at α=0.05.'},
+
+{id:'sq8_16',exam:'session',topic:'T8',type:'fi',
+ text:'n=9, x̄=14, s=3. Test H₀:μ=12. Compute t-statistic. Round to 1 decimal.',
+ answer:'2.0',
+ explanation:'t=(14−12)/(3/3)=2/1=2.0.'},
+
+{id:'sq8_17',exam:'session',topic:'T9',type:'mc',
+ text:'Which statement about the Law of Large Numbers is correct?',
+ options:['X̄ converges in probability to μ as n→∞','X̄ is exactly μ for any n','X̄ converges to N(0,1)','X̄ has variance σ² for all n'],
+ answer:'X̄ converges in probability to μ as n→∞',
+ explanation:'LLN: X̄ →_p μ. The CLT gives the rate of convergence and the limiting distribution.'},
+
+{id:'sq8_18',exam:'session',topic:'T9',type:'fi',
+ text:'X₁,...,Xₙ iid with E[X]=5 and Var[X]=9. How large must n be so that P(|X̄−5|≤1)≥0.95? Use z=1.96. Round up.',
+ answer:'35',
+ explanation:'P(|X̄−5|≤1)=P(|Z|≤√n/3)≥0.95 → √n/3≥1.96 → √n≥5.88 → n≥34.57 → n=35.'},
+
+{id:'sq8_19',exam:'session',topic:'T3',type:'fi',
+ text:'X ~ Poisson(2). Compute P(X≤1). Round to 3 decimals.',
+ answer:'0.406',
+ explanation:'P(X≤1)=P(X=0)+P(X=1)=e⁻²+2e⁻²=3e⁻²≈3×0.1353=0.406.'},
+
+{id:'sq8_20',exam:'session',topic:'T1',type:'mc',
+ text:'P(Aᶜ)=0.3, P(B)=0.5, and A,B independent. What is P(A∩B)?',
+ options:['0.35','0.15','0.21','0.50'],
+ answer:'0.35',
+ explanation:'P(A)=1−0.3=0.7. P(A∩B)=P(A)·P(B)=0.7×0.5=0.35.'},
+
+// ---- SESSION 9 ----
+{id:'sq9_01',exam:'session',topic:'T1',type:'fi',
+ text:'P(A∪B)=0.7, P(A)=0.5, P(B)=0.4. Find P(A∩B). Round to 1 decimal.',
+ answer:'0.2',
+ explanation:'P(A∩B)=P(A)+P(B)−P(A∪B)=0.5+0.4−0.7=0.2.'},
+
+{id:'sq9_02',exam:'session',topic:'T1',type:'mc',
+ text:'For any events A and B: P(A∩B) ≥ ?',
+ options:['P(A)+P(B)−1','P(A)·P(B)','P(A)−P(B)','0'],
+ answer:'P(A)+P(B)−1',
+ explanation:'Bonferroni: P(A∩B)≥P(A)+P(B)−1 (since P(A∪B)≤1). This is the Fréchet lower bound.'},
+
+{id:'sq9_03',exam:'session',topic:'T2',type:'fi',
+ text:'P(A|B)=0.7, P(B)=0.4. Find P(A∩B). Round to 2 decimals.',
+ answer:'0.28',
+ explanation:'P(A∩B)=P(A|B)·P(B)=0.7×0.4=0.28.'},
+
+{id:'sq9_04',exam:'session',topic:'T2',type:'mc',
+ text:'Bayes\' theorem states P(A|B) = ?',
+ options:['P(B|A)·P(A)/P(B)','P(A)·P(B)/P(A∩B)','P(B|A)/P(B)','P(A∩B)/P(A)'],
+ answer:'P(B|A)·P(A)/P(B)',
+ explanation:'Bayes: P(A|B)=P(A∩B)/P(B)=P(B|A)P(A)/P(B).'},
+
+{id:'sq9_05',exam:'session',topic:'T3',type:'mc',
+ text:'X₁,...,X₁₀ iid Bernoulli(0.3). S=X₁+...+X₁₀. Then S follows:',
+ options:['Binomial(10,0.3)','Poisson(3)','Normal(3,2.1)','Geometric(0.3)'],
+ answer:'Binomial(10,0.3)',
+ explanation:'Sum of n iid Bernoulli(p) is Binomial(n,p) exactly.'},
+
+{id:'sq9_06',exam:'session',topic:'T3',type:'fi',
+ text:'X ~ Binomial(4,0.6). Find E[X] and Var[X]. Report E[X].',
+ answer:'2.4',
+ explanation:'E[X]=np=4×0.6=2.4. Var[X]=np(1−p)=4×0.6×0.4=0.96.'},
+
+{id:'sq9_07',exam:'session',topic:'T4',type:'fi',
+ text:'X has PDF f(x)=6x(1−x) on [0,1]. Find E[X]. Round to 1 decimal.',
+ answer:'0.5',
+ explanation:'E[X]=∫₀¹ x·6x(1−x)dx=6∫₀¹(x²−x³)dx=6·[x³/3−x⁴/4]₀¹=6(1/3−1/4)=6×1/12=0.5.'},
+
+{id:'sq9_08',exam:'session',topic:'T4',type:'mc',
+ text:'For a valid PDF f(x), which is always true?',
+ options:['∫f(x)dx=1 and f(x)≥0 for all x','∫f(x)dx=0','f(x)≤1 for all x','f(x) is differentiable'],
+ answer:'∫f(x)dx=1 and f(x)≥0 for all x',
+ explanation:'A PDF must satisfy: (1) f(x)≥0 everywhere, and (2) ∫_{−∞}^{∞} f(x)dx=1.'},
+
+{id:'sq9_09',exam:'session',topic:'T5',type:'mc',
+ text:'X ~ N(2,9). What is P(−1 < X < 5)?',
+ options:['2Φ(1)−1','Φ(1)−Φ(−1)','Both previous are equal','Φ(2)−1'],
+ answer:'Both previous are equal',
+ explanation:'P(−1<X<5)=P((−1−2)/3<Z<(5−2)/3)=P(−1<Z<1)=2Φ(1)−1=Φ(1)−Φ(−1). Both equal the same thing.'},
+
+{id:'sq9_10',exam:'session',topic:'T5',type:'fi',
+ text:'X₁~N(1,4), X₂~N(2,9) independent. Var[X₁+X₂]=? Give integer.',
+ answer:'13',
+ explanation:'Var[X₁+X₂]=Var[X₁]+Var[X₂]=4+9=13.'},
+
+{id:'sq9_11',exam:'session',topic:'T6',type:'mc',
+ text:'The score function (score equation) is:',
+ options:['∂ℓ(θ)/∂θ=0','∂²ℓ(θ)/∂θ²=0','L(θ)=0','ℓ(θ)=max'],
+ answer:'∂ℓ(θ)/∂θ=0',
+ explanation:'The score equation sets the first derivative of the log-likelihood equal to zero to find the MLE.'},
+
+{id:'sq9_12',exam:'session',topic:'T6',type:'fi',
+ text:'x₁=4,x₂=6,x₃=2 from Uniform[0,θ]. What is the MLE for θ? Integer.',
+ answer:'6',
+ explanation:'MLE for Uniform[0,θ]: θ̂=max(xᵢ)=6.'},
+
+{id:'sq9_13',exam:'session',topic:'T7',type:'mc',
+ text:'A researcher collects n=25 observations and constructs a t-interval. If σ is unknown and n=25, the degrees of freedom for the t-distribution is:',
+ options:['24','25','23','∞'],
+ answer:'24',
+ explanation:'df=n−1=25−1=24.'},
+
+{id:'sq9_14',exam:'session',topic:'T7',type:'fi',
+ text:'95% CI for μ: [8.1, 11.9]. What is the margin of error? Round to 1 decimal.',
+ answer:'1.9',
+ explanation:'ME=(upper−lower)/2=(11.9−8.1)/2=3.8/2=1.9.'},
+
+{id:'sq9_15',exam:'session',topic:'T8',type:'fi',
+ text:'H₀:μ=0 vs H₁:μ≠0. n=36, x̄=0.5, σ=3. Compute z-statistic. Round to 1 decimal.',
+ answer:'1.0',
+ explanation:'z=(0.5−0)/(3/6)=0.5/0.5=1.0.'},
+
+{id:'sq9_16',exam:'session',topic:'T8',type:'mc',
+ text:'The rejection region for a right-sided z-test at α=0.05 is:',
+ options:['z≥1.645','z≥1.96','z≤−1.645','|z|≥1.96'],
+ answer:'z≥1.645',
+ explanation:'Right-sided test H₁:μ>μ₀ at α=0.05: reject when z≥z_{0.05}=1.645.'},
+
+{id:'sq9_17',exam:'session',topic:'T9',type:'mc',
+ text:'X₁,...,X₄ iid with E[X]=2 and Var[X]=8. What is E[X̄]?',
+ options:['2','8','0.5','4'],
+ answer:'2',
+ explanation:'E[X̄]=E[X]=μ=2. The sample mean is an unbiased estimator of μ.'},
+
+{id:'sq9_18',exam:'session',topic:'T9',type:'fi',
+ text:'X₁,...,X₈₁ iid Bernoulli(0.6). By CLT, SD(X̄) = σ/√n. Give exact value. Round to 3 decimals.',
+ answer:'0.054',
+ explanation:'σ²=p(1−p)=0.6×0.4=0.24. SD(X̄)=√(0.24/81)=√0.24/9≈0.4899/9≈0.054.'},
+
+{id:'sq9_19',exam:'session',topic:'T4',type:'fi',
+ text:'X ~ Uniform[0,6]. Compute Var[X]. Round to 2 decimals.',
+ answer:'3.00',
+ explanation:'Var[X]=(b−a)²/12=(6−0)²/12=36/12=3.00.'},
+
+{id:'sq9_20',exam:'session',topic:'T2',type:'fi',
+ text:'P(A)=0.3, P(B)=0.5, P(A∩B)=0.15. Are A and B independent? (1=yes, 0=no)',
+ answer:'1',
+ explanation:'P(A)·P(B)=0.3×0.5=0.15=P(A∩B). Yes, independent.'},
+
+// ---- SESSION 10 ----
+{id:'sq10_01',exam:'session',topic:'T1',type:'mc',
+ text:'How many ways can you arrange 4 distinct books on a shelf?',
+ options:['24','12','16','4'],
+ answer:'24',
+ explanation:'4!=4×3×2×1=24.'},
+
+{id:'sq10_02',exam:'session',topic:'T1',type:'fi',
+ text:'P(A)=0.4, P(B)=0.3, A and B independent. Compute P(Aᶜ∩Bᶜ). Round to 2 decimals.',
+ answer:'0.42',
+ explanation:'P(Aᶜ)=0.6, P(Bᶜ)=0.7. P(Aᶜ∩Bᶜ)=0.6×0.7=0.42.'},
+
+{id:'sq10_03',exam:'session',topic:'T2',type:'mc',
+ text:'If P(A∩B)=P(A)·P(B), then A and B are:',
+ options:['Independent','Disjoint','Complementary','Equally likely'],
+ answer:'Independent',
+ explanation:'The definition of independence is P(A∩B)=P(A)P(B).'},
+
+{id:'sq10_04',exam:'session',topic:'T2',type:'fi',
+ text:'A coin is biased: P(H)=0.7. It is tossed twice. Given at least one head, what is P(two heads)? Round to 2 decimals.',
+ answer:'0.54',
+ explanation:'P(HH)=0.49. P(at least 1 H)=1−P(TT)=1−0.09=0.91. P(HH|≥1H)=0.49/0.91≈0.5385≈0.54.'},
+
+{id:'sq10_05',exam:'session',topic:'T3',type:'fi',
+ text:'X ~ Poisson(5). Compute P(X=5). Round to 3 decimals.',
+ answer:'0.175',
+ explanation:'P(X=5)=e⁻⁵·5⁵/5!=e⁻⁵·3125/120=e⁻⁵·26.042≈0.0067×26.042≈0.175.'},
+
+{id:'sq10_06',exam:'session',topic:'T3',type:'mc',
+ text:'X ~ Pascal(r=2, p=0.4). What is Var[X]?',
+ options:['r(1−p)/p²','r/p','(1−p)/p','r/p²'],
+ answer:'r(1−p)/p²',
+ explanation:'For Pascal(r,p) (negative binomial): Var[X]=r(1−p)/p²=2×0.6/0.16=7.5.'},
+
+{id:'sq10_07',exam:'session',topic:'T4',type:'mc',
+ text:'f(x)=cx² for −1≤x≤1. Which is c?',
+ options:['3/2','1/2','3','1'],
+ answer:'3/2',
+ explanation:'∫₋₁¹ cx²dx=c·2/3=1 → c=3/2.'},
+
+{id:'sq10_08',exam:'session',topic:'T4',type:'fi',
+ text:'X ~ Exp(1). Compute E[X²]=2/λ² with λ=1. Integer answer.',
+ answer:'2',
+ explanation:'For Exp(λ): E[X²]=Var[X]+(E[X])²=1/λ²+1/λ²=2/λ². With λ=1: E[X²]=2.'},
+
+{id:'sq10_09',exam:'session',topic:'T5',type:'mc',
+ text:'X ~ N(4,16). Compute P(0<X<8) using Φ.',
+ options:['2Φ(1)−1','Φ(1)−Φ(0)','Φ(2)−1','2Φ(2)−1'],
+ answer:'2Φ(1)−1',
+ explanation:'σ=4. P(0<X<8)=P((0−4)/4<Z<(8−4)/4)=P(−1<Z<1)=2Φ(1)−1.'},
+
+{id:'sq10_10',exam:'session',topic:'T5',type:'fi',
+ text:'X ~ N(10,4) and Y=−2X+1. Compute E[Y] and Var[Y]. Report Var[Y]. Integer.',
+ answer:'16',
+ explanation:'E[Y]=−2×10+1=−19. Var[Y]=(−2)²·Var[X]=4×4=16.'},
+
+{id:'sq10_11',exam:'session',topic:'T6',type:'mc',
+ text:'Observations 3,7,5,9,6 from N(μ,σ²=4). MLE for μ is:',
+ options:['6','5','7','4'],
+ answer:'6',
+ explanation:'MLE for μ in N(μ,σ²) with σ² known = sample mean = (3+7+5+9+6)/5=30/5=6.'},
+
+{id:'sq10_12',exam:'session',topic:'T6',type:'fi',
+ text:'L(λ)=λ⁴e^{−8λ}. Find MLE for λ. Round to 1 decimal.',
+ answer:'0.5',
+ explanation:'ℓ=4logλ−8λ. dℓ/dλ=4/λ−8=0 → λ=4/8=0.5.'},
+
+{id:'sq10_13',exam:'session',topic:'T7',type:'fi',
+ text:'n=64, x̄=100, σ=16 (known). Compute 95% CI upper bound. z=1.96. Round to 1 decimal.',
+ answer:'103.9',
+ explanation:'ME=1.96×16/8=1.96×2=3.92. Upper=100+3.92=103.92≈103.9.'},
+
+{id:'sq10_14',exam:'session',topic:'T7',type:'mc',
+ text:'What is the effect of increasing α (significance level) on the width of a 2-sided CI?',
+ options:['CI becomes narrower','CI becomes wider','No effect','CI becomes one-sided'],
+ answer:'CI becomes narrower',
+ explanation:'Higher α → lower confidence level → smaller z_{α/2} → narrower CI. E.g., 90% CI is narrower than 95% CI.'},
+
+{id:'sq10_15',exam:'session',topic:'T8',type:'mc',
+ text:'H₀:μ=μ₀, H₁:μ<μ₀. The p-value is:',
+ options:['P(Z≤z_obs)=Φ(z_obs)','P(Z≥z_obs)','2P(Z≥|z_obs|)','1−Φ(z_obs)'],
+ answer:'P(Z≤z_obs)=Φ(z_obs)',
+ explanation:'Left-sided test: p-value=P(Z≤z_obs)=Φ(z_obs) where z_obs=(x̄−μ₀)/(σ/√n).'},
+
+{id:'sq10_16',exam:'session',topic:'T8',type:'fi',
+ text:'n=100, x̄=49, σ=5 (known). H₀:μ=50, H₁:μ≠50. Compute z-statistic. Round to 1 decimal.',
+ answer:'-2.0',
+ explanation:'z=(49−50)/(5/10)=−1/0.5=−2.0.'},
+
+{id:'sq10_17',exam:'session',topic:'T9',type:'fi',
+ text:'X₁,...,X₁₆ iid with E[X]=8, Var[X]=16. Compute P(7≤X̄≤9) using CLT. Express as 2Φ(k)−1; give k.',
+ answer:'1',
+ explanation:'SE=4/4=1. P(7≤X̄≤9)=P(−1≤Z≤1)=2Φ(1)−1. k=1.'},
+
+{id:'sq10_18',exam:'session',topic:'T9',type:'mc',
+ text:'For large n, the sample mean X̄ is approximately normal. Which best describes "large n"?',
+ options:['n≥30 is a common rule of thumb','n≥100 always required','n≥5 is always enough','Exactly n=1000'],
+ answer:'n≥30 is a common rule of thumb',
+ explanation:'n≥30 is the standard rule of thumb for the CLT, though heavily skewed distributions may require larger n.'},
+
+{id:'sq10_19',exam:'session',topic:'T1',type:'mc',
+ text:'If P(A)=0 for some event A, must A=∅?',
+ options:['No, A can be non-empty with probability 0','Yes, always','Only in discrete sample spaces','Only for continuous distributions'],
+ answer:'No, A can be non-empty with probability 0',
+ explanation:'A set can have measure zero without being empty. E.g., P({rational numbers in [0,1]})=0 but the set is infinite.'},
+
+{id:'sq10_20',exam:'session',topic:'T6',type:'mc',
+ text:'The Fisher information I(θ) for one observation satisfies:',
+ options:['I(θ)=E[(∂logf/∂θ)²]','I(θ)=E[logf]','I(θ)=∂²L/∂θ²','I(θ)=E[∂f/∂θ]'],
+ answer:'I(θ)=E[(∂logf/∂θ)²]',
+ explanation:'Fisher information: I(θ)=E[(∂logf(X;θ)/∂θ)²]=−E[∂²logf(X;θ)/∂θ²]. It measures expected curvature of the log-likelihood.'},
+
+]; // end sessionQuestions
+
+// ===== SESSION DEFINITIONS =====
+// Sessions 1-3 use existing questions by ID; sessions 4-10 use sessionQuestions
+const allQuestionsMap = {};
+[...questions, ...sessionQuestions].forEach(q => { allQuestionsMap[q.id] = q; });
+
+const sessions = [
+  // Session 1: Mar 2025 questions + fill gaps from generated
+  ['m25_01','m25_18','m25_17','m25_16','m25_10','m25_11','m25_12','m25_13','m25_15',
+   'm25_03','m25_04','m25_08','m25_09','m25_05','m25_06','m25_07','m25_02','m25_14','m25_19','m25_20'],
+  // Session 2: Jan 2025 questions
+  ['j25_01','j25_02','j25_03','j25_04','j25_05','j25_06','j25_07','j25_08','j25_09','j25_10',
+   'j25_11','j25_12','j25_13','j25_14','j25_15','j25_17','j25_18','j25_19','j25_23','j25_24'],
+  // Session 3: Fall 2024 + Final 2025 mix
+  ['f24_01','f24_02','f24_03','f24_04','f24_05','f24_07','f24_09','f24_11','f24_13','f24_14',
+   'fin25_01','fin25_02','fin25_04','fin25_05','fin25_06','fin25_07','fin25_08','fin25_10','fin25_12','fin25_16'],
+  // Sessions 4-10: sessionQuestions
+  ['sq4_01','sq4_02','sq4_03','sq4_04','sq4_05','sq4_06','sq4_07','sq4_08','sq4_09','sq4_10',
+   'sq4_11','sq4_12','sq4_13','sq4_14','sq4_15','sq4_16','sq4_17','sq4_18','sq4_19','sq4_20'],
+  ['sq5_01','sq5_02','sq5_03','sq5_04','sq5_05','sq5_06','sq5_07','sq5_08','sq5_09','sq5_10',
+   'sq5_11','sq5_12','sq5_13','sq5_14','sq5_15','sq5_16','sq5_17','sq5_18','sq5_19','sq5_20'],
+  ['sq6_01','sq6_02','sq6_03','sq6_04','sq6_05','sq6_06','sq6_07','sq6_08','sq6_09','sq6_10',
+   'sq6_11','sq6_12','sq6_13','sq6_14','sq6_15','sq6_16','sq6_17','sq6_18','sq6_19','sq6_20'],
+  ['sq7_01','sq7_02','sq7_03','sq7_04','sq7_05','sq7_06','sq7_07','sq7_08','sq7_09','sq7_10',
+   'sq7_11','sq7_12','sq7_13','sq7_14','sq7_15','sq7_16','sq7_17','sq7_18','sq7_19','sq7_20'],
+  ['sq8_01','sq8_02','sq8_03','sq8_04','sq8_05','sq8_06','sq8_07','sq8_08','sq8_09','sq8_10',
+   'sq8_11','sq8_12','sq8_13','sq8_14','sq8_15','sq8_16','sq8_17','sq8_18','sq8_19','sq8_20'],
+  ['sq9_01','sq9_02','sq9_03','sq9_04','sq9_05','sq9_06','sq9_07','sq9_08','sq9_09','sq9_10',
+   'sq9_11','sq9_12','sq9_13','sq9_14','sq9_15','sq9_16','sq9_17','sq9_18','sq9_19','sq9_20'],
+  ['sq10_01','sq10_02','sq10_03','sq10_04','sq10_05','sq10_06','sq10_07','sq10_08','sq10_09','sq10_10',
+   'sq10_11','sq10_12','sq10_13','sq10_14','sq10_15','sq10_16','sq10_17','sq10_18','sq10_19','sq10_20'],
+];
+
+// ===== MODE TOGGLE =====
+function switchMode(mode) {
+  document.getElementById('bankMode').style.display = mode === 'bank' ? '' : 'none';
+  document.getElementById('quizMode').style.display = mode === 'quiz' ? '' : 'none';
+  document.getElementById('modeBtnBank').classList.toggle('active', mode === 'bank');
+  document.getElementById('modeBtnQuiz').classList.toggle('active', mode === 'quiz');
+  if (mode === 'quiz') renderSessionGrid();
+}
+
+// ===== QUIZ SESSION STATE =====
+let currentSession = null;
+let sessionScores = {};
+let timerInterval = null;
+let timeLeft = 90 * 60; // seconds
+
+function renderSessionGrid() {
+  const grid = document.getElementById('sessionGrid');
+  const completedStyle = (i) => sessionScores['session_'+i] !== undefined
+    ? 'border-color:var(--correct);background:rgba(22,163,74,0.08)' : '';
+  grid.innerHTML = sessions.map((s,i) => `
+    <div class="session-card" onclick="startSession(${i})" style="${completedStyle(i)}">
+      <div class="s-num">Session ${i+1}</div>
+      <div class="s-sub">20 questions · 90 min</div>
+    </div>`).join('');
+}
+
+function startSession(idx) {
+  currentSession = idx;
+  sessionScores[idx] = {};
+  timeLeft = 90 * 60;
+  document.getElementById('sessionSelector').style.display = 'none';
+  document.getElementById('sessionRunner').style.display = '';
+  document.getElementById('qhTitle').textContent = `Session ${idx+1}`;
+  document.getElementById('qhScore').textContent = 'Score: 0/20';
+  renderQuizContent();
+  startTimer();
+}
+
+function startTimer() {
+  clearInterval(timerInterval);
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    updateTimerDisplay();
+    if (timeLeft <= 0) { clearInterval(timerInterval); submitSession(); }
+    if (timeLeft <= 300) document.getElementById('qhTimer').classList.add('urgent');
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const h = Math.floor(timeLeft / 3600);
+  const m = Math.floor((timeLeft % 3600) / 60);
+  const s = timeLeft % 60;
+  document.getElementById('qhTimer').textContent =
+    (h > 0 ? h+':' : '') + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+}
+
+function renderQuizContent() {
+  const ids = sessions[currentSession];
+  const qs = ids.map(id => allQuestionsMap[id]).filter(Boolean);
+  const main = document.getElementById('quizMainContent');
+  main.innerHTML = qs.map((q,i) => renderCard(q,i)).join('');
+}
+
+function updateQuizScore() {
+  const s = sessionScores[currentSession] || {};
+  const correct = Object.values(s).filter(v => v === 'correct').length;
+  document.getElementById('qhScore').textContent = `Score: ${correct}/20`;
+}
+
+// Override score recording for quiz mode
+const origCheckMC = checkMC;
+const origCheckFI = checkFI;
+const origCheckTF = checkTF;
+const origCheckMR = checkMR;
+
+function quizScoreHook(id, result) {
+  if (currentSession !== null && document.getElementById('quizMode').style.display !== 'none') {
+    sessionScores[currentSession][id] = result;
+    updateQuizScore();
+  } else {
+    scores[id] = result;
+    applyScoreStyle(id, result);
+    updateScore();
+  }
+}
+
+// Patch: quiz check functions wrap the existing ones but redirect score storage
+function checkMC(id, chosen, answers) {
+  const isCorrect = answers.includes(chosen);
+  const result = isCorrect ? 'correct' : 'wrong';
+  const inQuiz = currentSession !== null && document.getElementById('quizMode').style.display !== 'none';
+  if (!inQuiz) { scores[id] = result; applyScoreStyle(id, result); }
+  else { sessionScores[currentSession] = sessionScores[currentSession] || {}; sessionScores[currentSession][id] = result; updateQuizScore(); }
+  const opts = document.querySelectorAll(`#opts_${id} li`);
+  opts.forEach(li => {
+    li.onclick = null;
+    if (answers.includes(li.textContent)) li.classList.add('correct-ans');
+    else if (li.textContent === chosen && !isCorrect) li.classList.add('wrong-ans');
+  });
+  document.getElementById('ans_'+id).classList.add('visible');
+  if (!inQuiz) updateScore();
+}
+
+function checkFI(id) {
+  const input = document.getElementById('fi_'+id);
+  const resultEl = document.getElementById('fi_result_'+id);
+  const allQ = [...questions, ...sessionQuestions];
+  const q = allQ.find(q => q.id === id);
+  const userVal = input.value.trim().replace(',','.');
+  const correctVals = (q.answer+'').split('/').map(v => v.trim());
+  const userNum = parseFloat(userVal);
+  const isCorrect = correctVals.some(cv => {
+    const cn = parseFloat(cv);
+    return Math.abs(userNum - cn) < 0.015 || userVal.toLowerCase() === cv.toLowerCase();
+  });
+  const result = isCorrect ? 'correct' : 'wrong';
+  const inQuiz = currentSession !== null && document.getElementById('quizMode').style.display !== 'none';
+  if (!inQuiz) { scores[id] = result; applyScoreStyle(id, result); updateScore(); }
+  else { sessionScores[currentSession] = sessionScores[currentSession] || {}; sessionScores[currentSession][id] = result; updateQuizScore(); }
+  resultEl.innerHTML = isCorrect
+    ? '<span class="result-correct">✓ Correct!</span>'
+    : `<span class="result-wrong">✗ Answer: ${q.answer}</span>`;
+  document.getElementById('ans_'+id).classList.add('visible');
+}
+
+function checkTF(id, correctAnswers) {
+  const resultEl = document.getElementById('tf_result_'+id);
+  let allCorrect = true;
+  correctAnswers.forEach((ca, i) => {
+    const tEl = document.getElementById(`tf_${id}_${i}_t`);
+    const fEl = document.getElementById(`tf_${id}_${i}_f`);
+    const chosen = tEl && tEl.checked ? true : (fEl && fEl.checked ? false : null);
+    if (chosen === null || chosen !== ca) allCorrect = false;
+    const row = tEl ? tEl.closest('tr') : null;
+    if (row) row.style.background = chosen === ca ? 'rgba(22,163,74,0.08)' : 'rgba(220,38,38,0.08)';
+  });
+  const result = allCorrect ? 'correct' : 'wrong';
+  const inQuiz = currentSession !== null && document.getElementById('quizMode').style.display !== 'none';
+  if (!inQuiz) { scores[id] = result; applyScoreStyle(id, result); updateScore(); }
+  else { sessionScores[currentSession] = sessionScores[currentSession] || {}; sessionScores[currentSession][id] = result; updateQuizScore(); }
+  resultEl.innerHTML = allCorrect ? '<span class="result-correct">✓ Correct!</span>' : '<span class="result-wrong">✗ Some wrong</span>';
+  document.getElementById('ans_'+id).classList.add('visible');
+}
+
+function checkMR(id, correctAnswers) {
+  const checkboxes = document.querySelectorAll(`input[name="mr_${id}"]`);
+  const chosen = Array.from(checkboxes).filter(cb => cb.checked).map(cb => cb.value);
+  const isCorrect = chosen.length === correctAnswers.length &&
+    chosen.every(c => correctAnswers.includes(c)) &&
+    correctAnswers.every(c => chosen.includes(c));
+  const result = isCorrect ? 'correct' : 'wrong';
+  const inQuiz = currentSession !== null && document.getElementById('quizMode').style.display !== 'none';
+  if (!inQuiz) { scores[id] = result; applyScoreStyle(id, result); updateScore(); }
+  else { sessionScores[currentSession] = sessionScores[currentSession] || {}; sessionScores[currentSession][id] = result; updateQuizScore(); }
+  const resultEl = document.getElementById('mr_result_'+id);
+  resultEl.innerHTML = isCorrect
+    ? '<span class="result-correct">✓ Correct!</span>'
+    : `<span class="result-wrong">✗ Answer: ${correctAnswers.join(', ')}</span>`;
+  document.getElementById('ans_'+id).classList.add('visible');
+  document.querySelectorAll(`#mr_${id} label`).forEach(label => {
+    const cb = label.querySelector('input');
+    const val = cb.value;
+    if (correctAnswers.includes(val)) label.style.borderColor = 'var(--correct)';
+    else if (cb.checked) label.style.borderColor = 'var(--wrong)';
+  });
+}
+
+function submitSession() {
+  clearInterval(timerInterval);
+  const ids = sessions[currentSession];
+  const qs = ids.map(id => allQuestionsMap[id]).filter(Boolean);
+  const s = sessionScores[currentSession] || {};
+  const correct = Object.values(s).filter(v => v === 'correct').length;
+  const total = qs.length;
+
+  // Topic breakdown
+  const topicCorrect = {}, topicTotal = {};
+  qs.forEach(q => {
+    topicTotal[q.topic] = (topicTotal[q.topic]||0)+1;
+    if (s[q.id]==='correct') topicCorrect[q.topic] = (topicCorrect[q.topic]||0)+1;
+  });
+
+  const pct = Math.round(100*correct/total);
+  const grade = pct>=85?'Excellent!':pct>=70?'Good':pct>=50?'Needs work':'Keep studying';
+  const breakdown = Object.keys(topicTotal).sort().map(t =>
+    `<tr><td>${topicLabels[t]||t}</td><td>${topicCorrect[t]||0}/${topicTotal[t]}</td></tr>`).join('');
+
+  document.getElementById('quizFooter').style.display = 'none';
+  document.getElementById('quizMainContent').innerHTML = `
+    <div class="score-modal">
+      <div class="sm-score">${correct}/${total}</div>
+      <div class="sm-label">${pct}% — ${grade}</div>
+      <table><thead><tr><th>Topic</th><th>Score</th></tr></thead><tbody>${breakdown}</tbody></table>
+      <div style="margin-top:20px;display:flex;gap:10px;justify-content:center">
+        <button class="action-btn" onclick="reviewSession()">Review Answers</button>
+        <button class="action-btn secondary" onclick="backToSelector()">Back to Sessions</button>
+      </div>
+    </div>`;
+}
+
+function reviewSession() {
+  document.getElementById('quizFooter').style.display = 'flex';
+  document.getElementById('quizFooter').querySelector('.submit-btn').style.display = 'none';
+  renderQuizContent();
+  const ids = sessions[currentSession];
+  const qs = ids.map(id => allQuestionsMap[id]).filter(Boolean);
+  qs.forEach(q => {
+    document.getElementById('ans_'+q.id)?.classList.add('visible');
+    const s = (sessionScores[currentSession]||{})[q.id];
+    if (s) {
+      const card = document.getElementById('card_'+q.id);
+      if (card) card.style.borderColor = s==='correct'?'var(--correct)':'var(--wrong)';
+    }
+  });
+}
+
+function backToSelector() {
+  clearInterval(timerInterval);
+  currentSession = null;
+  document.getElementById('sessionRunner').style.display = 'none';
+  document.getElementById('quizFooter').style.display = 'flex';
+  document.getElementById('quizFooter').querySelector('.submit-btn') &&
+    (document.getElementById('quizFooter').querySelector('.submit-btn').style.display = '');
+  document.getElementById('sessionSelector').style.display = '';
+  renderSessionGrid();
 }
 
 // Initial render

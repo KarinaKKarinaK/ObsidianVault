@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>History of AI — Interactive Timeline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f172a;
+    --surface: #1e293b;
+    --surface2: #263347;
+    --border: #334155;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --computing: #3b82f6;
+    --ai: #8b5cf6;
+    --concept: #f59e0b;
+    --figure: #22c55e;
+    --exam-a: #ef4444;
+    --exam-b: #f97316;
+    --exam-c: #8b5cf6;
+    --radius: 10px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.4);
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f8fafc;
+      --surface: #fff;
+      --surface2: #f1f5f9;
+      --border: #e2e8f0;
+      --text: #1e293b;
+      --muted: #64748b;
+      --shadow: 0 4px 24px rgba(0,0,0,0.1);
+    }
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.5;
+    font-size: 15px;
+  }
+
+  /* ── TOP BAR ────────────────────────────────────────────── */
+  #topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    padding: 0 16px;
+  }
+
+  #topbar-inner {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  #topbar-row1 {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0 8px;
+    flex-wrap: wrap;
+  }
+
+  #topbar h1 {
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  #search-wrap {
+    flex: 1;
+    min-width: 160px;
+    max-width: 320px;
+  }
+
+  #search {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 14px;
+    outline: none;
+    min-height: 44px;
+    transition: border-color 0.15s;
+  }
+  #search:focus { border-color: var(--ai); }
+  #search::placeholder { color: var(--muted); }
+
+  #kb-hint {
+    font-size: 12px;
+    color: var(--muted);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  #kb-hint kbd {
+    display: inline-block;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text);
+  }
+
+  /* ── FILTER ROW ─────────────────────────────────────────── */
+  #filter-panel {
+    overflow: hidden;
+    transition: max-height 0.25s ease, opacity 0.2s ease;
+    max-height: 200px;
+    opacity: 1;
+  }
+  #filter-panel.collapsed { max-height: 0; opacity: 0; }
+
+  #filter-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 0 10px;
+    flex-wrap: wrap;
+  }
+
+  .filter-label {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-right: 4px;
+  }
+
+  .filter-btn {
+    min-height: 44px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1.5px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .filter-btn:hover { border-color: var(--text); color: var(--text); }
+  .filter-btn.active { color: #fff; }
+  .filter-btn[data-cat="all"].active { background: var(--border); border-color: var(--border); color: var(--text); }
+  .filter-btn[data-cat="computing"].active { background: var(--computing); border-color: var(--computing); }
+  .filter-btn[data-cat="ai"].active { background: var(--ai); border-color: var(--ai); }
+  .filter-btn[data-cat="concept"].active { background: var(--concept); border-color: var(--concept); }
+  .filter-btn[data-cat="figure"].active { background: var(--figure); border-color: var(--figure); }
+
+  .filter-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── ERA JUMP ROW ───────────────────────────────────────── */
+  #era-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 0 10px;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--border);
+  }
+
+  .era-btn {
+    min-height: 44px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1.5px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .era-btn:hover { border-color: var(--text); color: var(--text); background: var(--surface2); }
+
+  /* ── MAIN CONTENT ───────────────────────────────────────── */
+  #main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px 16px 80px;
+  }
+
+  /* ── ERA HEADERS ────────────────────────────────────────── */
+  .era-section { margin-bottom: 8px; }
+
+  .era-header {
+    position: sticky;
+    top: var(--topbar-height, 130px);
+    z-index: 50;
+    background: var(--bg);
+    padding: 18px 0 10px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .era-title {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--muted);
+    white-space: nowrap;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .era-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .era-count {
+    font-size: 11px;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2px 8px;
+    white-space: nowrap;
+  }
+
+  /* ── TIMELINE SPINE ─────────────────────────────────────── */
+  .era-events {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+  }
+
+  .era-events::before {
+    content: '';
+    position: absolute;
+    left: 72px;
+    top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--border), var(--border));
+  }
+
+  /* ── EVENT ROW ──────────────────────────────────────────── */
+  .event-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    position: relative;
+    padding: 6px 0;
+    transition: opacity 0.2s;
+  }
+
+  .event-row.hidden { display: none; }
+
+  .event-row.focused .event-card {
+    outline: 2px solid var(--ai);
+    outline-offset: 2px;
+  }
+
+  /* Year column */
+  .event-year {
+    width: 64px;
+    flex-shrink: 0;
+    text-align: right;
+    padding-right: 16px;
+    padding-top: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+    line-height: 1;
+    position: relative;
+    z-index: 1;
+  }
+
+  .event-year.neg::before {
+    content: '';
+  }
+
+  /* Dot on spine */
+  .event-spine-dot {
+    width: 18px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 17px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .spine-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid var(--bg);
+    flex-shrink: 0;
+  }
+
+  /* Card */
+  .event-card {
+    flex: 1;
+    margin-left: 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: border-color 0.15s, box-shadow 0.15s, transform 0.1s;
+    min-height: 44px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .event-card:hover {
+    border-color: var(--muted);
+    box-shadow: var(--shadow);
+    transform: translateX(2px);
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .card-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    flex: 1;
+    min-width: 120px;
+  }
+
+  .exam-badge {
+    font-size: 10px;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    padding: 2px 6px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    letter-spacing: 0.5px;
+  }
+  .exam-badge.exam-a { background: rgba(239,68,68,0.15); color: var(--exam-a); border: 1px solid rgba(239,68,68,0.3); }
+  .exam-badge.exam-b { background: rgba(249,115,22,0.15); color: var(--exam-b); border: 1px solid rgba(249,115,22,0.3); }
+  .exam-badge.exam-c { background: rgba(139,92,246,0.15); color: var(--exam-c); border: 1px solid rgba(139,92,246,0.3); }
+
+  .cat-badge {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  .cat-badge.computing { background: rgba(59,130,246,0.12); color: var(--computing); border: 1px solid rgba(59,130,246,0.25); }
+  .cat-badge.ai        { background: rgba(139,92,246,0.12); color: var(--ai);        border: 1px solid rgba(139,92,246,0.25); }
+  .cat-badge.concept   { background: rgba(245,158,11,0.12); color: var(--concept);   border: 1px solid rgba(245,158,11,0.25); }
+  .cat-badge.figure    { background: rgba(34,197,94,0.12);  color: var(--figure);    border: 1px solid rgba(34,197,94,0.25); }
+
+  .card-desc {
+    margin-top: 6px;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .card-expand {
+    display: none;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+    font-size: 13px;
+    line-height: 1.55;
+  }
+
+  .event-card.expanded .card-expand { display: block; }
+
+  .expand-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--muted);
+    margin-bottom: 5px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .expand-text {
+    color: var(--text);
+  }
+
+  .expand-chevron {
+    display: inline-block;
+    margin-left: 6px;
+    font-size: 10px;
+    color: var(--muted);
+    transition: transform 0.2s;
+    vertical-align: middle;
+  }
+  .event-card.expanded .expand-chevron { transform: rotate(180deg); }
+
+  /* No results message */
+  #no-results {
+    display: none;
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+    font-size: 15px;
+  }
+  #no-results.visible { display: block; }
+
+  /* ── LEGEND ─────────────────────────────────────────────── */
+  #legend {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 12px 0 4px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .legend-item { display: flex; align-items: center; gap: 5px; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  /* ── SCROLLBAR ──────────────────────────────────────────── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+  /* ── RESPONSIVE ─────────────────────────────────────────── */
+  @media (max-width: 600px) {
+    .event-year { width: 52px; font-size: 11px; }
+    .era-events::before { left: 58px; }
+    .event-card { padding: 10px 12px; }
+    #kb-hint { display: none; }
+    #topbar h1 { font-size: 15px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <div id="topbar-inner">
+    <div id="topbar-row1">
+      <h1>History of AI</h1>
+      <div id="search-wrap">
+        <input type="search" id="search" placeholder="Search events…" autocomplete="off" aria-label="Search events">
+      </div>
+      <div id="kb-hint">
+        <kbd>J</kbd><kbd>K</kbd> navigate &nbsp;
+        <kbd>F</kbd> filter &nbsp;
+        <kbd>Enter</kbd> expand
+      </div>
+    </div>
+
+    <div id="filter-panel">
+      <div id="filter-row">
+        <span class="filter-label">Filter:</span>
+        <button class="filter-btn active" data-cat="all">All</button>
+        <button class="filter-btn" data-cat="computing">
+          <span class="filter-dot" style="background:var(--computing)"></span>Computing
+        </button>
+        <button class="filter-btn" data-cat="ai">
+          <span class="filter-dot" style="background:var(--ai)"></span>AI
+        </button>
+        <button class="filter-btn" data-cat="concept">
+          <span class="filter-dot" style="background:var(--concept)"></span>Concepts
+        </button>
+        <button class="filter-btn" data-cat="figure">
+          <span class="filter-dot" style="background:var(--figure)"></span>Figures
+        </button>
+      </div>
+    </div>
+
+    <div id="era-row">
+      <span class="filter-label">Jump:</span>
+      <button class="era-btn" data-era="pre1900">Pre-1900</button>
+      <button class="era-btn" data-era="1900s">1900–1950</button>
+      <button class="era-btn" data-era="1950s">1950–1970</button>
+      <button class="era-btn" data-era="1970s">1970–2000</button>
+      <button class="era-btn" data-era="2000s">2000–present</button>
+    </div>
+  </div>
+</div>
+
+<div id="main">
+  <div id="legend">
+    <span class="legend-item"><span class="legend-dot" style="background:var(--computing)"></span>Computing</span>
+    <span class="legend-item"><span class="legend-dot" style="background:var(--ai)"></span>AI</span>
+    <span class="legend-item"><span class="legend-dot" style="background:var(--concept)"></span>Concept</span>
+    <span class="legend-item"><span class="legend-dot" style="background:var(--figure)"></span>Figure</span>
+    <span class="legend-item" style="margin-left:8px"><span class="exam-badge exam-a">[A]</span>&nbsp;A-question</span>
+    <span class="legend-item"><span class="exam-badge exam-b">[B]</span>&nbsp;B-question</span>
+    <span class="legend-item"><span class="exam-badge exam-c">[C]</span>&nbsp;C-question</span>
+  </div>
+  <div id="timeline"></div>
+  <div id="no-results">No events match your search.</div>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+const events = [
+  // Pre-1900
+  { year: -350, displayYear: "350 BCE", title: "Aristotle's Syllogism", cat: "ai",
+    desc: "First formal logic: systematic rules for deductive reasoning. Foundation of the AI prehistory tradition.",
+    exam: "C", tip: "AI prehistory — logic tradition predates computing by 2,000 years. Use for C-questions on appropriation/AI prehistory." },
+  { year: 1822, displayYear: "1822", title: "Babbage Difference Engine", cat: "computing",
+    desc: "First mechanical calculator design. Funded by British government; never completed due to engineering limitations.",
+    exam: "B", tip: "Ch.4. Babbage = precursor narrative. Aiken deliberately invoked Babbage to secure Harvard/IBM funding (agenda!)." },
+  { year: 1837, displayYear: "1837", title: "Babbage Analytical Engine + Lovelace", cat: "computing",
+    desc: "First concept of a general-purpose programmable machine. Ada Lovelace wrote the first algorithm.",
+    exam: "B", tip: "Ch.4. Lovelace = first programmer. Analytical Engine = stored-program precursor. Know the distinction: built vs. designed." },
+  { year: 1854, displayYear: "1854", title: "Boolean Algebra (Boole)", cat: "ai",
+    desc: "Logic as mathematics. Foundation for digital computing and automated reasoning.",
+    exam: "C", tip: "AI prehistory — connects logic tradition to computing. Mathematics → AI chain." },
+  { year: 1879, displayYear: "1879", title: "Frege Begriffsschrift", cat: "ai",
+    desc: "Formal notation for logic. Directly inspired Russell & Whitehead's Principia Mathematica.",
+    exam: "C", tip: "AI prehistory — formal logic tradition. One step in the Aristotle → Turing → McCarthy chain." },
+  { year: 1890, displayYear: "1890", title: "Hollerith Tabulating Machine", cat: "computing",
+    desc: "Punched-card system for 1890 US Census. Census completed in 2.5 yrs vs. 7.5 yrs. Founded IBM predecessor.",
+    exam: "A", tip: "A-question: Technology and Trust. Hollerith = trust built through speed + legible output. Administrative tradition." },
+  { year: 1894, displayYear: "1894", title: "Norbert Wiener (1894–1964)", cat: "figure",
+    desc: "Cybernetics (1948). Information + feedback = defining technology. Stafford Beer applied to management (Project Cybersyn).",
+    exam: "C", tip: "C-question: Defining Technology (cybernetics example). Wiener → Beer → Cybersyn chain." },
+  { year: 1910, displayYear: "1910", title: "Principia Mathematica (Russell & Whitehead)", cat: "ai",
+    desc: "Attempted to reduce all mathematics to formal logic. Inspired the dream of automated reasoning.",
+    exam: "C", tip: "AI prehistory. The 'automated reasoning dream' — connects to theorem-proving AI and LISP." },
+
+  // 1900–1950
+  { year: 1905, displayYear: "1905", title: "Polish Mathematicians (Rejewski 1905–1980)", cat: "figure",
+    desc: "Marian Rejewski, Jerzy Różycki, Henryk Zygalski broke Enigma in 1932. Absent from Anglo-American history.",
+    exam: "A", tip: "A-question: Prejudice in computing history (Stephanie Dick). Polish mathematicians erased from standard Turing narrative." },
+  { year: 1906, displayYear: "1906", title: "Grace Hopper (1906–1992)", cat: "figure",
+    desc: "First compiler (A-0, 1952). COBOL co-creator. 'Bug' populariser. Naval officer. Women in computing icon.",
+    exam: "A", tip: "A-question: Grace Hopper direct + indirect contributions. Direct: compiler, COBOL. Indirect: democratising computing." },
+  { year: 1912, displayYear: "1912", title: "Alan Turing (1912–1954)", cat: "figure",
+    desc: "Computability (1936), Enigma (WWII), Turing Test (1950). 'Father of AI' — contested, as Polish mathematicians preceded him on Enigma.",
+    exam: "A", tip: "A-question: AI prehistory, prejudice in computing history. Know: Rejewski/Różycki/Zygalski broke Enigma in 1932, BEFORE Turing." },
+  { year: 1916, displayYear: "1916", title: "Aad van Wijngaarden (1916–1987)", cat: "figure",
+    desc: "Mathematisch Centrum Amsterdam. Built ARRA (1952). Co-created ALGOL 60. Dutch computing founder.",
+    exam: "A", tip: "A-question: Dutch Dinosaurs. Van Wijngaarden = Dutch counterpart to Wilkes/Von Neumann. ALGOL = European academic agenda." },
+  { year: 1931, displayYear: "1931", title: "Gödel Incompleteness Theorems", cat: "ai",
+    desc: "Proved limits of formal systems — not all true statements can be proved. Challenged the Principia dream.",
+    exam: "C", tip: "AI prehistory. Shows limits of pure logic tradition. Turing (1936) directly followed Gödel's work." },
+  { year: 1936, displayYear: "1936", title: "Turing Computability + Church Lambda Calculus", cat: "ai",
+    desc: "Turing machine concept (universal computation, halting problem). Church's lambda calculus (foundation of LISP).",
+    exam: "A", tip: "AI prehistory. Turing 1936 = computability theory. Also: Enigma codebreaking. Note: Polish mathematicians PRECEDED Turing on Enigma." },
+  { year: 1942, displayYear: "1942", title: "Atanasoff-Berry Computer (ABC)", cat: "computing",
+    desc: "Early electronic computer at Iowa State. Technically functional but Atanasoff had no institutional trust network — passed over.",
+    exam: "A", tip: "A-question: Technology and Trust. Atanasoff = technically fine but no trust = erased from history. Counter-example to Hollerith." },
+  { year: 1944, displayYear: "1944", title: "Harvard Mark I (Aiken + IBM)", cat: "computing",
+    desc: "Electromechanical computer. Aiken used Babbage's narrative to secure funding — classic agenda move.",
+    exam: "A", tip: "A-question: Agendas. Aiken invoked Babbage = instrumental use of historical narrative to secure resources." },
+  { year: 1944, displayYear: "1944", title: "Project Whirlwind Starts (MIT, Forrester)", cat: "computing",
+    desc: "Aircraft simulator project → Perry Crawford converts to digital 1945 → led to SAGE and core memory.",
+    exam: "B", tip: "Ch.7: Real-time computing. Whirlwind = military origin of real-time computing. Perry Crawford = key connector." },
+  { year: 1945, displayYear: "1945", title: "ENIAC + EDVAC + Von Neumann First Draft", cat: "computing",
+    desc: "ENIAC: first electronic general-purpose computer. Von Neumann's First Draft introduced stored-program concept.",
+    exam: "B", tip: "Ch.4: Inventing the Computer. Distinguish: ENIAC built at Moore School; stored-program concept = Von Neumann (EDVAC). Attribution controversy." },
+  { year: 1946, displayYear: "1946", title: "Moore School Lectures", cat: "computing",
+    desc: "Key knowledge-transfer event. Wilkes → EDSAC; Williams/Newman → Manchester Baby. Spread stored-program design globally.",
+    exam: "B", tip: "Ch.4. Moore School lectures = how computing knowledge spread. Wilkes attended → EDSAC; Manchester Baby parallel UK development." },
+  { year: 1948, displayYear: "1948", title: "Cybernetics (Norbert Wiener)", cat: "concept",
+    desc: "Information + feedback + control applies to both animals AND machines. Defining technology of the 1960s.",
+    exam: "C", tip: "C-question: Bolter's Defining Technology. Cybernetics = 1960s example. Wiener → Stafford Beer → Project Cybersyn." },
+  { year: 1948, displayYear: "1948", title: "Manchester Baby (Williams + Newman)", cat: "computing",
+    desc: "First working stored-program computer run (June 21, 1948). UK parallel to EDSAC, enabled by Moore School Lectures.",
+    exam: "B", tip: "Ch.4. Parallel development with EDSAC. Note: ARRA (Netherlands, June 21, 1952) mirrored this date." },
+  { year: 1949, displayYear: "1949", title: "EDSAC (Maurice Wilkes, Cambridge)", cat: "computing",
+    desc: "First practical stored-program computer in regular operation. First programming manual (Wilkes/Wheeler/Gill, 1951).",
+    exam: "B", tip: "Ch.4. Wilkes = Moore School lectures attendee → built EDSAC → first programming manual. Key path from Moore School." },
+  { year: 1950, displayYear: "1950", title: "Turing Test (Computing Machinery and Intelligence)", cat: "ai",
+    desc: "Turing proposes intelligence as imitation — the Imitation Game. Foundational AI philosophy paper.",
+    exam: "A", tip: "A-question: AI and Mathematics/Computing connection. Turing 1950 connects computing to intelligence question." },
+
+  // 1950–1970
+  { year: 1951, displayYear: "1951", title: "Nim Game (Strachey, Ferranti Mark I)", cat: "concept",
+    desc: "Christopher Strachey programs Ferranti Mark I to play Nim. Scientific computer APPROPRIATED for game/AI demo.",
+    exam: "C", tip: "C-question: Appropriation. Scientific computer → game → AI demonstration. Start of game culture / AI lineage." },
+  { year: 1952, displayYear: "1952", title: "ARRA (Van Wijngaarden, Amsterdam) + UNIVAC Election", cat: "computing",
+    desc: "Dutch: ARRA = first Dutch electronic computer (June 21, 1952), plays national anthem. US: UNIVAC predicts 1952 election on CBS — public trust built.",
+    exam: "A", tip: "A-question: Dutch Dinosaurs (ARRA). A-question: Technology and Trust (UNIVAC + CBS). Both high-priority." },
+  { year: 1954, displayYear: "1954", title: "IBM Model 650 — First Mass-Produced Computer", cat: "computing",
+    desc: "First computer sold in large quantities. 'IBM and the seven dwarfs' era begins.",
+    exam: "B", tip: "Ch.5-6. IBM dominance. Watson Sr. 'rational but wrong' about computers. IBM 650 = commercial breakthrough." },
+  { year: 1956, displayYear: "1956", title: "Dartmouth Conference — AI Founded", cat: "ai",
+    desc: "McCarthy, Minsky, Shannon + others. 'Artificial Intelligence' coined. Field of AI officially founded.",
+    exam: "A", tip: "A-question: AI and Computing prehistory. Dartmouth = convergence of computing and logic traditions. McCarthy distanced from 'electronic brain' metaphor." },
+  { year: 1957, displayYear: "1957", title: "FORTRAN (IBM) + Perceptron (Rosenblatt)", cat: "ai",
+    desc: "FORTRAN: first high-level language for science (IBM commercial agenda). Perceptron: first neural network model.",
+    exam: "A", tip: "A-question: Programming Languages. FORTRAN (American commercial) vs ALGOL (European academic) = different agendas." },
+  { year: 1958, displayYear: "1958", title: "LISP (McCarthy)", cat: "ai",
+    desc: "First AI programming language. Based on Church's lambda calculus. Enabled symbolic AI.",
+    exam: "A", tip: "A-question: AI and Mathematics. LISP = lambda calculus → computing → AI. Direct chain." },
+  { year: 1959, displayYear: "1959", title: "COBOL (Grace Hopper) + Samuel Checkers", cat: "computing",
+    desc: "COBOL: business language, natural language vision, Hopper's democratising agenda. Samuel: first machine learning demo (self-improving checkers).",
+    exam: "B", tip: "Ch.5. COBOL = business computing tradition. Hopper = women in computing, compiler (A-0, 1952). Samuel = first ML." },
+  { year: 1959.5, displayYear: "1959", title: "SABRE Starts (IBM + American Airlines)", cat: "computing",
+    desc: "First commercial real-time reservation system. 1,100 terminals by 1964. Military tech (SAGE) appropriated for airlines.",
+    exam: "B", tip: "Ch.7. SABRE = military→civilian appropriation. SAGE technology → SABRE. 'Blending military research + entrepreneurial efforts' (CK)." },
+  { year: 1960, displayYear: "1960", title: "Programmed Instruction (Skinner)", cat: "concept",
+    desc: "Behaviourist AI in education. Computer as teaching machine: drill-practice, immediate feedback, top-down authority.",
+    exam: "A", tip: "A-question: AI and Education (appears in BOTH past exams). Contrast with Papert/LOGO." },
+  { year: 1961, displayYear: "1961", title: "CTSS — First Timesharing System (MIT)", cat: "computing",
+    desc: "Compatible Time-Sharing System. Multiple users share one computer. New class of users (non-specialists) created.",
+    exam: "B", tip: "Ch.8-9. Timesharing = new user types. BASIC (1963) + timesharing = democratisation of computing." },
+  { year: 1963, displayYear: "1963", title: "BASIC (Kemeny + Kurtz, Dartmouth)", cat: "computing",
+    desc: "First language for non-specialists. Made programming accessible to students and non-engineers.",
+    exam: "B", tip: "Ch.8-9. BASIC + timesharing = computing for non-specialists. Cultural shift." },
+  { year: 1964, displayYear: "1964", title: "IBM System/360", cat: "computing",
+    desc: "$5bn gamble on compatible family. Technically conservative, commercially revolutionary. Software crisis driver.",
+    exam: "B", tip: "Ch.6. Maturing of the Mainframe. System/360 = single compatible family (huge gamble). OS/360 = software crisis exemplar." },
+  { year: 1967, displayYear: "1967", title: "LOGO (Seymour Papert, MIT)", cat: "concept",
+    desc: "Constructivist AI in education. Child programs turtle, discovers math by doing. Opposite of Skinner.",
+    exam: "A", tip: "A-question: AI and Education. LOGO = constructivist (bottom-up tool) vs Skinner (top-down authority). Know this contrast COLD — in both past exams." },
+  { year: 1968, displayYear: "1968", title: "IBM Unbundling + Software Crisis + ARPANET", cat: "computing",
+    desc: "IBM unbundling (1968): software priced separately → software industry born. NATO Software Crisis conference. ARPANET initiated.",
+    exam: "B", tip: "Ch.7/8. Software crisis: OS/360 late + over budget + buggy. Dijkstra: structured programming (European). US: management. IBM unbundling = software industry." },
+
+  // 1970–2000
+  { year: 1969, displayYear: "1969", title: "ARPANET Operational", cat: "computing",
+    desc: "Packet-switched military network. Designed for survivability, not social communication.",
+    exam: "B", tip: "Ch.11. Internet = 3 desires: Military (ARPANET) + Academic (email) + Commercial (WWW). Know all three." },
+  { year: 1971, displayYear: "1971", title: "Email (Tomlinson) — Appropriation", cat: "concept",
+    desc: "Ray Tomlinson adds email to ARPANET. Designed as minor tool; within 2 years = dominant ARPANET use.",
+    exam: "C", tip: "C-question: Appropriation. Email = clearest example of appropriation. ARPANET designed for file transfer → email took over." },
+  { year: 1971.5, displayYear: "1971", title: "Project Cybersyn (Stafford Beer, Chile)", cat: "concept",
+    desc: "Beer applies management cybernetics to run Chile's economy. Socialist experiment 1971–73. Wiener in practice.",
+    exam: "C", tip: "C-question: Bolter's Defining Technology applied to cybernetics. Cybersyn = most ambitious real-world cybernetics application." },
+  { year: 1973, displayYear: "1973", title: "Lighthill Report — First AI Winter", cat: "ai",
+    desc: "UK Lighthill Report concludes AI failed to deliver. Funding cuts. Machine translation failures.",
+    exam: "C", tip: "C-question: AI Winters. Winter → spring framing = rhetorical tool. Babbage parallel: over-promise → abandonment → revival narrative." },
+  { year: 1975, displayYear: "1975", title: "Homebrew Computer Club", cat: "computing",
+    desc: "Silicon Valley hacker culture. Apple origin story. Counterculture + technology (Whole Earth Catalogue lineage).",
+    exam: "B", tip: "Ch.10/12. Silicon Valley myth. 'Two boys in a garage' narrative. Reality: Stanford, defense contracts, VC ecosystem." },
+  { year: 1977, displayYear: "1977", title: "Apple II + IBM PC (1981)", cat: "computing",
+    desc: "Personal computer mass market. Apple II (1977) for hobbyists; IBM PC (1981) legitimises for business.",
+    exam: "B", tip: "Ch.10. Personal computer: Apple II → VisiCalc (killer app) → IBM PC → Lotus 1-2-3. Desktop publishing = Mac use case." },
+  { year: 1984, displayYear: "1984", title: "Macintosh + Bolter 'Turing's Man'", cat: "concept",
+    desc: "Mac: GUI + mouse = 'computer for the rest of us'. Bolter (1984): computer as defining technology.",
+    exam: "C", tip: "C-question: Defining Technology. Bolter 1984 = key text. Clock→steam→cybernetics→computer as defining tech sequence." },
+  { year: 1986, displayYear: "1986", title: "Backpropagation (Rumelhart, Hinton, Williams)", cat: "ai",
+    desc: "Practical algorithm for training multi-layer neural networks. Second wave of neural network research.",
+    exam: "A", tip: "A-question: AI history. Backprop = enabled deep learning (later). Also: Minsky/Papert (1969) critique of perceptron → first neural net winter." },
+  { year: 1987, displayYear: "1987", title: "Second AI Winter", cat: "ai",
+    desc: "Expert systems brittle, LISP machines commercial failure, Japan 5th Gen disappoints. Funding cuts.",
+    exam: "C", tip: "C-question: AI Winters. Know both winters' causes. Winter narrative = rhetorical function (Babbage parallel)." },
+  { year: 1989, displayYear: "1989", title: "World Wide Web (Berners-Lee, CERN)", cat: "computing",
+    desc: "Designed for physics paper sharing between researchers. Third desire in the Internet's confluence.",
+    exam: "B", tip: "Ch.11. Internet = 3 desires. WWW = commercial desire's origin (though designed for academic use). Mosaic (1993) = commercialisation trigger." },
+  { year: 1993, displayYear: "1993", title: "Mosaic Browser", cat: "computing",
+    desc: "Made Web visually accessible. Triggered commercial Internet. Led directly to Amazon (1994) and e-commerce.",
+    exam: "B", tip: "Ch.11. Mosaic = pivot from academic to commercial Internet." },
+  { year: 1997, displayYear: "1997", title: "Deep Blue Defeats Kasparov", cat: "ai",
+    desc: "IBM Deep Blue beats world chess champion. Game culture + AI benchmark (Shannon, 1950 → Deep Blue).",
+    exam: "A", tip: "A-question: Game culture in AI history. Chess = AI benchmark lineage: Shannon (1950) → Deep Blue → AlphaGo (2016)." },
+  { year: 1998, displayYear: "1998", title: "Google / PageRank", cat: "computing",
+    desc: "PageRank: relevance via link structure. Massive user base → revenue problem → AdWords (2000) → surveillance capitalism.",
+    exam: "B", tip: "Ch.14. Google and Surveillance Capitalism. Revenue problem → AdWords (2000) → behaviour as raw material." },
+
+  // 2000–present
+  { year: 2000, displayYear: "2000", title: "Google AdWords — Surveillance Capitalism Begins", cat: "concept",
+    desc: "Search query data → targeted advertising. Zuboff: behaviour as raw material → prediction products → sold to influence.",
+    exam: "C", tip: "C-question: Surveillance Capitalism (Zuboff). Google loop: users → data → targeting → revenue → more users." },
+  { year: 2004, displayYear: "2004", title: "Web 2.0 + Facebook", cat: "computing",
+    desc: "User-generated content. Social networking. Data as product. Surveillance capitalism at scale.",
+    exam: "C", tip: "C-question: Surveillance Capitalism. Web 2.0 = user data collection industrialised." },
+  { year: 2012, displayYear: "2012", title: "AlexNet — Deep Learning Revolution", cat: "ai",
+    desc: "Hinton's AlexNet wins ImageNet by massive margin. GPU (games hardware) appropriated for deep learning.",
+    exam: "C", tip: "C-question: Appropriation. GPU (game culture) → AlexNet → deep learning. Completes the Nim→chess→GPU→AlexNet appropriation chain." },
+  { year: 2017, displayYear: "2017", title: "Transformer Architecture (Attention is All You Need)", cat: "ai",
+    desc: "Vaswani et al. Transformer replaces RNNs. Foundation of GPT, BERT, and all modern LLMs.",
+    exam: "A", tip: "A-question: AI and mathematics. Transformer = self-attention. Parallelizable like CNN, global access like RNN." },
+  { year: 2018, displayYear: "2018", title: "GDPR (EU Data Protection)", cat: "concept",
+    desc: "EU General Data Protection Regulation. Data as fundamental right. Explicit consent, right to erasure, 4% turnover fines.",
+    exam: "C", tip: "C-question: Surveillance Capitalism (EU response). Compare with US Section 230 / self-regulation. 'Brussels Effect' (Vogel)." },
+  { year: 2019, displayYear: "2019", title: "Zuboff 'The Age of Surveillance Capitalism'", cat: "concept",
+    desc: "Shoshana Zuboff names the surveillance capitalism system. Behaviour as raw material, prediction products, behavioural modification.",
+    exam: "C", tip: "C-question: Surveillance Capitalism. Know the Zuboff definition precisely. Also: EU AI Act (2024) builds on same concern." },
+  { year: 2022, displayYear: "2022", title: "ChatGPT", cat: "ai",
+    desc: "Instruction-tuned LLM by OpenAI. Mass public access to generative AI. AI as current defining technology candidate.",
+    exam: "C", tip: "C-question: Bolter's Defining Technology applied to AI (21st century). 'Can AI be the defining technology of the 21st century?'" },
+  { year: 2024, displayYear: "2024", title: "EU AI Act", cat: "concept",
+    desc: "First comprehensive AI regulation. Risk-based approach. High-risk systems require conformity assessment.",
+    exam: "C", tip: "C-question: Computing governance. Compare EU (rights-based, precautionary) vs US (market self-regulation)." },
+];
+
+// ── ERA DEFINITIONS ────────────────────────────────────────────────────────────
+const eras = [
+  { id: "pre1900", label: "Pre-1900",       min: -Infinity, max: 1899.9 },
+  { id: "1900s",   label: "1900–1950",      min: 1900,      max: 1949.9 },
+  { id: "1950s",   label: "1950–1970",      min: 1950,      max: 1969.9 },
+  { id: "1970s",   label: "1970–2000",      min: 1970,      max: 1999.9 },
+  { id: "2000s",   label: "2000–present",   min: 2000,      max: Infinity },
+];
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let activeFilter = "all";
+let searchQuery  = "";
+let focusedIndex = -1; // index into visibleRows()
+
+// ── SORT ──────────────────────────────────────────────────────────────────────
+events.sort((a, b) => a.year - b.year);
+
+// ── BUILD DOM ─────────────────────────────────────────────────────────────────
+function catColor(cat) {
+  return { computing: "#3b82f6", ai: "#8b5cf6", concept: "#f59e0b", figure: "#22c55e" }[cat] || "#94a3b8";
+}
+
+function examClass(e) {
+  return `exam-${e.toLowerCase()}`;
+}
+
+function buildTimeline() {
+  const container = document.getElementById("timeline");
+  container.innerHTML = "";
+
+  eras.forEach(era => {
+    const eraEvents = events.filter(e => e.year >= era.min && e.year <= era.max);
+    if (!eraEvents.length) return;
+
+    const section = document.createElement("div");
+    section.className = "era-section";
+    section.id = `era-${era.id}`;
+
+    // Sticky header
+    const header = document.createElement("div");
+    header.className = "era-header";
+    header.innerHTML = `
+      <span class="era-title">${era.label}</span>
+      <span class="era-line"></span>
+      <span class="era-count" data-era="${era.id}">${eraEvents.length} events</span>
+    `;
+    section.appendChild(header);
+
+    // Events list
+    const list = document.createElement("div");
+    list.className = "era-events";
+
+    eraEvents.forEach(ev => {
+      const row = document.createElement("div");
+      row.className = "event-row";
+      row.dataset.cat  = ev.cat;
+      row.dataset.year = ev.year;
+      row.dataset.title = ev.title.toLowerCase();
+      row.dataset.desc  = ev.desc.toLowerCase();
+
+      const color = catColor(ev.cat);
+      row.innerHTML = `
+        <div class="event-year">${ev.displayYear}</div>
+        <div class="event-spine-dot">
+          <span class="spine-dot" style="background:${color}"></span>
+        </div>
+        <div class="event-card" tabindex="0" role="button" aria-expanded="false">
+          <div class="card-header">
+            <span class="card-title">${ev.title}<span class="expand-chevron">▼</span></span>
+            <span class="exam-badge ${examClass(ev.exam)}">[${ev.exam}]</span>
+            <span class="cat-badge ${ev.cat}">${ev.cat.charAt(0).toUpperCase() + ev.cat.slice(1)}</span>
+          </div>
+          <div class="card-desc">${ev.desc}</div>
+          <div class="card-expand">
+            <div class="expand-label">Exam tip</div>
+            <div class="expand-text">${ev.tip}</div>
+          </div>
+        </div>
+      `;
+
+      const card = row.querySelector(".event-card");
+      card.addEventListener("click", () => toggleCard(card));
+      card.addEventListener("keydown", e => {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleCard(card); }
+      });
+
+      list.appendChild(row);
+    });
+
+    section.appendChild(list);
+    container.appendChild(section);
+  });
+}
+
+function toggleCard(card) {
+  const expanded = card.classList.toggle("expanded");
+  card.setAttribute("aria-expanded", expanded ? "true" : "false");
+}
+
+// ── FILTER & SEARCH ───────────────────────────────────────────────────────────
+function applyFilters() {
+  const rows = document.querySelectorAll(".event-row");
+  let visible = 0;
+
+  rows.forEach(row => {
+    const catMatch  = activeFilter === "all" || row.dataset.cat === activeFilter;
+    const q         = searchQuery.toLowerCase().trim();
+    const textMatch = !q || row.dataset.title.includes(q) || row.dataset.desc.includes(q);
+
+    if (catMatch && textMatch) {
+      row.classList.remove("hidden");
+      visible++;
+    } else {
+      row.classList.add("hidden");
+    }
+  });
+
+  // Update era counts
+  eras.forEach(era => {
+    const section   = document.getElementById(`era-${era.id}`);
+    if (!section) return;
+    const count     = section.querySelectorAll(".event-row:not(.hidden)").length;
+    const badge     = section.querySelector(".era-count");
+    if (badge) badge.textContent = `${count} events`;
+  });
+
+  document.getElementById("no-results").classList.toggle("visible", visible === 0);
+  focusedIndex = -1;
+  clearFocus();
+}
+
+// ── KEYBOARD NAV ──────────────────────────────────────────────────────────────
+function visibleRows() {
+  return Array.from(document.querySelectorAll(".event-row:not(.hidden)"));
+}
+
+function clearFocus() {
+  document.querySelectorAll(".event-row.focused").forEach(r => r.classList.remove("focused"));
+}
+
+function moveFocus(delta) {
+  const rows = visibleRows();
+  if (!rows.length) return;
+
+  clearFocus();
+  focusedIndex = Math.max(0, Math.min(rows.length - 1, focusedIndex + delta));
+  const target = rows[focusedIndex];
+  target.classList.add("focused");
+  target.querySelector(".event-card").focus({ preventScroll: true });
+  target.scrollIntoView({ block: "center", behavior: "smooth" });
+}
+
+// ── TOPBAR HEIGHT ─────────────────────────────────────────────────────────────
+function updateTopbarHeight() {
+  const h = document.getElementById("topbar").offsetHeight;
+  document.documentElement.style.setProperty("--topbar-height", h + "px");
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+buildTimeline();
+updateTopbarHeight();
+
+// Filter buttons
+document.querySelectorAll(".filter-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    activeFilter = btn.dataset.cat;
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    applyFilters();
+  });
+});
+
+// Era jump buttons
+document.querySelectorAll(".era-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const section = document.getElementById(`era-${btn.dataset.era}`);
+    if (section) {
+      const topbarH = document.getElementById("topbar").offsetHeight;
+      const top = section.getBoundingClientRect().top + window.scrollY - topbarH - 8;
+      window.scrollTo({ top, behavior: "smooth" });
+    }
+  });
+});
+
+// Search
+document.getElementById("search").addEventListener("input", e => {
+  searchQuery = e.target.value;
+  applyFilters();
+});
+
+// Keyboard shortcuts
+document.addEventListener("keydown", e => {
+  // Don't intercept when typing in search
+  const inSearch = document.activeElement === document.getElementById("search");
+
+  if (!inSearch) {
+    if (e.key === "j" || e.key === "J") { e.preventDefault(); moveFocus(+1); return; }
+    if (e.key === "k" || e.key === "K") { e.preventDefault(); moveFocus(-1); return; }
+  }
+
+  if (e.key === "f" || e.key === "F") {
+    if (!inSearch) {
+      e.preventDefault();
+      const panel = document.getElementById("filter-panel");
+      panel.classList.toggle("collapsed");
+      updateTopbarHeight();
+    }
+  }
+
+  if (e.key === "/" && !inSearch) {
+    e.preventDefault();
+    document.getElementById("search").focus();
+  }
+});
+
+// Recalculate topbar height on resize
+window.addEventListener("resize", updateTopbarHeight);
+</script>
+</body>
+</html>

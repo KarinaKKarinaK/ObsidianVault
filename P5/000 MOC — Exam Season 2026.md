@@ -15,6 +15,9 @@
 ## Today's Log
 [[Daily Logs/2026-04-26]]
 
+## Daily Habits Tracker
+[[Daily Habits — Exam Season]] — 5 daily habits, Apr 29 → Jun 4, auto-drops subjects after their exam
+
 ## Weekly Focus
 - **Week 1 (Apr 17–23):** DB relational model + ER videos | SP probability foundations | TM ch.4–5 | HAI ch.4–7
 - **Week 2 (Apr 24–30):** DB translation + SQL videos | SP distributions + joint | TM ch.17 + NER | HAI ch.9–11
@@ -38,6 +41,7 @@
 - [[HTML Study Tools/DB — Practice Tool.html|DB Practice Tool]]
 - [[HTML Study Tools/TM — Study Tool.html|TM Study Tool]] — flashcards + quiz + literature
 - [[HoAI/HAI_flashcard_tool.html|HAI Flashcard Tool]] — A/B/C flashcards + essay prompts
+- [[HoAI/HAI_timeline.html|HAI Interactive Timeline]] — 58 events, filter/search, exam badges
 - [[ML10.0/ML_review_website.html|ML Review Website]] — 10 lectures + 44-question quiz
 - [[Stats&Probab/SP_practice_website.html|SP Practice Website]] — past exams + autograding
 
