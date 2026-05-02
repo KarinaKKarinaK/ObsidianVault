@@ -1,6 +1,6 @@
 # HAI — Topic Notes
 
-[[HAI_question_bank|→ Question Bank]] | [[HAI_mindmap_data|→ Mind Map]] | [[HAI_flashcard_tool.html|→ Flashcard Tool]]
+[[HAI_question_bank|→ Question Bank]] | [[HAI_mindmap_data|→ Mind Map]] | [[HAI_mindmap.html|→ Mind Map Website]] | [[HAI_flashcard_tool.html|→ Flashcard Tool]]
 
 > **Exam:** Thu 28 May 2026, 15:30 | **Format:** written 2h15 | Pick **1A + 2B + 1C** | each = 2 pts | Bonus already secured (can skip one designated question)
 > Source: lectures 1–4, seminars 1–3, past exams May 2025 & July 2025, assignment sheets

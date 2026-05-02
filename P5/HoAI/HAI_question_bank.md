@@ -1,6 +1,6 @@
 # HAI — Question Bank
 
-[[HAI_topics|← Back to Topics]] | [[HAI_flashcard_tool.html|→ Flashcard Tool]]
+[[HAI_topics|← Back to Topics]] | [[HAI_mindmap.html|→ Mind Map Website]] | [[HAI_flashcard_tool.html|→ Flashcard Tool]]
 
 > All questions from past exams (May 2025 + July 2025) + assignment questions. Model answers: ~200 words each, structure: **Intro → claim → evidence → example → counterpoint → conclusion**.
 > Source: `Past_Exams/Exam XB_0113 2025 I.pdf`, `Past_Exams/Exam XB_0113 2025 II.pdf`, `Assignments/Screenshots`

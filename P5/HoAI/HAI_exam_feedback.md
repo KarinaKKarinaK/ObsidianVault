@@ -1,5 +1,7 @@
 # HoAI — Last Year Exam Feedback & Practical Tips
 
+[[HAI_topics|← Back to Topics]] | [[HAI_mindmap.html|→ Mind Map Website]]
+
 > Source: Prof. D.J. Beckers (dr., assistant professor History of Science, VU Amsterdam) — marks reconsideration reply
 
 ---

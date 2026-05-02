@@ -1,6 +1,6 @@
 # HAI — Mind Map Data
 
-[[HAI_topics|← Back to Topics]] | [[HAI_question_bank|← Question Bank]]
+[[HAI_topics|← Back to Topics]] | [[HAI_question_bank|← Question Bank]] | [[HAI_mindmap.html|→ Mind Map Website]]
 
 > Structured tree for manual transfer into Miro. Format: **Node name** — 1-line description. Indentation = level in tree.
 > Source: All HoAI source files.
