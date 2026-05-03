@@ -9,6 +9,7 @@
 - [[../../HoAI/HAI_topics|HAI Topics]] — A-questions, B-questions (Campbell-Kelly ch. 4–15), C-concepts
 - [[../../HoAI/HAI_question_bank|HAI Question Bank]] — every past exam question with model answer structure
 - [[../../HoAI/HAI_mindmap_data|HAI Mind Map Data]] — structured outline for Miro
+- [HAI Timeline Mindmap](../../HoAI/HAI_mindmap.html) — interactive horizontal timeline with concept connections (open in browser)
 - [[../../HoAI/HAI_exam_feedback|HAI Exam Feedback]] — Prof. Beckers' critique + 5 rules for the exam
 - [HAI Flashcard Tool](../../HoAI/HAI_flashcard_tool.html) — flashcards (A/B/C tabs) + practice essay prompts (open in browser)
 - [HAI Interactive Timeline](../../HoAI/HAI_timeline.html) — 58 events, 350 BCE–2024, filter by era/category, search, exam badges [A]/[B]/[C] (open in browser)
