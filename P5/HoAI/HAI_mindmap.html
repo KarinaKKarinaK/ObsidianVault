@@ -214,217 +214,309 @@ const NW = 148; // node width
 // ── EVENTS ──────────────────────────────────────────────────────────────────
 // pos: 'above' | 'below'   lane: 1 (near) | 2 (mid) | 3 (far)
 const EVENTS = [
-  // PRE-1900
-  { id:'aristotle',   year:-350, label:'Aristotle\nSyllogism',         short:'350 BCE', cat:'ai',       pos:'above', lane:3,
-    desc:'Formal logic as foundation of reasoning. First systematic attempt at automated thinking. Precursor to symbolic AI.',
-    obsidian:'P5/HoAI/HAI_topics' },
-  { id:'boole',       year:1854, label:'Boole\nBoolean Algebra',        short:'1854',    cat:'ai',       pos:'above', lane:2,
-    desc:'Logic as mathematics. Boolean algebra is the foundation of digital computing and symbolic AI.',
-    obsidian:'P5/HoAI/HAI_topics' },
-  { id:'babbage',     year:1837, label:'Babbage\nAnalytical Engine',    short:'1822–37', cat:'computing', pos:'below', lane:2,
-    desc:'First programmable machine concept. Never completed. Lovelace wrote first algorithm. Narrative later invoked by Aiken — example of Agendas.',
-    obsidian:'P5/HoAI/HAI_topics', highlight: false },
-  { id:'hollerith',   year:1890, label:'Hollerith\nTabulating',         short:'1890',    cat:'computing', pos:'above', lane:2,
-    desc:'Punched-card system for US Census. Founded IBM predecessor (CTR). Technology & Trust: legible fast output built institutional trust.',
-    obsidian:'P5/HoAI/HAI_topics' },
-  { id:'principia',   year:1910, label:'Principia\nMathematica',        short:'1910',    cat:'ai',       pos:'below', lane:2,
-    desc:'Russell & Whitehead: all mathematics from logical axioms. Dream of automated proof. Inspired Church, Turing, Gödel.',
+  // ── PRE-1900 ──────────────────────────────────────────────────────────────
+  { id:'aristotle', year:-350, label:'Aristotle\nSyllogism', short:'350 BCE', cat:'ai', pos:'above', lane:3,
+    desc:'Formal logic as foundation of reasoning. First systematic attempt to mechanize thought. Precursor to symbolic AI and the language of computation.',
     obsidian:'P5/HoAI/HAI_topics' },
 
-  // 1930s FOUNDATIONS
-  { id:'church',      year:1936, label:'Church\nLambda Calculus',       short:'1936',    cat:'ai',       pos:'below', lane:2,
-    desc:'Mathematical foundation for computation. → LISP (1958). Church-Turing thesis: defines what is computable.',
-    obsidian:'P5/HoAI/HAI_topics' },
-  { id:'turing36',    year:1936, label:'Turing\nComputability',         short:'1936',    cat:'ai',       pos:'above', lane:2,
-    desc:'Turing machine; halting problem; theoretical limits of computation. Foundation for AI field. Church-Turing thesis.',
-    obsidian:'P5/HoAI/HAI_topics', highlight:true },
-
-  // 1940s WWII
-  { id:'mark1',       year:1944, label:'Harvard\nMark I',               short:'1944',    cat:'computing', pos:'above', lane:3,
-    desc:"Aiken's electromechanical computer. IBM collaboration. Babbage narrative constructed for funding — Agendas in action.",
-    obsidian:'P5/HoAI/HAI_topics' },
-  { id:'eniac',       year:1945, label:'ENIAC',                         short:'1945',    cat:'computing', pos:'above', lane:1,
-    desc:'First electronic general-purpose computer. Moore School (Mauchly + Eckert). Funded by BRL for ballistics. Women of ENIAC programmed it.',
-    obsidian:'P5/HoAI/HAI_topics', highlight:true },
-  { id:'edvac',       year:1945, label:'EDVAC /\nvon Neumann',          short:'1945',    cat:'computing', pos:'below', lane:1,
-    desc:'Von Neumann architecture: stored-program concept. Controversial authorship (credit dispute). Foundation of all modern computers.',
-    obsidian:'P5/HoAI/HAI_topics' },
-  { id:'moore',       year:1946, label:'Moore School\nLectures',        short:'1946',    cat:'computing', pos:'above', lane:3,
-    desc:'Key knowledge-transfer event. Spread stored-program design from Moore School to UK and Europe → EDSAC, Manchester Baby.',
-    obsidian:'P5/HoAI/HAI_topics' },
-  { id:'cybernetics', year:1948, label:'Cybernetics\nWiener',           short:'1948',    cat:'ai',       pos:'below', lane:3,
-    desc:'Information + control + feedback loops. Machine = animal analogy. Defining Technology of the 1960s (Bolter). Influenced all AI.',
-    obsidian:'P5/HoAI/HAI_topics', highlight:true },
-  { id:'manchester',  year:1948, label:'Manchester\nBaby',              short:'1948',    cat:'computing', pos:'above', lane:2,
-    desc:'First stored-program run. Williams + Newman. UK parallel to EDSAC, developed independently after Moore School lectures.',
-    obsidian:'P5/HoAI/HAI_topics' },
-  { id:'edsac',       year:1949, label:'EDSAC',                         short:'1949',    cat:'computing', pos:'below', lane:2,
-    desc:'Wilkes, Cambridge. First practical stored-program computer. First programming manual (Wilkes/Wheeler/Gill 1951).',
+  { id:'babbage', year:1837, label:'Babbage\nAnalytical Engine', short:'1837', cat:'computing', pos:'below', lane:2,
+    desc:"Babbage's Analytical Engine: first programmable machine concept. Ada Lovelace wrote the first algorithm. Narrative invoked by Howard Aiken for Harvard Mark I funding — Agendas in action.",
     obsidian:'P5/HoAI/HAI_topics' },
 
-  // 1950s
-  { id:'turing-test', year:1950, label:'Turing Test',                   short:'1950',    cat:'ai',       pos:'above', lane:2,
-    desc:'"Computing Machinery and Intelligence". Intelligence as imitation game. Defines the AI debate for decades.',
-    obsidian:'P5/HoAI/HAI_question_bank', highlight:true },
-  { id:'nim',         year:1951, label:'Nim Game\n(Strachey)',          short:'1951',    cat:'ai',       pos:'below', lane:3,
-    desc:'Ferranti Mark I playing Nim. First computer game. Appropriation: scientific computer → entertainment → AI demonstration.',
+  { id:'boole', year:1854, label:'Boole\nLaws of Thought', short:'1854', cat:'ai', pos:'above', lane:2,
+    desc:'George Boole (1815-1864), An Investigation of the Laws of Thought (1854). Boolean logic: algebra of truth and false. Expressing thought in formulae and calculating with them. Foundation of digital computing.',
     obsidian:'P5/HoAI/HAI_topics' },
-  { id:'arra',        year:1952, label:'ARRA\nDutch',                   short:'1952',    cat:'computing', pos:'below', lane:1,
-    desc:'First Dutch electronic computer. Aad van Wijngaarden, Mathematisch Centrum Amsterdam. Played national anthem. Led to ALGOL 60.',
+
+  { id:'frege', year:1879, label:'Frege\nBegriffschrift', short:'1879', cat:'ai', pos:'below', lane:3,
+    desc:'Gotlob Frege (1848-1925), Begriffschrift (1879): first formal system of predicate logic. Remained obscure until rediscovered by Russell in the early 20th century.',
     obsidian:'P5/HoAI/HAI_topics' },
-  { id:'univac',      year:1952, label:'UNIVAC\nCBS Election',          short:'1952',    cat:'computing', pos:'above', lane:1,
-    desc:'UNIVAC predicted Eisenhower landslide on live TV. Public trust demonstration. Technology & Trust: Eckert-Mauchly commercializing ENIAC work.',
-    obsidian:'P5/HoAI/HAI_topics', highlight:true },
-  { id:'ibm650',      year:1954, label:'IBM 650',                       short:'1954',    cat:'computing', pos:'above', lane:3,
-    desc:'First mass-produced computer. Drum memory. Dominated early commercial market. IBM vs the seven dwarfs era begins.',
+
+  { id:'hollerith', year:1890, label:'Hollerith\nTabulating', short:'1890', cat:'computing', pos:'above', lane:1,
+    desc:'Herman Hollerith: punched-card tabulating system for US Census (1890). Founded IBM predecessor (CTR). Administration tradition: census and bureaucracy as a driver of computing.',
     obsidian:'P5/HoAI/HAI_topics' },
-  { id:'dartmouth',   year:1956, label:'Dartmouth\nConference',         short:'1956',    cat:'ai',       pos:'above', lane:1,
-    desc:'"Artificial Intelligence" coined by McCarthy. Field officially founded. McCarthy, Minsky, Shannon, Newell & Simon attend.',
-    obsidian:'P5/HoAI/HAI_topics', highlight:true },
-  { id:'fortran',     year:1957, label:'FORTRAN',                       short:'1957',    cat:'computing', pos:'below', lane:2,
-    desc:'IBM; practical for scientists. American commercial agenda vs. ALGOL (European academic ideal). Agendas: FORTRAN won commercially.',
+
+  // ── 1900–1940 ────────────────────────────────────────────────────────────
+  { id:'principia', year:1910, label:'Principia\nMathematica', short:'1910', cat:'ai', pos:'below', lane:2,
+    desc:'Bertrand Russell (1872-1970) & Alfred Whitehead (1861-1947): Principia Mathematica (1910-1913). All mathematics reducible to logical axioms. Dream of automated proof. Inspired Church, Turing, de Bruijn, McCarthy.',
     obsidian:'P5/HoAI/HAI_topics' },
-  { id:'gps',         year:1957, label:'General\nProblem Solver',       short:'1957',    cat:'ai',       pos:'above', lane:3,
-    desc:'Newell & Simon. Universal problem-solving algorithm using means-ends analysis. Early classical AI flagship system.',
+
+  { id:'torresq', year:1912, label:'Torres Quevedo\nChess (1912)', short:'1912', cat:'ai', pos:'above', lane:2,
+    desc:'Leonardo Torres Quevedo (1858-1936): automated chess endgame machine (1912). Mechanical human thinking and behaviour — predecessor to AI before computers. History of Science: human thinking.',
     obsidian:'P5/HoAI/HAI_topics' },
-  { id:'perceptron',  year:1957, label:'Perceptron\nRosenblatt',        short:'1957',    cat:'ai',       pos:'below', lane:1,
-    desc:'First neural network model. Minsky/Papert critique (1969) → first neural net winter. Foundation of modern deep learning.',
+
+  { id:'capek', year:1920, label:'Čapek RUR\n"robot" coined', short:'1920', cat:'concepts', pos:'above', lane:3,
+    desc:'Karel Čapek, R.U.R. (1920): coined the word "robot". With Frankenstein (Mary Shelley, 1818) and Fritz Lang\'s Metropolis (1927): artificially created humans in culture long before computers. BUT: does AI exist without computers?',
     obsidian:'P5/HoAI/HAI_topics' },
-  { id:'lisp',        year:1958, label:'LISP\nMcCarthy',               short:'1958',    cat:'ai',       pos:'above', lane:2,
-    desc:'Symbolic AI language. Lambda calculus basis (Church 1936). THE AI programming language for 30 years. Functional programming origin.',
+
+  { id:'hilbert', year:1928, label:'Hilbert\nEntscheidungsproblem', short:'1928', cat:'ai', pos:'below', lane:3,
+    desc:"David Hilbert (1862-1943), Entscheidungsproblem (1928): is there a way to calculate the truth of a given expression in a fixed mathematical system? Kurt Gödel (1906-1978), 1931: no way! (incompleteness theorem).",
     obsidian:'P5/HoAI/HAI_topics' },
-  { id:'sage',        year:1958, label:'SAGE\nAir Defence',            short:'1958–63', cat:'computing', pos:'below', lane:3,
-    desc:'Cold War air-defence. 23 direction centers. IBM AN/FSQ-7. Obsolete by ICBMs but massive tech spinoff. → SABRE (Appropriation).',
+
+  { id:'church', year:1936, label:'Church\nLambda Calculus', short:'1936', cat:'ai', pos:'below', lane:2,
+    desc:'Alonzo Church (1903-1995): lambda calculus, Journal of Symbolic Logic (1936). Mathematical foundation for computation. Answered Hilbert\'s Entscheidungsproblem. → LISP (McCarthy).',
     obsidian:'P5/HoAI/HAI_topics' },
-  { id:'cobol',       year:1959, label:'COBOL\nGrace Hopper',          short:'1959',    cat:'computing', pos:'above', lane:1,
-    desc:'Grace Hopper. Business language. Natural language vision. Committee-designed. Agendas: democratize programming for non-specialists.',
+
+  { id:'turing36', year:1936, label:'Turing\nComputable Numbers', short:'1936', cat:'ai', pos:'above', lane:2, highlight:true,
+    desc:"Alan Turing (1912-1954), On Computable Numbers (1936): introduces the a-machine (Turing machine). Answers Hilbert's Entscheidungsproblem. Foundation of computer science.",
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  // ── 1940s ────────────────────────────────────────────────────────────────
+  { id:'mark1', year:1944, label:'Harvard\nMark I', short:'1944', cat:'computing', pos:'above', lane:3,
+    desc:"Howard Aiken's electromechanical computer (1944). IBM collaboration. Aiken invoked Babbage narrative to secure funding — Agendas in action: a constructed historical lineage.",
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'eniac', year:1945, label:'ENIAC', short:'1945', cat:'computing', pos:'above', lane:1, highlight:true,
+    desc:'First electronic general-purpose computer (1945). Moore School (Mauchly + Eckert). Funded by BRL for ballistics. Science & Engineering tradition. Women of ENIAC programmed it.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'edvac', year:1945, label:'EDVAC /\nvon Neumann', short:'1945', cat:'computing', pos:'below', lane:1,
+    desc:"Von Neumann architecture: stored-program concept (1945). First Draft of a Report on the EDVAC. Controversial authorship. Foundation of all modern computers.",
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'moore', year:1946, label:'Moore School\nLectures', short:'1946', cat:'computing', pos:'above', lane:2,
+    desc:'Moore School Lectures (1946): key knowledge-transfer event. Spread stored-program design to UK and Europe. Attended by Wilkes, D. Hartree (1897-1958), others. → EDSAC (Cambridge), Manchester Baby.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'macy', year:1946, label:'Macy Conferences\nCybernetics', short:'1946-53', cat:'ai', pos:'below', lane:3,
+    desc:'Macy Conferences on Cybernetics (1946-1953). Norbert Wiener, Margaret Mead (1901-1978). Mead gave the 1967 ASC keynote. Margaret Masterman (1910-1986) also involved. Cybernetics: very diverging agendas.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'cybernetics', year:1948, label:'Cybernetics\nWiener', short:'1948', cat:'ai', pos:'below', lane:2, highlight:true,
+    desc:"Norbert Wiener, Cybernetics (1948): control and communication in the animal and the machine. Information + feedback loops. Machine = animal analogy. Defining Technology of the 1960s (Bolter, Turing's Man 1984).",
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'manchester', year:1948, label:'Manchester\nBaby', short:'1948', cat:'computing', pos:'above', lane:2,
+    desc:'Manchester Baby (1948): first stored-program run. Williams tube memory + Newman. UK development independent of EDSAC after Moore School lectures.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'berkeley', year:1948, label:'Berkeley\nGiant Brains', short:'1948', cat:'concepts', pos:'above', lane:3,
+    desc:'Edmund Berkeley (1909-1988), Giant Brains, or Machines That Think (1948). Also founded Computers and Automation magazine. Popularizing the "electronic brain" metaphor for the public.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'orwell', year:1948, label:'Orwell\n1984', short:'1948', cat:'concepts', pos:'below', lane:3,
+    desc:"George Orwell, 1984 (written 1948): totalitarianism, nationalism, surveillance, censorship — and SYSTEMS THINKING! 'Who controls the past controls the future.' Public anxiety about computers. cf. Jon Agar.",
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'edsac', year:1949, label:'EDSAC', short:'1949', cat:'computing', pos:'below', lane:2,
+    desc:"Wilkes, Cambridge (1949). First practical stored-program computer. EDSAC also performed music — 'computing sounds' demonstration. First programming manual (Wilkes/Wheeler/Gill 1951).",
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  // ── 1950s ────────────────────────────────────────────────────────────────
+  { id:'turing-test', year:1950, label:'Turing Test', short:'1950', cat:'ai', pos:'above', lane:1, highlight:true,
+    desc:'"Computing Machinery and Intelligence" (1950). Intelligence as imitation game. Turing was NOT at the Paris 1951 conference or Dartmouth 1956. Use of metaphor: machine as thinking.',
     obsidian:'P5/HoAI/HAI_question_bank' },
 
-  // 1960s
-  { id:'algol',       year:1960, label:'ALGOL 60',                      short:'1960',    cat:'computing', pos:'below', lane:1,
-    desc:'European academic language. Van Wijngaarden + Rutishauser + Bauer + Backus. Elegant but commercially rejected. FORTRAN\'s commercial agenda won.',
-    obsidian:'P5/HoAI/HAI_topics' },
-  { id:'ibm360',      year:1964, label:'IBM System/360',                short:'1964',    cat:'computing', pos:'above', lane:1,
-    desc:'Single compatible family; $5bn gamble. Huge success. Drove software crisis. IBM vs. seven dwarfs, then BUNCH.',
-    obsidian:'P5/HoAI/HAI_topics', highlight:true },
-  { id:'logo',        year:1967, label:'LOGO\nPapert',                  short:'1967',    cat:'ai',       pos:'below', lane:2,
-    desc:'Constructivist education. Child programs computer (not vice versa). Turtle graphics. Papert vs. Skinner pedagogical debate.',
-    obsidian:'P5/HoAI/HAI_topics' },
-  { id:'sw-crisis',   year:1968, label:'Software\nCrisis (NATO)',       short:'1968',    cat:'computing', pos:'above', lane:2,
-    desc:'NATO conference: OS/360 as exemplar of failure. Dijkstra\'s response: mathematical discipline. Birth of software engineering.',
-    obsidian:'P5/HoAI/HAI_question_bank', highlight:true },
-  { id:'unbundle',    year:1968, label:'IBM\nUnbundling',               short:'1968',    cat:'computing', pos:'below', lane:2,
-    desc:'Software priced separately from hardware. Created independent software industry. Antitrust pressure was key driver.',
-    obsidian:'P5/HoAI/HAI_topics' },
-  { id:'arpanet',     year:1969, label:'ARPANET',                       short:'1969',    cat:'computing', pos:'above', lane:3,
-    desc:'Packet switching. Military/DARPA origin. Survivable network design. Appropriated far beyond original military scope.',
+  { id:'paris1951', year:1951, label:'Paris 1951\n"Pensée Humaine"', short:'1951', cat:'ai', pos:'below', lane:1,
+    desc:'January 1951, Paris: "Les machines à calculer et la pensée humaine." 270 participants including Wiener, Aiken, Wilkes, Grey Walter/Vivian Dovey, van Wijngaarden, B.V. Bowden (Faster than Thought, 1953). NOT present: Turing, Masterman. Retrospectively a "missed opportunity" (2000s).',
     obsidian:'P5/HoAI/HAI_topics' },
 
-  // 1970s
-  { id:'email',       year:1971, label:'Email\nTomlinson',              short:'1971',    cat:'computing', pos:'below', lane:3,
-    desc:'Unintended appropriation of ARPANET. Became the dominant use. Classic Appropriation: tool repurposed beyond design intent.',
-    obsidian:'P5/HoAI/HAI_topics' },
-  { id:'lighthill',   year:1973, label:'Lighthill Report\n1st Winter',  short:'1973',    cat:'ai',       pos:'above', lane:1,
-    desc:'UK evaluation: AI failed to deliver on promises. → First AI winter. Machine translation failure. Over-promising; funding cuts.',
-    obsidian:'P5/HoAI/HAI_topics', highlight:true },
-
-  // 1980s
-  { id:'expert',      year:1980, label:'Expert Systems\nBoom',          short:'1980s',   cat:'ai',       pos:'below', lane:1,
-    desc:'MYCIN, DENDRAL. Knowledge-based AI. LISP machines. Japan 5th Generation project. Dominated the decade before collapse.',
-    obsidian:'P5/HoAI/HAI_topics' },
-  { id:'mac',         year:1984, label:'Macintosh\nGUI',                short:'1984',    cat:'computing', pos:'above', lane:2,
-    desc:'GUI, mouse, desktop metaphor. "Computer for the rest of us." Jobs & Wozniak. Popularized personal computing. XEROX PARC appropriation.',
-    obsidian:'P5/HoAI/HAI_topics' },
-  { id:'backprop',    year:1986, label:'Backprop.\nRumelhart',          short:'1986',    cat:'ai',       pos:'below', lane:2,
-    desc:'Neural network training algorithm. Second wave of connectionism. Foundation of modern deep learning. Revived perceptron concept.',
-    obsidian:'P5/HoAI/HAI_topics' },
-  { id:'winter2',     year:1988, label:'2nd AI Winter',                 short:'1987–93', cat:'ai',       pos:'above', lane:3,
-    desc:'Expert systems brittle and expensive. LISP machines commercial failure. Japan 5th Gen abandoned. Major funding collapse.',
+  { id:'arra', year:1952, label:'ARRA\nDutch (1952)', short:'1952', cat:'computing', pos:'below', lane:2,
+    desc:'ARRA (1952): first Dutch electronic computer, relay-based. Aad van Wijngaarden, Mathematisch Centrum Amsterdam. ARRA II (1954): transistors + speaker. Led to ALGOL 60. Dutch Dinosaurs.',
     obsidian:'P5/HoAI/HAI_topics' },
 
-  // 1990s
-  { id:'www',         year:1989, label:'World Wide Web\nBerners-Lee',   short:'1989',    cat:'computing', pos:'above', lane:1,
-    desc:'Tim Berners-Lee, CERN. Designed for physics paper sharing. Appropriated as global communication & commerce platform.',
-    obsidian:'P5/HoAI/HAI_topics', highlight:true },
-  { id:'google',      year:1998, label:'Google\nPageRank',              short:'1998',    cat:'computing', pos:'below', lane:1,
-    desc:'Brin & Page. PageRank algorithm. → AdWords (2000) → Surveillance Capitalism (Zuboff). Data as raw material origin.',
-    obsidian:'P5/HoAI/HAI_topics', highlight:true },
-
-  // 2000s
-  { id:'adwords',     year:2000, label:'Google AdWords\nSurv. Cap.',    short:'2000',    cat:'concepts', pos:'above', lane:1,
-    desc:'Birth of surveillance capitalism. Search data → targeted advertising → behavioural prediction products sold to advertisers.',
-    obsidian:'P5/HoAI/HAI_topics' },
-  { id:'web2',        year:2004, label:'Web 2.0\nSocial Media',         short:'2004+',   cat:'computing', pos:'below', lane:2,
-    desc:'User-generated content. Social networking. Data as product. Digital culture transformation: journalism, music, banking.',
+  { id:'univac', year:1952, label:'UNIVAC\nCBS Election', short:'1952', cat:'computing', pos:'above', lane:1, highlight:true,
+    desc:'UNIVAC predicted Eisenhower landslide on live TV (1952). Technology & Trust: legible, dramatic output builds public trust. Eckert-Mauchly commercializing ENIAC work.',
     obsidian:'P5/HoAI/HAI_topics' },
 
-  // 2010s+
-  { id:'alexnet',     year:2012, label:'AlexNet\nDeep Learning',        short:'2012',    cat:'ai',       pos:'above', lane:1,
-    desc:"Hinton's AlexNet wins ImageNet. GPU computing (Appropriation of games hardware). Deep learning revolution. → Current AI summer.",
-    obsidian:'P5/HoAI/HAI_topics', highlight:true },
-  { id:'gdpr',        year:2018, label:'GDPR',                          short:'2018',    cat:'concepts', pos:'below', lane:1,
-    desc:'EU data protection regulation. Fundamental rights approach. Right to erasure. EU response to surveillance capitalism. Zuboff vindicated.',
+  { id:'miracle', year:1953, label:'MIRACLE\nShell (1953)', short:'1953', cat:'computing', pos:'above', lane:2,
+    desc:'MIRACLE: Shell Netherlands computer (1953). First Dutch computer to play the national anthem — "computing sounds". Dutch Dinosaurs. Process Control tradition (Shell = industry).',
     obsidian:'P5/HoAI/HAI_topics' },
-  { id:'llm',         year:2017, label:'Transformers\nLLMs',            short:'2017+',   cat:'ai',       pos:'below', lane:2,
-    desc:'"Attention is All You Need" (Vaswani et al). GPT, BERT, Claude. Generative AI era. Language models as general-purpose AI.',
-    obsidian:'P5/HoAI/HAI_topics', highlight:true },
+
+  { id:'greywalter', year:1953, label:'Grey Walter\nTurtle Robots', short:'1953', cat:'ai', pos:'below', lane:3,
+    desc:'William Grey Walter / Vivian Dovey (Bristol): turtle robots demonstrating simple reflex behaviour. The Living Brain (1953). Present at Paris 1951. Use of Metaphor: brain as machine — cybernetics made visible.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'skinner', year:1954, label:'Skinner\nTeaching Machine', short:'1954', cat:'concepts', pos:'above', lane:3,
+    desc:'B.F. Skinner (1954): behaviourism applied to education — "programming children". Teaching machine box. Programmed instruction. 60% of CAI materials were mathematics. Precursor to PLATO and LOGO.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'dartmouth', year:1956, label:'Dartmouth\nConference', short:'1956', cat:'ai', pos:'above', lane:1, highlight:true,
+    desc:'"Artificial Intelligence" coined by John McCarthy. 1956 Dartmouth Summer Research Project. Participants: McCarthy, Minsky, Shannon, Solomonoff, Newell, Simon, Samuel, Selfridge, Rochester, Trenchard More. NOT present: Turing (dead), Masterman, Wiener.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'namur', year:1956, label:'Namur Congress\nCybernetics', short:'1956', cat:'concepts', pos:'below', lane:1,
+    desc:'Namur 1956 cybernetics congress. Stafford Beer present — cybernetics applied to business and management. NOT attended by Wiener, Minsky, McCarthy, or Rosenblatt. Beginning of Cybernetics in Business.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'mailufterl', year:1957, label:'Mailüfterl\nAustria', short:'1956-58', cat:'computing', pos:'above', lane:3,
+    desc:'Mailüfterl (1956-1958): transistor computer built at TH Vienna. Fastest computer on the European continent at the time. European computing initiative outside UK/US — part of the "European dwarves" story.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'fortran', year:1957, label:'FORTRAN', short:'1957', cat:'computing', pos:'below', lane:2,
+    desc:'IBM, Backus (1957): practical language for scientists. American commercial agenda vs. ALGOL (European academic ideal). Agendas: FORTRAN won commercially, ALGOL won intellectually.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'deskset', year:1957, label:'Desk Set\nFilm (1957)', short:'1957', cat:'concepts', pos:'above', lane:2,
+    desc:'Desk Set (1957, Spencer Tracy/Katharine Hepburn): comedy about a computer threatening office workers. Alongside Asimov (I, Robot 1950; Foundation 1951), Philip K. Dick, Kubrick\'s 2001: public imagination about AI.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'gps', year:1957, label:'General\nProblem Solver', short:'1957', cat:'ai', pos:'below', lane:3,
+    desc:'Newell & Simon (1957): General Problem Solver, means-ends analysis. AI working of the human brain in decision making. Deterministic model of human reasoning — dominant approach until ~1980.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'perceptron', year:1957, label:'Perceptron\nRosenblatt', short:'1957', cat:'ai', pos:'below', lane:1,
+    desc:'Frank Rosenblatt (1957): first neural network model. NOT at the Namur 1956 cybernetics congress. Minsky/Papert critique (1969) → neural net winter. Foundation of modern deep learning.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'lisp', year:1958, label:'LISP\nMcCarthy', short:'1958', cat:'ai', pos:'above', lane:3,
+    desc:"John McCarthy (1958): LISP — symbolic AI language based on Church's lambda calculus. McCarthy 1961: AI and mathematical reasoning. McCarthy 1965: LISP as proof checker. THE AI programming language for 30 years.",
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'cobol', year:1960, label:'COBOL\nGrace Hopper', short:'1960', cat:'computing', pos:'above', lane:1,
+    desc:"Grace Hopper (1960): business language. 'Educating a machine' — Hopper's metaphor for programming. Agendas: democratize programming for non-specialists. Administration tradition.",
+    obsidian:'P5/HoAI/HAI_question_bank' },
+
+  { id:'algol', year:1960, label:'ALGOL 60', short:'1960', cat:'computing', pos:'below', lane:1,
+    desc:"ALGOL 60: European academic language. Van Wijngaarden, Rutishauser, Bauer + Backus. Dijkstra's 1959 paper ('communication with automatic computer') influenced it. Elegant but commercially rejected. FORTRAN's commercial agenda won.",
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'x1', year:1959, label:'Electrologica X1\nDutch', short:'1956/59', cat:'computing', pos:'below', lane:3,
+    desc:'Electrologica X1: designed 1956 by Adriaan van Wijngaarden, commercially sold 1959. First Dutch commercial computer. Electrologica: European alternative to IBM. "Colloquium Moderne Rekenmachines" (1956). Dutch Dinosaurs.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  // ── 1960s ────────────────────────────────────────────────────────────────
+  { id:'plato', year:1960, label:'PLATO\nEd. Computing', short:'1960', cat:'concepts', pos:'above', lane:3,
+    desc:'PLATO (Programmed Logic for Automated Teaching Operations, 1960): computer-assisted instruction at University of Illinois. Since 1961 on timesharing. 60% mathematics — connection to AI? Computers in Education.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'sabre', year:1962, label:'SABRE\nAirline Booking', short:'1962', cat:'computing', pos:'above', lane:1, highlight:true,
+    desc:'SABRE (1962): IBM/American Airlines reservation system. Real Time Computing: 50,000 passengers booked in real time. Process Control tradition applied to administration. Appropriated from military computing origins.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'ibm360', year:1964, label:'IBM System/360', short:'1964', cat:'computing', pos:'below', lane:1, highlight:true,
+    desc:"IBM System/360: single compatible family. IBM vs. European dwarves. OS/360 became the prime example of the Software Crisis — the largest software project, massively over budget. Brooks: 'adding manpower makes it later'.",
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'logo', year:1967, label:'LOGO\nPapert', short:'1967', cat:'ai', pos:'below', lane:2,
+    desc:"Seymour Papert (1928-2016) & Marvin Minsky (1927-2016): LOGO programming language (1967). Constructivist: child programs computer, not the reverse. Turtle graphics. Papert's Mindstorms (1981): 'learn to code' movement.",
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'automath', year:1967, label:'Automath\nde Bruijn', short:'1967', cat:'ai', pos:'above', lane:2,
+    desc:'N.G. de Bruijn (1967): Automath — first computer proof checker (Eindhoven). AI and Mathematics: McCarthy 1961 proposed using computers for mathematical reasoning; de Bruijn built the first system.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'barclays', year:1967, label:'Barclays\nCash Dispenser', short:'1967', cat:'computing', pos:'above', lane:3,
+    desc:'Barclays Bank (Burroughs), first ATM/cash dispenser (1967). Real Time Computing applied to everyday banking. Process Control tradition entering ordinary life.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'sw-crisis', year:1968, label:'Software\nCrisis (NATO)', short:'1968', cat:'computing', pos:'below', lane:1, highlight:true,
+    desc:"NATO Garmisch 1968: OS/360 as exemplar of failure. Two readings: Brooks' crisis (management, size) vs. Dijkstra's crisis (need mathematical discipline — final push for ALGOL's agenda). Birth of software engineering.",
+    obsidian:'P5/HoAI/HAI_question_bank' },
+
+  { id:'kubrick2001', year:1968, label:'2001: A Space\nOdyssey (HAL)', short:'1968', cat:'concepts', pos:'above', lane:1,
+    desc:"Stanley Kubrick, 2001: A Space Odyssey (1968): HAL 9000 as AI. Philip K. Dick: Do Androids Dream of Electric Sheep? (1968). Science fiction: redefinition of what makes us human — feeling instead of thinking.",
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  // ── 1970s ────────────────────────────────────────────────────────────────
+  { id:'cybersyn', year:1971, label:'Cybersyn\nStafford Beer', short:'1971', cat:'concepts', pos:'above', lane:2,
+    desc:'Cybersyn (1971): Stafford Beer applied cybernetics to management of Chilean economy under Allende. Jay Forrester, World Dynamics (1971): systems thinking. W. Robert Widener, New Management Concepts (1968). Cybernetics in Business.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'lighthill', year:1973, label:'Lighthill Report\n1st Winter', short:'1973', cat:'ai', pos:'below', lane:1, highlight:true,
+    desc:"UK Lighthill Report (1973): AI failed to deliver on promises. Machine translation failure over-promised. First AI winter. Term 'AI winters' coined retrospectively in 2006 for cycles of hype and disappointment.",
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'fourcolour', year:1976, label:'Four Colour\nTheorem', short:'1976', cat:'ai', pos:'above', lane:2,
+    desc:'Appel & Haken (1976): Four Colour Theorem proved by computer (AURA at Argonne National Laboratory). First major computer-assisted mathematical proof. AI and Mathematics: computer as mathematical reasoner.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  // ── 1980s ────────────────────────────────────────────────────────────────
+  { id:'expert', year:1980, label:'Expert Systems\nBoom', short:'1980s', cat:'ai', pos:'below', lane:2,
+    desc:'MYCIN, DENDRAL, LISP machines. Knowledge-based AI. Japan 5th Generation project. AI in decision making — deterministic model of human brain (Newell/Simon approach until ~1980). Dominated the decade.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'mindstorms', year:1981, label:'Mindstorms\nPapert', short:'1981', cat:'concepts', pos:'above', lane:2,
+    desc:'Seymour Papert, Mindstorms: Children, Computers and Powerful Ideas (1981). Continuing LOGO: "learn to code" movement, turtle robots. Computers in Education (CAI). Positive influence on general trust in computing.',
+    obsidian:'P5/HoAI/HAI_topics' },
 ];
 
 // ── CONCEPT NODES (pinned at top of canvas) ─────────────────────────────────
 const CONCEPTS = [
-  { id:'c-appropriation', x:1100, label:'Appropriation', shortDesc:'Using tech for unintended purposes',
-    desc:'Nim→AI; Email→ARPANET; GPU→DeepLearning; SAGE→SABRE; Web→Social media. Tech designers ≠ tech users.',
+  { id:'c-traditions', x:300, label:'Three Traditions', shortDesc:'Administration · Process Control · Science',
+    desc:'Three independent drivers of computing: Administration (Hollerith/census/punched cards), Process Control (industrial/military, Dutch waterworks, Taylor), Science & Engineering (ballistics, ENIAC). Each shaped computing independently.',
     obsidian:'P5/HoAI/HAI_topics',
-    links:['nim','email','sage','alexnet','www'] },
-  { id:'c-agendas', x:1580, label:'Agendas', shortDesc:'Interests shaping historical narratives',
-    desc:'Aiken invokes Babbage for funding. Anglo-American narrative ignores Polish/Dutch/Soviet. FORTRAN vs ALGOL commercial vs academic.',
+    links:['hollerith','eniac','sabre'] },
+
+  { id:'c-trust', x:600, label:'Technology & Trust', shortDesc:'Capability alone ≠ adoption',
+    desc:'Hollerith: fast legible output → census trust. UNIVAC on CBS: public demonstration. Edmund Berkeley popularizes "electronic brain". Technology & Trust: being seen to work matters as much as actually working.',
+    obsidian:'P5/HoAI/HAI_topics',
+    links:['hollerith','univac','berkeley'] },
+
+  { id:'c-appropriation', x:950, label:'Appropriation', shortDesc:'Using tech for unintended purposes',
+    desc:"Tech designers ≠ tech users. Military computer (SAGE) → commercial airlines (SABRE). Scientific computer → music → AI demonstration. Appropriation: the second life of a technology.",
+    obsidian:'P5/HoAI/HAI_topics',
+    links:['sabre','edsac'] },
+
+  { id:'c-metaphor', x:1230, label:'Use of Metaphor', shortDesc:'"Electronic Brain" · "Educating a machine"',
+    desc:"Metaphors shape how we understand computers: 'Electronic brain' (newspaper, 1946). 'Educating a machine' (Grace Hopper — programming as teaching). Bolter, Turing's Man (1984): computer as defining technology. Karl Lashley (1929): motor behaviour and computing. Grey Walter's turtle robots.",
+    obsidian:'P5/HoAI/HAI_topics',
+    links:['cybernetics','cobol','manchester'] },
+
+  { id:'c-agendas', x:1510, label:'Agendas', shortDesc:'Interests shaping historical narratives',
+    desc:"Aiken invokes Babbage for Harvard Mark I funding. Anglo-American narrative ignores Dutch/Polish/European. FORTRAN (commercial) vs. ALGOL (academic ideal). 'Ideals made machines succeed' (Campbell-Kelly): hidden history of who benefits.",
     obsidian:'P5/HoAI/HAI_topics',
     links:['mark1','babbage','fortran','algol'] },
-  { id:'c-deftech', x:1940, label:'Defining Technology\n(Bolter)', shortDesc:'Tech reshaping cultural self-understanding',
-    desc:'Clock (17th c.): humans as clockwork. Steam (19th c.): society as energy. Cybernetics (1960s): brain as processor. AI (21st c.): intelligence as computation.',
+
+  { id:'c-dutch', x:1790, label:'Dutch Dinosaurs', shortDesc:'ARRA · MIRACLE · X1 · European dwarves',
+    desc:"Dutch homegrown computers: ARRA (1952, van Wijngaarden), MIRACLE (Shell, 1953 — first Dutch music/anthem), Electrologica X1 (1959 commercial). European dwarves vs. IBM: Zuse KG, Regnecentralen, Bull, LEO, Electrologica. 'Colloquium Moderne Rekenmachines' (1956).",
     obsidian:'P5/HoAI/HAI_topics',
-    links:['cybernetics','alexnet'] },
-  { id:'c-survcap', x:3050, label:'Surveillance Capitalism\n(Zuboff)', shortDesc:'Human behaviour as raw material',
-    desc:'Behaviour → prediction products → sold to advertisers. Born with AdWords (2000). Netflix, Facebook follow. GDPR as response.',
+    links:['arra','miracle','x1'] },
+
+  { id:'c-deftech', x:2070, label:'Defining Technology\n(Bolter)', shortDesc:'Tech reshaping cultural self-understanding',
+    desc:"J.D. Bolter, Turing's Man (1984): each era has a 'defining technology' reshaping how we understand humans. Clock (17th c.) → humans as clockwork. Steam (19th c.) → society as energy. Computer (1960s) → brain as processor.",
     obsidian:'P5/HoAI/HAI_topics',
-    links:['adwords','gdpr','google'] },
-  { id:'c-winters', x:2250, label:'AI Winters', shortDesc:'Cycles: hype → disappointment → funding cuts',
-    desc:'1st (1970s, Lighthill/MT failure). 2nd (1987, expert systems collapse). Narrative: winter→spring used to justify sustained investment.',
+    links:['cybernetics','berkeley'] },
+
+  { id:'c-winters', x:2350, label:'AI Winters', shortDesc:'Cycles: hype → disappointment → funding cuts',
+    desc:"First AI winter (1970s, Lighthill Report: machine translation failure, over-promising). Term 'AI winters' coined retrospectively in 2006. AI in decision making (Newell/Simon): very deterministic until ~1980. Hypes and research.",
     obsidian:'P5/HoAI/HAI_topics',
-    links:['lighthill','expert','winter2','alexnet'] },
-  { id:'c-trust', x:830, label:'Technology & Trust', shortDesc:'Capability alone ≠ adoption',
-    desc:'Hollerith: speed + legible output. UNIVAC on CBS: public trust demo. IBM brand: institutional risk reduction. Atanasoff: functional but passed over.',
+    links:['lighthill','expert'] },
+
+  { id:'c-education', x:2630, label:'Computers in\nEducation', shortDesc:'Skinner · PLATO · LOGO · Mindstorms',
+    desc:"Computers in Education (CAI): Skinner behaviourism (1954) → PLATO at Illinois (1960) → LOGO/Papert (1967) → Mindstorms (1981). Dutch: ÉCOL, computerkunde as school subject. Max Euwe (chess champion, FIDE 1966). Benjamin Bloom's taxonomy (1956). BASIC in schools.",
     obsidian:'P5/HoAI/HAI_topics',
-    links:['hollerith','univac'] },
-  { id:'c-traditions', x:380, label:'Three Traditions', shortDesc:'Administration · Process Control · Science',
-    desc:'Administration (Hollerith/census). Process control (Dutch waterworks, Taylor). Science (ballistics, astronomy). Three independent drivers of computing.',
-    obsidian:'P5/HoAI/HAI_topics',
-    links:['hollerith','arra'] },
+    links:['skinner','plato','logo','mindstorms'] },
 ];
 
 // ── CROSS-CONNECTIONS ────────────────────────────────────────────────────────
 const CONNECTIONS = [
-  { from:'babbage',    to:'mark1',    color:'#c8a000', dash:'6,4', label:'Agendas', marker:'arrow-yellow' },
-  { from:'turing36',   to:'dartmouth',color:'#5badd6', dash:'5,3', label:'foundation', marker:'arrow-blue' },
-  { from:'church',     to:'lisp',     color:'#5badd6', dash:'5,3', label:'λ→LISP', marker:'arrow-blue' },
-  { from:'cybernetics',to:'dartmouth',color:'#5badd6', dash:'6,4', label:'precursor', marker:'arrow-blue' },
-  { from:'moore',      to:'edsac',    color:'#5a9e5a', dash:'4,3', label:'lectures', marker:'arrow-green' },
-  { from:'moore',      to:'manchester',color:'#5a9e5a',dash:'4,3', label:'lectures', marker:'arrow-green' },
-  { from:'perceptron', to:'backprop', color:'#5badd6', dash:'5,3', label:'neural\nlineage', marker:'arrow-blue' },
-  { from:'backprop',   to:'alexnet',  color:'#5badd6', dash:'5,3', label:'deep\nlearning', marker:'arrow-blue' },
-  { from:'lisp',       to:'expert',   color:'#5badd6', dash:'4,3', label:'AI lang', marker:'arrow-blue' },
-  { from:'lighthill',  to:'expert',   color:'#c8a000', dash:'6,4', label:'winter\n→revival', marker:'arrow-yellow' },
-  { from:'expert',     to:'winter2',  color:'#c8a000', dash:'6,4', label:'→2nd winter', marker:'arrow-yellow' },
-  { from:'winter2',    to:'alexnet',  color:'#5badd6', dash:'6,4', label:'→AI summer', marker:'arrow-blue' },
-  { from:'sage',       to:'arpanet',  color:'#c8a000', dash:'6,4', label:'military\n→tech', marker:'arrow-yellow' },
-  { from:'arpanet',    to:'email',    color:'#c8a000', dash:'6,4', label:'Appropriation', marker:'arrow-yellow' },
-  { from:'arpanet',    to:'www',      color:'#5a9e5a', dash:'5,3', label:'→web', marker:'arrow-green' },
-  { from:'google',     to:'adwords',  color:'#c8a000', dash:'5,3', label:'Surv.Cap.', marker:'arrow-yellow' },
-  { from:'adwords',    to:'gdpr',     color:'#c8a000', dash:'6,4', label:'→regulation', marker:'arrow-yellow' },
-  { from:'fortran',    to:'algol',    color:'#c8a000', dash:'6,4', label:'Agendas', marker:'arrow-yellow' },
-  { from:'arra',       to:'algol',    color:'#5a9e5a', dash:'5,3', label:'Dutch→', marker:'arrow-green' },
-  { from:'eniac',      to:'edvac',    color:'#5a9e5a', dash:'4,3', label:'Moore\nSchool', marker:'arrow-green' },
-  { from:'alexnet',    to:'llm',      color:'#5badd6', dash:'5,3', label:'→LLMs', marker:'arrow-blue' },
+  // Logic / AI foundations lineage
+  { from:'frege',      to:'principia',  color:'#5badd6', dash:'5,3', label:'inspires', marker:'arrow-blue' },
+  { from:'principia',  to:'hilbert',    color:'#5badd6', dash:'5,3', label:'axioms', marker:'arrow-blue' },
+  { from:'hilbert',    to:'church',     color:'#5badd6', dash:'5,3', label:'Entscheid.', marker:'arrow-blue' },
+  { from:'hilbert',    to:'turing36',   color:'#5badd6', dash:'5,3', label:'Entscheid.', marker:'arrow-blue' },
+  { from:'church',     to:'lisp',       color:'#5badd6', dash:'5,3', label:'λ→LISP', marker:'arrow-blue' },
+  { from:'turing36',   to:'dartmouth',  color:'#5badd6', dash:'5,3', label:'foundation', marker:'arrow-blue' },
+  { from:'principia',  to:'automath',   color:'#5badd6', dash:'6,4', label:'proof\nchecker', marker:'arrow-blue' },
+  { from:'automath',   to:'fourcolour', color:'#5badd6', dash:'5,3', label:'AI & Math', marker:'arrow-blue' },
+  // Agendas: Babbage → Mark I
+  { from:'babbage',    to:'mark1',      color:'#c8a000', dash:'6,4', label:'Agendas', marker:'arrow-yellow' },
+  // Cybernetics lineage
+  { from:'macy',       to:'cybernetics',color:'#5badd6', dash:'4,3', label:'Wiener', marker:'arrow-blue' },
+  { from:'cybernetics',to:'dartmouth',  color:'#5badd6', dash:'6,4', label:'precursor', marker:'arrow-blue' },
+  // Moore School → UK computers
+  { from:'moore',      to:'edsac',      color:'#5a9e5a', dash:'4,3', label:'lectures', marker:'arrow-green' },
+  { from:'moore',      to:'manchester', color:'#5a9e5a', dash:'4,3', label:'lectures', marker:'arrow-green' },
+  // Dutch Dinosaurs lineage
+  { from:'arra',       to:'miracle',    color:'#5a9e5a', dash:'4,3', label:'Dutch', marker:'arrow-green' },
+  { from:'arra',       to:'algol',      color:'#5a9e5a', dash:'5,3', label:'→ALGOL', marker:'arrow-green' },
+  { from:'miracle',    to:'x1',         color:'#5a9e5a', dash:'4,3', label:'Dutch', marker:'arrow-green' },
+  // Programming language agendas
+  { from:'fortran',    to:'algol',      color:'#c8a000', dash:'6,4', label:'Agendas', marker:'arrow-yellow' },
+  // ENIAC → stored program
+  { from:'eniac',      to:'edvac',      color:'#5a9e5a', dash:'4,3', label:'stored\nprogram', marker:'arrow-green' },
+  // AI tools from Dartmouth
+  { from:'dartmouth',  to:'gps',        color:'#5badd6', dash:'5,3', label:'Newell\nSimon', marker:'arrow-blue' },
+  { from:'dartmouth',  to:'lisp',       color:'#5badd6', dash:'5,3', label:'McCarthy', marker:'arrow-blue' },
+  { from:'lisp',       to:'expert',     color:'#5badd6', dash:'4,3', label:'AI lang', marker:'arrow-blue' },
+  // Education lineage
+  { from:'skinner',    to:'plato',      color:'#c8a000', dash:'6,4', label:'CAI', marker:'arrow-yellow' },
+  { from:'plato',      to:'logo',       color:'#c8a000', dash:'5,3', label:'→', marker:'arrow-yellow' },
+  { from:'logo',       to:'mindstorms', color:'#5a9e5a', dash:'5,3', label:'Papert', marker:'arrow-green' },
+  // Software Crisis
+  { from:'ibm360',     to:'sw-crisis',  color:'#c8a000', dash:'6,4', label:'OS/360\nfailure', marker:'arrow-yellow' },
+  // AI winter
+  { from:'lighthill',  to:'expert',     color:'#c8a000', dash:'6,4', label:'winter\n→revival', marker:'arrow-yellow' },
 ];
 
 // ── COMPUTE POSITIONS ────────────────────────────────────────────────────────
@@ -541,11 +633,10 @@ function render() {
   // ── ERA BANDS ──────────────────────────────────────────────────────────────
   const eras = [
     { y0:-400, y1:1900, label:'Prehistory & Early Machines', x0: yearToX(-400), x1: yearToX(1900), bg:'rgba(240,230,210,0.18)' },
-    { y0:1900, y1:1945, label:'Foundations (1900–1945)',     x0: yearToX(1900), x1: yearToX(1945), bg:'rgba(220,240,220,0.20)' },
-    { y0:1945, y1:1965, label:'Cold War Computing',          x0: yearToX(1945), x1: yearToX(1965), bg:'rgba(210,235,250,0.20)' },
-    { y0:1965, y1:1980, label:'Software Era & AI Winters',   x0: yearToX(1965), x1: yearToX(1980), bg:'rgba(255,250,225,0.25)' },
-    { y0:1980, y1:2000, label:'PC Era & Internet',           x0: yearToX(1980), x1: yearToX(2000), bg:'rgba(235,220,240,0.20)' },
-    { y0:2000, y1:2026, label:'AI Renaissance',              x0: yearToX(2000), x1: yearToX(2026), bg:'rgba(220,240,230,0.22)' },
+    { y0:1900, y1:1945, label:'Foundations of AI (1900–1945)', x0: yearToX(1900), x1: yearToX(1945), bg:'rgba(220,240,220,0.20)' },
+    { y0:1945, y1:1956, label:'Early Computers & Cold War',  x0: yearToX(1945), x1: yearToX(1956), bg:'rgba(210,235,250,0.20)' },
+    { y0:1956, y1:1968, label:'Dartmouth Era & Dutch Dinosaurs', x0: yearToX(1956), x1: yearToX(1968), bg:'rgba(255,250,225,0.25)' },
+    { y0:1968, y1:1985, label:'Software Crisis & AI Winters', x0: yearToX(1968), x1: yearToX(1985), bg:'rgba(235,220,240,0.20)' },
   ];
   for (const era of eras) {
     rootG.appendChild(svgEl('rect', { x: era.x0, y: 0, width: era.x1-era.x0, height: CANVAS_H,
@@ -564,8 +655,8 @@ function render() {
   }));
 
   // year ticks
-  const tickYears = [-350,1822,1890,1936,1944,1945,1948,1950,1952,1956,1957,1960,
-                     1964,1968,1971,1973,1980,1984,1989,1998,2000,2012,2017,2018];
+  const tickYears = [-350,1837,1854,1879,1890,1910,1920,1936,1944,1945,1948,1950,
+                     1952,1956,1957,1960,1962,1964,1967,1968,1971,1973,1976,1981];
   for (const yr of tickYears) {
     const tx = yearToX(yr);
     rootG.appendChild(svgEl('line', { x1:tx, y1:TL_Y-5, x2:tx, y2:TL_Y+5,
