@@ -40,6 +40,7 @@
 ## Study Tools (open in browser)
 - [[HTML Study Tools/DB — Practice Tool.html|DB Practice Tool]]
 - [[HTML Study Tools/TM — Study Tool.html|TM Study Tool]] — flashcards + quiz + literature
+- [[Text Mining/TM_practice_exams.html|TM Practice Exams]] — 25 timed exam-style quizzes
 - [[HoAI/HAI_flashcard_tool.html|HAI Flashcard Tool]] — A/B/C flashcards + essay prompts
 - [[HoAI/HAI_timeline.html|HAI Interactive Timeline]] — 58 events, filter/search, exam badges
 - [[ML10.0/ML_review_website.html|ML Review Website]] — 10 lectures + 44-question quiz
