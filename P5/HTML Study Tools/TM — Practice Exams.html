@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Text Mining — Practice Exams</title>
+<style>
+:root {
+  --bg: #1a1a2e; --surface: #16213e; --card: #0f3460;
+  --accent: #e94560; --accent2: #0f7ea6; --text: #e0e0e0;
+  --muted: #8899aa; --success: #2ecc71; --warn: #f39c12; --danger: #e74c3c;
+  --border: rgba(255,255,255,0.08);
+}
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f0f4f8; --surface: #ffffff; --card: #e8f0fe;
+    --accent: #c0392b; --accent2: #1a73e8; --text: #202124;
+    --muted: #5f6368; --border: rgba(0,0,0,0.1);
+    --success: #1e8e3e; --danger: #d93025;
+  }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg); color: var(--text); font-size: 16px; line-height: 1.6; }
+#app { display: flex; height: 100vh; overflow: hidden; }
+#sidebar { width: 250px; min-width: 250px; background: var(--surface);
+  border-right: 1px solid var(--border); overflow-y: auto; padding: 16px 0; }
+#sidebar h1 { font-size: 13px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1px; color: var(--accent); padding: 0 16px 12px; }
+.nav-item { display: block; padding: 9px 16px; cursor: pointer; border-radius: 6px;
+  margin: 2px 8px; font-size: 13px; color: var(--muted); transition: all 0.15s; }
+.nav-item:hover { background: var(--border); color: var(--text); }
+.nav-item.active { background: var(--accent); color: white; }
+.nav-section { font-size: 10px; text-transform: uppercase; letter-spacing: 1px;
+  color: var(--muted); padding: 14px 16px 4px; }
+.score-badge { float: right; font-size: 11px; background: var(--card);
+  border-radius: 10px; padding: 2px 7px; }
+.score-badge.good { background: rgba(46,204,113,0.2); color: var(--success); }
+.score-badge.ok { background: rgba(243,156,18,0.2); color: var(--warn); }
+.score-badge.bad { background: rgba(231,76,60,0.2); color: var(--danger); }
+#main { flex: 1; overflow-y: auto; padding: 32px; }
+.page { display: none; }
+.page.active { display: block; }
+h2 { font-size: 22px; margin-bottom: 6px; }
+h3 { font-size: 16px; margin: 20px 0 6px; color: var(--accent2); }
+p { margin-bottom: 10px; color: var(--muted); font-size: 15px; }
+.subtitle { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+.topic-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin: 16px 0; }
+.topic-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  padding: 14px; cursor: pointer; transition: all 0.15s; }
+.topic-card:hover { border-color: var(--accent2); }
+.topic-card h4 { font-size: 14px; margin-bottom: 4px; }
+.topic-card p { font-size: 12px; margin: 0; }
+.topic-pill { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 50px;
+  background: var(--card); color: var(--accent2); margin-right: 4px; margin-bottom: 4px; border: 1px solid var(--border); }
+/* Quiz */
+.quiz-header { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
+.quiz-title { flex: 1; }
+.timer { font-size: 28px; font-weight: 700; color: var(--accent); font-variant-numeric: tabular-nums; }
+.progress-wrap { margin-bottom: 20px; }
+.progress-info { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+.progress-bar { background: var(--card); border-radius: 50px; height: 6px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--accent2); border-radius: 50px; transition: width 0.3s; }
+.question-card { background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 24px; margin-bottom: 16px; max-width: 800px; }
+.q-meta { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+.q-text { font-size: 16px; margin-bottom: 16px; color: var(--text); line-height: 1.6; }
+.option { display: block; width: 100%; text-align: left; padding: 12px 16px;
+  margin: 6px 0; border-radius: 8px; border: 1px solid var(--border);
+  background: var(--card); color: var(--text); cursor: pointer; font-size: 15px;
+  transition: all 0.15s; line-height: 1.4; }
+.option:hover:not(:disabled) { border-color: var(--accent2); }
+.option.correct { background: rgba(46,204,113,0.15); border-color: var(--success); color: var(--success); }
+.option.wrong { background: rgba(231,76,60,0.15); border-color: var(--danger); color: var(--danger); }
+.option.reveal { background: rgba(46,204,113,0.08); border-color: var(--success); }
+.option:disabled { cursor: default; }
+.explanation { background: var(--card); border-radius: 8px; padding: 12px 16px;
+  margin-top: 12px; font-size: 14px; color: var(--muted); display: none;
+  border-left: 3px solid var(--accent2); }
+.explanation.show { display: block; }
+.btn { padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer;
+  font-size: 14px; font-weight: 600; transition: all 0.15s; }
+.btn-primary { background: var(--accent2); color: white; }
+.btn-primary:hover { opacity: 0.9; }
+.btn-secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
+.btn-secondary:hover { border-color: var(--accent2); }
+.btn-accent { background: var(--accent); color: white; }
+.btn-row { display: flex; gap: 10px; align-items: center; margin-top: 16px; flex-wrap: wrap; }
+.results-card { background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 28px; max-width: 600px; margin-bottom: 20px; }
+.score-circle { width: 100px; height: 100px; border-radius: 50%; display: flex;
+  align-items: center; justify-content: center; font-size: 26px; font-weight: 700;
+  margin: 0 auto 16px; border: 4px solid var(--accent2); }
+.score-circle.pass { border-color: var(--success); color: var(--success); }
+.score-circle.fail { border-color: var(--danger); color: var(--danger); }
+.topic-result { display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+.topic-result:last-child { border-bottom: none; }
+.mini-bar { width: 120px; height: 6px; background: var(--card); border-radius: 3px; overflow: hidden; }
+.mini-fill { height: 100%; border-radius: 3px; }
+.review-item { background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  padding: 16px; margin-bottom: 12px; max-width: 800px; }
+.review-item.correct-r { border-left: 4px solid var(--success); }
+.review-item.wrong-r { border-left: 4px solid var(--danger); }
+.home-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; margin: 20px 0; }
+.exam-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  padding: 18px; cursor: pointer; transition: all 0.15s; }
+.exam-card:hover { border-color: var(--accent2); transform: translateY(-1px); }
+.exam-card h4 { font-size: 15px; margin-bottom: 6px; }
+.exam-card p { font-size: 12px; }
+</style>
+</head>
+<body>
+<div id="app">
+<div id="sidebar">
+  <h1>TM Exam Prep</h1>
+  <div class="nav-item active" onclick="showPage('home')">Home</div>
+  <div class="nav-section">Practice Exams</div>
+  <div id="exam-nav"></div>
+</div>
+<div id="main">
+  <div id="home" class="page active">
+    <h2>Text Mining — Practice Exams</h2>
+    <p class="subtitle">25 full practice exams · 35 questions each · Multiple choice · All exam topics</p>
+    <h3>Topics Covered</h3>
+    <div style="margin-bottom:20px">
+      <span class="topic-pill">Linguistics &amp; NLP</span>
+      <span class="topic-pill">Tokenisation</span>
+      <span class="topic-pill">Morphology &amp; Syntax</span>
+      <span class="topic-pill">Semantics &amp; Pragmatics</span>
+      <span class="topic-pill">Named Entity Recognition</span>
+      <span class="topic-pill">Sentiment Analysis</span>
+      <span class="topic-pill">Topic Modelling</span>
+      <span class="topic-pill">ML for NLP</span>
+      <span class="topic-pill">Evaluation Metrics</span>
+      <span class="topic-pill">Embeddings</span>
+      <span class="topic-pill">Transformers &amp; BERT</span>
+      <span class="topic-pill">Fine-tuning</span>
+      <span class="topic-pill">Annotation</span>
+      <span class="topic-pill">Text Classification</span>
+    </div>
+    <h3>Exam Tips</h3>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;max-width:600px;margin-bottom:24px">
+      <p style="margin-bottom:6px">• Exam is <strong>multiple choice, individual</strong> (60% of grade)</p>
+      <p style="margin-bottom:6px">• Based on <strong>literature and lecture slides</strong></p>
+      <p style="margin-bottom:6px">• Canvas self-test quizzes are representative of exam style</p>
+      <p style="margin-bottom:0">• Pass: average grade ≥ 5.5; each component ≥ 5</p>
+    </div>
+    <h3>All Practice Exams</h3>
+    <div class="home-grid" id="home-exam-grid"></div>
+  </div>
+  <div id="quiz-view" class="page">
+    <div class="quiz-header">
+      <div class="quiz-title">
+        <h2 id="quiz-title">Practice Exam</h2>
+        <div class="subtitle" id="quiz-subtitle"></div>
+      </div>
+      <div class="timer" id="timer">45:00</div>
+      <button class="btn btn-secondary" onclick="submitExam()">Submit Exam</button>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-info">
+        <span id="q-counter">Question 1 of 35</span>
+        <span id="q-answered">0 answered</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+    </div>
+    <div id="question-area"></div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="prevQ()" id="btn-prev">← Previous</button>
+      <button class="btn btn-primary" onclick="nextQ()" id="btn-next">Next →</button>
+      <button class="btn btn-accent" onclick="submitExam()" style="margin-left:auto">Submit Exam</button>
+    </div>
+  </div>
+  <div id="results-view" class="page">
+    <h2>Exam Results</h2>
+    <div id="results-content"></div>
+  </div>
+</div>
+</div>
+<script>
+// ─── QUESTION BANK ───────────────────────────────────────────────────────────
+// Format: { q, opts:[a,b,c,d], a: index(0-3), topic, exp }
+const QB = [
+// ── LINGUISTICS ──
+{q:"What type of phrase is 'The Text Mining Course'?",opts:["Verb Phrase (VP)","Noun Phrase (NP)","Adjective Phrase (AdjP)","Prepositional Phrase (PP)"],a:1,topic:"Linguistics",exp:"'The Text Mining Course' is headed by a noun ('Course'), making it a Noun Phrase (NP)."},
+{q:"What is the difference between dependency parsing and constituent parsing?",opts:["A dependency parser detects hierarchical relations (NPs, VPs); a constituency parser detects flat relations between words","A dependency parser detects flat relations between adjectives, nouns and verbs; a constituency parser detects hierarchical relations such as noun phrases and verb phrases","A dependency parser detects relations between morphemes; a constituency parser detects POS relations","There is no difference"],a:1,topic:"Linguistics",exp:"Dependency parsing identifies flat binary relations between head words and their dependents. Constituency (phrase-structure) parsing identifies hierarchical constituents like NP and VP."},
+{q:"What are chunkers?",opts:["Chunkers identify compound nouns but provide no further syntactic information","Chunkers provide the same information as a parser but are more robust","Chunkers efficiently identify constituents but do not provide full sentence structure or syntactic dependencies","Chunkers provide full phrase structure trees but miss some syntactic structures"],a:2,topic:"Linguistics",exp:"Chunkers are shallow parsers that detect phrases (chunks) like NPs efficiently, without building a full parse tree or computing syntactic dependencies."},
+{q:"What is the lexical relation between 'lecture room' and 'university building'?",opts:["synonymy","hyponymy","meronymy","homophony"],a:2,topic:"Linguistics",exp:"Meronymy is a part-whole relation: a lecture room is a part of a university building."},
+{q:"Syntactic parsers and chunkers are NLP modules used for which of the following?",opts:["Morphology","Semantics","Syntax","Pragmatics"],a:2,topic:"Linguistics",exp:"Both parsers and chunkers operate at the syntactic level — they analyse sentence structure."},
+{q:"What is the primary difference between semantics and pragmatics?",opts:["Semantics is related to word order; pragmatics deals with syntax rules","Semantics deals with the literal meaning of words; pragmatics focuses on how context influences meaning","Semantics focuses on language evolution; pragmatics is concerned with language in isolation","Semantics is concerned with sentence structure; pragmatics is about sentence correctness"],a:1,topic:"Linguistics",exp:"Semantics studies literal/compositional meaning; pragmatics studies how context, speaker intent, and situation shape interpretation."},
+{q:"Which of the following is an example of a morphological process?",opts:["Using context to determine word meaning","Applying tone or stress to modify word meaning","Adding a prefix to a word to alter its meaning","Changing word order to form a question"],a:2,topic:"Linguistics",exp:"Morphology studies word structure. Adding a prefix (e.g., un- to 'happy' → 'unhappy') is a morphological derivation process."},
+{q:"Which process involves changes to a word's grammatical features such as tense or number?",opts:["Compounding","Derivation","Inflection","All of the above"],a:2,topic:"Linguistics",exp:"Inflection changes grammatical features (tense, number, case) without changing the word's core meaning or POS — e.g., 'walk' → 'walks' / 'walked'."},
+{q:"In dependency grammar, what term refers to the relationship between a head word and the words that depend on it?",opts:["Coordination","Subordination","Agreement relations","Dependency relations"],a:3,topic:"Linguistics",exp:"In dependency grammar, the connections between head words and their dependents are called dependency relations."},
+{q:"What is the difference between metaphors and metonymy in pragmatics?",opts:["A metaphor always involves exaggeration; metonymy involves understatement","A metaphor refers to literal meanings; metonymy involves abstract concepts","A metaphor substitutes one word based on association; metonymy compares two unrelated things","Metaphors transfer a property from one concept to a different, unrelated concept; metonymy uses a word to refer to a related concept"],a:3,topic:"Linguistics",exp:"Metaphors map properties across unrelated domains ('time is money'). Metonymy uses a related term as a stand-in ('the White House announced' = the US government)."},
+// ── NLP / PIPELINES ──
+{q:"How do different tokenisers split hyphenated terms such as 'state-of-the-art'?",opts:["Always as one token","Always as four tokens","Always as three tokens","It depends on the setup of the tokeniser"],a:3,topic:"NLP",exp:"Different tokenisers make different decisions about hyphens. NLTK might keep the whole term; others split on every hyphen. The behaviour depends on the tokeniser's rules/configuration."},
+{q:"What type of approaches were used in early NLP tools?",opts:["Deep learning","Statistical models","Hybrid approaches","Rules"],a:3,topic:"NLP",exp:"Early NLP systems (1950s–1980s) relied on hand-crafted rule-based approaches. Statistical models came later in the 1990s; deep learning from the 2010s."},
+{q:"How many words in English can be used to make reference to movements according to WordNet?",opts:["between 30 and 300","between 3 and 30","between 300 and 3000","more than 3000"],a:3,topic:"NLP",exp:"WordNet shows the rich vocabulary available in English — more than 3000 words exist for expressing movement, demonstrating the lexical variability NLP systems must handle."},
+{q:"Which statement best describes the structure of NLP pipelines?",opts:["NLP pipelines consist of entirely distinct modules without shared components","NLP pipelines always process text directly without preprocessing","NLP pipelines are rigid sequences that cannot be modified","NLP pipelines are likely to share basic processing steps (such as tokenization) while including specific modules for higher-level interpretations"],a:3,topic:"NLP",exp:"NLP pipelines share foundational steps (tokenization, POS tagging) and build task-specific modules on top for NER, parsing, sentiment, etc."},
+{q:"Which of the following is an example of language variation rather than ambiguity?",opts:["The phrase 'I saw her duck' referring to either an action or an animal","The word 'bank' meaning both a financial institution and the side of a river","A sentence that can be interpreted in two ways due to its structure","Differences in how British and American English spell 'color/colour'"],a:3,topic:"NLP",exp:"'Color/colour' is a spelling variant — the same word, different orthographic conventions. Ambiguity involves multiple possible interpretations for the same form."},
+{q:"What is the key difference between inline annotations and stand-off annotations?",opts:["Inline annotations are used for image data; stand-off for text","Inline annotations require no processing; stand-off requires complex processing","Inline annotations are stored separately; stand-off annotations are embedded in the text","Inline annotations are inserted directly within the text; stand-off annotations are stored in a separate file or layer"],a:3,topic:"NLP",exp:"Inline annotations (e.g., XML tags) modify the text directly. Stand-off annotations are stored separately and linked to text positions by character offsets."},
+{q:"What is the difference between Gold, Silver, and Bronze data?",opts:["Gold = training; Silver = validation; Bronze = test data","Gold = raw data; Silver = processed; Bronze = aggregated","Gold = user feedback; Silver = ML-generated; Bronze = survey data","Gold = manually labeled by humans; Silver = semi-automatically labeled with human verification; Bronze = automatically labeled with minimal human intervention"],a:3,topic:"NLP",exp:"Data quality tiers: Gold is fully human-annotated (highest quality); Silver uses automation with some human check; Bronze is fully automatic with little/no human review."},
+{q:"What can be considered as features of a text in NLP?",opts:["Author's handwriting, page layout, text color","Number of pages, font style, print quality","Gold labels","Sentence length, punctuation marks, part-of-speech tags"],a:3,topic:"NLP",exp:"NLP features are derived from the text content itself: length, POS tags, n-grams, syntactic patterns — not physical presentation properties."},
+{q:"What is the primary goal of feature engineering in NLP?",opts:["To improve raw data quality by manually cleaning it","To enhance model performance by increasing complexity","To minimize data needed by reducing data size","To transform raw data into features that can be used for machine learning models"],a:3,topic:"NLP",exp:"Feature engineering extracts and constructs meaningful representations (features) from raw text so that ML algorithms can learn from them."},
+{q:"What is a disadvantage of supervised machine learning in NLP?",opts:["It requires large amounts of unannotated data","It does not work well with text data","It is unable to generalise to unseen data","It needs annotated data, which can be expensive and time-consuming to create"],a:3,topic:"NLP",exp:"Supervised learning requires labelled training data. For NLP, annotation is slow and costly, requiring linguistic expertise and inter-annotator agreement checks."},
+// ── NAMED ENTITY RECOGNITION ──
+{q:"What is the main reason to express sequential tags using the BIO/IOB format?",opts:["The IOB format is easier to interpret for machines","The IOB format is easier to read","All of the above","The IOB format can better express the boundaries of an entity or chunk"],a:3,topic:"NER",exp:"BIO tagging (Beginning, Inside, Outside) explicitly marks entity boundaries, preventing ambiguity when two entities of the same type appear consecutively."},
+{q:"What is the effect of metonymy for named entity classification?",opts:["Locations can be ambiguous because they have the same name","Metonymy is not relevant for detecting entity type","Parts of entities are being referred to","The same name is used for different types such as locations, people and governments"],a:3,topic:"NER",exp:"Metonymy causes type ambiguity: 'Washington' can mean the city (LOC), the government (ORG), or a person (PER) depending on context."},
+{q:"Why is it important to create balanced evaluation datasets for NLP?",opts:["Unbalanced datasets provide too little data for training","An unbalanced dataset is too small to measure performance","An unbalanced dataset doesn't adequately reflect the linguistic phenomenon it purports to represent","When a dataset does not contain a realistic sample of the phenomenon, it does not allow one to measure system performance on that phenomenon adequately"],a:3,topic:"NER",exp:"If rare entity types are underrepresented, evaluation metrics will not reflect real-world performance on those types."},
+{q:"What can be considered a referring expression in NERC?",opts:["Only proper nouns, such as person or organisation names","Only adjectives that describe entities","A communicative act to identify an entity","Common noun phrases, pronouns, and in some cases verbs, verb phrases, and adjectives"],a:3,topic:"NER",exp:"Referring expressions include pronouns, definite NPs, and more — any linguistic unit used to identify an entity in discourse."},
+{q:"What is the key difference between Named Entity Recognition (NER) and Named Entity Classification (NEC)?",opts:["NER deals with proper nouns; NEC focuses on common nouns","NER assigns entity types; NEC identifies phrases referring to named entities","NER recognises context; NEC focuses on entity structure","NER involves identifying phrases that refer to named entities; NEC assigns entity types such as person, location, or organisation"],a:3,topic:"NER",exp:"NER = detection (finding spans); NEC = classification (assigning types like PER, LOC, ORG to detected spans). Together they form NERC."},
+{q:"Which of the following features can be used in Named Entity Recognition and Classification (NERC)?",opts:["Word-level features only","Lookup features only","Document & corpus features only","All of the above (word-level, lookup, document & corpus features)"],a:3,topic:"NER",exp:"NERC systems use word-level features (capitalisation, shape), lookup features (gazetteers, dictionaries), and document/corpus-level features (TF, co-occurrence)."},
+{q:"Which of the following is an example of ambiguity in NER?",opts:["'Paris' as a location vs. 'Paris' as a person","'New York', 'NY', and 'The Big Apple' all referring to the same location","'Holland' and 'The Netherlands' used as metonyms for the same country","'Apple' referring to the organisation vs. 'apple' as a fruit"],a:3,topic:"NER",exp:"'Apple' is genuinely ambiguous: it can refer to Apple Inc. (ORG) or the fruit (not an entity). Context (surrounding words) is needed to disambiguate."},
+{q:"The representation 'xxxXx' for the word 'spaCy' is an example of which feature?",opts:["Digit pattern","Character n-gram feature","Case feature","Word shape feature"],a:3,topic:"NER",exp:"Word shape features replace letters with their shape (lowercase x, uppercase X) and digits with d — e.g., 'spaCy' → 'xxxXx'. They capture capitalisation patterns useful for NER."},
+{q:"Which of the following typically does NOT serve as a feature for token-level classification?",opts:["IOB tag of the previous word","Lemma of the next word","POS tag of the previous word","Length of the current word"],a:3,topic:"NER",exp:"Token length is rarely informative for sequence labelling. Context (previous/next POS, lemma, IOB tags) and morphology are standard features."},
+{q:"Which factor does NOT impact performance for NERC?",opts:["The annotation of the spans","Amount of training data","Genre of text","Text font size"],a:3,topic:"NER",exp:"Font size is a visual property irrelevant to text content. Annotation quality, training data size, and genre (domain adaptation) all directly affect NERC performance."},
+// ── SENTIMENT ANALYSIS ──
+{q:"100 reviews: 40 positive, 60 negative. Classifier labels 50 positive, 50 negative; correctly identifies 10 positive and 20 negative. Macro-averaged precision and recall?",opts:["Precision 0.3, Recall 0.5","Precision 0.15, Recall 0.3","Precision 0.5, Recall 0.5","Recall and precision are both 0.3"],a:3,topic:"Sentiment",exp:"Pos precision=10/50=0.2, Neg precision=20/50=0.4 → macro P=(0.2+0.4)/2=0.3. Pos recall=10/40=0.25, Neg recall=20/60=0.33 → macro R≈0.3."},
+{q:"What is the opinion target in 'These guys are terrible.'?",opts:["terrible","are","the speaker or writer","These guys"],a:3,topic:"Sentiment",exp:"The opinion target is what the opinion is about. 'Terrible' is the opinion expression; 'These guys' is who/what is being evaluated."},
+{q:"In sentiment analysis, which set consists of typical negation words that reverse polarity?",opts:["always, completely, absolutely, certainly","hardly, scarcely, barely, slightly","good, excellent, fantastic, delightful","not, never, no, neither"],a:3,topic:"Sentiment",exp:"Negation words (not, never, no, neither) flip the polarity of the opinion they scope over — 'not good' becomes negative."},
+{q:"Who is the opinion holder in 'Emma believes that the new restaurant is fantastic'?",opts:["Fantastic","The new restaurant","The listener","Emma"],a:3,topic:"Sentiment",exp:"The opinion holder is the entity expressing the opinion. Emma believes → Emma is the holder; 'fantastic' is the expression; 'the new restaurant' is the target."},
+{q:"What is the role of aspect in Aspect-Based Sentiment Analysis?",opts:["The opinion holder's overall sentiment","The syntactic structure of the sentence","The emotional tone of the entire sentence","A specific feature or attribute of the product or service being evaluated"],a:3,topic:"Sentiment",exp:"ABSA identifies sentiment toward specific aspects (e.g., 'food', 'service', 'price') rather than the document overall."},
+{q:"Which of the following is an example of figurative language?",opts:["Similes","Metaphors","Metonymy","All of the above"],a:3,topic:"Sentiment",exp:"Figurative language includes similes, metaphors, metonymy, irony, and hyperbole — all of which challenge literal sentiment analysis."},
+{q:"According to Ekman et al. (1976), which are the six basic human emotions?",opts:["Love, jealousy, pride, excitement, boredom, shame","Gratitude, embarrassment, curiosity, hope, frustration, admiration","None of the above","Happiness, sadness, anger, fear, surprise, disgust"],a:3,topic:"Sentiment",exp:"Ekman's six universal basic emotions are: happiness, sadness, anger, fear, surprise, and disgust — recognisable across cultures from facial expressions."},
+{q:"Which of the following can be used as features in sentiment analysis?",opts:["Words or n-grams only","POS tags only","Modal verbs only","All of the above (words/n-grams, POS tags, modal verbs)"],a:3,topic:"Sentiment",exp:"Sentiment classifiers use diverse features: bag-of-words, n-grams, POS tags, modal verbs, negation markers, punctuation, and more."},
+{q:"According to Ravi & Ravi (2015), which approach was most commonly used for sentiment classification?",opts:["Logistic Regression (LR)","Dictionary-based approaches (DBA)","Latent Dirichlet Allocation (LDA)","Support Vector Machines (SVM)"],a:3,topic:"Sentiment",exp:"Ravi & Ravi (2015) surveyed sentiment analysis methods and found SVMs were the most widely used machine learning classifier for sentiment classification."},
+{q:"VADER is specifically attuned to sentiments expressed in which domain?",opts:["News articles","Scientific reports","All of the above","Social media"],a:3,topic:"Sentiment",exp:"VADER (Valence Aware Dictionary and sEntiment Reasoner) was developed and tuned for social media text — handling emoticons, slang, and informal writing."},
+// ── TOPIC MODELLING ──
+{q:"What makes topic detection more difficult for longer texts compared to short texts?",opts:["Longer texts provide more details about a topic","Longer texts have more word variation to express topics","Longer texts have stronger opinions","Longer texts such as news may contain different topics which creates ambiguity"],a:3,topic:"Topic Modelling",exp:"A short tweet likely covers one topic; a news article may cover several. Multi-topic documents require more sophisticated detection."},
+{q:"Why is it so difficult to agree on a set of universal topics?",opts:["There is a limited set of topics but many ways to describe them","There is too much variation in keywords","Topics are based on keywords that differ text to text","Topics are subjective categories and both the world and our view on it changes continuously"],a:3,topic:"Topic Modelling",exp:"Topic categories are socially constructed and change over time. What counts as a 'topic' depends on the domain, purpose, and cultural context."},
+{q:"What is the most important difference between topic modelling and text categorisation?",opts:["Topic modelling is hierarchical; text categorisation is not","Text categorisation uses keywords; topic modelling uses complete texts","Topic modelling is more fine-grained than text categorisation","For text categorisation the topics are given, whereas topic modelling does not assume an a priori definition of topics"],a:3,topic:"Topic Modelling",exp:"Text categorisation is supervised (predefined categories); topic modelling is unsupervised — it discovers latent topics from the data without prior labels."},
+{q:"What determines the level of granularity when assigning topics to a text?",opts:["Topics should be fine-grained to capture all details","The number of topics is always fixed","Topics should be coarse-grained to capture only main topics","Depends on data usage and specific application"],a:3,topic:"Topic Modelling",exp:"Granularity is application-dependent: a news aggregator might use broad topics; a research tool might need fine-grained sub-topics."},
+{q:"At what unit level can a topic be assigned in topic modelling or classification?",opts:["Short texts only","Complete books only","Sentences only","All of the above (sentences, documents, books)"],a:3,topic:"Topic Modelling",exp:"Topics can be assigned at any text unit: sentences, paragraphs, documents, or entire books, depending on the application."},
+{q:"Which of the following is NOT a disadvantage of supervised topic classification?",opts:["Manual effort to maintain topics and training data","Results biased toward training data distribution","New topics cannot be detected if not in training data","Control over the topics"],a:3,topic:"Topic Modelling",exp:"Control over topics is an ADVANTAGE of supervised classification — you define exactly what categories exist. The listed items are genuine disadvantages."},
+{q:"What approach is commonly used to label clusters in topic modelling?",opts:["Using most frequent words across all clusters","Random words from each cluster","Domain experts manually assign labels from memory","Extracting the most distinctive keywords from clusters using techniques like TF-IDF"],a:3,topic:"Topic Modelling",exp:"After clustering, TF-IDF highlights words that are frequent in a cluster but rare elsewhere — these distinctive terms are used as interpretable labels."},
+{q:"Why is random initialisation a limitation in Latent Dirichlet Allocation (LDA)?",opts:["LDA is not limited by random initialisation","It leads to overfitting","It makes LDA computationally inefficient","It can lead to unstable topic modelling results"],a:3,topic:"Topic Modelling",exp:"LDA uses Gibbs sampling from a random start, meaning different runs can produce different topics. Results are not deterministic."},
+{q:"What is catastrophic forgetting during fine-tuning?",opts:["The ability to learn multiple tasks during fine-tuning","The ability to remain effective with little data","The process of enhancing model performance by learning new tasks","The tendency of a model to forget information learned during pre-training when exposed to new data during fine-tuning"],a:3,topic:"Transformers",exp:"When fine-tuning on a small domain-specific dataset, the model may overwrite its general pre-trained weights, 'forgetting' general language knowledge."},
+{q:"Which factor is NOT mentioned as one to consider when choosing a topic model (Churchill & Singh 2021)?",opts:["Dataset size","Noise level","Document length","The complexity of the algorithm"],a:3,topic:"Topic Modelling",exp:"Churchill & Singh (2021) discuss dataset size, noise level, and document length as key factors. Algorithm complexity is not one of their listed considerations."},
+// ── ML / EVALUATION ──
+{q:"What does 'precision' measure in NLP evaluation?",opts:["The proportion of all actual positives that were correctly identified","The proportion of correctly identified instances out of all instances","The proportion of predicted positives that are actually correct","The harmonic mean of precision and recall"],a:2,topic:"Evaluation",exp:"Precision = TP / (TP + FP). Of all items the system predicted as positive, what fraction were actually positive?"},
+{q:"What does 'recall' measure in NLP evaluation?",opts:["The proportion of predicted positives that are correct","The proportion of correctly predicted instances overall","The harmonic mean of precision and recall","The proportion of actual positives that were correctly retrieved"],a:3,topic:"Evaluation",exp:"Recall = TP / (TP + FN). Of all actual positives in the data, what fraction did the system find?"},
+{q:"What is the F1 score?",opts:["The arithmetic mean of precision and recall","The ratio of true positives to true negatives","The harmonic mean of precision and recall","The geometric mean of precision and recall"],a:2,topic:"Evaluation",exp:"F1 = 2 × (P × R) / (P + R). The harmonic mean penalises imbalance between precision and recall more than the arithmetic mean would."},
+{q:"What is the difference between micro and macro averaging?",opts:["Micro averaging is used for binary; macro for multiclass","Micro averaging gives equal weight to each class; macro averages aggregate counts across all classes","Macro averaging gives equal weight to each class; micro averaging aggregates counts across all classes","There is no difference between micro and macro averaging"],a:2,topic:"Evaluation",exp:"Macro averaging computes metric per class then averages (treats all classes equally). Micro averaging pools all TP/FP/FN across classes (gives more weight to frequent classes)."},
+{q:"What is a confusion matrix used for?",opts:["Visualising model training loss over epochs","Summarising the performance of a classifier by showing predicted vs actual class counts","Showing the distribution of features in a dataset","Measuring the similarity between two documents"],a:1,topic:"Evaluation",exp:"A confusion matrix shows TPs, TNs, FPs, and FNs in a table — a complete picture of classification performance for all classes."},
+{q:"What is the purpose of cross-validation in ML?",opts:["To augment the training data with synthetic examples","To make the model more complex and powerful","To estimate model performance more reliably by training and testing on different data splits","To reduce the number of features used in the model"],a:2,topic:"Evaluation",exp:"K-fold cross-validation trains k models on different subsets and averages results, giving a more reliable performance estimate than a single train/test split."},
+{q:"What is inter-annotator agreement (IAA) used for?",opts:["Measuring how well a model generalises to new data","Measuring the consistency between different human annotators labelling the same data","Measuring the accuracy of automatic annotation tools","Measuring the size of the annotation schema"],a:1,topic:"Annotation",exp:"IAA (e.g., Cohen's Kappa) quantifies how consistently multiple annotators apply the same labels — higher IAA indicates a clearer annotation scheme and more reliable gold data."},
+{q:"What does Cohen's Kappa measure?",opts:["The F1 score of an annotator","Agreement between annotators adjusted for chance agreement","The number of annotation errors per document","The proportion of documents labelled consistently"],a:1,topic:"Annotation",exp:"Kappa = (observed agreement − expected chance agreement) / (1 − expected chance agreement). It corrects for the agreement that would occur by random labelling."},
+{q:"What is overfitting in a machine learning model?",opts:["The model is too simple to capture patterns in the data","The model performs equally well on training and test data","The model performs well on training data but poorly on unseen test data","The model requires too much computational power"],a:2,topic:"ML",exp:"Overfitting: the model memorises training examples (including noise) and fails to generalise — high train accuracy, low test accuracy."},
+{q:"What is the purpose of a development (validation) set?",opts:["To train the final model","To test the model after all training is complete","To tune hyperparameters and make modelling decisions without touching the test set","To augment the training data"],a:2,topic:"ML",exp:"The dev/validation set is held out during training to tune hyperparameters (e.g., learning rate, regularisation). The test set is only used once, at the very end."},
+// ── EMBEDDINGS ──
+{q:"What is a word embedding?",opts:["A rule-based dictionary mapping words to definitions","A sparse one-hot vector representing a word's vocabulary index","A dense low-dimensional vector that captures semantic and syntactic properties of a word","A graph connecting words by their syntactic relations"],a:2,topic:"Embeddings",exp:"Word embeddings (word2vec, GloVe, etc.) represent words as dense real-valued vectors where semantic similarity corresponds to vector proximity."},
+{q:"What is the difference between CBOW and Skip-gram in word2vec?",opts:["CBOW predicts the context from the target word; Skip-gram predicts the target from context words","CBOW uses character-level input; Skip-gram uses word-level input","CBOW is unsupervised; Skip-gram is supervised","CBOW predicts the target word from context words; Skip-gram predicts context words from the target word"],a:3,topic:"Embeddings",exp:"CBOW: given surrounding context → predict target. Skip-gram: given target → predict context. Skip-gram performs better on rare words."},
+{q:"What property of word embeddings is demonstrated by the analogy 'king − man + woman ≈ queen'?",opts:["Syntactic tagging accuracy","Contextual disambiguation","Linear algebraic structure encoding semantic relationships","Bag-of-words frequency encoding"],a:2,topic:"Embeddings",exp:"Word2vec embeddings encode semantic relationships as linear transformations in vector space — gender, royalty, and other relationships can be computed algebraically."},
+{q:"What is a key limitation of static word embeddings (e.g., word2vec)?",opts:["They require very large computational resources for inference","They cannot be used in downstream NLP tasks","They assign the same vector to a word regardless of context, ignoring polysemy","They can only represent words that appear more than 100 times"],a:2,topic:"Embeddings",exp:"'Bank' in 'river bank' vs 'savings bank' gets the same word2vec vector. Contextualised embeddings (ELMo, BERT) solve this by generating context-dependent representations."},
+{q:"What is TF-IDF?",opts:["A neural embedding technique for document representation","A metric combining term frequency and inverse document frequency to weight the importance of words in documents","A grammatical framework for parsing sentence structure","A method for counting word co-occurrences in a fixed window"],a:1,topic:"Embeddings",exp:"TF-IDF = TF × IDF. TF: how often a word appears in a document. IDF: how rare it is across the corpus. Words that are frequent in one doc but rare overall get high scores."},
+// ── TRANSFORMERS / BERT ──
+{q:"What is the key innovation of the Transformer architecture (Vaswani et al. 2017)?",opts:["Recurrent connections that process sequences step by step","Convolutional filters applied to word sequences","Self-attention mechanism allowing parallel processing of entire sequences","A deeper feed-forward network applied word by word"],a:2,topic:"Transformers",exp:"The Transformer replaced RNNs with self-attention: every token attends to every other token simultaneously, enabling parallelisation and better long-range dependency modelling."},
+{q:"What does BERT stand for?",opts:["Bidirectional Encoder Representations from Transformers","Boundary Entity Recognition Tool","Backward Encoding for Recurrent Text","Batch Embedding Representation Technique"],a:0,topic:"Transformers",exp:"BERT (Devlin et al. 2018) is a pre-trained bidirectional Transformer encoder — it reads context from both left and right simultaneously, unlike GPT (left-to-right only)."},
+{q:"What is the difference between BERT and GPT in terms of architecture?",opts:["BERT uses a decoder; GPT uses an encoder","BERT is unidirectional (left-to-right); GPT is bidirectional","BERT is a bidirectional encoder; GPT is a left-to-right decoder","BERT and GPT use identical architectures"],a:2,topic:"Transformers",exp:"BERT uses the Transformer encoder with masked language modelling (bidirectional context). GPT uses the Transformer decoder trained left-to-right for language modelling."},
+{q:"What pre-training objective does BERT use?",opts:["Next-word prediction only","Masked Language Modelling (MLM) and Next Sentence Prediction (NSP)","Sentiment classification on labelled data","Neural machine translation"],a:1,topic:"Transformers",exp:"BERT is pre-trained with: (1) Masked LM — predict randomly masked tokens using bidirectional context; (2) NSP — predict whether two sentences are consecutive."},
+{q:"What is transfer learning in the context of NLP?",opts:["Training a model from scratch on domain-specific data","Copying model weights from one language to another without modification","Pre-training a model on a large general corpus, then fine-tuning on a specific task with less data","Using the output of one NLP tool as input to another"],a:2,topic:"Transformers",exp:"Transfer learning: pre-train on massive data (capturing general language knowledge), then fine-tune on a small labelled task-specific dataset — achieving high performance with few examples."},
+{q:"What is fine-tuning in the context of pre-trained language models?",opts:["Training a language model from scratch on domain data","Randomly reinitialising the pre-trained weights for a new task","Continuing training a pre-trained model on a small labelled dataset for a specific downstream task","Removing the top layers of a pre-trained model and retraining them"],a:2,topic:"Transformers",exp:"Fine-tuning adapts pre-trained weights (e.g., BERT) to a target task (e.g., NER, sentiment) by training for a few epochs on labelled task data."},
+// ── TEXT CLASSIFICATION ──
+{q:"What is Naive Bayes classification?",opts:["A neural network that uses backpropagation","A probabilistic classifier that assumes all features are independent given the class","A decision tree that splits on word frequency thresholds","An SVM variant optimised for text data"],a:1,topic:"ML",exp:"Naive Bayes applies Bayes' theorem with the 'naive' assumption that features (words) are conditionally independent given the class — despite this being false, it works well for text."},
+{q:"What is the bag-of-words (BoW) representation?",opts:["A word embedding capturing semantic similarity","A representation that encodes word order and syntactic structure","A sequence model processing text left to right","A document representation that counts word occurrences, ignoring word order"],a:3,topic:"ML",exp:"BoW represents a document as a vector of word counts (or presence), discarding all information about word order, syntax, and sentence structure."},
+{q:"What is a key advantage of logistic regression over Naive Bayes for text classification?",opts:["Logistic regression requires no training data","Logistic regression is always faster to train","Logistic regression does not need feature engineering","Logistic regression does not assume feature independence and can handle correlated features"],a:3,topic:"ML",exp:"Logistic regression is a discriminative model — it learns the decision boundary directly and handles correlated features better than the naive independence assumption of NB."},
+{q:"What are N-grams in NLP?",opts:["Neural network layer dimensions","Contiguous sequences of N items (words or characters) from text","Grammatical rules for parsing N-word sentences","Clusters of N semantically similar documents"],a:1,topic:"NLP",exp:"N-grams are contiguous sequences: unigrams (N=1), bigrams (N=2), trigrams (N=3). They capture local word order and are used as features in many NLP models."},
+{q:"What is stemming in text preprocessing?",opts:["Replacing words with their dictionary base form (lemma)","Converting text to lowercase","Reducing words to their root form by removing suffixes, possibly yielding non-words","Removing all punctuation from text"],a:2,topic:"NLP",exp:"Stemming heuristically strips suffixes (e.g., 'running' → 'run', 'studies' → 'studi'). It's fast but imprecise. Lemmatisation uses vocabulary knowledge to return valid base forms."},
+{q:"What is lemmatisation?",opts:["Removing prefixes and suffixes to get a rough word root","Replacing every word with its most common synonym","Normalising a word to its base dictionary form (lemma) using vocabulary and morphological analysis","Converting all words to lowercase"],a:2,topic:"NLP",exp:"Lemmatisation returns the actual dictionary form: 'better' → 'good', 'running' → 'run'. It requires knowing the word's POS and uses a morphological lexicon."},
+{q:"What are stop words?",opts:["Words with the highest TF-IDF scores in a corpus","Words that contain spelling errors","Words that are so frequent they carry little discriminative information (e.g., 'the', 'is', 'and')","Words that appear only once in the corpus"],a:2,topic:"NLP",exp:"Stop words are highly frequent function words removed during preprocessing to reduce noise and dimensionality — though modern deep learning often keeps them."},
+{q:"What is sequence labelling?",opts:["Classifying entire documents into predefined categories","Assigning a single label to a sequence of tokens","Assigning a label to each individual token in a sequence (e.g., POS tagging, NER)","Ordering documents by relevance"],a:2,topic:"NER",exp:"Sequence labelling (POS tagging, NER, chunking) assigns a tag to each token in a sequence, using features from surrounding context."},
+{q:"What does POS tagging do?",opts:["Identifies named entities in text","Assigns grammatical categories (noun, verb, adjective, etc.) to each word in a sentence","Measures the sentiment of each sentence","Extracts the subject and object of each verb"],a:1,topic:"Linguistics",exp:"Part-of-speech tagging labels each token with its syntactic role: NN (noun), VBZ (verb, 3rd person singular), JJ (adjective), etc. It is a foundational NLP preprocessing step."},
+{q:"Which model is commonly used for sequence labelling tasks like NER?",opts:["k-Nearest Neighbours (k-NN)","Naive Bayes","Linear regression","Conditional Random Field (CRF)"],a:3,topic:"NER",exp:"CRFs are graphical models that condition on the whole input sequence and model dependencies between adjacent output labels — making them well-suited for NER and POS tagging."},
+];
+
+QB.push(...[
+// ── ADDITIONAL EXAM-STYLE QUESTIONS FROM LECTURES, QUIZZES, AND COURSE NOTES ──
+{q:"A system converts news articles into a table of claims, sources, and stance labels. Which course concept does this best illustrate?",opts:["Computational linguistics only, because it models syntax","NLP only, because it tokenises natural language","Text mining, because unstructured text is converted into structured information","Information retrieval, because documents are ranked by relevance"],a:2,topic:"NLP",exp:"The course defines text mining as moving from unstructured text to structured data, information, or knowledge. A claims-sources-stance table is structured output extracted from text."},
+{q:"Which distinction between computational linguistics, NLP, and text mining is most accurate?",opts:["Computational linguistics builds algorithms for language; NLP engineers language-processing modules; text mining uses those modules to extract structured knowledge","Computational linguistics is a synonym for text mining; NLP only concerns speech","Text mining is lower-level than tokenisation; computational linguistics is the applied product layer","NLP only uses rules, while text mining only uses neural networks"],a:0,topic:"NLP",exp:"Lecture 1 separates the levels: computational linguistics studies algorithms/models of language, NLP builds practical processing components, and text mining applies them to extract structured information."},
+{q:"The lecture example 'There is no such thing as simple text' is mainly a warning that:",opts:["Short documents cannot be processed by NLP systems","Even apparently simple texts may require entity detection, linking, coreference, attribution, and judgement extraction","Only transformer models can process real text","Text mining should ignore tweets and informal writing"],a:1,topic:"NLP",exp:"The point is that even a short tweet can involve many hidden tasks: phrase detection, entity linking, coreference, provenance attribution, semantic parsing, and judgement extraction."},
+{q:"Which toolkit pairing best matches the course notes?",opts:["NLTK: industrial speed; spaCy: teaching-oriented only","AllenNLP: symbolic grammar rules; HuggingFace: only visual datasets","NLTK: well-documented teaching toolkit; spaCy: faster industrial NLP toolkit","Scikit-learn: named entity linker; Pandas: transformer model hub"],a:2,topic:"NLP",exp:"The notes describe NLTK as well-documented and useful for teaching, while spaCy is faster and more industrial. HuggingFace provides pre-trained models and pipelines."},
+{q:"A text mining system fails because its sentence splitter treats 'Dr.' as the end of a sentence. Which pipeline risk does this most directly create?",opts:["Catastrophic forgetting","Error propagation into later modules such as POS tagging and NER","Macro-averaging bias","Topic coherence instability"],a:1,topic:"NLP",exp:"Sentence splitting is an early preprocessing step. If it is wrong, downstream POS tagging, parsing, entity recognition, and classification can all receive distorted input."},
+{q:"Which preprocessing issue is specifically about deciding whether '$523.45' should be one token or several tokens?",opts:["Sentence splitting","Tokenisation","Coreference resolution","Named entity linking"],a:1,topic:"NLP",exp:"Tokenisation decides how text is split into tokens. Currency symbols, decimals, brackets, hyphens, contractions, and diacritics are common tokenisation problems."},
+{q:"Why do downstream modules often fail to exploit ambiguity in traditional NLP pipelines?",opts:["Earlier modules normally pass only one chosen output rather than a full uncertainty distribution","Downstream modules never receive any text","Pipelines cannot perform POS tagging","Ambiguity only appears in sentiment tasks"],a:0,topic:"NLP",exp:"Lecture 3 highlights that a POS tagger might internally estimate uncertainty, but later modules often receive only the selected tag and lose useful confidence information."},
+{q:"Which module sequence best matches the general NLP pipeline in the course?",opts:["Topic modelling → stemming → database indexing → rendering","Tokenisation → lexical analysis → syntactic analysis → semantic analysis → pragmatic analysis","NER → sentence splitting → raw PDF extraction → tokenisation","Fine-tuning → annotation → corpus collection → feature construction"],a:1,topic:"NLP",exp:"The lecture presents a layered NLP architecture beginning with tokenisation/lexical analysis and moving toward syntax, semantics, and pragmatics."},
+{q:"In the medical NLP pipeline example, why are section detection and document-format conversion needed before linguistic analysis?",opts:["They replace all later NLP modules","They turn PDF/HTML structure into usable text regions so tokenisation and linguistic modules operate on the right content","They calculate precision and recall","They create gold labels automatically"],a:1,topic:"NLP",exp:"Medical documents often arrive as PDF/HTML with sections and layout. The system must first identify usable text and document sections before tokenisation, POS, syntax, entities, relations, time, and hedging."},
+{q:"The statement 'color' and 'colour' express the same lexical item in different orthographic forms is primarily an example of:",opts:["Ambiguity","Variation","Metonymy","Polysemy"],a:1,topic:"NLP",exp:"Variation means multiple forms express the same meaning or referent. Ambiguity is one form with multiple meanings."},
+{q:"The phrase 'may may still rule in May' is difficult for NLP mainly because:",opts:["It has no verbs","The same surface form can play different roles or meanings depending on context","It is a topic modelling example","It is impossible to tokenise"],a:1,topic:"Linguistics",exp:"The example illustrates lexical/POS ambiguity: 'may' can be modal verb, name, or month, depending on position and context."},
+{q:"Which claim about Zipf's law is most consistent with the lecture?",opts:["All words occur with equal frequency in large corpora","The frequency of a word is roughly inversely proportional to its rank","Rare words make up about 80% of every text","Zipf's law applies only to named entities"],a:1,topic:"Linguistics",exp:"Zipf's law states that frequency declines approximately as rank increases: f(w_i) = f(W1) / rank(w_i). Very frequent words are short and often polysemous."},
+{q:"Why are the most frequent words often poor discriminative features in a bag-of-words classifier?",opts:["They are always misspelled","They are usually stopwords with broad grammatical functions and little topic-specific content","They never occur in training data","They cannot be represented in vectors"],a:1,topic:"Linguistics",exp:"High-frequency function words like 'the', 'of', and 'is' occur in many documents, so they often carry little discriminative information for classification."},
+{q:"Which pair correctly contrasts open-class and closed-class parts of speech?",opts:["Open class: pronouns and prepositions; closed class: nouns and verbs","Open class: nouns, verbs, adjectives, adverbs; closed class: pronouns and prepositions","Open class: punctuation; closed class: named entities","Open class: only rare words; closed class: only stopwords"],a:1,topic:"Linguistics",exp:"Open classes accept new words more readily: nouns, verbs, adjectives, adverbs. Closed classes such as pronouns and prepositions change slowly and have small inventories."},
+{q:"Why is POS tagging described as relatively easy but not solved?",opts:["The most frequent-tag baseline is already around 90%, but ambiguous cases and context still matter","It requires no training data and no lexicon","It is only a binary classification problem","It never suffers from domain shift"],a:0,topic:"Linguistics",exp:"Choosing the most frequent POS tag for each word gives about 90% accuracy, but the remaining cases include genuine ambiguity, unknown words, informal text, and domain differences."},
+{q:"A language with many noun cases, many verb forms, and a forms-to-stems ratio above 200:1 creates which NLP difficulty?",opts:["Less sparse data because all forms collapse automatically","Greater sparsity and stronger need for morphological normalisation","No need for lemmatisation","Only sentiment classification errors"],a:1,topic:"Linguistics",exp:"Morphologically rich languages produce many surface forms per lemma, spreading evidence across forms. Lemmatisation or morphological analysis helps reduce variation."},
+{q:"Which statement about stopwords is most precise?",opts:["Stopwords are a formal linguistic part-of-speech class","Stopwords are frequent words with low content value, often but not exclusively closed-class words","Stopwords are all words unseen during training","Stopwords are only punctuation marks"],a:1,topic:"Linguistics",exp:"The notes stress that stopwords are not a linguistic class. They are frequent low-information words and can include both open and closed class items depending on the task."},
+{q:"In the phrase 'Old women and men can be annoying', the ambiguity is mainly:",opts:["Scope or coordination ambiguity over whether 'old' modifies only women or both women and men","Named entity type ambiguity","Sentence boundary ambiguity","WordPiece tokenisation ambiguity"],a:0,topic:"Linguistics",exp:"The adjective 'old' can scope over 'women' only or over both 'women and men'. This is a structural ambiguity."},
+{q:"Why is chunking cheaper than full constituency parsing?",opts:["It ignores tokens entirely","It identifies shallow phrase chunks without constructing the complete hierarchical parse tree","It replaces syntax with sentiment lexicons","It requires a transformer but no labels"],a:1,topic:"Linguistics",exp:"Chunking is shallow parsing: it identifies phrase chunks such as NPs and VPs, typically up to limited depth, without producing a complete parse tree."},
+{q:"In dependency grammar, why is the subject relation linguistically important?",opts:["It normally agrees in number with the main verb","It is always the first token in the sentence","It is equivalent to a named entity label","It determines topic model granularity"],a:0,topic:"Linguistics",exp:"The notes mention subject as a dependency relation that agrees in number with the main verb. Dependency parsing captures head-dependent relations like subject, object, adjunct, and modifier."},
+{q:"Which example best illustrates variation in NER?",opts:["'Apple' can mean fruit or company","'IBM' and 'Big Blue' can refer to the same organisation","'May' can be a month or modal verb","'US' can mean location or government"],a:1,topic:"NER",exp:"Variation in NER means different expressions refer to the same entity, such as IBM and Big Blue. Ambiguity/metonymy involve one expression with multiple possible interpretations."},
+{q:"Which NERC pipeline stage links 'Paris' in a sentence to a specific entry in Wikipedia or DBpedia?",opts:["NER recognition","NEC classification","NEL/NED linking or disambiguation","BIO encoding"],a:2,topic:"NER",exp:"NER detects the span, NEC assigns the type, and NEL/NED links or disambiguates the mention against a reference database such as Wikipedia, DBpedia, or YAGO."},
+{q:"Which referring expression is outside the narrowest traditional view of named entities but still relevant for reference and coreference?",opts:["A proper noun like 'Amsterdam'","A pronoun like 'she' referring to a previously mentioned person","An all-caps stock ticker","A date written as a number"],a:1,topic:"NER",exp:"The lecture distinguishes entities, references, and referring expressions. Pronouns and common noun phrases can refer to entities and matter for coreference, even if classic NER focuses on proper names."},
+{q:"Entity extent ambiguity is best illustrated by which problem?",opts:["Whether 'University of Amsterdam Library' is one entity, nested entities, or a larger phrase containing entities","Whether 'cold' is positive or negative","Whether a classifier should use macro or micro averaging","Whether BERT uses 768 or 300 dimensions"],a:0,topic:"NER",exp:"Extent ambiguity concerns the boundaries of an entity mention, especially nested or complex expressions where annotators may disagree about the correct span."},
+{q:"Why can fine-grained entity typing make NERC harder?",opts:["It reduces the number of possible labels to one","It introduces many more possible categories, such as FIGER's 112 types, increasing ambiguity and data needs","It removes the need for BIO labels","It guarantees higher inter-annotator agreement"],a:1,topic:"NER",exp:"More fine-grained taxonomies require the model and annotators to distinguish many subtle entity types, increasing classification difficulty and annotation burden."},
+{q:"Which feature would a gazetteer most likely provide in a classic NERC system?",opts:["A list of known organisations, person names, locations, or entity cue words","The F1 score of the system","The final CRF transition matrix","The document-topic probability distribution"],a:0,topic:"NER",exp:"Classic NERC systems use gazetteers and lexicons containing entity names or cue words such as company suffixes, person titles, and location indicators."},
+{q:"In the CoNLL-style row 'IBM | NNP | B-NP | XXX | B-ORG', what does 'XXX' represent?",opts:["The BIO label","The POS tag","A word-shape feature","A topic label"],a:2,topic:"NER",exp:"The short or full word-shape feature abstracts the capitalization pattern. 'IBM' maps to 'XXX', while the BIO entity label is B-ORG."},
+{q:"Why does a CRF layer help a neural NER model?",opts:["It converts word embeddings into one-hot vectors","It models dependencies between adjacent output labels so invalid or unlikely tag sequences are penalised","It performs sentence splitting","It calculates inverse document frequency"],a:1,topic:"NER",exp:"CRFs model sequence-level label dependencies, making them useful on top of token representations from BiLSTMs or other encoders for BIO labelling."},
+{q:"Which description best matches Lample et al. 2016's NER architecture from the course notes?",opts:["Bag-of-words features followed by Naive Bayes","Character and word embeddings through BiLSTMs, followed by a CRF layer","LDA topics followed by logistic regression","Gazetteer lookup only, followed by hand-written grammar rules"],a:1,topic:"NER",exp:"The architecture combines character-level and word-level representations, left-to-right and right-to-left LSTMs, concatenation, and a CRF layer for BIO labels."},
+{q:"Why do affix features improve neural NER according to the Yadav & Bethard discussion?",opts:["They encode n-gram prefixes and suffixes that capture useful morphological cues","They replace all word embeddings","They make the task unsupervised","They are used only for topic modelling"],a:0,topic:"NER",exp:"Affixes are n-gram prefixes/suffixes. They help represent morpho-syntactic patterns such as person-name endings, organisation suffixes, and capitalization-related forms."},
+{q:"Which output from a HuggingFace NER pipeline most clearly shows token-level classification rather than document classification?",opts:["A single label such as POSITIVE for the whole text","A dictionary per token with entity, score, word, start, and end offsets","A list of topics with probabilities for the whole corpus","A confusion matrix for all documents"],a:1,topic:"Transformers",exp:"The course notebook shows NER output per token/subtoken, including fields such as entity label, confidence score, token index, word, start, and end offsets."},
+{q:"Why does BERT split 'Ilia' into subwords such as 'Il' and '##ia'?",opts:["WordPiece tokenisation handles rare or unseen words by composing them from known subword units","BERT cannot process names","It is performing stemming","It marks sentence boundaries"],a:0,topic:"Transformers",exp:"BERT uses WordPiece. Subword tokenisation reduces unknown words by splitting less frequent words or names into reusable pieces; '##' marks continuation."},
+{q:"How does XLM-RoBERTa's SentencePiece tokenisation differ from BERT WordPiece in the course example?",opts:["It uses pieces such as '▁Ili' and 'a', where the underscore-like marker indicates a word boundary","It never splits names","It only works for English","It outputs POS tags instead of subtokens"],a:0,topic:"Transformers",exp:"The notebook notes that XLM-RoBERTa uses SentencePiece and may tokenise 'Ilia' as '▁Ili', 'a', with the marker indicating a word boundary."},
+{q:"Which HuggingFace pipeline task is most appropriate for assigning BIO-style named entity labels?",opts:["summarization","token-classification or ner","text-generation","audio-classification"],a:1,topic:"Transformers",exp:"NER is a token-classification task. The pipeline can be called as 'ner' or, more generally, token classification."},
+{q:"Why is pretraining followed by fine-tuning useful in the course's transformer workflow?",opts:["It lets a model learn general language patterns from large corpora and adapt to a smaller labelled task dataset","It avoids all annotation and evaluation","It guarantees no domain shift","It only works for image classification"],a:0,topic:"Transformers",exp:"Pretraining builds general language representations. Fine-tuning adapts those representations to tasks such as sentiment, NER, or text classification using comparatively small labelled datasets."},
+{q:"Which statement about BERT's dimensions and layers matches the notes?",opts:["BERT uses 300-dimensional GloVe vectors and no attention","BERT-base style representations use 768 dimensions with 12 layers/attention heads in the lecture summary","BERT is a one-layer CRF with 112 entity types","BERT has no token embeddings"],a:1,topic:"Transformers",exp:"The notes repeatedly mention 768-dimensional contextual embeddings and 12 layers/attention heads for BERT-style models used in examples."},
+{q:"What does the BERT mask-prediction objective contribute to NERC and other token tasks?",opts:["It teaches the model to use bidirectional context to infer missing tokens, producing context-sensitive token representations","It removes all ambiguity in labels","It creates a topic taxonomy","It calculates Cohen's kappa"],a:0,topic:"Transformers",exp:"Masked language modelling trains BERT to infer masked tokens using surrounding context, which supports contextual representations useful for ambiguous names and words."},
+{q:"Which is the best interpretation of catastrophic forgetting during fine-tuning?",opts:["The model forgets training examples only after evaluation","Task-specific fine-tuning can overwrite general knowledge learned during pretraining","The tokenizer forgets subwords","The evaluation set loses labels"],a:1,topic:"Transformers",exp:"Catastrophic forgetting occurs when adapting to new data causes a model to lose useful general patterns acquired during earlier pretraining."},
+{q:"A model is trained on movie reviews and performs badly on product reviews. Which concept from the evaluation lectures best explains this?",opts:["Domain shift","BIO encoding","Word shape","Metonymy"],a:0,topic:"Evaluation",exp:"Domain shift occurs when training and testing distributions differ. Church et al. warn that cross-validation within one domain is not enough to prove real generalisation."},
+{q:"Why can 10-fold cross-validation still overestimate real-world performance?",opts:["It trains no models","All folds usually come from the same dataset/domain, so it may not test out-of-domain generalisation","It always uses the test set for tuning","It cannot compute precision"],a:1,topic:"Evaluation",exp:"Cross-validation rotates held-out splits within the same dataset. It estimates in-domain performance but may hide performance drops under domain shift."},
+{q:"A tsunami alert classifier is tuned to never miss a real tsunami, even if it sends many false alarms. Which metric priority does this reflect?",opts:["High precision over recall","High recall over precision","High accuracy only","High kappa only"],a:1,topic:"Evaluation",exp:"For safety-critical alerts, missing a true event is worse than false alarms. The system prioritises high recall and accepts lower precision."},
+{q:"A spam filter that blocks legitimate email is unacceptable. Which metric should be especially high for the spam label?",opts:["Precision","Recall only","Macro topic coherence","Cohen's kappa"],a:0,topic:"Evaluation",exp:"High precision means that when the system predicts spam, it is usually correct. This reduces false positives that would block legitimate email."},
+{q:"Which evaluation choice gives each class equal influence even if one class is rare?",opts:["Micro averaging","Macro averaging","Raw accuracy","Training loss"],a:1,topic:"Evaluation",exp:"Macro averaging computes a metric per class and then averages, so small classes count equally with large classes."},
+{q:"Which evaluation choice pools true positives, false positives, and false negatives across all classes before computing a metric?",opts:["Macro averaging","Micro averaging","Cohen's kappa","TF-IDF"],a:1,topic:"Evaluation",exp:"Micro averaging aggregates counts across classes. Frequent classes therefore have more influence on the final score."},
+{q:"If an annotation task has Cohen's kappa around 0.55, what is the most defensible conclusion?",opts:["Annotators are perfectly consistent","There is moderate disagreement or ambiguity in the annotation scheme/task","The classifier has 55% accuracy","The dataset is automatically bronze quality"],a:1,topic:"Annotation",exp:"Kappa corrects agreement for chance. Values around 0.55 indicate weaker agreement than high-kappa tasks like document-level hotel sentiment at about 0.87."},
+{q:"Why is gold data more expensive than bronze data?",opts:["Gold data requires careful human annotation, while bronze data is mostly automatically labelled","Gold data is always multilingual","Bronze data must be manually checked by three annotators","Gold data contains only positive examples"],a:0,topic:"Annotation",exp:"Gold data is manually annotated and usually quality-controlled. Bronze data is automatically labelled with minimal human intervention and is therefore cheaper but noisier."},
+{q:"Which workflow order best matches supervised text classification in the notes?",opts:["Train → acquire data → label → evaluate → define features","Data acquisition → dataset construction → labelling → feature construction → representation/selection → training → evaluation","Evaluate → tokenise → delete labels → collect corpus","Topic labels → LDA sampling → gold data → tokenisation"],a:1,topic:"ML",exp:"The course workflow begins with data acquisition and dataset construction, then annotation, feature construction, representation, feature selection/projection, classifier training, and evaluation."},
+{q:"Why is accuracy unreliable for a dataset with 99% non-spam and 1% spam?",opts:["A classifier that always predicts non-spam can get 99% accuracy while detecting no spam","Accuracy cannot be computed for binary labels","Precision and recall become identical","The data is necessarily unlabelled"],a:0,topic:"Evaluation",exp:"Accuracy is misleading on imbalanced data. A trivial majority-class classifier can score very highly while completely failing the minority class."},
+{q:"What does a contingency table or confusion matrix compare?",opts:["Gold labels against system output labels","Token lengths against word shapes","Topics against genres only","Pretraining epochs against batch size"],a:0,topic:"Evaluation",exp:"A confusion matrix tabulates how gold labels align with predicted labels, making true positives, false positives, false negatives, and confusions visible."},
+{q:"Which feature selection use of TF-IDF is most appropriate?",opts:["Selecting terms that are frequent in one document or cluster but relatively rare across the corpus","Selecting only punctuation marks","Assigning BIO labels to entity spans","Measuring annotator agreement"],a:0,topic:"Embeddings",exp:"TF-IDF highlights distinctive terms: high term frequency locally and low document frequency globally. It is useful for keywords, feature selection, and cluster labelling."},
+{q:"Why are one-hot bag-of-words vectors sparse and high-dimensional?",opts:["Each vocabulary item gets its own dimension, and most documents contain only a small subset of all words","Each token gets a 768-dimensional contextual vector","They encode syntax trees for every sentence","They contain only sentiment labels"],a:0,topic:"ML",exp:"BoW uses one dimension per vocabulary item. Since any document uses only some vocabulary terms, most entries are zero."},
+{q:"Which representation preserves local word order better than unigram bag-of-words?",opts:["Bigrams or trigrams","Document ID numbers","Random shuffling","Class priors only"],a:0,topic:"ML",exp:"N-grams are contiguous sequences of N tokens. Bigrams and trigrams retain limited local order ignored by unigram bag-of-words."},
+{q:"Why can lemmatisation be preferable to stemming for linguistically careful preprocessing?",opts:["It returns dictionary base forms using morphological and POS information","It always produces shorter non-words","It deletes all closed-class words","It replaces all words with sentiment scores"],a:0,topic:"NLP",exp:"Lemmatisation maps forms to valid lemmas, often using POS and morphological analysis. Stemming is a rough suffix-stripping heuristic that may produce non-words."},
+{q:"Which sentence best shows why static embeddings cannot resolve polysemy by themselves?",opts:["The word 'bank' receives one vector whether it means river edge or financial institution","The word 'bank' is always out-of-vocabulary","Static embeddings cannot be used in classifiers","Static embeddings contain no real numbers"],a:0,topic:"Embeddings",exp:"Static embeddings such as Word2Vec and GloVe assign one vector per word type, so different senses of the same form share a representation."},
+{q:"What is GloVe trained from according to the embedding notes?",opts:["Global word co-occurrence statistics","BIO entity labels only","Manual syntactic trees only","A rule-based gazetteer"],a:0,topic:"Embeddings",exp:"GloVe learns dense vectors from global co-occurrence statistics, unlike purely local prediction objectives."},
+{q:"Which Word2Vec objective predicts surrounding context words from the current target word?",opts:["CBOW","Skip-gram","TF-IDF","LDA"],a:1,topic:"Embeddings",exp:"Skip-gram predicts context from the target word. CBOW predicts the target word from context words."},
+{q:"A mean sentence embedding is created by:",opts:["Averaging token embeddings into one fixed-size vector for the sentence","Counting only stopwords","Choosing the most frequent POS tag","Sampling LDA topics"],a:0,topic:"Embeddings",exp:"The notes compare token embeddings with mean sentence embeddings, where token vectors are averaged into one vector representing the whole sentence."},
+{q:"Which best describes subjectivity in the lecture, beyond simple positive/negative polarity?",opts:["All social and emotional relations expressed when posting information, including stance, attribution, agenda setting, emotion, and opinion","Only the word 'good' or 'bad' in a sentence","Only six universal emotions","Only document-level star ratings"],a:0,topic:"Sentiment",exp:"Subjectivity is broader than sentiment polarity. It includes opinion, stance, emotion, attribution, agenda setting, aspects, and argumentation."},
+{q:"In the structure Holder → SIP → Sentiment → Target, which item is a Source Introducing Predicate?",opts:["A speech-act or cognitive verb such as 'claims', 'believes', or 'denies'","The entity being evaluated","The positive or negative adjective only","The evaluation metric"],a:0,topic:"Sentiment",exp:"SIPs introduce claims or opinions, including speech-act verbs such as say/claim/deny and cognitive verbs such as think/believe/feel."},
+{q:"Which is an example of implicit rather than explicit sentiment?",opts:["The review says 'excellent'","A report says a participant 'suffered' or 'died', implying negative affect without a direct polarity adjective","The sentence contains the word 'terrible'","A star rating is 1 out of 5"],a:1,topic:"Sentiment",exp:"Implicit sentiment is inferred from events or context rather than expressed by explicit opinion words. 'Suffer' and 'die' can imply negative sentiment or affect."},
+{q:"Agenda setting is challenging for sentiment analysis because:",opts:["A text can express subjectivity through what it chooses to mention or omit, even without explicit opinion words","It always uses obvious polarity words","It only appears in product reviews","It is identical to POS tagging"],a:0,topic:"Sentiment",exp:"The lecture defines agenda setting as subjective selection of content. A report can reveal stance by repeatedly choosing negative facts while avoiding positive ones."},
+{q:"Which option correctly separates opinion, stance, and polarity?",opts:["Opinion is lexically realised attitude; stance is position in a debate; polarity is positive/negative/neutral orientation","Opinion is always neutral; stance is a POS tag; polarity is a person entity","Opinion, stance, and polarity are exact synonyms","Polarity means who holds the opinion"],a:0,topic:"Sentiment",exp:"The notes distinguish sentiment terminology: opinion is a realised evaluative expression, stance is debate-oriented position, and polarity is positive/negative/neutral sentiment."},
+{q:"Which pair belongs to Plutchik's emotion model rather than only Ekman's six basic emotions?",opts:["Trust and anticipation","Precision and recall","Person and organisation","CBOW and Skip-gram"],a:0,topic:"Sentiment",exp:"Ekman lists six basic emotions. Plutchik's wheel includes additional categories such as trust and anticipation and models intensity and mixtures."},
+{q:"In Plutchik's Wheel of Emotions, 'ecstasy > joy > serenity' illustrates:",opts:["Emotion intensity levels","BIO span boundaries","Topic hierarchy depth","Word frequency rank"],a:0,topic:"Sentiment",exp:"Plutchik's model represents intensity gradations, such as stronger and weaker forms of related emotions."},
+{q:"Which is one of Ravi & Ravi's subjectivity mining pipeline steps?",opts:["Opinion spam detection","Minimum spanning tree construction","A* search","Database normalization"],a:0,topic:"Sentiment",exp:"The notes list subjectivity classification/polarity, sentiment classification, opinion spam detection, and aspect extraction as Ravi & Ravi pipeline steps."},
+{q:"Which is NOT one of the five opinion extraction classification problems from lecture 4?",opts:["Does the text contain an opinion expression?","Who is the holder?","What is the target?","What is the shortest dependency path between every token pair?"],a:3,topic:"Sentiment",exp:"The five problems are: subjective text, opinion expression, holder, target, and polarity. Dependency paths may be features, but are not one of the five classification problems."},
+{q:"The contrast 'cold person' versus 'cold soda' is mainly evidence that sentiment systems need:",opts:["Context-sensitive interpretation or aspect/domain information","Only larger stopword lists","No training data","Only document-level labels"],a:0,topic:"Sentiment",exp:"The same word can reverse polarity depending on target or domain. 'Cold' is negative for personality but positive for a drink."},
+{q:"Which feature group is plausible for sentiment classification according to the lecture?",opts:["BoW/n-grams, POS tags, opinion lexicons, intensifiers, negation, syntactic dependencies, and TF-IDF term position","Only font size and page margins","Only image metadata","Only entity gazetteers with no text features"],a:0,topic:"Sentiment",exp:"Lecture 4 lists many sentiment features including words, n-grams, POS, lexicons, valence shifters/intensifiers, negation, dependencies, and TF-IDF/position."},
+{q:"Which statement about in-domain sentiment performance from the Ravi & Ravi lecture summary is accurate?",opts:["Reported in-domain accuracy ranged roughly from 72% to 92% depending on methods and data","No sentiment system exceeded 20%","Only LDA was used for sentiment","SVM was never used"],a:0,topic:"Sentiment",exp:"The summary gives 72-92% in-domain accuracy, with SVM appearing most often in Ravi & Ravi's survey."},
+{q:"Aspect-based sentiment analysis is necessary when:",opts:["A document has different opinions about different product/service features, such as good battery but poor screen","Every document has exactly one sentiment","The corpus has no targets","Only named entities are extracted"],a:0,topic:"Sentiment",exp:"ABSA handles sentiment toward specific aspects or facets rather than forcing one overall document polarity."},
+{q:"Why are genres not the same as topics?",opts:["Genres are conventional styles or communicative forms, while topics are what the document is about","Genres are always unsupervised clusters; topics are always file formats","Genres are POS tags; topics are entity labels","There is no distinction in the course"],a:0,topic:"Topic Modelling",exp:"The topic modelling lecture distinguishes genres such as tweets, news, blogs, or reviews from topics such as politics, sport, health, or events."},
+{q:"Which list item is one of the IPTC top-level media topic categories from the lecture?",opts:["crime/law/justice","WordPiece continuation","B-ORG","Cohen's kappa"],a:0,topic:"Topic Modelling",exp:"IPTC includes top-level categories such as crime/law/justice, politics, sport, health, environment, economy/business/finance, and others."},
+{q:"What makes the IPTC Media Topics taxonomy useful for news classification?",opts:["It has about 1,200 multilingual, hierarchically organised terms that are continuously updated","It is a tokenizer for BERT","It is a list of stopwords only","It replaces all evaluation metrics"],a:0,topic:"Topic Modelling",exp:"The lecture describes IPTC as a multilingual taxonomy with around 1,200 terms, four levels deep, and updated categories such as cybercrime."},
+{q:"Reuters-21578 is primarily used in the course as an example of:",opts:["A supervised text classification dataset with many topic categories","A transformer tokenizer","A named entity gazetteer","An inter-annotator agreement formula"],a:0,topic:"Topic Modelling",exp:"Reuters-21578 is a classic supervised text classification dataset with categories such as grain, wheat, oilseed, soybean, and veg-oil."},
+{q:"JRC-Acquis is notable in the topic modelling notes because it:",opts:["Contains EU legal/official texts in 22 languages and uses EuroVoc labels","Contains only English movie reviews","Is the default BERT NER model","Measures POS-tagging baselines"],a:0,topic:"Topic Modelling",exp:"JRC-Acquis is described as a multilingual EU official text corpus with 22 languages and EuroVoc thesaurus labels."},
+{q:"In supervised multi-label topic classification, one-against-all means:",opts:["Training a separate classifier for each label to decide whether that label applies","Choosing exactly one topic per document","Running LDA once per word","Removing all rare labels"],a:0,topic:"Topic Modelling",exp:"One-against-all handles multi-label classification by treating each label as a separate binary decision."},
+{q:"Which is an advantage of supervised topic classification over unsupervised topic modelling?",opts:["Control over the predefined topic set","Ability to detect all new topics without labels","No need for labelled data","Guaranteed absence of training distribution bias"],a:0,topic:"Topic Modelling",exp:"Supervised classification gives control over the topic set and can perform well, but it requires labels and cannot detect genuinely new topics without maintenance."},
+{q:"Which is a disadvantage of supervised topic classification?",opts:["It is biased toward the training distribution and cannot detect unseen topic labels without retraining or relabelling","It has no topic labels at all","It cannot use TF-IDF","It always produces unstable random topics"],a:0,topic:"Topic Modelling",exp:"Supervised topic systems are constrained by the label set and training distribution. New or shifted topics require updated labels and training data."},
+{q:"In unsupervised topic modelling, why are distinctive TF-IDF keywords useful after clustering?",opts:["They help humans interpret and label clusters","They calculate BIO boundaries","They replace all documents with one class","They measure kappa"],a:0,topic:"Topic Modelling",exp:"Topic models or clusters need human interpretation. Distinctive high-TF-IDF terms make the latent topic easier to name."},
+{q:"Which output is more precise for LDA than saying it gives 'one topic per document'?",opts:["A topic-word distribution and a document-topic distribution","A single BIO tag per token","A confusion matrix only","A list of stopwords"],a:0,topic:"Topic Modelling",exp:"LDA represents topics as distributions over words and documents as distributions over topics. Documents can mix multiple topics."},
+{q:"Why can long news articles be harder for topic detection than short texts?",opts:["They may contain multiple topics, events, and subtopics in one document","They never contain enough words","They cannot be tokenised","They always have one gold topic"],a:0,topic:"Topic Modelling",exp:"Longer texts often cover multiple related events or themes, creating ambiguity over which topic label or mixture is appropriate."},
+{q:"Which statement about topic granularity best follows the lecture?",opts:["The right granularity depends on application and data usage","Always use exactly 17 topics","Always use one topic per sentence","Always choose the deepest IPTC level"],a:0,topic:"Topic Modelling",exp:"Topic granularity is not universal. The right level depends on why the topics are assigned and how the output will be used."},
+{q:"Which factor makes universal topic sets difficult to define?",opts:["Topics are subjective, world-dependent, and change over time","All documents have the same topic","Topic labels are purely syntactic","There are only six possible topics"],a:0,topic:"Topic Modelling",exp:"The lecture emphasises that topics have no fixed a priori definition; they depend on world knowledge, social context, and changing events."},
+{q:"In LDA-style modelling, treating words independently is closest to which simplifying assumption?",opts:["Bag-of-words exchangeability, ignoring word order","Full syntactic parsing","BIO sequence dependency","Coreference resolution"],a:0,topic:"Topic Modelling",exp:"LDA uses a bag-of-words view: documents are represented by word occurrences and topic assignments, not by syntax or sequence order."},
+{q:"Which hidden topic label is the most plausible for a cluster with top words 'dog, cat, animal, loyal'?",opts:["Animals","Economy","Weather","NER"],a:0,topic:"Topic Modelling",exp:"The lecture gives example hidden topics where words such as dog, animal, loyal, and cat indicate an animals topic."},
+{q:"Which concept best explains why two runs of LDA can return somewhat different topics?",opts:["Random initialisation and sampling can produce unstable topic assignments","Cohen's kappa changes the vocabulary","BIO labels are deterministic","TF-IDF forbids randomness"],a:0,topic:"Topic Modelling",exp:"LDA often uses random initialisation and iterative sampling/optimisation. Different starts can lead to different local solutions and topic interpretations."},
+{q:"Which exam answer is strongest if asked why transformer fine-tuning changed text classification?",opts:["It made transfer learning practical: a generally pre-trained model can be adapted with task-specific labelled data and often outperforms feature-engineered pipelines","It removed all need for evaluation","It made bag-of-words mathematically impossible","It only helps with audio tasks"],a:0,topic:"Transformers",exp:"The course's fine-tuning materials and Sun et al.-style findings emphasise transfer learning and strong downstream performance with task-specific fine-tuning."},
+]);
+
+// ─── BUILD EXAMS ─────────────────────────────────────────────────────────────
+// Shuffle array
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// Build 25 exams: each 35 questions, covering all topics proportionally
+function buildExams() {
+  const topics = [...new Set(QB.map(q => q.topic))];
+  const exams = [];
+  for (let e = 0; e < 25; e++) {
+    let pool = shuffle(QB);
+    // Ensure topic coverage: pick from each topic first
+    let selected = [];
+    const topicBuckets = {};
+    topics.forEach(t => topicBuckets[t] = pool.filter(q => q.topic === t));
+    // Distribute ~35 across topics
+    const perTopic = Math.floor(35 / topics.length);
+    topics.forEach(t => {
+      const bucket = topicBuckets[t];
+      selected.push(...bucket.slice(0, perTopic));
+    });
+    // Fill remaining slots
+    const remaining = pool.filter(q => !selected.includes(q));
+    while (selected.length < 35 && remaining.length > 0) {
+      selected.push(remaining.shift());
+    }
+    selected = shuffle(selected).slice(0, 35);
+    exams.push(selected);
+  }
+  return exams;
+}
+
+const EXAMS = buildExams();
+
+// ─── STATE ────────────────────────────────────────────────────────────────────
+let state = {
+  examIdx: null,
+  qIdx: 0,
+  answers: [],  // user's selected option index or null
+  submitted: false,
+  timerSecs: 45 * 60,
+  timerInterval: null,
+  scores: Array(EXAMS.length).fill(null),
+};
+
+// ─── RENDER SIDEBAR ──────────────────────────────────────────────────────────
+function renderSidebar() {
+  const nav = document.getElementById('exam-nav');
+  nav.innerHTML = '';
+  EXAMS.forEach((_, i) => {
+    const sc = state.scores[i];
+    let badge = '';
+    if (sc !== null) {
+      const pct = Math.round(sc / 35 * 100);
+      const cls = pct >= 70 ? 'good' : pct >= 50 ? 'ok' : 'bad';
+      badge = `<span class="score-badge ${cls}">${sc}/35</span>`;
+    }
+    nav.innerHTML += `<div class="nav-item" id="nav-exam-${i}" onclick="startExam(${i})">Exam ${i+1} ${badge}</div>`;
+  });
+}
+
+function renderHomeGrid() {
+  const grid = document.getElementById('home-exam-grid');
+  grid.innerHTML = '';
+  EXAMS.forEach((exam, i) => {
+    const topics = [...new Set(exam.map(q => q.topic))];
+    const sc = state.scores[i];
+    const scoreStr = sc !== null ? `Score: ${sc}/35 (${Math.round(sc/35*100)}%)` : '35 questions · ~45 min';
+    grid.innerHTML += `
+      <div class="exam-card" onclick="startExam(${i})">
+        <h4>Practice Exam ${i+1}</h4>
+        <p style="margin-bottom:8px">${scoreStr}</p>
+        <div>${topics.slice(0,4).map(t=>`<span class="topic-pill">${t}</span>`).join('')}</div>
+      </div>`;
+  });
+}
+
+// ─── NAVIGATION ──────────────────────────────────────────────────────────────
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  if (id === 'home') document.querySelector('.nav-item').classList.add('active');
+}
+
+// ─── START EXAM ──────────────────────────────────────────────────────────────
+function startExam(idx) {
+  state.examIdx = idx;
+  state.qIdx = 0;
+  state.answers = Array(35).fill(null);
+  state.submitted = false;
+  state.timerSecs = 45 * 60;
+  if (state.timerInterval) clearInterval(state.timerInterval);
+  state.timerInterval = setInterval(tickTimer, 1000);
+
+  document.getElementById('quiz-title').textContent = `Practice Exam ${idx+1}`;
+  document.getElementById('quiz-subtitle').textContent = '35 questions · Multiple choice · All topics';
+
+  // Update sidebar active
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const navItem = document.getElementById(`nav-exam-${idx}`);
+  if (navItem) navItem.classList.add('active');
+
+  showPage('quiz-view');
+  renderQuestion();
+}
+
+function tickTimer() {
+  if (state.submitted) { clearInterval(state.timerInterval); return; }
+  state.timerSecs--;
+  const m = Math.floor(state.timerSecs / 60).toString().padStart(2,'0');
+  const s = (state.timerSecs % 60).toString().padStart(2,'0');
+  document.getElementById('timer').textContent = `${m}:${s}`;
+  if (state.timerSecs <= 0) { submitExam(); }
+}
+
+// ─── RENDER QUESTION ─────────────────────────────────────────────────────────
+function renderQuestion() {
+  const exam = EXAMS[state.examIdx];
+  const q = exam[state.qIdx];
+  const answered = state.answers.filter(a => a !== null).length;
+
+  document.getElementById('q-counter').textContent = `Question ${state.qIdx + 1} of 35`;
+  document.getElementById('q-answered').textContent = `${answered} answered`;
+  document.getElementById('prog-fill').style.width = `${(state.qIdx / 35) * 100}%`;
+  document.getElementById('btn-prev').disabled = state.qIdx === 0;
+  document.getElementById('btn-next').textContent = state.qIdx === 34 ? 'Review →' : 'Next →';
+
+  const userAnswer = state.answers[state.qIdx];
+  const isAnswered = userAnswer !== null;
+
+  let optsHtml = q.opts.map((opt, oi) => {
+    let cls = '';
+    if (state.submitted || isAnswered) {
+      if (oi === q.a) cls = 'correct';
+      else if (oi === userAnswer && oi !== q.a) cls = 'wrong';
+    }
+    const disabled = (state.submitted || isAnswered) ? 'disabled' : '';
+    return `<button class="option ${cls}" onclick="selectOption(${oi})" ${disabled}>${opt}</button>`;
+  }).join('');
+
+  let expHtml = '';
+  if (state.submitted || isAnswered) {
+    expHtml = `<div class="explanation show"><strong>Explanation:</strong> ${q.exp}</div>`;
+  }
+
+  document.getElementById('question-area').innerHTML = `
+    <div class="question-card">
+      <div class="q-meta">Q${state.qIdx+1} &nbsp;·&nbsp; <span class="topic-pill">${q.topic}</span></div>
+      <div class="q-text">${q.q}</div>
+      ${optsHtml}
+      ${expHtml}
+    </div>`;
+}
+
+function selectOption(optIdx) {
+  if (state.answers[state.qIdx] !== null) return;
+  state.answers[state.qIdx] = optIdx;
+  renderQuestion();
+}
+
+function nextQ() {
+  if (state.qIdx < 34) { state.qIdx++; renderQuestion(); }
+  else { submitExam(); }
+}
+
+function prevQ() {
+  if (state.qIdx > 0) { state.qIdx--; renderQuestion(); }
+}
+
+// ─── SUBMIT EXAM ─────────────────────────────────────────────────────────────
+function submitExam() {
+  if (state.timerInterval) clearInterval(state.timerInterval);
+  state.submitted = true;
+
+  const exam = EXAMS[state.examIdx];
+  let score = 0;
+  const topicStats = {};
+  exam.forEach((q, i) => {
+    if (!topicStats[q.topic]) topicStats[q.topic] = {correct:0,total:0};
+    topicStats[q.topic].total++;
+    if (state.answers[i] === q.a) { score++; topicStats[q.topic].correct++; }
+  });
+  state.scores[state.examIdx] = score;
+  renderSidebar();
+  renderHomeGrid();
+
+  const pct = Math.round(score / 35 * 100);
+  const pass = pct >= 57;
+
+  // Topic breakdown
+  let topicRows = Object.entries(topicStats).map(([t, s]) => {
+    const tp = Math.round(s.correct/s.total*100);
+    const color = tp >= 70 ? '#2ecc71' : tp >= 50 ? '#f39c12' : '#e74c3c';
+    return `<div class="topic-result">
+      <span>${t}</span>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="mini-bar"><div class="mini-fill" style="width:${tp}%;background:${color}"></div></div>
+        <span style="font-size:13px;color:${color}">${s.correct}/${s.total}</span>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Review list
+  let reviewHtml = exam.map((q, i) => {
+    const ua = state.answers[i];
+    const correct = ua === q.a;
+    const cls = correct ? 'correct-r' : 'wrong-r';
+    const icon = correct ? '✓' : '✗';
+    const color = correct ? 'var(--success)' : 'var(--danger)';
+    return `<div class="review-item ${cls}">
+      <div style="display:flex;gap:8px;align-items:flex-start">
+        <span style="color:${color};font-weight:700;font-size:16px;min-width:20px">${icon}</span>
+        <div>
+          <div style="font-size:13px;color:var(--muted);margin-bottom:4px">Q${i+1} · ${q.topic}</div>
+          <div style="font-size:15px;margin-bottom:8px">${q.q}</div>
+          ${!correct ? `<div style="font-size:13px;color:var(--danger);margin-bottom:4px">Your answer: ${ua !== null ? q.opts[ua] : 'Not answered'}</div>` : ''}
+          <div style="font-size:13px;color:var(--success);margin-bottom:6px">Correct: ${q.opts[q.a]}</div>
+          <div style="font-size:13px;color:var(--muted)">${q.exp}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('results-content').innerHTML = `
+    <div class="results-card">
+      <div class="score-circle ${pass ? 'pass' : 'fail'}">${pct}%</div>
+      <h3 style="text-align:center;margin:0 0 4px">${score} / 35 correct</h3>
+      <p style="text-align:center;margin-bottom:20px">${pass ? '✓ Good result!' : '✗ Keep practising — aim for ≥57%'}</p>
+      <h3 style="margin-top:0">Topic Breakdown</h3>
+      ${topicRows}
+    </div>
+    <div class="btn-row" style="margin-bottom:24px">
+      <button class="btn btn-primary" onclick="retakeExam()">Retake Exam</button>
+      <button class="btn btn-secondary" onclick="showPage('home');document.querySelector('.nav-item').classList.add('active')">← Home</button>
+    </div>
+    <h3>Full Review</h3>
+    ${reviewHtml}`;
+
+  showPage('results-view');
+}
+
+function retakeExam() {
+  startExam(state.examIdx);
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+renderSidebar();
+renderHomeGrid();
+</script>
+</body>
+</html>

@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HAI — Timeline Mindmap</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background: #faf8f3;
+  color: #2c2c2c;
+  height: 100vh;
+  overflow: hidden;
+  user-select: none;
+}
+
+#header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 50px;
+  background: #faf8f3;
+  border-bottom: 1px solid #e8e3d8;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  gap: 10px;
+  z-index: 100;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+}
+#header h1 {
+  font-family: Georgia, serif;
+  font-size: 1rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+#search-box {
+  flex: 1; max-width: 220px;
+  padding: 5px 11px;
+  border: 1px solid #d8d3c8;
+  border-radius: 18px;
+  background: #fff;
+  font-size: 0.8rem;
+  outline: none;
+}
+#search-box:focus { border-color: #8fbc8f; }
+.btn {
+  padding: 5px 12px;
+  border: 1px solid #d8d3c8;
+  border-radius: 14px;
+  background: #fff;
+  font-size: 0.75rem;
+  color: #555;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+.btn:hover { background: #f0ece2; }
+.btn.active { background: #e8f5e8; border-color: #8fbc8f; color: #2a6a2a; }
+
+.filter-btn { font-size: 0.72rem; padding: 4px 9px; }
+.filter-btn.f-computing.active { background: #e8f5e8; border-color: #6aaa6a; color: #1e5e1e; }
+.filter-btn.f-ai.active { background: #e3f2fb; border-color: #5badd6; color: #1a4d6e; }
+.filter-btn.f-concepts.active { background: #fef9e1; border-color: #d4a800; color: #6b4c00; }
+.filter-btn.f-figures.active { background: #f9eef9; border-color: #b86ab8; color: #5c1e5c; }
+
+#canvas-wrap {
+  position: fixed;
+  top: 50px; left: 0; right: 0; bottom: 0;
+  overflow: hidden;
+  cursor: grab;
+}
+#canvas-wrap.grabbing { cursor: grabbing; }
+
+svg#timeline-svg {
+  position: absolute;
+  top: 0; left: 0;
+  overflow: visible;
+}
+
+#tooltip {
+  position: fixed;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px 14px;
+  max-width: 300px;
+  font-size: 0.77rem;
+  line-height: 1.55;
+  color: #333;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.13);
+  z-index: 200;
+  pointer-events: none;
+  display: none;
+}
+#tooltip strong { display: block; font-size: 0.85rem; margin-bottom: 4px; color: #111; }
+#tooltip .t-link { margin-top: 6px; font-size: 0.72rem; color: #7a7a7a; font-style: italic; }
+
+#legend {
+  position: fixed;
+  bottom: 14px; left: 14px;
+  background: rgba(250,248,243,0.96);
+  border: 1px solid #e8e3d8;
+  border-radius: 8px;
+  padding: 9px 13px;
+  font-size: 0.73rem;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+#legend h4 { font-family: Georgia, serif; font-size: 0.75rem; margin-bottom: 5px; color: #555; }
+.leg-row { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; }
+.leg-sq { width: 11px; height: 11px; border-radius: 2px; flex-shrink: 0; }
+.leg-dash { width: 18px; height: 0; border-top: 2px dashed; flex-shrink: 0; }
+
+#hint {
+  position: fixed;
+  bottom: 14px; right: 14px;
+  font-size: 0.7rem; color: #aaa; text-align: right; z-index: 100; line-height: 1.7;
+}
+</style>
+</head>
+<body>
+
+<div id="header">
+  <h1>HAI — Timeline</h1>
+  <input id="search-box" type="text" placeholder="Search…" />
+  <button class="btn filter-btn f-computing active" data-cat="computing">Computing</button>
+  <button class="btn filter-btn f-ai active" data-cat="ai">AI History</button>
+  <button class="btn filter-btn f-concepts active" data-cat="concepts">Concepts</button>
+  <button class="btn filter-btn f-figures active" data-cat="figures">Figures</button>
+  <button class="btn" id="btn-connections">Connections ✓</button>
+  <button class="btn" id="btn-reset">Reset View</button>
+  <a href="obsidian://open?vault=ObsidianVault&file=P5%2FHoAI%2FHAI_topics" class="btn" style="text-decoration:none">→ Topics</a>
+  <a href="obsidian://open?vault=ObsidianVault&file=P5%2FHoAI%2FHAI_question_bank" class="btn" style="text-decoration:none">→ Q-Bank</a>
+  <a href="obsidian://open?vault=ObsidianVault&file=P5%2FCourses%2FHAI%20%E2%80%94%20History%20of%20AI%2FHAI%20%E2%80%94%20Index" class="btn" style="text-decoration:none">→ Index</a>
+</div>
+
+<div id="canvas-wrap">
+  <svg id="timeline-svg">
+    <defs>
+      <marker id="arrow-yellow" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+        <polygon points="0 0, 7 3.5, 0 7" fill="#c8a000" opacity="0.75"/>
+      </marker>
+      <marker id="arrow-blue" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+        <polygon points="0 0, 7 3.5, 0 7" fill="#5badd6" opacity="0.75"/>
+      </marker>
+      <marker id="arrow-green" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+        <polygon points="0 0, 7 3.5, 0 7" fill="#5a9e5a" opacity="0.75"/>
+      </marker>
+      <filter id="shadow">
+        <feDropShadow dx="0" dy="2" stdDeviation="2.5" flood-color="rgba(0,0,0,0.10)"/>
+      </filter>
+    </defs>
+    <g id="root-g"></g>
+  </svg>
+</div>
+
+<div id="tooltip"></div>
+
+<div id="legend">
+  <h4>Legend</h4>
+  <div class="leg-row"><div class="leg-sq" style="background:#e8f5e8;border:1.5px solid #6aaa6a"></div><span>Computing</span></div>
+  <div class="leg-row"><div class="leg-sq" style="background:#e3f2fb;border:1.5px solid #5badd6"></div><span>AI History</span></div>
+  <div class="leg-row"><div class="leg-sq" style="background:#fef9e1;border:1.5px solid #d4a800"></div><span>Concepts</span></div>
+  <div class="leg-row"><div class="leg-sq" style="background:#f9eef9;border:1.5px solid #b86ab8"></div><span>Figures</span></div>
+  <div class="leg-row"><div class="leg-sq" style="background:#ffd6d6;border:1.5px solid #e05050"></div><span>Highlight</span></div>
+  <div style="margin-top:5px; border-top:1px solid #e8e3d8; padding-top:5px;">
+    <div class="leg-row"><div class="leg-dash" style="border-color:#c8a000"></div><span>Concept link</span></div>
+    <div class="leg-row"><div class="leg-dash" style="border-color:#5badd6"></div><span>AI lineage</span></div>
+    <div class="leg-row"><div class="leg-dash" style="border-color:#5a9e5a"></div><span>Tech lineage</span></div>
+  </div>
+</div>
+
+<div id="hint">Scroll to zoom · Drag to pan<br>Click node to open note</div>
+
+<script>
+// ── COLORS ─────────────────────────────────────────────────────────────────
+const C = {
+  computing: { fill: '#e8f5e8', border: '#6aaa6a', text: '#1e5e1e' },
+  ai:        { fill: '#e3f2fb', border: '#5badd6', text: '#1a4d6e' },
+  concepts:  { fill: '#fef9e1', border: '#d4a800', text: '#6b4c00' },
+  figures:   { fill: '#f9eef9', border: '#b86ab8', text: '#5c1e5c' },
+  highlight: { fill: '#ffd6d6', border: '#e05050', text: '#7a0000' },
+};
+
+// ── YEAR → X ────────────────────────────────────────────────────────────────
+function yearToX(y) {
+  const seg = [
+    [-400,1800,50,280],
+    [1800,1900,280,480],
+    [1900,1936,480,760],
+    [1936,1945,760,1060],
+    [1945,1952,1060,1360],
+    [1952,1960,1360,1660],
+    [1960,1970,1660,2060],
+    [1970,1980,2060,2440],
+    [1980,1990,2440,2820],
+    [1990,2000,2820,3200],
+    [2000,2015,3200,3700],
+    [2015,2026,3700,4200],
+  ];
+  for (const [y0,y1,x0,x1] of seg) {
+    if (y >= y0 && y <= y1) return x0 + (y-y0)/(y1-y0)*(x1-x0);
+  }
+  return 4200;
+}
+
+const TL_Y = 390; // timeline center y
+const CANVAS_H = 800;
+const CANVAS_W = 4500;
+const NW = 148; // node width
+
+// ── EVENTS ──────────────────────────────────────────────────────────────────
+// pos: 'above' | 'below'   lane: 1 (near) | 2 (mid) | 3 (far)
+const EVENTS = [
+  // ── PRE-1900 ──────────────────────────────────────────────────────────────
+  { id:'aristotle', year:-350, label:'Aristotle\nSyllogism', short:'350 BCE', cat:'ai', pos:'above', lane:3,
+    desc:'Formal logic as foundation of reasoning. First systematic attempt to mechanize thought. Precursor to symbolic AI and the language of computation.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'babbage', year:1837, label:'Babbage\nAnalytical Engine', short:'1837', cat:'computing', pos:'below', lane:2,
+    desc:"Babbage's Analytical Engine: first programmable machine concept. Ada Lovelace wrote the first algorithm. Narrative invoked by Howard Aiken for Harvard Mark I funding — Agendas in action.",
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'boole', year:1854, label:'Boole\nLaws of Thought', short:'1854', cat:'ai', pos:'above', lane:2,
+    desc:'George Boole (1815-1864), An Investigation of the Laws of Thought (1854). Boolean logic: algebra of truth and false. Expressing thought in formulae and calculating with them. Foundation of digital computing.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'frege', year:1879, label:'Frege\nBegriffschrift', short:'1879', cat:'ai', pos:'below', lane:3,
+    desc:'Gotlob Frege (1848-1925), Begriffschrift (1879): first formal system of predicate logic. Remained obscure until rediscovered by Russell in the early 20th century.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'hollerith', year:1890, label:'Hollerith\nTabulating', short:'1890', cat:'computing', pos:'above', lane:1,
+    desc:'Herman Hollerith: punched-card tabulating system for US Census (1890). Founded IBM predecessor (CTR). Administration tradition: census and bureaucracy as a driver of computing.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  // ── 1900–1940 ────────────────────────────────────────────────────────────
+  { id:'principia', year:1910, label:'Principia\nMathematica', short:'1910', cat:'ai', pos:'below', lane:2,
+    desc:'Bertrand Russell (1872-1970) & Alfred Whitehead (1861-1947): Principia Mathematica (1910-1913). All mathematics reducible to logical axioms. Dream of automated proof. Inspired Church, Turing, de Bruijn, McCarthy.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'torresq', year:1912, label:'Torres Quevedo\nChess (1912)', short:'1912', cat:'ai', pos:'above', lane:2,
+    desc:'Leonardo Torres Quevedo (1858-1936): automated chess endgame machine (1912). Mechanical human thinking and behaviour — predecessor to AI before computers. History of Science: human thinking.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'capek', year:1920, label:'Čapek RUR\n"robot" coined', short:'1920', cat:'concepts', pos:'above', lane:3,
+    desc:'Karel Čapek, R.U.R. (1920): coined the word "robot". With Frankenstein (Mary Shelley, 1818) and Fritz Lang\'s Metropolis (1927): artificially created humans in culture long before computers. BUT: does AI exist without computers?',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'hilbert', year:1928, label:'Hilbert\nEntscheidungsproblem', short:'1928', cat:'ai', pos:'below', lane:3,
+    desc:"David Hilbert (1862-1943), Entscheidungsproblem (1928): is there a way to calculate the truth of a given expression in a fixed mathematical system? Kurt Gödel (1906-1978), 1931: no way! (incompleteness theorem).",
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'church', year:1936, label:'Church\nLambda Calculus', short:'1936', cat:'ai', pos:'below', lane:2,
+    desc:'Alonzo Church (1903-1995): lambda calculus, Journal of Symbolic Logic (1936). Mathematical foundation for computation. Answered Hilbert\'s Entscheidungsproblem. → LISP (McCarthy).',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'turing36', year:1936, label:'Turing\nComputable Numbers', short:'1936', cat:'ai', pos:'above', lane:2, highlight:true,
+    desc:"Alan Turing (1912-1954), On Computable Numbers (1936): introduces the a-machine (Turing machine). Answers Hilbert's Entscheidungsproblem. Foundation of computer science.",
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  // ── 1940s ────────────────────────────────────────────────────────────────
+  { id:'mark1', year:1944, label:'Harvard\nMark I', short:'1944', cat:'computing', pos:'above', lane:3,
+    desc:"Howard Aiken's electromechanical computer (1944). IBM collaboration. Aiken invoked Babbage narrative to secure funding — Agendas in action: a constructed historical lineage.",
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'eniac', year:1945, label:'ENIAC', short:'1945', cat:'computing', pos:'above', lane:1, highlight:true,
+    desc:'First electronic general-purpose computer (1945). Moore School (Mauchly + Eckert). Funded by BRL for ballistics. Science & Engineering tradition. Women of ENIAC programmed it.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'edvac', year:1945, label:'EDVAC /\nvon Neumann', short:'1945', cat:'computing', pos:'below', lane:1,
+    desc:"Von Neumann architecture: stored-program concept (1945). First Draft of a Report on the EDVAC. Controversial authorship. Foundation of all modern computers.",
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'moore', year:1946, label:'Moore School\nLectures', short:'1946', cat:'computing', pos:'above', lane:2,
+    desc:'Moore School Lectures (1946): key knowledge-transfer event. Spread stored-program design to UK and Europe. Attended by Wilkes, D. Hartree (1897-1958), others. → EDSAC (Cambridge), Manchester Baby.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'macy', year:1946, label:'Macy Conferences\nCybernetics', short:'1946-53', cat:'ai', pos:'below', lane:3,
+    desc:'Macy Conferences on Cybernetics (1946-1953). Norbert Wiener, Margaret Mead (1901-1978). Mead gave the 1967 ASC keynote. Margaret Masterman (1910-1986) also involved. Cybernetics: very diverging agendas.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'cybernetics', year:1948, label:'Cybernetics\nWiener', short:'1948', cat:'ai', pos:'below', lane:2, highlight:true,
+    desc:"Norbert Wiener, Cybernetics (1948): control and communication in the animal and the machine. Information + feedback loops. Machine = animal analogy. Defining Technology of the 1960s (Bolter, Turing's Man 1984).",
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'manchester', year:1948, label:'Manchester\nBaby', short:'1948', cat:'computing', pos:'above', lane:2,
+    desc:'Manchester Baby (1948): first stored-program run. Williams tube memory + Newman. UK development independent of EDSAC after Moore School lectures.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'berkeley', year:1948, label:'Berkeley\nGiant Brains', short:'1948', cat:'concepts', pos:'above', lane:3,
+    desc:'Edmund Berkeley (1909-1988), Giant Brains, or Machines That Think (1948). Also founded Computers and Automation magazine. Popularizing the "electronic brain" metaphor for the public.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'orwell', year:1948, label:'Orwell\n1984', short:'1948', cat:'concepts', pos:'below', lane:3,
+    desc:"George Orwell, 1984 (written 1948): totalitarianism, nationalism, surveillance, censorship — and SYSTEMS THINKING! 'Who controls the past controls the future.' Public anxiety about computers. cf. Jon Agar.",
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'edsac', year:1949, label:'EDSAC', short:'1949', cat:'computing', pos:'below', lane:2,
+    desc:"Wilkes, Cambridge (1949). First practical stored-program computer. EDSAC also performed music — 'computing sounds' demonstration. First programming manual (Wilkes/Wheeler/Gill 1951).",
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  // ── 1950s ────────────────────────────────────────────────────────────────
+  { id:'turing-test', year:1950, label:'Turing Test', short:'1950', cat:'ai', pos:'above', lane:1, highlight:true,
+    desc:'"Computing Machinery and Intelligence" (1950). Intelligence as imitation game. Turing was NOT at the Paris 1951 conference or Dartmouth 1956. Use of metaphor: machine as thinking.',
+    obsidian:'P5/HoAI/HAI_question_bank' },
+
+  { id:'paris1951', year:1951, label:'Paris 1951\n"Pensée Humaine"', short:'1951', cat:'ai', pos:'below', lane:1,
+    desc:'January 1951, Paris: "Les machines à calculer et la pensée humaine." 270 participants including Wiener, Aiken, Wilkes, Grey Walter/Vivian Dovey, van Wijngaarden, B.V. Bowden (Faster than Thought, 1953). NOT present: Turing, Masterman. Retrospectively a "missed opportunity" (2000s).',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'arra', year:1952, label:'ARRA\nDutch (1952)', short:'1952', cat:'computing', pos:'below', lane:2,
+    desc:'ARRA (1952): first Dutch electronic computer, relay-based. Aad van Wijngaarden, Mathematisch Centrum Amsterdam. ARRA II (1954): transistors + speaker. Led to ALGOL 60. Dutch Dinosaurs.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'univac', year:1952, label:'UNIVAC\nCBS Election', short:'1952', cat:'computing', pos:'above', lane:1, highlight:true,
+    desc:'UNIVAC predicted Eisenhower landslide on live TV (1952). Technology & Trust: legible, dramatic output builds public trust. Eckert-Mauchly commercializing ENIAC work.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'miracle', year:1953, label:'MIRACLE\nShell (1953)', short:'1953', cat:'computing', pos:'above', lane:2,
+    desc:'MIRACLE: Shell Netherlands computer (1953). First Dutch computer to play the national anthem — "computing sounds". Dutch Dinosaurs. Process Control tradition (Shell = industry).',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'greywalter', year:1953, label:'Grey Walter\nTurtle Robots', short:'1953', cat:'ai', pos:'below', lane:3,
+    desc:'William Grey Walter / Vivian Dovey (Bristol): turtle robots demonstrating simple reflex behaviour. The Living Brain (1953). Present at Paris 1951. Use of Metaphor: brain as machine — cybernetics made visible.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'skinner', year:1954, label:'Skinner\nTeaching Machine', short:'1954', cat:'concepts', pos:'above', lane:3,
+    desc:'B.F. Skinner (1954): behaviourism applied to education — "programming children". Teaching machine box. Programmed instruction. 60% of CAI materials were mathematics. Precursor to PLATO and LOGO.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'dartmouth', year:1956, label:'Dartmouth\nConference', short:'1956', cat:'ai', pos:'above', lane:1, highlight:true,
+    desc:'"Artificial Intelligence" coined by John McCarthy. 1956 Dartmouth Summer Research Project. Participants: McCarthy, Minsky, Shannon, Solomonoff, Newell, Simon, Samuel, Selfridge, Rochester, Trenchard More. NOT present: Turing (dead), Masterman, Wiener.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'namur', year:1956, label:'Namur Congress\nCybernetics', short:'1956', cat:'concepts', pos:'below', lane:1,
+    desc:'Namur 1956 cybernetics congress. Stafford Beer present — cybernetics applied to business and management. NOT attended by Wiener, Minsky, McCarthy, or Rosenblatt. Beginning of Cybernetics in Business.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'mailufterl', year:1957, label:'Mailüfterl\nAustria', short:'1956-58', cat:'computing', pos:'above', lane:3,
+    desc:'Mailüfterl (1956-1958): transistor computer built at TH Vienna. Fastest computer on the European continent at the time. European computing initiative outside UK/US — part of the "European dwarves" story.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'fortran', year:1957, label:'FORTRAN', short:'1957', cat:'computing', pos:'below', lane:2,
+    desc:'IBM, Backus (1957): practical language for scientists. American commercial agenda vs. ALGOL (European academic ideal). Agendas: FORTRAN won commercially, ALGOL won intellectually.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'deskset', year:1957, label:'Desk Set\nFilm (1957)', short:'1957', cat:'concepts', pos:'above', lane:2,
+    desc:'Desk Set (1957, Spencer Tracy/Katharine Hepburn): comedy about a computer threatening office workers. Alongside Asimov (I, Robot 1950; Foundation 1951), Philip K. Dick, Kubrick\'s 2001: public imagination about AI.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'gps', year:1957, label:'General\nProblem Solver', short:'1957', cat:'ai', pos:'below', lane:3,
+    desc:'Newell & Simon (1957): General Problem Solver, means-ends analysis. AI working of the human brain in decision making. Deterministic model of human reasoning — dominant approach until ~1980.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'perceptron', year:1957, label:'Perceptron\nRosenblatt', short:'1957', cat:'ai', pos:'below', lane:1,
+    desc:'Frank Rosenblatt (1957): first neural network model. NOT at the Namur 1956 cybernetics congress. Minsky/Papert critique (1969) → neural net winter. Foundation of modern deep learning.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'lisp', year:1958, label:'LISP\nMcCarthy', short:'1958', cat:'ai', pos:'above', lane:3,
+    desc:"John McCarthy (1958): LISP — symbolic AI language based on Church's lambda calculus. McCarthy 1961: AI and mathematical reasoning. McCarthy 1965: LISP as proof checker. THE AI programming language for 30 years.",
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'cobol', year:1960, label:'COBOL\nGrace Hopper', short:'1960', cat:'computing', pos:'above', lane:1,
+    desc:"Grace Hopper (1960): business language. 'Educating a machine' — Hopper's metaphor for programming. Agendas: democratize programming for non-specialists. Administration tradition.",
+    obsidian:'P5/HoAI/HAI_question_bank' },
+
+  { id:'algol', year:1960, label:'ALGOL 60', short:'1960', cat:'computing', pos:'below', lane:1,
+    desc:"ALGOL 60: European academic language. Van Wijngaarden, Rutishauser, Bauer + Backus. Dijkstra's 1959 paper ('communication with automatic computer') influenced it. Elegant but commercially rejected. FORTRAN's commercial agenda won.",
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'x1', year:1959, label:'Electrologica X1\nDutch', short:'1956/59', cat:'computing', pos:'below', lane:3,
+    desc:'Electrologica X1: designed 1956 by Adriaan van Wijngaarden, commercially sold 1959. First Dutch commercial computer. Electrologica: European alternative to IBM. "Colloquium Moderne Rekenmachines" (1956). Dutch Dinosaurs.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  // ── 1960s ────────────────────────────────────────────────────────────────
+  { id:'plato', year:1960, label:'PLATO\nEd. Computing', short:'1960', cat:'concepts', pos:'above', lane:3,
+    desc:'PLATO (Programmed Logic for Automated Teaching Operations, 1960): computer-assisted instruction at University of Illinois. Since 1961 on timesharing. 60% mathematics — connection to AI? Computers in Education.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'sabre', year:1962, label:'SABRE\nAirline Booking', short:'1962', cat:'computing', pos:'above', lane:1, highlight:true,
+    desc:'SABRE (1962): IBM/American Airlines reservation system. Real Time Computing: 50,000 passengers booked in real time. Process Control tradition applied to administration. Appropriated from military computing origins.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'ibm360', year:1964, label:'IBM System/360', short:'1964', cat:'computing', pos:'below', lane:1, highlight:true,
+    desc:"IBM System/360: single compatible family. IBM vs. European dwarves. OS/360 became the prime example of the Software Crisis — the largest software project, massively over budget. Brooks: 'adding manpower makes it later'.",
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'logo', year:1967, label:'LOGO\nPapert', short:'1967', cat:'ai', pos:'below', lane:2,
+    desc:"Seymour Papert (1928-2016) & Marvin Minsky (1927-2016): LOGO programming language (1967). Constructivist: child programs computer, not the reverse. Turtle graphics. Papert's Mindstorms (1981): 'learn to code' movement.",
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'automath', year:1967, label:'Automath\nde Bruijn', short:'1967', cat:'ai', pos:'above', lane:2,
+    desc:'N.G. de Bruijn (1967): Automath — first computer proof checker (Eindhoven). AI and Mathematics: McCarthy 1961 proposed using computers for mathematical reasoning; de Bruijn built the first system.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'barclays', year:1967, label:'Barclays\nCash Dispenser', short:'1967', cat:'computing', pos:'above', lane:3,
+    desc:'Barclays Bank (Burroughs), first ATM/cash dispenser (1967). Real Time Computing applied to everyday banking. Process Control tradition entering ordinary life.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'sw-crisis', year:1968, label:'Software\nCrisis (NATO)', short:'1968', cat:'computing', pos:'below', lane:1, highlight:true,
+    desc:"NATO Garmisch 1968: OS/360 as exemplar of failure. Two readings: Brooks' crisis (management, size) vs. Dijkstra's crisis (need mathematical discipline — final push for ALGOL's agenda). Birth of software engineering.",
+    obsidian:'P5/HoAI/HAI_question_bank' },
+
+  { id:'kubrick2001', year:1968, label:'2001: A Space\nOdyssey (HAL)', short:'1968', cat:'concepts', pos:'above', lane:1,
+    desc:"Stanley Kubrick, 2001: A Space Odyssey (1968): HAL 9000 as AI. Philip K. Dick: Do Androids Dream of Electric Sheep? (1968). Science fiction: redefinition of what makes us human — feeling instead of thinking.",
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  // ── 1970s ────────────────────────────────────────────────────────────────
+  { id:'cybersyn', year:1971, label:'Cybersyn\nStafford Beer', short:'1971', cat:'concepts', pos:'above', lane:2,
+    desc:'Cybersyn (1971): Stafford Beer applied cybernetics to management of Chilean economy under Allende. Jay Forrester, World Dynamics (1971): systems thinking. W. Robert Widener, New Management Concepts (1968). Cybernetics in Business.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'lighthill', year:1973, label:'Lighthill Report\n1st Winter', short:'1973', cat:'ai', pos:'below', lane:1, highlight:true,
+    desc:"UK Lighthill Report (1973): AI failed to deliver on promises. Machine translation failure over-promised. First AI winter. Term 'AI winters' coined retrospectively in 2006 for cycles of hype and disappointment.",
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'fourcolour', year:1976, label:'Four Colour\nTheorem', short:'1976', cat:'ai', pos:'above', lane:2,
+    desc:'Appel & Haken (1976): Four Colour Theorem proved by computer (AURA at Argonne National Laboratory). First major computer-assisted mathematical proof. AI and Mathematics: computer as mathematical reasoner.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  // ── 1980s ────────────────────────────────────────────────────────────────
+  { id:'expert', year:1980, label:'Expert Systems\nBoom', short:'1980s', cat:'ai', pos:'below', lane:2,
+    desc:'MYCIN, DENDRAL, LISP machines. Knowledge-based AI. Japan 5th Generation project. AI in decision making — deterministic model of human brain (Newell/Simon approach until ~1980). Dominated the decade.',
+    obsidian:'P5/HoAI/HAI_topics' },
+
+  { id:'mindstorms', year:1981, label:'Mindstorms\nPapert', short:'1981', cat:'concepts', pos:'above', lane:2,
+    desc:'Seymour Papert, Mindstorms: Children, Computers and Powerful Ideas (1981). Continuing LOGO: "learn to code" movement, turtle robots. Computers in Education (CAI). Positive influence on general trust in computing.',
+    obsidian:'P5/HoAI/HAI_topics' },
+];
+
+// ── CONCEPT NODES (pinned at top of canvas) ─────────────────────────────────
+const CONCEPTS = [
+  { id:'c-traditions', x:300, label:'Three Traditions', shortDesc:'Administration · Process Control · Science',
+    desc:'Three independent drivers of computing: Administration (Hollerith/census/punched cards), Process Control (industrial/military, Dutch waterworks, Taylor), Science & Engineering (ballistics, ENIAC). Each shaped computing independently.',
+    obsidian:'P5/HoAI/HAI_topics',
+    links:['hollerith','eniac','sabre'] },
+
+  { id:'c-trust', x:600, label:'Technology & Trust', shortDesc:'Capability alone ≠ adoption',
+    desc:'Hollerith: fast legible output → census trust. UNIVAC on CBS: public demonstration. Edmund Berkeley popularizes "electronic brain". Technology & Trust: being seen to work matters as much as actually working.',
+    obsidian:'P5/HoAI/HAI_topics',
+    links:['hollerith','univac','berkeley'] },
+
+  { id:'c-appropriation', x:950, label:'Appropriation', shortDesc:'Using tech for unintended purposes',
+    desc:"Tech designers ≠ tech users. Military computer (SAGE) → commercial airlines (SABRE). Scientific computer → music → AI demonstration. Appropriation: the second life of a technology.",
+    obsidian:'P5/HoAI/HAI_topics',
+    links:['sabre','edsac'] },
+
+  { id:'c-metaphor', x:1230, label:'Use of Metaphor', shortDesc:'"Electronic Brain" · "Educating a machine"',
+    desc:"Metaphors shape how we understand computers: 'Electronic brain' (newspaper, 1946). 'Educating a machine' (Grace Hopper — programming as teaching). Bolter, Turing's Man (1984): computer as defining technology. Karl Lashley (1929): motor behaviour and computing. Grey Walter's turtle robots.",
+    obsidian:'P5/HoAI/HAI_topics',
+    links:['cybernetics','cobol','manchester'] },
+
+  { id:'c-agendas', x:1510, label:'Agendas', shortDesc:'Interests shaping historical narratives',
+    desc:"Aiken invokes Babbage for Harvard Mark I funding. Anglo-American narrative ignores Dutch/Polish/European. FORTRAN (commercial) vs. ALGOL (academic ideal). 'Ideals made machines succeed' (Campbell-Kelly): hidden history of who benefits.",
+    obsidian:'P5/HoAI/HAI_topics',
+    links:['mark1','babbage','fortran','algol'] },
+
+  { id:'c-dutch', x:1790, label:'Dutch Dinosaurs', shortDesc:'ARRA · MIRACLE · X1 · European dwarves',
+    desc:"Dutch homegrown computers: ARRA (1952, van Wijngaarden), MIRACLE (Shell, 1953 — first Dutch music/anthem), Electrologica X1 (1959 commercial). European dwarves vs. IBM: Zuse KG, Regnecentralen, Bull, LEO, Electrologica. 'Colloquium Moderne Rekenmachines' (1956).",
+    obsidian:'P5/HoAI/HAI_topics',
+    links:['arra','miracle','x1'] },
+
+  { id:'c-deftech', x:2070, label:'Defining Technology\n(Bolter)', shortDesc:'Tech reshaping cultural self-understanding',
+    desc:"J.D. Bolter, Turing's Man (1984): each era has a 'defining technology' reshaping how we understand humans. Clock (17th c.) → humans as clockwork. Steam (19th c.) → society as energy. Computer (1960s) → brain as processor.",
+    obsidian:'P5/HoAI/HAI_topics',
+    links:['cybernetics','berkeley'] },
+
+  { id:'c-winters', x:2350, label:'AI Winters', shortDesc:'Cycles: hype → disappointment → funding cuts',
+    desc:"First AI winter (1970s, Lighthill Report: machine translation failure, over-promising). Term 'AI winters' coined retrospectively in 2006. AI in decision making (Newell/Simon): very deterministic until ~1980. Hypes and research.",
+    obsidian:'P5/HoAI/HAI_topics',
+    links:['lighthill','expert'] },
+
+  { id:'c-education', x:2630, label:'Computers in\nEducation', shortDesc:'Skinner · PLATO · LOGO · Mindstorms',
+    desc:"Computers in Education (CAI): Skinner behaviourism (1954) → PLATO at Illinois (1960) → LOGO/Papert (1967) → Mindstorms (1981). Dutch: ÉCOL, computerkunde as school subject. Max Euwe (chess champion, FIDE 1966). Benjamin Bloom's taxonomy (1956). BASIC in schools.",
+    obsidian:'P5/HoAI/HAI_topics',
+    links:['skinner','plato','logo','mindstorms'] },
+];
+
+// ── CROSS-CONNECTIONS ────────────────────────────────────────────────────────
+const CONNECTIONS = [
+  // Logic / AI foundations lineage
+  { from:'frege',      to:'principia',  color:'#5badd6', dash:'5,3', label:'inspires', marker:'arrow-blue' },
+  { from:'principia',  to:'hilbert',    color:'#5badd6', dash:'5,3', label:'axioms', marker:'arrow-blue' },
+  { from:'hilbert',    to:'church',     color:'#5badd6', dash:'5,3', label:'Entscheid.', marker:'arrow-blue' },
+  { from:'hilbert',    to:'turing36',   color:'#5badd6', dash:'5,3', label:'Entscheid.', marker:'arrow-blue' },
+  { from:'church',     to:'lisp',       color:'#5badd6', dash:'5,3', label:'λ→LISP', marker:'arrow-blue' },
+  { from:'turing36',   to:'dartmouth',  color:'#5badd6', dash:'5,3', label:'foundation', marker:'arrow-blue' },
+  { from:'principia',  to:'automath',   color:'#5badd6', dash:'6,4', label:'proof\nchecker', marker:'arrow-blue' },
+  { from:'automath',   to:'fourcolour', color:'#5badd6', dash:'5,3', label:'AI & Math', marker:'arrow-blue' },
+  // Agendas: Babbage → Mark I
+  { from:'babbage',    to:'mark1',      color:'#c8a000', dash:'6,4', label:'Agendas', marker:'arrow-yellow' },
+  // Cybernetics lineage
+  { from:'macy',       to:'cybernetics',color:'#5badd6', dash:'4,3', label:'Wiener', marker:'arrow-blue' },
+  { from:'cybernetics',to:'dartmouth',  color:'#5badd6', dash:'6,4', label:'precursor', marker:'arrow-blue' },
+  // Moore School → UK computers
+  { from:'moore',      to:'edsac',      color:'#5a9e5a', dash:'4,3', label:'lectures', marker:'arrow-green' },
+  { from:'moore',      to:'manchester', color:'#5a9e5a', dash:'4,3', label:'lectures', marker:'arrow-green' },
+  // Dutch Dinosaurs lineage
+  { from:'arra',       to:'miracle',    color:'#5a9e5a', dash:'4,3', label:'Dutch', marker:'arrow-green' },
+  { from:'arra',       to:'algol',      color:'#5a9e5a', dash:'5,3', label:'→ALGOL', marker:'arrow-green' },
+  { from:'miracle',    to:'x1',         color:'#5a9e5a', dash:'4,3', label:'Dutch', marker:'arrow-green' },
+  // Programming language agendas
+  { from:'fortran',    to:'algol',      color:'#c8a000', dash:'6,4', label:'Agendas', marker:'arrow-yellow' },
+  // ENIAC → stored program
+  { from:'eniac',      to:'edvac',      color:'#5a9e5a', dash:'4,3', label:'stored\nprogram', marker:'arrow-green' },
+  // AI tools from Dartmouth
+  { from:'dartmouth',  to:'gps',        color:'#5badd6', dash:'5,3', label:'Newell\nSimon', marker:'arrow-blue' },
+  { from:'dartmouth',  to:'lisp',       color:'#5badd6', dash:'5,3', label:'McCarthy', marker:'arrow-blue' },
+  { from:'lisp',       to:'expert',     color:'#5badd6', dash:'4,3', label:'AI lang', marker:'arrow-blue' },
+  // Education lineage
+  { from:'skinner',    to:'plato',      color:'#c8a000', dash:'6,4', label:'CAI', marker:'arrow-yellow' },
+  { from:'plato',      to:'logo',       color:'#c8a000', dash:'5,3', label:'→', marker:'arrow-yellow' },
+  { from:'logo',       to:'mindstorms', color:'#5a9e5a', dash:'5,3', label:'Papert', marker:'arrow-green' },
+  // Software Crisis
+  { from:'ibm360',     to:'sw-crisis',  color:'#c8a000', dash:'6,4', label:'OS/360\nfailure', marker:'arrow-yellow' },
+  // AI winter
+  { from:'lighthill',  to:'expert',     color:'#c8a000', dash:'6,4', label:'winter\n→revival', marker:'arrow-yellow' },
+];
+
+// ── COMPUTE POSITIONS ────────────────────────────────────────────────────────
+const LANE_ABOVE = [TL_Y - 100, TL_Y - 200, TL_Y - 310];
+const LANE_BELOW = [TL_Y + 100, TL_Y + 200, TL_Y + 300];
+
+const eventMap = {};
+for (const ev of EVENTS) {
+  ev.x = yearToX(ev.year) - NW / 2;
+  const lanes = ev.pos === 'above' ? LANE_ABOVE : LANE_BELOW;
+  const laneIdx = Math.min((ev.lane || 1) - 1, lanes.length - 1);
+  ev.cy = lanes[laneIdx]; // center y of node
+  ev.h  = ev.label.includes('\n') ? 56 : 44;
+  eventMap[ev.id] = ev;
+}
+for (const c of CONCEPTS) {
+  c.cy = 34;
+  c.h  = c.label.includes('\n') ? 52 : 42;
+  c.x  = c.x - NW / 2;
+}
+
+// ── RENDERING ────────────────────────────────────────────────────────────────
+const svg   = document.getElementById('timeline-svg');
+const rootG = document.getElementById('root-g');
+
+let transform = { x: 20, y: 0, scale: 0.9 };
+let searchTerm  = '';
+let showConn    = true;
+const activeFilters = new Set(['computing','ai','concepts','figures']);
+
+function colorFor(ev) {
+  if (ev.highlight) return C.highlight;
+  return C[ev.cat] || C.computing;
+}
+
+function svgEl(tag, attrs) {
+  const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  for (const [k,v] of Object.entries(attrs)) el.setAttribute(k, v);
+  return el;
+}
+
+function nodeVisible(ev) {
+  const cat = ev.cat || 'concepts';
+  return activeFilters.has(cat);
+}
+
+function wrapText(text, maxW, fsize) {
+  const lines = text.split('\n');
+  const out = [];
+  for (const line of lines) {
+    const words = line.split(' ');
+    let cur = '';
+    const cpl = Math.floor(maxW / (fsize * 0.56));
+    for (const w of words) {
+      if ((cur+' '+w).trim().length > cpl && cur) { out.push(cur); cur = w; }
+      else cur = cur ? cur+' '+w : w;
+    }
+    if (cur) out.push(cur);
+  }
+  return out;
+}
+
+function renderNode(g, x, y, w, h, ev, isConceptNode) {
+  const cs = isConceptNode ? C.concepts : colorFor(ev);
+  const isMatch = searchTerm && (ev.label.toLowerCase().includes(searchTerm) || (ev.desc||'').toLowerCase().includes(searchTerm));
+
+  // shadow
+  g.appendChild(svgEl('rect', { x: x+2, y: y+3, width: w, height: h, rx: 7,
+    fill: 'rgba(0,0,0,0.08)' }));
+  // box
+  const box = svgEl('rect', { x, y, width: w, height: h, rx: 7,
+    fill: isMatch ? '#fffacd' : cs.fill,
+    stroke: isMatch ? '#e0b800' : cs.border,
+    'stroke-width': isMatch ? 2.5 : (ev.highlight ? 2 : 1.5),
+    filter: 'url(#shadow)',
+    cursor: ev.obsidian ? 'pointer' : 'default'
+  });
+  g.appendChild(box);
+
+  // text
+  const fontSize = isConceptNode ? 10.5 : 10;
+  const lines = wrapText(ev.label, w - 14, fontSize);
+  const lh = 14;
+  const totalTH = lines.length * lh;
+  let ty = y + h/2 - totalTH/2 + lh * 0.72;
+  for (const line of lines) {
+    const t = svgEl('text', { x: x + w/2, y: ty, 'text-anchor':'middle',
+      fill: cs.text, 'font-size': fontSize, 'font-weight': isConceptNode ? '600' : '500',
+      'font-family': isConceptNode ? "Georgia, serif" : 'system-ui, sans-serif',
+      'pointer-events':'none' });
+    t.textContent = line;
+    g.appendChild(t);
+    ty += lh;
+  }
+
+  // obsidian link indicator
+  if (ev.obsidian) {
+    const dot = svgEl('circle', { cx: x + w - 7, cy: y + 7, r: 3.5,
+      fill: '#8fbc8f', opacity: '0.8', cursor: 'pointer' });
+    g.appendChild(dot);
+  }
+
+  return box;
+}
+
+function render() {
+  rootG.innerHTML = '';
+  rootG.setAttribute('transform',
+    `translate(${transform.x},${transform.y}) scale(${transform.scale})`);
+
+  svg.setAttribute('width',  CANVAS_W);
+  svg.setAttribute('height', CANVAS_H);
+
+  // ── ERA BANDS ──────────────────────────────────────────────────────────────
+  const eras = [
+    { y0:-400, y1:1900, label:'Prehistory & Early Machines', x0: yearToX(-400), x1: yearToX(1900), bg:'rgba(240,230,210,0.18)' },
+    { y0:1900, y1:1945, label:'Foundations of AI (1900–1945)', x0: yearToX(1900), x1: yearToX(1945), bg:'rgba(220,240,220,0.20)' },
+    { y0:1945, y1:1956, label:'Early Computers & Cold War',  x0: yearToX(1945), x1: yearToX(1956), bg:'rgba(210,235,250,0.20)' },
+    { y0:1956, y1:1968, label:'Dartmouth Era & Dutch Dinosaurs', x0: yearToX(1956), x1: yearToX(1968), bg:'rgba(255,250,225,0.25)' },
+    { y0:1968, y1:1985, label:'Software Crisis & AI Winters', x0: yearToX(1968), x1: yearToX(1985), bg:'rgba(235,220,240,0.20)' },
+  ];
+  for (const era of eras) {
+    rootG.appendChild(svgEl('rect', { x: era.x0, y: 0, width: era.x1-era.x0, height: CANVAS_H,
+      fill: era.bg }));
+    const t = svgEl('text', { x: (era.x0+era.x1)/2, y: CANVAS_H - 14,
+      'text-anchor':'middle', fill:'#aaa', 'font-size':10,
+      'font-family':'Georgia, serif', 'font-style':'italic' });
+    t.textContent = era.label;
+    rootG.appendChild(t);
+  }
+
+  // ── TIMELINE BAR ──────────────────────────────────────────────────────────
+  rootG.appendChild(svgEl('line', {
+    x1: 30, y1: TL_Y, x2: CANVAS_W - 30, y2: TL_Y,
+    stroke: '#444', 'stroke-width': 2.5, opacity: 0.6
+  }));
+
+  // year ticks
+  const tickYears = [-350,1837,1854,1879,1890,1910,1920,1936,1944,1945,1948,1950,
+                     1952,1956,1957,1960,1962,1964,1967,1968,1971,1973,1976,1981];
+  for (const yr of tickYears) {
+    const tx = yearToX(yr);
+    rootG.appendChild(svgEl('line', { x1:tx, y1:TL_Y-5, x2:tx, y2:TL_Y+5,
+      stroke:'#666', 'stroke-width':1.2 }));
+    const yrLabel = yr < 0 ? `${Math.abs(yr)} BCE` : yr.toString();
+    const t = svgEl('text', { x:tx, y:TL_Y+16, 'text-anchor':'middle',
+      fill:'#666', 'font-size': 8.5, 'font-family':'system-ui, sans-serif' });
+    t.textContent = yrLabel;
+    rootG.appendChild(t);
+  }
+
+  // ── CROSS-CONNECTIONS ──────────────────────────────────────────────────────
+  if (showConn) {
+    const connG = svgEl('g', {});
+    for (const conn of CONNECTIONS) {
+      const src = eventMap[conn.from];
+      const dst = eventMap[conn.to];
+      if (!src || !dst) continue;
+      if (!nodeVisible(src) || !nodeVisible(dst)) continue;
+
+      const sx = src.x + NW/2;
+      const sy = src.cy;
+      const ex = dst.x + NW/2;
+      const ey = dst.cy;
+      const my = (sy + ey) / 2;
+      // curved path below/above timeline
+      const below = sy > TL_Y || ey > TL_Y;
+      const cy1 = below ? Math.max(sy, ey) + 40 : Math.min(sy, ey) - 50;
+      const d = `M ${sx} ${sy} C ${sx} ${cy1}, ${ex} ${cy1}, ${ex} ${ey}`;
+
+      const path = svgEl('path', { d, fill:'none',
+        stroke: conn.color, 'stroke-width': 1.5, opacity: '0.55',
+        'stroke-dasharray': conn.dash,
+        'marker-end': `url(#${conn.marker})` });
+      connG.appendChild(path);
+
+      // connection label
+      if (conn.label) {
+        const mx2 = (sx+ex)/2;
+        const by = below ? cy1 + 10 : cy1 - 4;
+        const lt = svgEl('text', { x:mx2, y:by, 'text-anchor':'middle',
+          fill: conn.color, 'font-size': 8, opacity: '0.8', 'font-style':'italic' });
+        lt.textContent = conn.label.replace('\n',' ');
+        connG.appendChild(lt);
+      }
+    }
+    rootG.appendChild(connG);
+  }
+
+  // ── CONCEPT → EVENT LINK LINES (dotted) ───────────────────────────────────
+  const clinkG = svgEl('g', {});
+  for (const c of CONCEPTS) {
+    for (const eid of (c.links || [])) {
+      const ev = eventMap[eid];
+      if (!ev || !nodeVisible(ev)) continue;
+      const sx = c.x + NW/2;
+      const sy = c.cy + c.h;
+      const ex = ev.x + NW/2;
+      const ey = ev.cy - ev.h/2;
+      clinkG.appendChild(svgEl('line', {
+        x1:sx, y1:sy, x2:ex, y2:ey,
+        stroke:'#c8a000', 'stroke-width':1, 'stroke-dasharray':'3,4', opacity:'0.35'
+      }));
+    }
+  }
+  rootG.appendChild(clinkG);
+
+  // ── STEM LINES (event to timeline) ────────────────────────────────────────
+  const stemG = svgEl('g', {});
+  for (const ev of EVENTS) {
+    if (!nodeVisible(ev)) continue;
+    const cx = ev.x + NW/2;
+    const nodeEdgeY = ev.pos === 'above' ? ev.cy + ev.h/2 : ev.cy - ev.h/2;
+    const cs = colorFor(ev);
+    stemG.appendChild(svgEl('line', {
+      x1: cx, y1: nodeEdgeY, x2: cx, y2: TL_Y,
+      stroke: cs.border, 'stroke-width': 1.2, opacity: '0.5'
+    }));
+    // dot on timeline
+    stemG.appendChild(svgEl('circle', {
+      cx, cy: TL_Y, r: 4,
+      fill: cs.border, opacity: '0.7'
+    }));
+  }
+  rootG.appendChild(stemG);
+
+  // ── EVENT NODES ───────────────────────────────────────────────────────────
+  const nodeG = svgEl('g', {});
+  for (const ev of EVENTS) {
+    if (!nodeVisible(ev)) continue;
+    const ny = ev.cy - ev.h / 2;
+    const g = svgEl('g', { class:'evt-node' });
+    const box = renderNode(g, ev.x, ny, NW, ev.h, ev, false);
+
+    box.addEventListener('click', () => {
+      if (ev.obsidian) window.open('obsidian://open?vault=ObsidianVault&file=' + encodeURIComponent(ev.obsidian), '_self');
+    });
+    g.addEventListener('mouseenter', e => showTip(e, ev));
+    g.addEventListener('mousemove', moveTip);
+    g.addEventListener('mouseleave', hideTip);
+    nodeG.appendChild(g);
+  }
+  rootG.appendChild(nodeG);
+
+  // ── CONCEPT NODES (sticky top row) ────────────────────────────────────────
+  const cg = svgEl('g', {});
+  for (const c of CONCEPTS) {
+    const ny = c.cy;
+    const g = svgEl('g', { class:'concept-node' });
+    renderNode(g, c.x, ny, NW, c.h, c, true);
+    g.addEventListener('click', () => {
+      if (c.obsidian) window.open('obsidian://open?vault=ObsidianVault&file=' + encodeURIComponent(c.obsidian), '_self');
+    });
+    g.addEventListener('mouseenter', e => showTip(e, c));
+    g.addEventListener('mousemove', moveTip);
+    g.addEventListener('mouseleave', hideTip);
+    cg.appendChild(g);
+  }
+  rootG.appendChild(cg);
+}
+
+// ── TOOLTIP ──────────────────────────────────────────────────────────────────
+const tip = document.getElementById('tooltip');
+
+function showTip(e, node) {
+  const linkHint = node.obsidian ? `<div class="t-link">Click to open in Obsidian →</div>` : '';
+  tip.innerHTML = `<strong>${node.label.replace(/\n/g,' ')}</strong>${node.desc || node.shortDesc || ''}${linkHint}`;
+  tip.style.display = 'block';
+  moveTip(e);
+}
+function moveTip(e) {
+  let x = e.clientX + 15, y = e.clientY + 15;
+  if (x + 310 > window.innerWidth) x = e.clientX - 315;
+  if (y + 120 > window.innerHeight) y = e.clientY - 90;
+  tip.style.left = x + 'px'; tip.style.top = y + 'px';
+}
+function hideTip() { tip.style.display = 'none'; }
+
+// ── PAN + ZOOM ────────────────────────────────────────────────────────────────
+const wrap = document.getElementById('canvas-wrap');
+let panning = false, panStart = {}, txStart = {};
+
+wrap.addEventListener('mousedown', e => {
+  if (e.target.closest('.evt-node,.concept-node')) return;
+  panning = true;
+  panStart = { x: e.clientX, y: e.clientY };
+  txStart  = { x: transform.x, y: transform.y };
+  wrap.classList.add('grabbing');
+});
+window.addEventListener('mousemove', e => {
+  if (!panning) return;
+  transform.x = txStart.x + (e.clientX - panStart.x);
+  transform.y = txStart.y + (e.clientY - panStart.y);
+  rootG.setAttribute('transform', `translate(${transform.x},${transform.y}) scale(${transform.scale})`);
+});
+window.addEventListener('mouseup', () => { panning = false; wrap.classList.remove('grabbing'); });
+
+wrap.addEventListener('wheel', e => {
+  e.preventDefault();
+  const delta = e.deltaY > 0 ? 0.9 : 1.1;
+  const ns = Math.min(3, Math.max(0.18, transform.scale * delta));
+  const r = wrap.getBoundingClientRect();
+  const mx = e.clientX - r.left, my = e.clientY - r.top;
+  transform.x = mx - (mx - transform.x) * ns / transform.scale;
+  transform.y = my - (my - transform.y) * ns / transform.scale;
+  transform.scale = ns;
+  rootG.setAttribute('transform', `translate(${transform.x},${transform.y}) scale(${transform.scale})`);
+}, { passive: false });
+
+// ── CONTROLS ─────────────────────────────────────────────────────────────────
+document.getElementById('btn-reset').addEventListener('click', () => {
+  transform = { x: 20, y: 0, scale: 0.9 };
+  render();
+});
+
+document.getElementById('btn-connections').addEventListener('click', function() {
+  showConn = !showConn;
+  this.textContent = showConn ? 'Connections ✓' : 'Connections ✗';
+  render();
+});
+
+document.getElementById('search-box').addEventListener('input', e => {
+  searchTerm = e.target.value.trim().toLowerCase();
+  render();
+});
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const cat = this.dataset.cat;
+    if (activeFilters.has(cat)) activeFilters.delete(cat);
+    else activeFilters.add(cat);
+    this.classList.toggle('active');
+    render();
+  });
+});
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+requestAnimationFrame(() => requestAnimationFrame(() => {
+  const h = wrap.getBoundingClientRect().height;
+  transform.y = h / 2 - TL_Y * transform.scale;
+  render();
+}));
+window.addEventListener('resize', render);
+</script>
+</body>
+</html>

@@ -1,0 +1,1852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HAI Mastery — Final Prep</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --panel: #161922;
+    --panel-2: #1c2030;
+    --border: #2a2f42;
+    --text: #e6e8ef;
+    --muted: #9098b1;
+    --accent: #f4c95d;
+    --a-color: #6cb6ff;
+    --b-color: #7ee2a8;
+    --c-color: #c792ea;
+    --warn: #ff8b6b;
+    --ok: #7ee2a8;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif; line-height: 1.55; }
+  a { color: var(--accent); text-decoration: none; }
+
+  /* HEADER */
+  header.top {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(15,17,21,.95); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 20px;
+  }
+  .topwrap { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .brand { font-weight: 700; font-size: 18px; letter-spacing: -0.01em; }
+  .brand .acc { color: var(--accent); }
+  .countdown { font-size: 13px; color: var(--muted); padding: 4px 10px; background: var(--panel); border: 1px solid var(--border); border-radius: 999px; }
+  .countdown strong { color: var(--warn); }
+  .search { flex: 1; min-width: 220px; }
+  .search input {
+    width: 100%; padding: 8px 12px; font-size: 14px;
+    background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+    color: var(--text);
+  }
+  .search input:focus { outline: none; border-color: var(--accent); }
+  .progress-wrap { font-size: 12px; color: var(--muted); }
+  .progress-wrap strong { color: var(--ok); }
+
+  /* TAB NAV */
+  nav.tabs { max-width: 1400px; margin: 0 auto; padding: 0 20px; display: flex; gap: 4px; overflow-x: auto; }
+  nav.tabs button {
+    background: transparent; border: none; color: var(--muted);
+    padding: 10px 14px; font-size: 14px; cursor: pointer; border-bottom: 2px solid transparent;
+    white-space: nowrap;
+  }
+  nav.tabs button:hover { color: var(--text); }
+  nav.tabs button.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  main { max-width: 1400px; margin: 0 auto; padding: 24px 20px 80px; }
+  .view { display: none; }
+  .view.active { display: block; }
+
+  h1 { font-size: 24px; margin: 0 0 8px; letter-spacing: -0.02em; }
+  h2 { font-size: 18px; margin: 24px 0 12px; letter-spacing: -0.01em; }
+  h3 { font-size: 15px; margin: 12px 0 6px; }
+  p, li { font-size: 14px; }
+  .lede { color: var(--muted); margin-bottom: 24px; max-width: 800px; }
+
+  /* CARDS */
+  .grid { display: grid; gap: 14px; }
+  .grid.cols-2 { grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); }
+  .grid.cols-3 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+  .card {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 16px;
+  }
+  .card.compact { padding: 12px; }
+  .card h3 { margin-top: 0; }
+  .pill {
+    display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 999px;
+    background: var(--panel-2); color: var(--muted); margin-right: 6px; border: 1px solid var(--border);
+  }
+  .pill.a { color: var(--a-color); border-color: rgba(108,182,255,.3); }
+  .pill.b { color: var(--b-color); border-color: rgba(126,226,168,.3); }
+  .pill.c { color: var(--c-color); border-color: rgba(199,146,234,.3); }
+  .pill.warn { color: var(--warn); border-color: rgba(255,139,107,.3); }
+  .pill.ok { color: var(--ok); border-color: rgba(126,226,168,.3); }
+
+  /* TOPIC CARDS */
+  .topic {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
+    margin-bottom: 12px; overflow: hidden; transition: border-color .15s;
+  }
+  .topic.mastered { border-color: rgba(126,226,168,.5); }
+  .topic-head {
+    display: flex; align-items: center; gap: 10px; padding: 14px 16px; cursor: pointer;
+    user-select: none;
+  }
+  .topic-head:hover { background: var(--panel-2); }
+  .topic-id {
+    font-family: ui-monospace, SF Mono, monospace; font-size: 12px;
+    padding: 3px 7px; border-radius: 4px; background: var(--panel-2); color: var(--muted);
+    min-width: 38px; text-align: center;
+  }
+  .topic-id.a { color: var(--a-color); }
+  .topic-id.b { color: var(--b-color); }
+  .topic-id.c { color: var(--c-color); }
+  .topic-title { flex: 1; font-weight: 600; font-size: 14px; }
+  .topic-meta { font-size: 11px; color: var(--muted); }
+  .topic-body { display: none; padding: 0 16px 16px; border-top: 1px solid var(--border); }
+  .topic.open .topic-body { display: block; }
+  .topic.open .topic-head { background: var(--panel-2); }
+
+  .kv { display: grid; grid-template-columns: 110px 1fr; gap: 6px 14px; margin: 12px 0; font-size: 13px; }
+  .kv .k { color: var(--muted); }
+  .kv .v { color: var(--text); }
+  .tip {
+    background: rgba(244,201,93,.08); border-left: 3px solid var(--accent);
+    padding: 10px 14px; margin: 12px 0; border-radius: 4px; font-size: 13px;
+  }
+  .tip strong { color: var(--accent); }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+  .chip {
+    font-size: 11px; padding: 3px 8px; border-radius: 4px;
+    background: var(--panel-2); border: 1px solid var(--border); color: var(--muted);
+    cursor: pointer; transition: all .15s;
+  }
+  .chip:hover { color: var(--text); border-color: var(--accent); }
+  .chip.linked-q { color: var(--a-color); }
+  .chip.linked-p { color: #ffb86c; }
+  .chip.linked-d { color: var(--c-color); }
+
+  .actions { display: flex; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+  .btn {
+    background: var(--panel-2); border: 1px solid var(--border); color: var(--text);
+    padding: 6px 12px; font-size: 12px; border-radius: 6px; cursor: pointer;
+    transition: all .15s;
+  }
+  .btn:hover { background: var(--border); }
+  .btn.primary { background: var(--accent); color: #1a1611; border-color: var(--accent); font-weight: 600; }
+  .btn.ok { color: var(--ok); border-color: rgba(126,226,168,.3); }
+
+  /* QUESTION CARDS */
+  .question { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 12px; overflow: hidden; }
+  .q-head { padding: 14px 16px; cursor: pointer; }
+  .q-head:hover { background: var(--panel-2); }
+  .q-id { font-family: ui-monospace, monospace; font-size: 11px; color: var(--muted); }
+  .q-title { font-weight: 600; margin: 4px 0; font-size: 14px; }
+  .q-prompt { color: var(--muted); font-style: italic; font-size: 13px; }
+  .q-body { display: none; padding: 0 16px 16px; border-top: 1px solid var(--border); }
+  .question.open .q-body { display: block; }
+  .answer { font-size: 13px; line-height: 1.65; }
+  .answer p { margin: 8px 0; }
+  .skeleton {
+    background: var(--panel-2); padding: 10px 14px; border-radius: 6px; margin: 10px 0;
+    font-size: 12px; color: var(--muted); border-left: 3px solid var(--c-color);
+  }
+
+  /* FILTER BAR */
+  .filter-bar {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;
+    padding: 12px; background: var(--panel); border-radius: 8px; border: 1px solid var(--border);
+  }
+  .filter-bar select, .filter-bar input {
+    background: var(--panel-2); border: 1px solid var(--border); color: var(--text);
+    padding: 6px 10px; border-radius: 6px; font-size: 13px;
+  }
+  .filter-bar label { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+
+  /* TABLES */
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border); }
+  th { color: var(--muted); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; }
+  tr:hover { background: var(--panel-2); }
+  td .pill { margin-right: 4px; }
+
+  /* CONNECTIONS */
+  .conn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 800px) { .conn-grid { grid-template-columns: 1fr; } }
+  .conn-card {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 16px;
+  }
+  .conn-card h4 { margin: 0 0 10px; font-size: 14px; color: var(--accent); }
+  .conn-list { font-size: 13px; }
+  .conn-list li { margin: 6px 0; }
+  .conn-list strong { color: var(--text); }
+
+  /* PRACTICE */
+  .practice-card {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
+    padding: 24px; max-width: 800px; margin: 0 auto;
+  }
+  .practice-prompt {
+    font-size: 16px; font-style: italic; color: var(--text);
+    padding: 18px; background: var(--panel-2); border-left: 3px solid var(--accent);
+    border-radius: 6px; margin: 16px 0;
+  }
+  .practice-meta { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+  textarea.draft {
+    width: 100%; min-height: 240px; background: var(--panel-2); color: var(--text);
+    border: 1px solid var(--border); border-radius: 6px; padding: 12px; font-size: 13px;
+    font-family: inherit; line-height: 1.6; resize: vertical;
+  }
+  textarea.draft:focus { outline: none; border-color: var(--accent); }
+
+  /* CHEAT SHEET */
+  .cheat-section { margin-bottom: 28px; }
+  .cheat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 8px; }
+  .cheat-item {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px;
+    font-size: 12px;
+  }
+  .cheat-item .term { color: var(--accent); font-weight: 600; display: block; margin-bottom: 4px; }
+  .cheat-item .def { color: var(--muted); font-size: 11px; }
+
+  /* TIMELINE */
+  .timeline { position: relative; padding-left: 24px; border-left: 2px solid var(--border); margin: 16px 0; }
+  .timeline-item { margin-bottom: 14px; position: relative; padding-left: 12px; }
+  .timeline-item::before {
+    content: ''; position: absolute; left: -31px; top: 6px; width: 10px; height: 10px;
+    background: var(--accent); border-radius: 50%; border: 2px solid var(--bg);
+  }
+  .timeline-year {
+    display: inline-block; font-family: ui-monospace, monospace; color: var(--accent);
+    font-weight: 600; font-size: 13px; margin-right: 8px;
+  }
+  .timeline-text { font-size: 13px; }
+
+  /* HIGHLIGHT */
+  .highlight { background: rgba(244,201,93,.25); color: var(--text); padding: 0 2px; border-radius: 2px; }
+
+  /* HIDDEN */
+  .hidden { display: none !important; }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 5px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--muted); margin: 8px 0 16px; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .legend .dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  /* OVERVIEW */
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin: 16px 0; }
+  .stat {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+    padding: 14px; text-align: center;
+  }
+  .stat .num { font-size: 28px; font-weight: 700; color: var(--accent); display: block; }
+  .stat .lbl { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+
+  .strategy-box {
+    background: linear-gradient(135deg, rgba(244,201,93,.1), rgba(244,201,93,.03));
+    border: 1px solid rgba(244,201,93,.2); border-radius: 10px; padding: 18px; margin: 16px 0;
+  }
+  .strategy-box h3 { color: var(--accent); margin-top: 0; }
+
+  .scroll-x { overflow-x: auto; }
+
+  /* MOBILE */
+  @media (max-width: 640px) {
+    .topwrap { gap: 8px; }
+    .brand { font-size: 15px; }
+    .countdown { font-size: 11px; }
+    main { padding: 16px 12px 80px; }
+    .grid.cols-2 { grid-template-columns: 1fr; }
+    .kv { grid-template-columns: 90px 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="topwrap">
+    <div class="brand">HAI <span class="acc">Mastery</span></div>
+    <div class="countdown" id="countdown">Loading…</div>
+    <div class="search"><input type="text" id="globalSearch" placeholder="Search topics, people, dates, questions…" /></div>
+    <div class="progress-wrap"><strong id="progressMastered">0</strong>/<span id="progressTotal">0</span> mastered</div>
+  </div>
+  <nav class="tabs" id="tabs">
+    <button data-view="overview" class="active">Overview</button>
+    <button data-view="topics">Topic Mastery</button>
+    <button data-view="questions">Questions + Answers</button>
+    <button data-view="connections">Connections</button>
+    <button data-view="people">People &amp; Dates</button>
+    <button data-view="cheat">Cheat Sheet</button>
+    <button data-view="practice">Practice</button>
+    <button data-view="templates">Answer Templates</button>
+  </nav>
+</header>
+
+<main>
+  <section class="view active" id="view-overview"></section>
+  <section class="view" id="view-topics"></section>
+  <section class="view" id="view-questions"></section>
+  <section class="view" id="view-connections"></section>
+  <section class="view" id="view-people"></section>
+  <section class="view" id="view-cheat"></section>
+  <section class="view" id="view-practice"></section>
+  <section class="view" id="view-templates"></section>
+</main>
+
+<script>
+/* ======================= DATA ======================= */
+const EXAM_DATE = new Date('2026-05-28T15:30:00');
+
+const TOPICS = {
+  A: [
+    {
+      id: 'A1', title: 'Three Traditions of Automation',
+      body: 'The prehistory of computing cannot be told as a single story — three separate traditions converged. <strong>Administration</strong> (census offices, insurance companies, banks — Hollerith\'s tabulating machines for the 1890 US census); <strong>Process control</strong> (engineering and industrial automation — Dutch waterworks calculations, Taylor\'s scientific management); <strong>Science</strong> (calculation for physics, astronomy, military ballistics). These traditions operated independently with very different goals, social contexts, and institutional homes. Only in retrospect does it seem they were leading toward the same machine. This is why "a history" of computing is always a particular history — the choice of starting point reflects the historian\'s agenda.',
+      keyPeople: ['Hollerith', 'Taylor'], keyDates: ['1890 US Census'],
+      keyTerms: ['Administration tradition', 'Process control', 'Science tradition'],
+      connections: ['C2', 'A3', 'A5'], linkedQuestions: ['C-01', 'A-09'],
+      examTip: 'If asked about prehistory or multiple histories of computing, use the three traditions + show different actors/contexts.',
+      source: 'Lecture 1'
+    },
+    {
+      id: 'A2', title: 'Technology and Trust — Hollerith and the 1890 Census',
+      body: '<strong>Herman Hollerith</strong> designed a punched-card tabulating machine for the 1890 US Census — the first large-scale automated data processing project. The key story is about <strong>trust</strong>: government officials had to be convinced to trust a machine with sensitive national data, previously done by human clerks. Hollerith succeeded partly because his machines were faster (2.5 years vs. 7.5 for the 1880 census) and partly because he made the output legible and reliable. This introduces the broader theme: new computing technologies always require social/institutional trust to be adopted — pure technical superiority is not enough. The same dynamic reappears with UNIVAC (1952 election prediction on TV) and IBM\'s marketing-heavy approach.',
+      keyPeople: ['Hollerith'], keyDates: ['1890 census', '1952 UNIVAC election'],
+      keyTerms: ['Trust', 'Punched card', 'Legibility'],
+      connections: ['A1', 'B5'], linkedQuestions: ['A-01'],
+      examTip: '"Technology and trust" is a recurring A-question theme in BOTH past exams. Connect Hollerith → UNIVAC → IBM.',
+      source: 'Lecture 1'
+    },
+    {
+      id: 'A3', title: 'History of AI is Older than History of Computing',
+      body: 'The standard narrative places AI as a 1950s product of computing. But if AI is defined broadly — attempts to mechanically replicate human reasoning — its prehistory is much older: <strong>Aristotle\'s syllogism</strong>, <strong>Ramon Llull\'s Ars Magna (13th c.)</strong>, <strong>Leibniz\'s Calculus Ratiocinator (17th c.)</strong>, <strong>Babbage\'s Analytical Engine (1837)</strong>, and crucially the dream of a universal logical language (Principia Mathematica, Esperanto, Peano notation). All predate electronic computers. Computing emerged from the <em>Administration</em> tradition; AI\'s roots are in the <em>Science</em> tradition (logic and mathematics). They merge at the 1956 Dartmouth conference, but their prehistories are separate.',
+      keyPeople: ['Aristotle', 'Ramon Llull', 'Leibniz', 'Babbage', 'McCarthy'],
+      keyDates: ['13th c. Ars Magna', '17th c. Calculus Ratiocinator', '1837 Analytical Engine', '1910 Principia', '1956 Dartmouth'],
+      keyTerms: ['Universal logical language', 'Syllogism', 'Lambda calculus'],
+      connections: ['A1', 'A11', 'C2'], linkedQuestions: ['A-09', 'A-10'],
+      examTip: 'Directly tied to C-question concepts (agendas, appropriation). Know specific examples from before 1940.',
+      source: 'Lecture 1, Assignment 1.2'
+    },
+    {
+      id: 'A4', title: 'Babbage and the Aiken Intermezzo',
+      body: '<strong>Charles Babbage</strong> (1791–1871) designed the Difference Engine (1822) and Analytical Engine (1837) but never completed them — undone by engineering limits, funding disputes, and his own perfectionism. His work was largely forgotten by the time <strong>Howard Aiken</strong> at Harvard sought funding for the Mark I (1937–1944). Aiken strategically <strong>invoked Babbage\'s legacy</strong> — presenting himself as the person who finally completed Babbage\'s vision — to legitimise his project to IBM and Harvard administration. This is the textbook example of <strong>agendas</strong>: Aiken used a historical narrative instrumentally. The Mark I was actually quite different from the Analytical Engine, but the rhetorical lineage served Aiken\'s purpose. IBM later had a PR scandal when Harvard took all the credit.',
+      keyPeople: ['Babbage', 'Aiken', 'Ada Lovelace'],
+      keyDates: ['1822 Difference Engine', '1837 Analytical Engine', '1937–44 Mark I'],
+      keyTerms: ['Agendas', 'Legitimation', 'Invented lineage'],
+      connections: ['C2', 'C5', 'A3'], linkedQuestions: ['C-04'],
+      examTip: 'Babbage→Aiken is the canonical example for "agendas" in C-questions. Know both the historical facts and the agenda argument.',
+      source: 'Lecture 1'
+    },
+    {
+      id: 'A5', title: 'Dutch Dinosaurs — Computing in the Netherlands',
+      body: 'A counter-narrative to the Anglo-American story. Key figures: <strong>H.A. Lorentz</strong> and <strong>C. Lely</strong> used manual calculation for the Zuiderzee waterworks (1910s–20s); <strong>Johan van Veen</strong> (1893–1953) at Rijkswaterstaat built the <em>Deltar</em> for flood control; <strong>Aad van Wijngaarden</strong> (1916–1987) went to England in 1946, founded the Mathematisch Centrum in Amsterdam (1947), and built the <strong>ARRA</strong> (June 21, 1952) — one of the first Dutch computers. The Dutch case shows computing emerged from real national needs (water management after WWII flooding), not just military/commercial pressure. Van Wijngaarden also co-designed ALGOL 60.',
+      keyPeople: ['H.A. Lorentz', 'C. Lely', 'Johan van Veen', 'Aad van Wijngaarden'],
+      keyDates: ['1910s–20s Zuiderzee', '1947 Mathematisch Centrum', 'June 21 1952 ARRA', '1953 Delta flood'],
+      keyTerms: ['Deltar', 'ARRA', 'ALGOL 60', 'Mathematisch Centrum'],
+      connections: ['A13', 'C2', 'B4'], linkedQuestions: ['A-02'],
+      examTip: 'Appears as A-question topic AND C-question context. Know: van Veen + Deltar, van Wijngaarden + ARRA + Mathematisch Centrum + ALGOL.',
+      source: 'Lectures 1–2'
+    },
+    {
+      id: 'A6', title: 'Cold War Science and Prejudice in Computing History',
+      body: 'Cold War science shaped computing profoundly (Manhattan Project → atomic power → massive computation; NASA; military funding for Whirlwind/SAGE). But the dominant narrative is Anglo-American. <strong>Prejudice in the historiography</strong> appears in two ways: (1) non-Anglo pioneers are systematically ignored — e.g., <strong>Polish mathematicians Rejewski, Różycki, and Zygalski</strong> broke the Enigma cipher <em>before</em> Turing (from 1932), but Bletchley gets all the credit; Japan and Germany also had computers ready by ~1948 (Manchester Baby, Dec 1948). (2) <strong>Stephanie Dick</strong> shows computing history reflects cultural dispositions — choices about what counts as "computing" encode ideological assumptions.',
+      keyPeople: ['Rejewski', 'Różycki', 'Zygalski', 'Turing', 'Stephanie Dick'],
+      keyDates: ['1932 Enigma break (Polish)', 'Dec 1948 Manchester Baby'],
+      keyTerms: ['Prejudice', 'Cultural disposition', 'Bletchley narrative'],
+      connections: ['C2', 'A1'], linkedQuestions: ['C-01'],
+      examTip: '"Prejudice" as a theme works in C-questions about agendas/histories. Rejewski etc. is the key factual anchor.',
+      source: 'Lecture 2'
+    },
+    {
+      id: 'A7', title: 'Computing Sounds',
+      body: 'In the early 1950s, computers literally made music. <strong>Christopher Strachey</strong> sent a punched card tape to EDSAC (Cambridge) to play "God Save the Queen" (1951); the ARRA (Amsterdam) played the Dutch national anthem; the Univac had a "stall speaker." Sounds served multiple purposes: <strong>termination signals</strong>, <strong>auditive monitoring</strong> (you could hear the machine\'s state), <strong>navigation</strong> (debugging), and <strong>instruction</strong> (demonstrating to visitors). Historically significant because it shows computers entering cultural life — sounds made the machine legible to a wider public. Later, making computers <em>silent</em> became a design goal (professionalism). Also shows <strong>appropriation</strong>: a military/scientific tool used for entertainment.',
+      keyPeople: ['Christopher Strachey'],
+      keyDates: ['1951 EDSAC anthem', '1952 ARRA anthem'],
+      keyTerms: ['Auditive monitoring', 'Termination signal', 'Cultural demonstration'],
+      connections: ['C1', 'A9'], linkedQuestions: [],
+      examTip: 'Two uses of sounds: monitoring + cultural demonstration. Assignment 3 asks: "Why were speakers connected to these machines?"',
+      source: 'Lecture 3, Assignment 3 (Q1)'
+    },
+    {
+      id: 'A8', title: 'Metaphors in Computing',
+      body: 'Language shapes how we think about technology. The word <strong>"program"</strong> was first used in the context of ENIAC (1946) and the verb <strong>"programming"</strong> appears by 1948. Before fixed terminology: <strong>plugging</strong> (wiring), <strong>sequencing</strong>, <strong>assembling</strong> (→ Assembly language), <strong>autocoding</strong> (→ automatic translation), <strong>pseudo-coding</strong>. Each metaphor shaped what users thought the computer was doing. The transition to <strong>FORTRAN</strong> (1957) and <strong>COBOL</strong> (1959) as "natural language" programming was itself metaphorical. Similarly, "electronic brain" (British press for EDSAC) shaped public perception. The IBM 1401 was called "Big Blue." Metaphors are not neutral — they encode agendas and constrain imagination.',
+      keyPeople: ['Hopper', 'Backus'],
+      keyDates: ['1946 program', '1948 programming', '1957 FORTRAN', '1959 COBOL'],
+      keyTerms: ['Electronic brain', 'Plugging', 'Assembling', 'Autocoding', 'Pseudo-coding'],
+      connections: ['A13', 'C2'], linkedQuestions: ['A-03'],
+      examTip: '"Metaphor" appears in A-questions of May 2025 exam. Know: program/programming, assembling/autocoding, electronic brain.',
+      source: 'Lecture 3'
+    },
+    {
+      id: 'A9', title: 'Game Culture and Appropriation',
+      body: '<strong>Appropriation</strong> = taking a technology and re-purposing it for uses its designers never intended. Key early example: <strong>Ferranti Mark I</strong> (1951) — a scientific computer used by Christopher Strachey to play <strong>Nim</strong>, a mathematical game. Not just entertainment — it demonstrated the machine could perform symbolic reasoning, shaping the trajectory of AI research. Later: computers → games → game culture → AI as competitive challenge (chess). Game culture also led to <strong>interactive computing</strong> and personal computers. The Dartmouth conference (1956) used game-playing as a demonstration of "artificial intelligence." Modern arc: Deep Blue (1997), AlphaGo (2016), GPUs as deep learning infrastructure.',
+      keyPeople: ['Strachey', 'Shannon', 'Samuel'],
+      keyDates: ['1950 Shannon chess paper', '1951 Nim', '1953 Turing chess', '1959 Samuel checkers', '1997 Deep Blue', '2016 AlphaGo'],
+      keyTerms: ['Appropriation', 'Symbolic reasoning', 'Benchmark'],
+      connections: ['C1', 'A11', 'A7'], linkedQuestions: ['A-06', 'C-05'],
+      examTip: 'Appropriation as a C-concept is illustrated most cleanly by gaming. Know both the historical example AND the analytical concept.',
+      source: 'Lecture 3'
+    },
+    {
+      id: 'A10', title: 'Cybernetics in Business, Scifi, and AI',
+      body: '<strong>Cybernetics</strong> (Norbert Wiener, 1948) — the science of control and communication in animals and machines — briefly became the dominant metaphor for thinking about intelligence, organisations, and society. <strong>Stafford Beer</strong> applied cybernetics to business management; <strong>Project Cybersyn</strong> (Chile, 1971–73) was Salvador Allende\'s attempt to use cybernetic management for the entire national economy (Beer + Medina). Cybernetics in the 1960s shaped how AI was conceived. <strong>Science fiction</strong> (Asimov, Clarke, Philip K. Dick) created cultural expectations about intelligent machines. The Dartmouth conference 1956 name "Artificial Intelligence" (McCarthy) was a deliberate choice to distinguish from cybernetics.',
+      keyPeople: ['Wiener', 'Stafford Beer', 'Allende', 'Eden Medina', 'McCarthy'],
+      keyDates: ['1948 Cybernetics', '1956 Dartmouth', '1971–73 Cybersyn'],
+      keyTerms: ['Feedback', 'Homeostasis', 'Defining technology', 'Information processing'],
+      connections: ['C3', 'A11'], linkedQuestions: ['C-02'],
+      examTip: 'Cybernetics as "defining technology" (Bolter sense) of the 1960s. Project Cybersyn = concrete example. Scifi → cultural expectations → overpromising → AI winters.',
+      source: 'Lecture 3'
+    },
+    {
+      id: 'A11', title: 'AI and Mathematics — Proof Checkers and Computers',
+      body: 'Mathematicians in the 1950s–60s became interested in computers for <strong>formal proof</strong>: could machines verify proofs? This drove the development of <strong>LISP</strong> (1958, John McCarthy) — based on Alonzo Church\'s <strong>lambda calculus</strong> (1936). The chain: formal logic → Principia Mathematica (Russell & Whitehead, 1910) → Gödel\'s incompleteness (1931) → Turing\'s Halting Problem → Church\'s lambda calculus → McCarthy\'s LISP → AI as theorem proving. <strong>MacKenzie</strong> (<em>Mechanizing Proof</em>, 2001) documents how proof-checking computers were used for mathematics AND military systems (Patriot missile guidance) — making formal methods a political/military issue.',
+      keyPeople: ['Russell', 'Whitehead', 'Gödel', 'Turing', 'Church', 'McCarthy', 'MacKenzie'],
+      keyDates: ['1910 Principia', '1931 Gödel', '1936 lambda calculus', '1958 LISP'],
+      keyTerms: ['Lambda calculus', 'Formal proof', 'Theorem proving', 'LISP'],
+      connections: ['A3', 'C2'], linkedQuestions: ['A-04'],
+      examTip: 'The line: Principia Mathematica → Church → Turing → LISP → AI theorem proving. Know this chain.',
+      source: 'Lecture 4, Assignment 4 (Q1)'
+    },
+    {
+      id: 'A12', title: 'AI and Education — Programmed Instruction vs. LOGO',
+      body: 'Two distinct traditions: (1) <strong>Programmed instruction</strong> (1960s) — B.F. Skinner\'s behaviourist model: break knowledge into small steps, test after each, give immediate feedback. Computers as automated teaching machines. Criticised as mechanical/dehumanising. (2) <strong>LOGO</strong> (Seymour Papert, MIT, 1967) — constructivist model based on Piaget: children learn by <em>doing</em> programming (turtle graphics), discovering math through play. The computer is a <em>tool for thinking</em>, not a replacement teacher. Programmed instruction (top-down, behaviourist) vs. LOGO (bottom-up, constructivist) maps onto deeper debates about what AI and computing can and should do in education.',
+      keyPeople: ['B.F. Skinner', 'Seymour Papert', 'Piaget'],
+      keyDates: ['1950s–60s programmed instruction', '1967 LOGO'],
+      keyTerms: ['Behaviourism', 'Constructivism', 'Turtle graphics', 'Mind\'s mirror'],
+      connections: ['C6'], linkedQuestions: ['A-05', 'A-12'],
+      examTip: 'Appears in BOTH past exams + the "No Bonus" question. Always contrast Skinner vs Papert. Know the pedagogical philosophy behind each.',
+      source: 'Lecture 4'
+    },
+    {
+      id: 'A13', title: 'Programming Languages and Cultural Divide — ALGOL 60 vs FORTRAN/COBOL',
+      body: 'Late 1950s: two programming cultures. <strong>FORTRAN</strong> (IBM, 1957) — practical, for scientists, American, compiled fast. <strong>COBOL</strong> (Grace Hopper, 1959) — for business, English-like, committee-designed. <strong>ALGOL 60</strong> — designed by a European/American committee (van Wijngaarden, Rutishauser, Bauer, Backus) at conferences in Zürich, Darmstadt — aimed at mathematical elegance and universality. Americans (IBM/industry) rejected ALGOL as too academic; Europeans embraced it as the "right" language. ALGOL introduced <strong>structured programming</strong> concepts that influenced every later language. The divide reflects <strong>agendas</strong>: American commercial pragmatism vs. European academic idealism.',
+      keyPeople: ['Backus', 'Hopper', 'van Wijngaarden', 'Rutishauser', 'Bauer', 'Dijkstra'],
+      keyDates: ['1957 FORTRAN', '1959 COBOL', '1960 ALGOL 60'],
+      keyTerms: ['Structured programming', 'Compiler', 'Natural language programming'],
+      connections: ['C2', 'A14', 'A5'], linkedQuestions: [],
+      examTip: 'FORTRAN = American/commercial. ALGOL 60 = European/academic. COBOL = business/committee. Know the "agendas" framing — appears in assignments.',
+      source: 'Lecture 4, Assignment 4 (Q2)'
+    },
+    {
+      id: 'A14', title: 'Software Crisis and the Rise of the Software Industry',
+      body: 'By the late 1960s, software had become the bottleneck. <strong>IBM\'s "unbundling"</strong> (1968) — separating software pricing from hardware — transformed software from a service into a commodity, creating the software industry. The <strong>software crisis</strong> (NATO conference, 1968): large software projects were consistently late, over budget, full of bugs. OS/360 was the classic example (Brooks: <em>The Mythical Man-Month</em>). European response: <strong>Edsger Dijkstra</strong> (1930–2002, Dutch) argued for <em>structured programming</em> — mathematical discipline. American response: management techniques, more testing, bigger teams. Shaped: agile precursors, software engineering as a discipline, professional separation between software and hardware.',
+      keyPeople: ['Dijkstra', 'Brooks'],
+      keyDates: ['1968 NATO conference', '1968 IBM unbundling', '1975 Mythical Man-Month'],
+      keyTerms: ['Software crisis', 'Unbundling', 'Structured programming', 'Mythical Man-Month'],
+      connections: ['A13', 'C2'], linkedQuestions: ['B-05'],
+      examTip: 'Software crisis = 1968 NATO. IBM unbundling = 1968. Dijkstra = European structured programming response. Also a C-question topic (US vs European perspective).',
+      source: 'Lecture 4'
+    }
+  ],
+  B: [
+    {
+      id: 'B4', title: 'Ch.4 — Inventing the Computer',
+      body: '<strong>Period:</strong> 1940s. <strong>Thesis:</strong> The "invention" of the computer was not a single moment but parallel developments converging through wartime urgency and post-war knowledge sharing. <strong>Narrative:</strong> The Moore School (UPenn) built ENIAC (Mauchly + Eckert + Goldstine, 1945) for ballistics; Von Neumann joined and wrote the <em>First Draft of a Report on EDVAC</em> (1945), introducing the stored-program concept. Moore School Lectures (1946) spread the knowledge to Europe — Newman and Williams → Manchester Baby (1948); Wilkes → EDSAC (Cambridge, 1949). Atanasoff\'s ABC was a predecessor but was passed over. <strong>CK\'s key argument:</strong> Moore School functioned as a "means to an end" (ballistics) — the computer was the tool, not the goal.',
+      keyPeople: ['Mauchly', 'Eckert', 'Goldstine', 'Von Neumann', 'Wilkes', 'Newman', 'Williams', 'Atanasoff'],
+      keyDates: ['1945 ENIAC', '1945 First Draft EDVAC', '1946 Moore School Lectures', '1948 Manchester Baby', '1949 EDSAC'],
+      keyTerms: ['Stored-program', 'Moore School', 'EDVAC', 'Means to an end'],
+      connections: ['B5', 'A5'], linkedQuestions: ['B-01', 'B-13'],
+      examTip: 'Why was Moore School central? Distinguish what it BUILT vs. what it DISSEMINATED.',
+      source: 'Seminar 2; CK Ch.4'
+    },
+    {
+      id: 'B5', title: 'Ch.5 — The Computer Becomes a Business Machine',
+      body: '<strong>Period:</strong> Late 1940s–50s. <strong>Thesis:</strong> Transition from scientific instrument to business machine required both technical and organisational innovation. <strong>Narrative:</strong> Three company types competed: electronics firms (RCA, GE, Honeywell), business machine firms (IBM, Remington Rand, NCR, Burroughs), startups (EMCC — Eckert & Mauchly, ERA). Eckert & Mauchly → UNIVAC (Census Bureau) → acquired by Remington Rand; <strong>1952 election prediction on CBS TV</strong> made UNIVAC famous but Remington Rand failed to capitalise. IBM was slow (Watson Sr. sceptical), built the SSEC (PR success), gradually introduced electronics; Model 650 dominated. By end of 1950s: "IBM and the seven dwarfs."',
+      keyPeople: ['Watson Sr.', 'Eckert', 'Mauchly'],
+      keyDates: ['1951 UNIVAC I', '1952 CBS election', '1954 IBM 650'],
+      keyTerms: ['EMCC', 'UNIVAC', 'Seven dwarfs', 'SSEC'],
+      connections: ['B4', 'B6', 'A2'], linkedQuestions: ['B-02', 'B-03'],
+      examTip: 'CK phrase: "Watson was rational but wrong; Eckert and Mauchly were irrational but right" — explain.',
+      source: 'Seminar 2; CK Ch.5'
+    },
+    {
+      id: 'B6', title: 'Ch.6 — The Maturing of the Mainframe',
+      body: '<strong>Period:</strong> 1960s. <strong>Thesis:</strong> IBM consolidated dominance through superior marketing and a massive architectural bet (System/360). <strong>Narrative:</strong> IBM ~75% of market by 1960s — "IBM and the seven dwarfs" (Sperry/UNIVAC, Honeywell, RCA, GE, Control Data, Burroughs, NCR). IBM 1401: cheap, fast printer (1403), RPG → 12,000 sold (vs. 1,000 forecast). Competitor strategies: IBM compatibility (RCA Spectra 70), own compatible family (Honeywell/Burroughs/NCR), niche specialisation (Control Data → scientific; GE → timesharing). <strong>System/360 (1964):</strong> IBM bet everything on one compatible family — technically conservative but commercially revolutionary. 1970–71 recession: RCA and GE exit → "IBM and the BUNCH."',
+      keyPeople: ['Watson Jr.'],
+      keyDates: ['1959 IBM 1401', '1964 System/360', '1970–71 recession'],
+      keyTerms: ['Seven dwarfs', 'BUNCH', 'RPG', 'Compatibility', 'Niche', 'Desk Job culture'],
+      connections: ['B5', 'B8'], linkedQuestions: [],
+      examTip: 'How did IBM maintain dominance? What strategies did "the seven dwarfs" use? Three options: compatibility, own family, niche.',
+      source: 'Seminar 3; CK Ch.6'
+    },
+    {
+      id: 'B7', title: 'Ch.7 — Real Time Computing',
+      body: '<strong>Period:</strong> Late 1940s–70s. <strong>Thesis:</strong> Real-time computing emerged from military necessity and spread to civilian life through entrepreneurial appropriation. Batch = submit job, wait. Real-time = continuous interaction. <strong>Project Whirlwind</strong> (MIT, Jay Forrester, 1944): aircraft simulator → digital (Perry Crawford, 1945) → core memory (Bill Papian, 1951) → almost cancelled, survived as SAGE. <strong>SAGE</strong> (Semi-Automatic Ground Environment): 23 direction centers, IBM AN/FSQ-7; militarily obsolete almost immediately (ICBMs), but spawned CRT culture, drum memory, trained engineers. Civilian spinoffs: <strong>SABRE</strong> (IBM + American Airlines, 1957–64): 1,100 terminals in 50 cities; credit cards/ATMs (Diners Club 1949 → BankAmericard 1958 → Visa 1970; Barclays ATM 1967); <strong>UPC</strong> (1973): McKinsey + IBM + vendors — political as much as technical.',
+      keyPeople: ['Forrester', 'Crawford', 'Papian'],
+      keyDates: ['1944 Whirlwind', '1949 Diners Club', '1957–64 SABRE', '1958 BankAmericard', '1967 Barclays ATM', '1970 Visa', '1973 UPC'],
+      keyTerms: ['Whirlwind', 'SAGE', 'SABRE', 'Real-time', 'AN/FSQ-7', 'UPC'],
+      connections: ['C1', 'B6'], linkedQuestions: ['B-04'],
+      examTip: 'CK attributes real-time to "blending of military research and entrepreneurial efforts" — Whirlwind/SAGE → SABRE chain.',
+      source: 'Seminar 3; CK Ch.7'
+    },
+    {
+      id: 'B8', title: 'Ch.8–9 — New Ways of Computing / Timesharing',
+      body: '<strong>Period:</strong> 1960s–70s. <strong>Thesis:</strong> Timesharing transformed computing from batch/institutional to interactive/potentially personal — and California counterculture shaped how. <strong>Narrative:</strong> Timesharing pioneered by CTSS (MIT, 1961), commercialised by GE (niche strategy from Ch.6). <strong>BASIC</strong> (Kemeny & Kurtz, Dartmouth, 1963): designed for non-specialists. <strong>Whole Earth Catalogue</strong> (Stewart Brand, 1968): hippie tool catalogue including computers as liberation tools — "access to tools." California blended counterculture + tech (different from East Coast institutional computing). Precursor to personal computing: timesharing terminal → personal terminal → PC.',
+      keyPeople: ['Kemeny', 'Kurtz', 'Stewart Brand'],
+      keyDates: ['1961 CTSS', '1963 BASIC', '1968 Whole Earth Catalogue'],
+      keyTerms: ['Timesharing', 'BASIC', 'CTSS', 'Whole Earth Catalogue', 'Access to tools'],
+      connections: ['B10', 'C1'], linkedQuestions: ['B-06'],
+      examTip: 'How did timesharing create new kinds of computing users? What role did BASIC play? Connect to Whole Earth Catalogue → countercultural framing.',
+      source: 'CK Ch.8–9'
+    },
+    {
+      id: 'B10', title: 'Ch.10 — The Personal Computer',
+      body: '<strong>Period:</strong> 1970s–80s. <strong>Thesis:</strong> Broadening computing\'s appeal in the 1980s required making them accessible to non-specialists — a social/design challenge as much as technical. Early PCs (Altair 1975, Apple I/II 1976/77) for hobbyists. Apple Macintosh (1984): GUI, mouse, "for the rest of us." IBM PC (1981): open architecture, legitimised PCs for business. Killer apps: VisiCalc (Apple II), Lotus 1-2-3 (IBM PC). Lisa (Apple, 1983) — too expensive, failed. The Macintosh popularised GUI (originally from Xerox PARC). By late 1980s: PCs = mainstream business tool.',
+      keyPeople: ['Jobs', 'Wozniak', 'Gates'],
+      keyDates: ['1975 Altair', '1976 Apple I', '1977 Apple II', '1981 IBM PC', '1983 Lisa', '1984 Macintosh'],
+      keyTerms: ['GUI', 'Killer app', 'VisiCalc', 'Lotus 1-2-3', 'Open architecture', 'Xerox PARC'],
+      connections: ['B8', 'B12'], linkedQuestions: ['B-07', 'B-08', 'A-13'],
+      examTip: 'Successful (Macintosh) vs. unsuccessful (Lisa, VisiOn). Two strategies: easier-to-use vs. open-architecture.',
+      source: 'CK Ch.10'
+    },
+    {
+      id: 'B11', title: 'Ch.11 — The Internet',
+      body: '<strong>Period:</strong> 1980s–90s. <strong>Thesis:</strong> The Internet emerged from a "confluence of three desires": military networking (ARPANET), academic information sharing, commercial communication. ARPANET (1969): packet switching, designed to survive nuclear attack. Email (Ray Tomlinson, 1971) becomes dominant — appropriation. Commercial Internet: WWW (Berners-Lee, CERN, 1989) → browser (Mosaic, 1993) → commercialisation. Three desires don\'t always align — tensions between open access (academic) and commercial control persist.',
+      keyPeople: ['Berners-Lee', 'Ray Tomlinson', 'Paul Baran'],
+      keyDates: ['1964 packet switching', '1969 ARPANET', '1971 email', '1989 WWW', '1993 Mosaic'],
+      keyTerms: ['ARPANET', 'Packet switching', 'WWW', 'Confluence of three desires'],
+      connections: ['C1', 'B14'], linkedQuestions: ['B-09', 'C-03'],
+      examTip: 'CK calls Internet a "confluence of three desires" — what were they, and how did each shape the early Internet?',
+      source: 'CK Ch.11'
+    },
+    {
+      id: 'B12', title: 'Ch.12 — Silicon Valley',
+      body: '<strong>Period:</strong> 1970s–2000s. <strong>Thesis:</strong> The "Silicon Valley myth" (two boys in a garage) conceals a specific cultural and institutional context. Silicon Valley grew from Shockley Semiconductor → Fairchild → Intel (traitorous eight); Stanford research culture; venture capital ecosystem. The "garage myth" (Apple, HP, Google) obscures university connections, defence contracts, VC funding. Company culture: flat hierarchies, stock options, informal dress codes, "move fast and break things" — vs. non-Valley (IBM: suits, hierarchy).',
+      keyPeople: ['Shockley', 'Noyce', 'Moore', 'Grove'],
+      keyDates: ['1957 traitorous eight', '1968 Intel'],
+      keyTerms: ['Garage myth', 'Traitorous eight', 'VC', 'Stock options'],
+      connections: ['B10', 'B14'], linkedQuestions: ['B-07'],
+      examTip: 'What distinguishes Silicon Valley culture from non-Valley computing companies? Is the "two boys in a garage" myth accurate?',
+      source: 'CK Ch.12'
+    },
+    {
+      id: 'B13', title: 'Ch.13 — Globalization and Diversity',
+      body: '<strong>Period:</strong> 1990s–2010s. <strong>Thesis:</strong> Globalisation of computing created new labour geographies (offshoring/outsourcing) and, by the 2010s, began to confront the diversity problem. <strong>Off-shoring:</strong> US companies moved software development to India (Infosys, Wipro, TCS), then Eastern Europe, China. <strong>Out-sourcing:</strong> IT services (Accenture, EDS) managed companies\' computing infrastructure. Diversity (2010s): industry became aware of demographic skew (male, white, Asian-American). "Pipeline" arguments vs. structural change.',
+      keyPeople: ['Safiya Umoja Noble', 'Joy Buolamwini'],
+      keyDates: ['1990s offshoring', '2014 Google diversity report'],
+      keyTerms: ['Off-shoring', 'Out-sourcing', 'Pipeline argument', 'Algorithmic bias'],
+      connections: ['B15'], linkedQuestions: ['B-10', 'B-14'],
+      examTip: 'Off-shoring vs. out-sourcing — different mechanisms. Diversity: pipeline argument vs. structural change.',
+      source: 'CK Ch.13'
+    },
+    {
+      id: 'B14', title: 'Ch.14 — The World Wide Web: Searching and Advertising',
+      body: '<strong>Period:</strong> 1990s–2010s. <strong>Thesis:</strong> Google invented a new business model — <strong>surveillance capitalism</strong> — monetising attention by combining free search with targeted advertising. Early search (AltaVista, Yahoo) was directory-based. Google (Page + Brin, 1998): PageRank → dramatically better search. Revenue problem: solution = targeted advertising (AdWords, 2000). Service is "free" but users pay with data. Netflix/Web 2.0: streaming personalisation = same model. <strong>Surveillance capitalism</strong> (Zuboff): human behaviour as raw material for prediction products. GDPR (2018) = European response.',
+      keyPeople: ['Page', 'Brin', 'Zuboff'],
+      keyDates: ['1998 Google', '2000 AdWords', '2018 GDPR'],
+      keyTerms: ['PageRank', 'AdWords', 'Surveillance capitalism', 'Prediction products'],
+      connections: ['C4', 'B15'], linkedQuestions: ['B-11', 'B-15', 'A-08', 'A-14'],
+      examTip: 'How did Google develop surveillance capitalism? Is Netflix an example of the same phenomenon?',
+      source: 'CK Ch.14'
+    },
+    {
+      id: 'B15', title: 'Ch.15 — Computers and Governance',
+      body: '<strong>Period:</strong> 2000s–2020s. <strong>Thesis:</strong> Who governs computing — and who bears ethical liability — is answered very differently in US and EU. <strong>US:</strong> self-regulation, First Amendment, Section 230 (platforms not liable for user content). <strong>EU:</strong> GDPR (2018), right to be forgotten, data as a right. Ethical liability: who is responsible when an algorithm discriminates, when a self-driving car kills someone, when a recommendation system radicalises users? The "ethical AI" debate.',
+      keyPeople: [],
+      keyDates: ['1996 Section 230', '2018 GDPR', '2024 EU AI Act'],
+      keyTerms: ['Section 230', 'GDPR', 'Brussels Effect', 'Ethical liability', 'Right to be forgotten'],
+      connections: ['B14', 'C4'], linkedQuestions: ['B-12', 'B-16'],
+      examTip: 'Compare US and EU approaches. Different legal philosophies: market self-regulation vs. fundamental rights + precautionary principle.',
+      source: 'CK Ch.15'
+    }
+  ],
+  C: [
+    {
+      id: 'C1', title: 'Appropriation',
+      body: '<strong>Definition:</strong> Taking a technology designed for one purpose and using it for a different, often unforeseen purpose. A key mechanism of technological change. <strong>Primary examples:</strong> Ferranti Mark I (1951): scientific computer → Nim game (Strachey) → demonstration of AI reasoning; SAGE (military air defence) → SABRE (civilian airline reservations) → credit card networks; Internet (military/academic) → commercial/social media; Computing sounds (monitoring tool) → musical performance/cultural demonstration; Email (ARPANET utility) → dominant Internet application; GPU (gaming) → deep learning. <strong>Complication:</strong> Appropriation is not always intentional — it happens in social use. Some appropriations fail (Videotext in 1980s).',
+      keyPeople: ['Strachey', 'Hinton'],
+      keyDates: ['1951 Nim', '1971 email', '2012 AlexNet'],
+      keyTerms: ['Appropriation', 'Repurposing', 'Unintended use'],
+      connections: ['A9', 'A7', 'B7', 'B11'], linkedQuestions: ['C-03', 'C-05'],
+      examTip: 'Show how appropriation connects history of computing to history of AI; show that technological trajectories are not predetermined.',
+      source: 'Lectures 3–4; both past exams'
+    },
+    {
+      id: 'C2', title: 'Agendas',
+      body: '<strong>Definition:</strong> Interests, goals, and purposes that shape how historical narratives are constructed. Historians, funders, and institutions use histories to serve present aims. <strong>Primary examples:</strong> Aiken used the Babbage narrative to secure IBM funding for Harvard Mark I; AI winters narrative used to argue for renewed funding ("we learned from our mistakes"); Eckert & Mauchly vs. Von Neumann dispute over EDVAC authorship; Pamela McCorduck\'s <em>Machines Who Think</em>; FORTRAN (IBM/commercial agenda) vs. ALGOL (European academic agenda). <strong>Complication:</strong> All histories have agendas — this does not make them false, but we should ask: who benefits from this telling?',
+      keyPeople: ['Aiken', 'McCorduck', 'Eckert', 'Mauchly', 'Von Neumann'],
+      keyDates: [],
+      keyTerms: ['Agenda', 'Legitimation', 'Counter-narrative', 'Historiography'],
+      connections: ['A4', 'C5', 'A6', 'A13'], linkedQuestions: ['C-01', 'C-04'],
+      examTip: 'Use "agendas" to explain WHY certain stories are told, who is left out, what the stakes are.',
+      source: 'Lectures 1–4; both past exams'
+    },
+    {
+      id: 'C3', title: 'Defining Technology (J. David Bolter, Turing\'s Man, 1984)',
+      body: '<strong>Definition:</strong> A technology that reshapes not just what we do but how we understand ourselves and our world — becomes a cultural metaphor for human nature and intelligence. <strong>Bolter\'s examples:</strong> The clock (17th c.) → humans as clockwork machines (Descartes); Steam engine (19th c.) → society as energy system; <strong>Cybernetics/computers (1960s)</strong> → brain as information processor; <strong>AI (21st c.)</strong> → intelligence as computation. <strong>Key mechanism:</strong> A defining technology provides a vocabulary that spreads beyond the technical domain into philosophy, politics, medicine, education. <strong>Complication:</strong> Not all influential technologies become "defining" — must reshape self-understanding, not just behaviour.',
+      keyPeople: ['Bolter', 'Wiener', 'Descartes'],
+      keyDates: ['1984 Turing\'s Man', '1948 Cybernetics'],
+      keyTerms: ['Defining technology', 'Cultural metaphor', 'Self-understanding'],
+      connections: ['A10'], linkedQuestions: ['C-02', 'C-06'],
+      examTip: 'Ask whether AI is the defining technology of the 21st c. Use cybernetics (1960s) and current AI (LLMs) as the two poles.',
+      source: 'Lecture 3; both past exams'
+    },
+    {
+      id: 'C4', title: 'Surveillance Capitalism (Shoshana Zuboff)',
+      body: '<strong>Definition:</strong> A business model where human experience and behaviour are collected as raw material, processed into "prediction products," and sold to advertisers or other buyers who want to influence behaviour. <strong>Examples:</strong> Google (2000): free search → AdWords → user data as commodity; Netflix: viewing history → recommendation engine → engagement maximisation; Facebook: social graph + activity → targeted political advertising; Web 2.0 generally: user-generated content + engagement = the product. <strong>Key move:</strong> Users think the service is "free." It is not — they pay with behavioural data. <strong>European response:</strong> GDPR (2018). <strong>US response:</strong> Self-regulation, Section 230.',
+      keyPeople: ['Zuboff', 'Page', 'Brin'],
+      keyDates: ['1998 Google', '2000 AdWords', '2018 GDPR'],
+      keyTerms: ['Surveillance capitalism', 'Prediction products', 'Behavioural data'],
+      connections: ['B14', 'B15'], linkedQuestions: ['B-11', 'B-15', 'A-08', 'A-14'],
+      examTip: 'Connect to Ch.14–15 (CK); use to answer questions about "data-driven culture" and "computing and governance."',
+      source: 'CK Ch.14; both past exams'
+    },
+    {
+      id: 'C5', title: 'AI Winters',
+      body: '<strong>Definition:</strong> Periods of drastically reduced funding and interest in AI, following failed promises. <strong>Two major winters:</strong> 1970s (after Lighthill Report, 1973) and late 1980s (after expert systems collapse, ~1987–93). <strong>Causes:</strong> 1st winter — overselling of machine translation and general AI; Lighthill Report (UK, 1973) concluded AI had failed; US DARPA cut funding. 2nd winter — expert systems (LISP machines) brittle, expensive; Japanese 5th Generation Computer didn\'t deliver. <strong>Narrative use (agenda):</strong> The "AI winter" concept is itself rhetorical: (a) to warn about overselling current AI, (b) to argue for sustained investment ("we\'re different this time"), (c) by historians to periodise. <strong>Complication:</strong> The "winter → spring" narrative may obscure continuous background work (neural networks in 1980s, SVMs in 1990s).',
+      keyPeople: ['Lighthill', 'McCorduck'],
+      keyDates: ['1973 Lighthill Report', '1987–93 expert systems collapse'],
+      keyTerms: ['AI winter', 'Lighthill Report', 'Expert systems', 'LISP machines', '5th Generation'],
+      connections: ['C2', 'A4', 'A11'], linkedQuestions: ['C-04'],
+      examTip: 'Use to discuss agendas + AI history. Know the Babbage→AI winter→LLM arc. Appears in BOTH exams.',
+      source: 'Lecture 1; both past exams'
+    },
+    {
+      id: 'C6', title: 'Digital Culture',
+      body: '<strong>Definition:</strong> The transformation of existing practices and habits by digital technology — not just new tools, but new ways of doing old things. <strong>Examples:</strong> Music (vinyl/CD → streaming/Spotify) — access expanded, artist revenue compressed; Journalism (print gatekeeping → social media virality) — democratisation + misinformation; Banking (ATMs + online banking) — 24/7 access + algorithmic credit scoring; Education (LOGO and programmed instruction → MOOCs → AI tutors). <strong>Key analytical move:</strong> Digital culture is not just "computers change things" — it is the specific <em>logic</em> of digital technology (data collection, personalisation, platformisation, network effects) reshaping cultural production and consumption.',
+      keyPeople: [],
+      keyDates: [],
+      keyTerms: ['Digital culture', 'Platformisation', 'Network effects', 'Personalisation'],
+      connections: ['C4', 'A12'], linkedQuestions: [],
+      examTip: 'Assignment 1.4 + exam C-questions ask to apply this to a personal/professional example. Connects to surveillance capitalism + Bolter.',
+      source: 'Lectures 1–4; both past exams'
+    }
+  ]
+};
+const QUESTIONS = [
+  {
+    id: 'A-01', type: 'A', exam: 'May 2025', title: 'Technology and Trust',
+    prompt: 'In the lecture, the introduction of new computing technology always went hand in hand with the need to build trust in the technology. Explain the line of thought.',
+    thesis: 'Technical capability alone is never sufficient — adoption requires trust as a SOCIAL achievement.',
+    answer: `The lecture argues that technical capability alone is never sufficient for a computing technology to be adopted — the technology must also become socially trusted by the institutions and users it serves.\n\nThe clearest example is Hollerith's tabulating machine (1890 US Census). Hollerith designed a punched-card system that could process census data far faster than manual clerks. But government officials and the public had to be convinced that the machine's results were reliable. Hollerith succeeded through speed (completion in 2.5 years vs. 7.5 previously), reproducibility, and legible output. Trust was built not just by the machine working but by making its workings intelligible.\n\nThe same dynamic recurs throughout computing history: UNIVAC (1952 election prediction on CBS) built public trust through a dramatic, visible demonstration; IBM built institutional trust through marketing, service contracts, and the cultural weight of the IBM brand. The slogan "nobody ever got fired for buying IBM" encapsulates this — trust reduced risk for decision-makers.\n\nConversely, technologies that lacked trust infrastructure failed regardless of technical merit. Atanasoff's ABC computer (1940s) worked technically but had no institutional home or trust network, and was passed over.\n\nIn conclusion, the lecture's line of thought is that trust is a social achievement, not a technical one — and computing history is in part a history of how trust was produced, legitimised, and sometimes exploited.`,
+    usedConcepts: ['A2', 'B5'],
+    keyHooks: ['Hollerith 1890', 'UNIVAC 1952 CBS', 'IBM marketing', 'Atanasoff ABC']
+  },
+  {
+    id: 'A-02', type: 'A', exam: 'May 2025', title: 'Dutch Dinosaurs',
+    prompt: 'In the lecture, a number of Dutch computer pioneers were discussed. Explain the role of the Dutch Dinosaurs in the history of computing.',
+    thesis: 'Dutch contribution = counter-narrative; computing emerged from multiple national contexts (water management, not just military).',
+    answer: `The "Dutch Dinosaurs" is the lecture's term for the Dutch contribution to early computing — a counter-narrative to the dominant Anglo-American story that locates computing's origins entirely in the US and UK.\n\nThe Dutch story begins with practical necessity. H.A. Lorentz and C. Lely required enormous calculations for the Zuiderzee waterworks (1910s–20s) — water management, not military needs, was the driver. Johan van Veen (1893–1953) at Rijkswaterstaat built the Deltar analogue computer for Delta flood control after the 1953 flood disaster — a genuine process-control computer serving national infrastructure.\n\nThe scientific tradition is represented by Aad van Wijngaarden (1916–1987), who visited England in 1946, brought back knowledge, and co-founded the Mathematisch Centrum in Amsterdam. On June 21, 1952, the ARRA — the first Dutch electronic computer — ran its first program. Van Wijngaarden later co-designed ALGOL 60, one of the most influential programming languages ever.\n\nThe Dutch case illustrates two important points. First, computing emerged from multiple national contexts for multiple reasons — it was not a uniquely American invention. Second, the choice to highlight or ignore the Dutch story reflects historiographical agendas: an Anglo-American history is a particular history, not a universal one.`,
+    usedConcepts: ['A5', 'C2', 'A1'],
+    keyHooks: ['Lorentz Lely Zuiderzee', 'van Veen Deltar', 'van Wijngaarden ARRA Jun 21 1952', 'ALGOL 60', 'Mathematisch Centrum']
+  },
+  {
+    id: 'A-03', type: 'A', exam: 'May 2025', title: 'Metaphor — The "Electronic Brain"',
+    prompt: 'In the lecture, the metaphor of the "electronic brain" was discussed. Explain the line of thought.',
+    thesis: 'Metaphors are never neutral — they shape what users think computers can do, and constrain research agendas.',
+    answer: `The lecture argues that the language used to describe computers is never neutral — metaphors shape how users, politicians, and the public understand what computers are and what they can do.\n\nThe term "electronic brain" was used extensively in British newspapers in the early 1950s to describe machines like EDSAC and later the Ferranti Mark I. The metaphor worked in two directions. For advocates, it highlighted the power of the machine — implying human-like reasoning capability and suggesting that intelligence could be replicated mechanically. For critics, it raised anxieties: if the machine had a "brain," did it threaten human employment, autonomy, or uniqueness?\n\nThe "brain" metaphor was not just journalistic shorthand; it also shaped research agendas. Cybernetics (Wiener, 1948) used brain-as-machine and machine-as-brain interchangeably. McCarthy's choice of the term "Artificial Intelligence" (Dartmouth, 1956) was partly a deliberate break from the brain metaphor — he wanted a term that was scientifically precise, not analogical.\n\nOther computing metaphors (program, assembly, autocoding) shaped how programming was taught and understood. The progression from "plugging" to "programming" encoded different assumptions about skill, creativity, and the relationship between human and machine.\n\nThe line of thought: metaphors are cognitive tools that both enable and constrain — they open certain possibilities while closing off others.`,
+    usedConcepts: ['A8', 'A10'],
+    keyHooks: ['EDSAC', 'Ferranti Mark I', 'Wiener 1948', 'McCarthy 1956 Dartmouth']
+  },
+  {
+    id: 'A-04', type: 'A', exam: 'May 2025', title: 'AI in Mathematics',
+    prompt: 'In the lecture, the relationship between AI and mathematics was discussed. Give two examples of this relationship.',
+    thesis: 'Two-way relationship: AI as a tool for mathematics (proof checking) AND mathematics as foundation for AI (logic, lambda calculus).',
+    answer: `The lecture traces two distinct but connected ways in which AI and mathematics are intertwined: AI as a tool for mathematics, and mathematics as a foundation for AI.\n\nExample 1 — Formal proof and LISP: Mathematicians in the 1950s became interested in computers as proof-checking tools. If mathematics consisted of formal logical operations, could a machine verify proofs? This question drove John McCarthy (1927–2011) to develop LISP (1958), a programming language based on Alonzo Church's lambda calculus (1936). LISP became the foundation language for AI research for three decades — not because of AI applications, but because it was the right tool for symbolic manipulation. The connection: logic → formal proof → lambda calculus → LISP → AI.\n\nExample 2 — Principia Mathematica and automated reasoning: Russell and Whitehead's Principia Mathematica (1910–13) attempted to derive all mathematics from logical axioms. This project — showing that mathematics was reducible to logic — directly inspired the dream of automated reasoning. Gödel (1931) showed the limits; Turing formalised computability (1936); both results were then incorporated into early AI theory. The vision of a machine that could reason formally underpinned expert systems, theorem provers, and modern proof assistants (Coq, Lean).\n\nBoth examples show that AI and mathematics are deeply entangled — AI is not just applied to mathematics, it emerged from mathematical ideas.`,
+    usedConcepts: ['A11', 'A3'],
+    keyHooks: ['Church 1936 lambda', 'McCarthy 1958 LISP', 'Russell Whitehead 1910 Principia', 'Gödel 1931', 'Turing 1936']
+  },
+  {
+    id: 'A-05', type: 'A', exam: 'May 2025', title: 'AI and Education',
+    prompt: 'In the lecture, the relationship between AI and education in the 1960s and 1970s was discussed. Give two examples.',
+    thesis: 'Two opposing pedagogies: programmed instruction (top-down behaviourism, Skinner) vs. LOGO (bottom-up constructivism, Papert).',
+    answer: `Two distinct traditions of using computers in education emerged in the 1960s–70s, reflecting fundamentally different theories of learning.\n\nExample 1 — Programmed Instruction (Skinner, 1950s–60s): B.F. Skinner's behaviourist learning theory held that learning could be broken into discrete steps, each followed by immediate feedback. Computers were ideal "teaching machines": present a question, wait for answer, give correct feedback. This model was widely adopted in military and corporate training. It treated the computer as a sophisticated drill-and-practice system. Critics argued it was mechanical, reinforced rote learning, and reduced education to stimulus-response.\n\nExample 2 — LOGO (Seymour Papert, MIT, 1967): Papert drew on Piaget's constructivism — children learn by building mental models through active exploration, not passive reception. LOGO let children program a turtle (physical or screen-based) using simple commands, discovering mathematical concepts (angles, geometry, recursion) through play. The computer was not the teacher but a tool for thinking — a "mind's mirror." LOGO assumed children could be makers of knowledge, not just receivers.\n\nThe contrast is crucial for the exam: programmed instruction = top-down behaviourism = computer as authority; LOGO = bottom-up constructivism = computer as tool. Both claimed to use "AI" concepts but had opposite pedagogical philosophies. This debate continues in discussions of AI tutors today.`,
+    usedConcepts: ['A12'],
+    keyHooks: ['Skinner behaviourism', 'Papert MIT 1967 LOGO', 'Piaget constructivism', 'Turtle graphics']
+  },
+  {
+    id: 'A-06', type: 'A', exam: 'May 2025', title: 'Game Culture and AI',
+    prompt: 'In the lecture, game culture was discussed in relation to the history of computing. Explain the line of thought.',
+    thesis: 'Games were not frivolous — they were a domain where machines could demonstrate symbolic reasoning, foundational to AI.',
+    answer: `The lecture argues that games played a structurally important role in the development of computing and AI — not as frivolous entertainment but as a domain in which machines could demonstrate capabilities previously thought to require human intelligence.\n\nThe key early example is Nim (1951): Christopher Strachey programmed the Ferranti Mark I to play Nim, a mathematical strategy game. This was an act of appropriation — a scientific computer repurposed for game-playing. But it was also a proof of concept: a machine could engage in rule-based strategic reasoning. This directly influenced the framing of AI as "game-playing intelligence."\n\nChess became the dominant benchmark. Claude Shannon published a theoretical paper on chess-playing computers (1950); Alan Turing wrote a chess-playing algorithm (1953, never implemented). The 1956 Dartmouth conference framed AI partly around game-playing as a testbed. Deep Blue's defeat of Kasparov (1997) and AlphaGo's defeat of Lee Sedol (2016) are the successors of the same research lineage.\n\nGames also drove computing hardware: real-time graphics, fast processing, and eventually the GPU — a games technology — became the infrastructure for deep learning. The trajectory from Nim (1951) to GPU-based neural networks (2010s) shows that game culture was not tangential to AI history but integral to it.`,
+    usedConcepts: ['A9', 'C1'],
+    keyHooks: ['Strachey Nim 1951 Ferranti', 'Shannon 1950', 'Turing 1953 chess', 'Deep Blue 1997', 'AlphaGo 2016']
+  },
+  {
+    id: 'A-07', type: 'A', exam: 'May 2025', title: 'History of AI vs. History of Computing',
+    prompt: 'In the lecture, the history of AI was compared to the history of computing. Explain two comparisons.',
+    thesis: 'Both have contested origin stories AND both use narratives of progress/crisis instrumentally — agendas in both.',
+    answer: `The lecture makes a structural comparison between how the histories of AI and computing are typically told, revealing both parallels and important differences.\n\nComparison 1 — Both have contested origin stories: Computing's standard origin (ENIAC, 1945; Moore School; US) conceals parallel developments in the UK, Netherlands, Germany, and the Soviet Union. Similarly, AI's standard origin (Dartmouth conference, 1956; McCarthy; US) conceals prior work: cybernetics (Wiener, 1948), Turing's "Computing Machinery and Intelligence" (1950), and earlier dreams of logical machines (Leibniz, Babbage, Boole). In both cases, the "origin" chosen reflects the historian's agenda.\n\nComparison 2 — Both use narratives of progress and crisis: Computing history has its hardware generations (1st = vacuum tubes, 2nd = transistors, etc.) and crises (software crisis, 1968). AI history has its waves (symbolic AI → connectionism → deep learning) and winters (1970s, late 1980s). In both cases, the narratives of progress and crisis are partly rhetorical — used to justify current projects and secure funding. The "AI winter" narrative, for example, is used to argue that sustained investment is necessary to reach the "spring."\n\nBoth histories are also histories of what gets forgotten: the women programmers (ENIAC operators, Grace Hopper), the non-Western computing traditions, the paths not taken.`,
+    usedConcepts: ['C2', 'C5', 'A6', 'A3'],
+    keyHooks: ['Dartmouth 1956', 'ENIAC 1945', 'Wiener 1948', 'Lighthill 1973']
+  },
+  {
+    id: 'A-08', type: 'A', exam: 'May 2025', title: 'Web 2.0 and AI',
+    prompt: 'In the lecture, the emergence of Web 2.0 was compared to developments in AI. Explain the line of thought.',
+    thesis: 'Web 2.0 created the data infrastructure modern AI required; same business model underlies both.',
+    answer: `The lecture connects Web 2.0 and AI through the concept of data-driven systems — both represent a shift from rule-based to statistical/behavioral approaches enabled by large-scale data collection.\n\nWeb 2.0 (early 2000s) is characterised by user-generated content (Wikipedia, YouTube, blogs), social networking (Facebook, Twitter), and recommendation systems (Netflix, Amazon). The key innovation was that user behaviour — clicks, ratings, watch times, purchases — became the raw material for improving systems. This is surveillance capitalism (Zuboff): data collection enables personalisation, which increases engagement, which generates more data.\n\nAI followed a parallel path. Early AI (1950s–80s) relied on hand-coded rules (expert systems, GOFAI). The deep learning revolution (2010s) succeeded because vast datasets — partly generated by Web 2.0 platforms — enabled statistical learning at scale. ImageNet (2009), scraped from the web, trained convolutional neural networks that beat human performance. Large language models (GPT, BERT) were trained on web-scraped text.\n\nThe line of thought: Web 2.0 created the data infrastructure that modern AI required. The same business model (free service → behavioural data → algorithmic improvement) underlies both platforms and AI systems. This makes the history of the web inseparable from the history of contemporary AI.`,
+    usedConcepts: ['C4', 'B14'],
+    keyHooks: ['ImageNet 2009', 'GPT BERT', 'AdWords 2000', 'Zuboff']
+  },
+  {
+    id: 'A-09', type: 'A', exam: 'July 2025', title: 'Prehistory of AI — Common Events with Computing',
+    prompt: 'In the lecture, the prehistory of AI was discussed. What events in this prehistory do AI and computing have in common?',
+    thesis: 'Their prehistories overlap at THREE points (Babbage, Turing, Dartmouth) but are otherwise parallel — different traditions.',
+    answer: `The lecture argues that the prehistories of AI and computing overlap at specific points but are largely separate — they come from different intellectual traditions.\n\nCommon event 1 — Babbage's Analytical Engine (1837): Babbage's design for a programmable mechanical computer is claimed as a precursor both by computing historians (stored-program concept) and by AI historians (the idea of a machine that could follow logical instructions). Ada Lovelace's notes (1843) include what some call the first algorithm — claimed by both traditions.\n\nCommon event 2 — Turing (1936–1950): Alan Turing's 1936 paper on computability (Turing machines) is foundational for computing theory. His 1950 paper "Computing Machinery and Intelligence" — introducing the Turing Test — is foundational for AI theory. Turing is the figure where both histories most clearly overlap, which is why he can be described as "father" of both fields (though the claim is contested).\n\nCommon event 3 — Dartmouth Conference (1956): This is where the two traditions formally merge — McCarthy coined "Artificial Intelligence" and assembled computing and mathematics researchers to work on a unified agenda.\n\nBefore 1956, computing was primarily driven by the administration and military traditions; AI's prehistory is primarily in logic and mathematics. Their convergence at Dartmouth is the key shared moment — everything before that is mostly parallel histories.`,
+    usedConcepts: ['A3', 'A1', 'A11'],
+    keyHooks: ['Babbage 1837', 'Lovelace 1843', 'Turing 1936', 'Turing 1950', 'Dartmouth 1956']
+  },
+  {
+    id: 'A-10', type: 'A', exam: 'July 2025', title: 'Paris 1951 — AI as Driving Force',
+    prompt: 'In the lecture, the Paris conference of 1951 was discussed. Explain how AI was a driving force for scientists to enter the field of computing.',
+    thesis: 'AI as a VISION (thinking machines) attracted scientists more than batch processing — gave computing humanistic significance.',
+    answer: `The 1951 Paris conference on computing was a moment where the intellectual excitement around "thinking machines" — not just calculating ones — attracted scientists who might otherwise have stayed in pure mathematics or physics.\n\nThe lecture's argument is that AI as a vision was a more compelling motivation for many scientists than batch processing or accounting. The idea that a machine could replicate human reasoning — theorem-proving, language understanding, game-playing — was intellectually exciting in a way that tabulating census data was not. This vision attracted mathematicians (like McCarthy, later), logicians, and linguists into what would become computer science.\n\nConcretely, cybernetics (Wiener, 1948) had already created a cross-disciplinary field focused on information, control, and intelligence. By 1951, European scientists attending international conferences were engaging with these ideas. The possibility of artificial intelligence gave computing a humanistic as well as a technical significance — it was not just about speed but about mind.\n\nThe Paris 1951 context also shows that the history of computing is not purely driven by commercial or military needs: intellectual curiosity and the dream of artificial minds were legitimate drivers. This is important for understanding why certain researchers invested in computing even before there was obvious commercial application.`,
+    usedConcepts: ['A10', 'A11', 'A3'],
+    keyHooks: ['Paris 1951', 'Wiener 1948 Cybernetics', 'McCarthy', 'Vision of thinking machines']
+  },
+  {
+    id: 'A-11', type: 'A', exam: 'July 2025', title: 'Grace Hopper — Direct and Indirect Contributions',
+    prompt: 'Grace Hopper made both direct and indirect contributions to computing and AI. Explain both.',
+    thesis: 'Direct = compiler + COBOL; indirect = democratising language of computing + women\'s legitimacy in tech.',
+    answer: `Grace Hopper (1906–1992) is one of the most important figures in the history of computing, with contributions that operated at both the technical and cultural level.\n\nDirect contributions: Hopper developed the first compiler (A-0 system, 1952), a program that translated symbolic mathematical code into machine code — a foundational step toward higher-level programming. She was the primary force behind COBOL (1959), the business programming language that remained dominant for decades (and still runs much banking infrastructure). Her technical insight was that computers should be programmable in something closer to natural language — a democratic vision of computing.\n\nIndirect contributions: Hopper was an advocate for making computing accessible to non-specialists — a cultural and political project. Her famous phrase "it's easier to ask forgiveness than to ask permission" became a motto for technological innovation. She popularised the term "bug" (a literal insect found in a relay in the Mark II, 1947) — shaping how programming errors are conceptualised. As a naval officer and public figure, she legitimised women in computing at a time when the field was becoming male-dominated. Her institutional influence made COBOL an international standard.\n\nFor AI specifically: COBOL's natural-language orientation prefigured natural language processing; her compiler work showed that programs could translate between levels of abstraction — a key AI concept.`,
+    usedConcepts: ['A13', 'A8'],
+    keyHooks: ['A-0 compiler 1952', 'COBOL 1959', '"bug" 1947 Mark II', 'Naval officer']
+  },
+  {
+    id: 'A-12', type: 'A', exam: 'July 2025', title: 'AI and Education — Programmed Instruction vs. LOGO',
+    prompt: 'In the lecture, AI was discussed in relation to education. Give two examples: programmed instruction and LOGO.',
+    thesis: 'Same as A-05 — Skinner behaviourism vs. Papert constructivism; computer as authority vs. tool for thinking.',
+    answer: `See A-05 — same content. Both exams ask this question in similar form.\n\nKey structure for the exam:\n1. Programmed Instruction (Skinner, 1950s–60s): behaviourism, computer as authority, drill-and-practice, criticised as mechanical.\n2. LOGO (Papert, MIT, 1967): constructivism (Piaget), computer as tool for thinking, turtle graphics, children as makers of knowledge.\n3. Contrast explicitly: top-down vs. bottom-up; authority vs. tool; this debate continues in modern AI tutors.`,
+    usedConcepts: ['A12'],
+    keyHooks: ['Skinner', 'Papert MIT 1967', 'Turtle graphics', 'Piaget']
+  },
+  {
+    id: 'A-13', type: 'A', exam: 'July 2025', title: 'Computers and Ordinary Life (1980s–90s)',
+    prompt: 'In the lecture, computers entering ordinary life in the 1980s and 1990s was discussed using statistics and cultural examples such as blockbusters. Explain.',
+    thesis: 'Computers transitioned from professional tools to household objects — measurable statistically AND culturally (films, games).',
+    answer: `The lecture argues that the 1980s–90s saw computing transition from institutional/professional tools to household and cultural objects — a shift measured both statistically and culturally.\n\nStatistical dimension: IBM PC (1981) and Apple Macintosh (1984) → home computer ownership rises. By 1990, approximately 22% of US households owned a personal computer; by 2000, over 50%. The spread of ATMs, supermarket UPC scanners, and airline reservation systems (SABRE) meant ordinary people interacted with computing infrastructure daily without knowing it.\n\nCultural dimension: Blockbuster and home video (VHS standardisation battle, mid-1980s) = computers managing rental inventory and customer data at scale. The video rental store was an early example of database-driven retail. Nintendo (1983 Japan, 1985 US) = computers as home entertainment: millions of households with a general-purpose processor running interactive software. The "PC" entering living rooms was not as a computer but as a games console — appropriation again.\n\nCulturally, computers appeared in advertising, films (WarGames 1983, Tron 1982, The Terminator 1984), and news coverage as both promising and threatening. This cultural ambivalence — the computer as liberator and as surveillance tool — was established in this decade and shapes public perception of AI today.`,
+    usedConcepts: ['B10', 'C1', 'C6'],
+    keyHooks: ['IBM PC 1981', 'Macintosh 1984', 'Nintendo 1983/85', 'WarGames 1983', 'Tron 1982', 'Terminator 1984']
+  },
+  {
+    id: 'A-14', type: 'A', exam: 'July 2025', title: 'Data and AI — Surveillance Capitalism',
+    prompt: 'In the lecture, the connection between data, AI, and surveillance capitalism was discussed. Explain.',
+    thesis: 'Surveillance capitalism produced the training data AI needs — they are structurally entangled, not accidentally connected.',
+    answer: `Modern AI systems require massive amounts of behavioural data; surveillance capitalism is precisely the business model that produces this data at scale. The connection is therefore not accidental but structural.\n\nFirst, surveillance capitalism (Zuboff): user behaviour is collected as raw material, processed into prediction products, sold to advertisers or used to influence further behaviour. Google (2000) developed AdWords on this principle; Facebook, Netflix, TikTok extended it. Users think the service is "free" — they pay with data.\n\nSecond, AI training: Deep learning succeeds because of dataset scale. ImageNet (2009), scraped from the web, made convolutional networks possible. GPT/BERT/LLMs are trained on text scraped from web-scale corpora. None of this would exist without the engagement-driven web that surveillance capitalism built. The recommendation engines themselves ARE AI — they are how the surveillance capitalism loop closes.\n\nThird, the implication: AI and surveillance capitalism are the same system viewed from two angles. The same infrastructure that monetises attention also produces the training corpora. GDPR (2018) was the European response; US Section 230 protections allowed the model to grow.\n\nIn conclusion: when we ask "what data trains AI?" we are asking "who has been surveilled?" The political economy of AI is the political economy of surveillance capitalism.`,
+    usedConcepts: ['C4', 'B14', 'B15'],
+    keyHooks: ['Zuboff', 'AdWords 2000', 'ImageNet 2009', 'GPT/BERT', 'GDPR 2018']
+  },
+  {
+    id: 'B-01', type: 'B', exam: 'May 2025', title: 'Maurice Wilkes and EDSAC',
+    prompt: 'What was the importance of Maurice Wilkes and EDSAC in the history of computing?',
+    thesis: 'Practical realisation of stored-program + first programming manual + knowledge transfer hub at Cambridge.',
+    answer: `Maurice Wilkes (1913–2010) built the EDSAC (Electronic Delay Storage Automatic Calculator) at Cambridge in 1949 — the first practical stored-program computer to run a complete program — and wrote the first systematic programming manual.\n\nWilkes attended the Moore School Lectures (1946) in Philadelphia, where he absorbed Von Neumann's stored-program concept from the EDVAC design. Returning to Cambridge, he built EDSAC with a team using mercury delay-line memory. On May 6, 1949, EDSAC ran its first program — computing a table of squares.\n\nThe significance is threefold. First, practical realisation: while ENIAC (1945) and EDVAC (on paper) preceded it, EDSAC was the first to actually run as a stored-program machine in regular operation — demonstrating the concept worked. Second, systematisation of programming: Wilkes, Wheeler, and Gill published the first programming manual (The Preparation of Programs for an Electronic Digital Computer, 1951) — a foundational text. Third, knowledge transfer: Wilkes trained researchers who spread across British universities and industry, making Cambridge a hub of early British computing.\n\nWilkes is also significant for the Dutch connection: his work influenced van Wijngaarden's ARRA project at the Mathematisch Centrum. EDSAC thus represents the Moore School Lectures' most immediate and fruitful legacy.`,
+    usedConcepts: ['B4', 'A5'],
+    keyHooks: ['Wilkes', 'May 6 1949 EDSAC', 'Moore School 1946', '1951 programming manual', 'van Wijngaarden ARRA']
+  },
+  {
+    id: 'B-02', type: 'B', exam: 'May 2025', title: 'Computer Manufacturers in the 1950s',
+    prompt: 'In the early 1950s computer manufacturers faced the challenge of turning a scientific instrument into a product. Explain how they reconstructed the automatic computer as a business machine.',
+    thesis: 'Reconstruction was cognitive (reframing as "data processing" not "thinking machines") + organisational (sales, leasing, service).',
+    answer: `The early 1950s saw three types of organisations attempting to commercialise the computer: electronics firms (RCA, GE, Honeywell), business machine companies (IBM, Remington Rand, NCR, Burroughs), and startups (EMCC — Eckert & Mauchly; ERA).\n\nThe core challenge was cognitive, not just technical: customers needed to understand what a computer was for and why it was better than existing tabulating machines or human calculators. Companies solved this differently. Eckert & Mauchly targeted government agencies (Census Bureau → UNIVAC I, 1951; Northrop aviation → BINAC). The 1952 CBS election-night broadcast of UNIVAC's prediction (correctly forecasting Eisenhower) was the first mass public demonstration — building trust through spectacle.\n\nIBM was initially cautious — Watson Sr. reportedly doubted a large commercial market. IBM's approach was incremental: introduce electronics gradually, leverage existing customer relationships, and emphasise service and compatibility. The Model 650 (1954) was aimed at existing punched-card customers — reconstruction not revolution. IBM's marketing infrastructure (salesforce, leasing model, service contracts) turned the computer from a product into a service relationship.\n\nThe reconstruction succeeded when computers were reframed: not as "thinking machines" (threatening, alien) but as "data processing" tools (familiar, efficient extensions of existing office practice). The IBM 1401 (1959) — with its fast printer and Report Program Generator — completed this reconstruction: computers as business infrastructure.`,
+    usedConcepts: ['B5', 'A2'],
+    keyHooks: ['EMCC UNIVAC 1951', '1952 CBS Eisenhower', 'IBM 650 1954', 'IBM 1401 1959', 'Watson Sr.']
+  },
+  {
+    id: 'B-03', type: 'B', exam: 'May 2025', title: 'Watson Rational but Wrong',
+    prompt: 'CK uses the phrase "Watson was rational but wrong; Eckert and Mauchly were irrational but right." Explain.',
+    thesis: 'Technological trajectories are not predictable from current conditions — new tech creates new markets, doesn\'t just serve existing ones.',
+    answer: `This Campbell-Kelly phrase captures the paradox of technological forecasting: rational analysis of present conditions can lead to wrong predictions about future trajectories.\n\nWatson was rational but wrong: Thomas Watson Sr. (IBM) looked at the existing market — businesses that used tabulating machines for payroll, accounting, and record-keeping — and calculated that there was a small, finite demand for computers (reportedly estimated 5–10 machines worldwide). This was rational given 1940s conditions: computers were enormous, fragile, and astronomically expensive. IBM's existing customers had no obvious need for them. Watson prioritised IBM's profitable punch-card business.\n\nEckert & Mauchly were irrational but right: Eckert and Mauchly founded EMCC (1946) on the belief that there would be large commercial demand for computers — despite having no market evidence and serious funding problems. They built UNIVAC targeting the Census Bureau and other agencies. This was "irrational" by conventional business logic. Yet they were right: demand grew dramatically as businesses discovered what computers could do.\n\nThe lesson for history of technology: technological trajectories are not predictable from current conditions alone. New technologies create new markets — they don't just serve existing ones. Watson was applying rational analysis to the wrong framework. The phrase also illustrates CK's broader argument that technological history is not simply the story of rational actors making optimal decisions.`,
+    usedConcepts: ['B5'],
+    keyHooks: ['Watson Sr. 5–10 machines', 'EMCC 1946', 'UNIVAC Census Bureau']
+  },
+  {
+    id: 'B-04', type: 'B', exam: 'May 2025', title: 'Real-Time Computing — Military and Safety',
+    prompt: 'Real-time computing started as a military and safety project. Explain.',
+    thesis: 'Whirlwind (Navy aircraft sim) → SAGE (Cold War air defence) — military requirement, safety-critical reliability bred civilian real-time systems.',
+    answer: `Real-time computing — processing information fast enough to affect ongoing events — emerged from specific military and safety requirements in the late 1940s and early 1950s.\n\nProject Whirlwind (1944–1953) at MIT was originally designed as an aircraft flight simulator for the US Navy (Jay Forrester, 1944). When Perry Crawford (Office of Naval Research) convinced Forrester to go digital (1945), the project transformed into something much larger — a demonstration that digital computers could process data in real time, responding to inputs within milliseconds rather than hours. Almost cancelled for cost overruns (ONR funding exhausted by 1951), Whirlwind was saved when it became the technological foundation for SAGE.\n\nSAGE (Semi-Automatic Ground Environment, 1958–63): The Cold War air-defence network required radar data from hundreds of stations to be processed centrally and presented to human operators in real time. SAGE used IBM AN/FSQ-7 computers — the largest ever built — at 23 direction centres. Militarily, SAGE was obsolete almost as soon as it was deployed (ICBMs bypassed its air-defence logic). But as a technological demonstration, it was transformative: it developed core memory, CRT displays, modems, light-gun interfaces, and trained thousands of engineers — most of whom moved into civilian computing careers.\n\nThe safety dimension is also present: Whirlwind's aircraft simulation heritage meant that reliability under time pressure was a design requirement from the start — a discipline that carried into civilian real-time systems.`,
+    usedConcepts: ['B7'],
+    keyHooks: ['Forrester 1944 Whirlwind', 'Crawford 1945 digital', 'SAGE 1958–63', 'AN/FSQ-7', '23 direction centres']
+  },
+  {
+    id: 'B-05', type: 'B', exam: 'May 2025', title: 'Software Crisis — Stakeholders',
+    prompt: 'In the late 1960s there was a software crisis. Who were the stakeholders involved, and what were their interests?',
+    thesis: 'Four stakeholders with conflicting interests: clients (operational harm), IBM (revenue/reputation), academics (Dijkstra: discipline), software industry (professionalisation).',
+    answer: `The software crisis (named at the 1968 NATO Software Engineering Conference in Garmisch) described the systematic failure of large software projects to be delivered on time, within budget, and without errors. Multiple stakeholders had different interests.\n\nUsers/clients (governments, corporations): IBM's OS/360 operating system — designed to run on the entire System/360 product line — was years late, contained thousands of bugs, and cost far more than projected. Clients experienced real operational harm: systems they had purchased could not deliver what was promised.\n\nHardware manufacturers (IBM): IBM had bet the company on System/360 and OS/360. The crisis threatened both revenue and reputation. IBM's response was to add more programmers — which Frederick Brooks later showed was counterproductive (The Mythical Man-Month, 1975: adding people to a late project makes it later).\n\nAcademics and researchers (Dijkstra, European tradition): Viewed the crisis as a fundamental problem of method — software development lacked the rigorous mathematical discipline that mathematics and engineering applied to their problems. Structured programming (Dijkstra) — eliminating GOTO statements, using clear control flow — was proposed as a disciplinary solution.\n\nThe software industry (emerging): IBM's "unbundling" (1968) — separating software pricing from hardware — created the software industry as a distinct commercial sector. Software companies had an interest in professionalising software development, creating methods and certifications that would raise barriers to entry.`,
+    usedConcepts: ['A14'],
+    keyHooks: ['NATO 1968 Garmisch', 'OS/360', 'Brooks Mythical Man-Month 1975', 'Dijkstra structured programming', 'IBM unbundling 1968']
+  },
+  {
+    id: 'B-06', type: 'B', exam: 'May 2025', title: 'Timesharing — Ordinary People',
+    prompt: 'In the chapter "New ways of computing," timesharing was one of the topics. How did timesharing make computing accessible to ordinary people?',
+    thesis: 'Three shifts: access without ownership + interactive feedback + BASIC for non-specialists. Plus countercultural framing (Whole Earth Catalogue).',
+    answer: `Timesharing solved the bottleneck of batch processing: instead of waiting hours or days for a job to run, multiple users could interact with a computer simultaneously via remote terminals, experiencing near-instant responses.\n\nTechnical mechanism: The system divided CPU time into tiny slices and switched rapidly between users — imperceptible to any individual user who experienced continuous access. Pioneered at MIT (CTSS, 1961) and commercialised by GE (one of the "seven dwarfs" who chose timesharing as a niche strategy).\n\nMaking computing accessible: Three shifts occurred. First, access without ownership: universities and businesses could connect terminals to distant mainframes without owning the computer. Second, interactive feedback: instead of submitting a card deck and returning the next day, users could iterate, correct errors, and explore — making computing feel manageable. Third, BASIC (Kemeny & Kurtz, Dartmouth, 1963): designed specifically as a programming language for non-specialists. BASIC's simplicity allowed students, teachers, and hobbyists to write programs — the first democratisation of programming.\n\nThe Whole Earth Catalogue (Stewart Brand, 1968) framed timesharing terminals as liberation tools — "access to tools" that could empower individuals against institutions. This countercultural framing fused with the technology in California and became part of the ideology that later produced personal computing. Timesharing was thus not just a technical development but a step in the social history of who counted as a computer user.`,
+    usedConcepts: ['B8'],
+    keyHooks: ['CTSS MIT 1961', 'BASIC Kemeny Kurtz Dartmouth 1963', 'Stewart Brand 1968 Whole Earth Catalogue']
+  },
+  {
+    id: 'B-07', type: 'B', exam: 'May 2025', title: 'Personal Computers — California Cultures',
+    prompt: 'Campbell-Kelly discusses the role of Californian cultures in the development of personal computing. Explain.',
+    thesis: 'Counterculture + academic research + entrepreneurial risk-taking — a specific cultural ecology that gave PCs meaning AND market.',
+    answer: `Campbell-Kelly argues that Silicon Valley's distinctive culture — a blend of counterculture, academic research, and entrepreneurial risk-taking — was a key ingredient in the personal computer revolution, not just the technology itself.\n\nThe countercultural context: By the late 1960s, the San Francisco Bay Area had developed a culture that was simultaneously anti-establishment and technologically enthusiastic. The Whole Earth Catalogue (Stewart Brand, 1968) epitomised this: tools — including computers — were liberation devices for individuals and communities. The Homebrew Computer Club (1975) was a direct expression of this ethos: hackers sharing technical knowledge freely, seeing the personal computer as a political act (computing for the people, not by corporations).\n\nThe resulting culture differed from East Coast institutional computing (IBM: formal, hierarchical, expensive) and from European computing (academic, government-funded). California's version combined: informal collaboration, stock option cultures, tolerance for failure and re-invention, and close university-industry links (Stanford's Office of Technology Licensing pioneered commercial tech transfer).\n\nApple (Jobs + Wozniak, 1976), Intel (Grove, Moore, Noyce, 1968), and later Google (Page + Brin, 1998) emerged from this specific cultural ecology. The personal computer was not just technically feasible in 1975 — it had been for some time. What made it happen then and there was the cultural and institutional infrastructure that gave it meaning and market.`,
+    usedConcepts: ['B12', 'B10', 'B8'],
+    keyHooks: ['Whole Earth Catalogue 1968', 'Homebrew 1975', 'Apple 1976', 'Intel 1968', 'Stanford OTL']
+  },
+  {
+    id: 'B-08', type: 'B', exam: 'May 2025', title: 'Broadening the Appeal — 1980s',
+    prompt: 'In the 1980s, several companies tried to broaden the appeal of personal computers. Give an example of a successful and an unsuccessful attempt.',
+    thesis: 'Macintosh (success: GUI + design) vs. Apple Lisa (failure: too expensive). Two strategies — usability vs. open architecture.',
+    answer: `The 1980s saw a wave of attempts to make personal computers accessible to non-technical users — with mixed results.\n\nSuccessful example — Apple Macintosh (1984): The Mac introduced a graphical user interface (GUI), mouse navigation, and desktop metaphor (files, folders, trash) to a mass-market product. Its famous "1984" Super Bowl advertisement positioned it against IBM's grey institutional computing. The Mac succeeded because it reduced the cognitive barrier to entry: users did not need to learn command-line syntax. Desktop publishing (Aldus PageMaker, 1985) gave the Mac a killer use case for professionals. The Mac showed that design — not just power — could sell computers.\n\nUnsuccessful example — Apple Lisa (1983) or various GUI attempts: The Apple Lisa (1983) preceded the Mac with a similar GUI but cost $9,995 — far beyond most buyers. Despite superior features, it failed commercially. Similarly, VisiCorp VisiOn (1983) attempted a GUI for IBM PCs but was too slow and expensive. These failures show that technological innovation alone is insufficient: price point, software ecosystem, and marketing must align.\n\nThe IBM PC's success (1981) came from the opposite approach: an open architecture that invited third-party software and hardware development, creating an ecosystem. IBM "broadened appeal" not by making the computer easier to use but by making it cheaper to develop for — demonstrating that broadening appeal can take different forms.`,
+    usedConcepts: ['B10'],
+    keyHooks: ['Macintosh 1984', 'Lisa 1983 $9995', 'VisiOn 1983', 'IBM PC 1981 open architecture', 'PageMaker 1985']
+  },
+  {
+    id: 'B-09', type: 'B', exam: 'May 2025', title: 'Internet — Three Desires',
+    prompt: 'Campbell-Kelly calls the Internet the "confluence of three desires." What were they?',
+    thesis: 'Military (survivability) + Academic (information sharing) + Commercial (revenue). Tensions persist (net neutrality, GDPR).',
+    answer: `Campbell-Kelly identifies three distinct streams of motivation that converged to produce the Internet, each with different institutions, values, and goals.\n\nDesire 1 — Military/governmental (survivability): ARPANET (1969), funded by DARPA, was designed to create a communications network that could survive a nuclear attack by routing data around damaged nodes. Packet switching (Baran, 1964) was the technical solution. This desire valued resilience and decentralisation — no central point of failure.\n\nDesire 2 — Academic/scientific (information sharing): Universities and research institutions wanted to share computing resources and data across geographical distances. Email emerged (1971, Ray Tomlinson) as the dominant application — far more used than the file-sharing and remote computing that ARPANET was designed for. This desire valued open access and collaboration — the internet as a library and community.\n\nDesire 3 — Commercial (communication and revenue): By the early 1990s, commercial providers (CompuServe, AOL) saw a market in paid internet access and online services. The World Wide Web (Berners-Lee, CERN, 1989; public 1991) and Mosaic browser (1993) made the internet visually accessible, enabling commercial e-commerce (Amazon 1994, eBay 1995) and advertising-based services.\n\nThe tensions between these three desires persist: military surveillance vs. academic openness vs. commercial exploitation. Net neutrality debates, GDPR, and platform regulation are contemporary expressions of the same conflicts.`,
+    usedConcepts: ['B11'],
+    keyHooks: ['ARPANET 1969 DARPA', 'Baran 1964 packet switching', 'Tomlinson 1971 email', 'Berners-Lee CERN 1989', 'Mosaic 1993']
+  },
+  {
+    id: 'B-10', type: 'B', exam: 'May 2025', title: 'Diversity and Inclusion in the 2010s',
+    prompt: 'Campbell-Kelly discusses diversity and inclusion in the computing industry in the 2010s. What were the main issues?',
+    thesis: 'Pipeline argument vs. structural change; algorithmic bias linked diversity to AI safety; women were marginalised AS the field professionalised.',
+    answer: `By the 2010s, the computing industry had become acutely aware of — and publicly embarrassed by — its demographic skew: predominantly male, and in the US, predominantly white and Asian-American, with almost no representation from Black, Hispanic, or Indigenous communities.\n\nThe pipeline argument vs. structural change: Industry responses split. The "pipeline argument" held that there simply weren't enough qualified diverse candidates — a supply problem solvable by better school-level STEM education. Critics (including Safiya Umoja Noble, Joy Buolamwini) argued this missed structural barriers: hiring bias, workplace culture (bro culture, sexual harassment), lack of role models, and the historical exclusion of women and minorities from computer science education (note that early computing was dominated by women — the ENIAC programmers were women; Grace Hopper; Ada Lovelace — who were systematically marginalised as the field professionalised).\n\nGoogle's 2014 diversity report — which triggered the broader industry conversation — showed only 30% women employees, 2% Black. Subsequent initiatives (unconscious bias training, diversity hiring goals) produced limited results. The algorithmic bias issue (facial recognition failing on dark skin; hiring algorithms replicating historical biases) added urgency.\n\nCK frames this as both a social justice issue and a technical risk: systems designed by homogeneous teams systematically fail diverse users — the diversity problem is not separate from the AI safety problem.`,
+    usedConcepts: ['B13'],
+    keyHooks: ['Google 2014 diversity report', 'Noble', 'Buolamwini', 'ENIAC women', 'Hopper', 'Lovelace']
+  },
+  {
+    id: 'B-11', type: 'B', exam: 'May 2025', title: 'Google — Surveillance Capitalism',
+    prompt: 'Google developed a new business model based on search. Explain how this led to surveillance capitalism.',
+    thesis: 'PageRank → traffic → revenue problem → AdWords → user data → targeting loop. Closed loop = surveillance capitalism.',
+    answer: `Google's PageRank algorithm (Page + Brin, 1998) made web search dramatically better by treating links as votes — pages linked to by many high-quality pages were ranked higher. This produced unprecedented user traffic but created a revenue problem: Google's founders initially refused advertising as compromising search quality.\n\nThe solution was AdWords (2000): targeted text advertisements alongside search results, sold per click. This was structurally novel because relevance — not interruption — drove engagement. Advertisers paid for users who had already expressed intent through their search query.\n\nThe surveillance capitalism loop emerged when Google realised that more user data → better predictions of intent → better-targeted ads → more revenue. Every search, click, location, account behaviour became raw material. Gmail (2004), Google Maps, Chrome, Android — each new product expanded the data collection surface. The "free" service is paid for with behavioural data.\n\nZuboff's analysis (Surveillance Capitalism, 2019): human experience is treated as raw material; predictions about behaviour are sold; eventually behaviour is not just predicted but modified. Facebook, Amazon, Netflix all replicate the same logic.\n\nThe key shift: Google did not invent advertising or surveillance; it invented the closed loop where user data, prediction, and behavioural intervention reinforce each other. GDPR (2018) is the European regulatory response; US Section 230 has shielded platforms.`,
+    usedConcepts: ['B14', 'C4'],
+    keyHooks: ['Page Brin 1998 PageRank', 'AdWords 2000', 'Gmail 2004', 'Zuboff 2019', 'GDPR 2018']
+  },
+  {
+    id: 'B-12', type: 'B', exam: 'May 2025', title: 'Computing and Governance — Ethical Liability',
+    prompt: 'Campbell-Kelly discusses ethical liability in computing governance. Give two examples.',
+    thesis: 'Algorithmic discrimination + autonomous vehicles — both expose the gap between technological capability and legal frameworks.',
+    answer: `The question of who bears ethical and legal responsibility when computing systems cause harm has become one of the central challenges of the 21st century.\n\nExample 1 — Algorithmic discrimination: Amazon's AI hiring tool (2018) was scrapped after it was found to systematically downrank female candidates — because it had been trained on historically male-dominated hiring data. Who is liable? The company that deployed it? The engineers who built it? The data that trained it? Current US law (Section 230, employment law) does not clearly assign responsibility. The GDPR Article 22 (right not to be subject to automated decision-making) provides an EU framework, but enforcement is complex.\n\nExample 2 — Autonomous vehicles: When a self-driving car (Uber, 2018; Tesla autopilot cases) kills a pedestrian, who is criminally liable — the company, the software engineer, the "driver" who was supervising? Traditional product liability law was designed for static products; autonomous systems create new liability frameworks. The EU AI Act (2024) attempts to create tiered liability based on AI system risk level.\n\nCK's argument is that the governance gap — between technological capability and legal/ethical frameworks — is a recurring pattern in computing history (cf. early software liability questions in the 1980s), but the stakes with AI are higher because decisions are more consequential and less transparent.`,
+    usedConcepts: ['B15'],
+    keyHooks: ['Amazon hiring 2018', 'GDPR Article 22', 'Uber 2018', 'EU AI Act 2024', 'Section 230']
+  },
+  {
+    id: 'B-13', type: 'B', exam: 'July 2025', title: 'Moore School — Pre-war, War, Post-war',
+    prompt: 'In what ways was Moore School relevant in the history of computing? Distinguish between the pre-war, war and post-war period.',
+    thesis: 'Pre-war: Differential Analyzer + Mauchly\'s vision. War: ENIAC + Von Neumann\'s EDVAC. Post-war: Moore School Lectures disseminated stored-program globally.',
+    answer: `The Moore School of Electrical Engineering at the University of Pennsylvania was the institutional home of the most consequential period in early computing history.\n\nPre-war: The Moore School's Differential Analyzer — a mechanical analogue computer — was one of the most powerful computing tools of the 1930s. John Mauchly visited (1941) and was struck by the potential of electronic digital computation. The Moore School was already a centre of computational thinking before WWII.\n\nWar (1943–45): The BRL (Ballistics Research Laboratory) needed firing tables for artillery — laborious to compute by hand. Mauchly and Eckert proposed an electronic digital computer. With Goldstine (BRL liaison), they received funding and built ENIAC (operational 1945) — the first electronic general-purpose programmable computer. Von Neumann visited (1944), joined as a consultant, and drafted the First Draft of a Report on EDVAC — which introduced the stored-program concept.\n\nPost-war (1946–50): The Moore School Lectures (1946) were a seminal knowledge-transfer event: engineers from the UK (Newman, Williams → Manchester Baby; Wilkes → EDSAC), Europe, and the US attended and took the stored-program design home. Eckert and Mauchly left to found EMCC. The Moore School's institutional role diminished, but the knowledge it disseminated shaped every major computer project of the late 1940s.`,
+    usedConcepts: ['B4'],
+    keyHooks: ['Differential Analyzer', 'Mauchly 1941', 'BRL ballistics', 'ENIAC 1945', 'Von Neumann EDVAC 1945', 'Moore School Lectures 1946']
+  },
+  {
+    id: 'B-14', type: 'B', exam: 'July 2025', title: 'Off-shoring and Out-sourcing',
+    prompt: 'Campbell-Kelly discusses off-shoring and out-sourcing in computing. What were the consequences?',
+    thesis: 'Off-shoring (work moved to India/EE) + out-sourcing (IT services contracted out) — created global industry but loss of local jobs/expertise + new vulnerabilities.',
+    answer: `From the 1980s onward, the globalisation of the computing industry took two structural forms with different consequences.\n\nOff-shoring (moving work to lower-cost countries): US companies moved software development, call centres, and IT support to India (Bangalore hub: Infosys, Wipro, TCS), then Eastern Europe, Philippines, and China. Drivers: labour cost differentials (Indian software engineers cost 20–30% of US equivalents in the 1990s), improved telecommunications, and education infrastructure (IITs). Consequences: growth of a global software industry in India; creation of a new middle class; but also loss of US/European entry-level IT jobs and concerns about intellectual property.\n\nOut-sourcing (contracting IT functions to specialist providers): Companies like EDS (Ross Perot), Accenture, and IBM Global Services managed clients' entire IT operations — data centres, enterprise software, helpdesks. This allowed companies to focus on core competences and convert fixed IT costs to variable. Consequence: growth of IT services as a sector; but also loss of in-house expertise and vendor lock-in.\n\nCK's framing: globalisation created a more efficient but more interdependent computing economy. The COVID-19 pandemic (supply chain disruption) and Ukraine war (Eastern European IT workers affected) later revealed vulnerabilities in this model. The diversity implication: off-shoring created computing industries in non-Western countries that increased diversity globally but did not necessarily address diversity in US/European leadership.`,
+    usedConcepts: ['B13'],
+    keyHooks: ['Infosys Wipro TCS', 'IIT', 'EDS Perot', 'Accenture', 'IBM Global Services']
+  },
+  {
+    id: 'B-15', type: 'B', exam: 'July 2025', title: 'Netflix as Surveillance Capitalism',
+    prompt: 'Explain how Netflix can be seen as an example of surveillance capitalism.',
+    thesis: 'Subscription model BUT the surveillance loop is in the recommendation engine — behaviour collected, predictions made, content commissioned, taste shaped.',
+    answer: `Surveillance capitalism (Zuboff) describes a business model in which user behaviour is collected as raw material, processed into prediction products, and used to influence future behaviour — with advertising revenue as the monetisation mechanism.\n\nNetflix fits this model, with some modifications. Netflix is subscription-based (not ad-funded in its original form), but the surveillance capitalism logic is present in its recommendation engine. Every second of viewing, every pause, every re-watch, every abandoned episode generates behavioural data. This data is used to:\n1. Predict what a user will watch next (personalised recommendations)\n2. Commission content (data showed House of Cards would succeed before production began)\n3. Optimise thumbnails, trailers, and even episode structure for engagement\n\nThe goal is maximising watch time — engagement that generates subscription renewals and, since 2022, also advertising revenue. Netflix users pay both with money and with behavioural data.\n\nThe Web 2.0 context: Netflix is part of a broader pattern where digital platforms — YouTube, Spotify, TikTok — use engagement data to create feedback loops. The recommendation algorithm doesn't just respond to preferences; it shapes them. This is the deeper surveillance capitalism claim: behaviour is not just observed but modified by the prediction product. This has implications for cultural diversity (algorithmic narrowing of taste) and for mental health (engagement-maximising algorithms promoting outrage, anxiety, etc.).`,
+    usedConcepts: ['C4', 'B14'],
+    keyHooks: ['House of Cards data', 'Watch time', 'Recommendation engine', 'Zuboff', 'YouTube/Spotify/TikTok parallel']
+  },
+  {
+    id: 'B-16', type: 'B', exam: 'July 2025', title: 'Computing Governance — US vs. EU',
+    prompt: 'Compare the US and EU approaches to computing governance. What are the key differences?',
+    thesis: 'US = market self-regulation + Section 230 + First Amendment. EU = fundamental rights + GDPR + precautionary principle. Brussels Effect makes EU rules de facto global.',
+    answer: `The US and EU have developed fundamentally different legal philosophies for governing computing — differences rooted in different conceptions of rights, markets, and the role of the state.\n\nUS approach: Based on market self-regulation and First Amendment values. Section 230 of the Communications Decency Act (1996) shields platforms from liability for user-generated content — a foundational legal protection for the tech industry. US privacy law is fragmented (no federal data protection law; California CCPA is strongest state-level). The underlying philosophy: innovation is best promoted by minimal regulation; markets will punish bad actors; free speech trumps content control.\n\nEU approach: Based on fundamental rights and precautionary principle. GDPR (2018): data protection as a fundamental right; explicit consent required; right to be forgotten; mandatory data breach notification; fines up to 4% of global turnover. EU AI Act (2024): risk-based regulation of AI systems (prohibited uses, high-risk categories, transparency requirements). The underlying philosophy: citizens need protection from both state and corporate power; rights must be proactively protected.\n\nConsequence: EU has higher compliance costs and potentially slower innovation; US has faster innovation but more documented harms (algorithmic discrimination, data breaches, platform manipulation). The "Brussels Effect" (Vogel): EU regulations become de facto global standards because multinational companies find it easier to implement one standard globally than separate EU/US versions — making EU governance more influential than its market size alone would suggest.`,
+    usedConcepts: ['B15'],
+    keyHooks: ['Section 230 1996', 'GDPR 2018', 'EU AI Act 2024', 'Brussels Effect Vogel', 'CCPA']
+  },
+  {
+    id: 'C-01', type: 'C', exam: 'May 2025', title: 'Histories and Alternative Starting Points',
+    prompt: 'Historians can choose different starting points for the history of computing. Explain how the choice of a starting point reflects the historian\'s agenda.',
+    thesis: 'Every "starting point" foregrounds some actors/nations and excludes others — agendas in operation.',
+    answer: `Every history of computing begins with a choice — and that choice reveals what the historian values and who they serve.\n\nThe standard starting point (Campbell-Kelly, most textbooks) is ENIAC (1945) at the Moore School, Pennsylvania. This starting point foregrounds the US, military funding, and the WWII context. It serves an agenda that celebrates American technological achievement and the defence-industrial complex as drivers of progress.\n\nAlternative starting point 1 — Babbage (1837): Starting with Babbage emphasises the British contribution and the theoretical foundation of computing (the stored-program concept, the difference between data and program). This agenda emphasises ideas over implementation. But: Babbage's machine was never completed; starting there makes computing seem like an interrupted Victorian dream — a narrative Aiken exploited for funding.\n\nAlternative starting point 2 — Hollerith (1890): Starting with the census machine emphasises the administrative tradition and the connection between computing and statecraft — making visible the role of data collection in governance. This is an agenda that foregrounds power, surveillance, and social control.\n\nAlternative starting point 3 — Polish codebreakers (1932): Starting with Rejewski, Różycki, and Zygalski breaking Enigma emphasises the European and specifically Eastern European contribution — and challenges the Anglo-American narrative. This agenda is explicitly counter-hegemonic.\n\nThe conclusion: a "starting point" is never innocent. It determines which people, nations, and traditions are made central or peripheral. Recognising agendas does not invalidate histories — it makes us more critical consumers of them.`,
+    usedConcepts: ['C2', 'A1', 'A6', 'A4'],
+    keyHooks: ['ENIAC 1945', 'Babbage 1837', 'Hollerith 1890', 'Rejewski et al. 1932']
+  },
+  {
+    id: 'C-02', type: 'C', exam: 'May 2025', title: 'Defining Technology — Cybernetics',
+    prompt: 'Campbell-Kelly discusses the concept of "defining technology" developed by J. David Bolter. Apply this concept to the role of cybernetics in the 1960s.',
+    thesis: 'Cybernetics provided a universal vocabulary (feedback, control, information) that restructured understanding across science, social science, popular culture — Bolter\'s definition exactly.',
+    answer: `J. David Bolter (Turing's Man, 1984) defines a "defining technology" as one that reshapes not just what people do but how they understand themselves and their world — providing a cultural metaphor for human nature.\n\nApplied to cybernetics in the 1960s: Norbert Wiener's Cybernetics (1948) proposed that both animals and machines could be understood as information-processing and feedback systems — entities that received signals, processed them, and regulated their behaviour accordingly. This metaphor became extraordinarily generative.\n\nIn science: Neuroscience began describing the brain in cybernetic terms (neurons as switches, reflexes as feedback loops). In psychology: behaviourism gave way to cognitive science — the mind as information processor. In social science: organisations and governments were analysed as systems with inputs, outputs, and control mechanisms (Stafford Beer's Brain of the Firm; Project Cybersyn in Chile, 1971–73). In popular culture: robots, cyborgs, and "thinking machines" entered science fiction.\n\nCybernetics was a "defining technology" in Bolter's sense because it provided a universal vocabulary — feedback, control, information, homeostasis — that restructured understanding across domains. By the 1970s, the language of cybernetics had penetrated economics, ecology, management theory, and medicine.\n\nThe 21st-century parallel: AI is arguably the current defining technology. Large language models and neural networks are generating new metaphors for mind, creativity, and intelligence — reshaping self-understanding in ways analogous to cybernetics in the 1960s.`,
+    usedConcepts: ['C3', 'A10'],
+    keyHooks: ['Bolter 1984 Turing\'s Man', 'Wiener 1948', 'Stafford Beer', 'Cybersyn 1971–73 Chile']
+  },
+  {
+    id: 'C-03', type: 'C', exam: 'May 2025', title: 'Internet and Appropriation',
+    prompt: 'Give an example of appropriation in the history of the Internet and explain how it changed the Internet.',
+    thesis: 'Email = the canonical Internet appropriation. Designed for remote login/file transfer, became the dominant application — created social Internet.',
+    answer: `Appropriation — using a technology for purposes its designers did not intend — is one of the primary mechanisms through which the Internet changed from a military/academic network into a global social infrastructure.\n\nThe clearest example is email. ARPANET (1969) was designed for remote login (connecting researchers to distant computers) and file transfer. Email was added as a minor utility (Ray Tomlinson, 1971). Within two years, it accounted for the majority of ARPANET traffic — users had appropriated the network for personal and professional communication that the designers had not anticipated.\n\nEmail's appropriation changed the Internet in fundamental ways: it created the expectation of person-to-person asynchronous communication over the network; it attracted a much broader user base (administrators, secretaries, faculty, students — not just engineers); and it raised the first social and legal questions about network communication (flaming, privacy, workplace monitoring).\n\nFurther appropriations followed: the World Wide Web (designed for physics paper sharing at CERN, 1989) was appropriated for e-commerce (Amazon, 1994), social networking (Facebook, 2004), and streaming video (YouTube, 2005) — none of which Berners-Lee intended.\n\nEach appropriation expanded the Internet's user base, attracted new funding and attention, and generated new social and legal challenges. The Internet as we know it is not what anyone designed — it is an accumulation of appropriations.`,
+    usedConcepts: ['C1', 'B11'],
+    keyHooks: ['ARPANET 1969', 'Tomlinson 1971 email', 'Berners-Lee CERN 1989', 'Amazon 1994', 'Facebook 2004', 'YouTube 2005']
+  },
+  {
+    id: 'C-04', type: 'C', exam: 'May 2025', title: 'AI Winters as Agenda',
+    prompt: 'Describe the concept of AI winters and explain how the narrative of AI winters itself serves an agenda.',
+    thesis: 'The "winter → spring" narrative is itself rhetorical — used by funders ("invest more"), critics ("another bubble"), and historians (dramatic periodisation).',
+    answer: `AI winters are periods of drastically reduced research funding and interest in AI, following cycles of over-promising and under-delivering. Two major winters: the 1970s (following the Lighthill Report, 1973) and the late 1980s–early 90s (collapse of expert systems).\n\nThe Babbage-Aiken parallel is instructive. Babbage over-promised his Difference and Analytical Engines — promised completion dates repeatedly passed, government funding was withdrawn, and Babbage died in bitterness. Aiken, seeking Harvard Mark I funding in the late 1930s, invoked Babbage's legacy — presenting himself as finally realising Babbage's vision — to secure IBM support. This was an agenda: Aiken used a narrative of thwarted genius and inevitable progress to make his case.\n\nThe AI winter narrative operates similarly. Its use serves multiple agendas:\n- For those seeking funding: "We are in a winter — sustained investment will bring the spring." This frames past failures as temporary and investment as the solution.\n- For critics: "AI has always over-promised — the current excitement is another bubble." This uses history as warning.\n- For historians: Periodising AI as "waves and winters" creates a dramatic narrative that makes AI seem teleologically directed toward a final success — which may or may not be accurate.\n\nThe deeper point: the AI winter concept is not a neutral description of history but a rhetorical tool. Recognising this does not mean there were no winters — it means we should ask who benefits from which version of the story.`,
+    usedConcepts: ['C5', 'C2', 'A4'],
+    keyHooks: ['Lighthill 1973', 'Expert systems 1987–93', '5th Generation Japan', 'Babbage', 'Aiken Mark I', 'McCorduck']
+  },
+  {
+    id: 'C-05', type: 'C', exam: 'July 2025', title: 'Appropriation in Computing and AI',
+    prompt: 'Give an example of appropriation and explain how it connects the history of computing to the history of AI.',
+    thesis: 'Appropriation chain: scientific computer → game (Nim 1951) → AI demo → AI research → ... → GPU (gaming) → deep learning. Computing and AI inseparable through appropriation.',
+    answer: `Appropriation — repurposing a technology for uses its designers did not intend — is the key mechanism linking computing and AI histories.\n\nThe Ferranti Mark I (1951) was a commercial scientific computer. Christopher Strachey — a schoolteacher and hobbyist — programmed it to play Nim, a mathematical strategy game. The engineers who built the Ferranti Mark I designed it for scientific calculation; Strachey appropriated it to demonstrate symbolic reasoning. This act was foundational for AI for two reasons: it showed that a digital computer could engage in something that resembled thinking (strategic planning), and it inspired John McCarthy and others who attended or heard about such demonstrations to imagine broader AI research programmes.\n\nGaming computers were themselves then appropriated by the AI research community at Dartmouth (1956): chess-playing, draughts (Arthur Samuel's self-learning checkers programme, 1959), and theorem-proving became the standard AI benchmarks. Samuel's checkers programme is significant because it learned — adjusting its evaluation function based on experience — an early instance of machine learning.\n\nThe chain continues: GPU graphics processors (designed for video games in the 1990s) were appropriated by Geoffrey Hinton's team for training neural networks (2012, AlexNet) — triggering the deep learning revolution. The GPU was not designed for AI; it became the infrastructure of modern AI through appropriation.\n\nAppropriation thus explains why the history of computing and the history of AI cannot be told separately: AI researchers consistently took computing tools designed for other purposes and turned them toward intelligence research.`,
+    usedConcepts: ['C1', 'A9'],
+    keyHooks: ['Ferranti Mark I 1951', 'Strachey Nim', 'Dartmouth 1956', 'Samuel checkers 1959', 'AlexNet 2012', 'Hinton GPU']
+  },
+  {
+    id: 'C-06', type: 'C', exam: 'July 2025', title: 'Defining Technology — AI in 21st Century',
+    prompt: 'Can AI be considered a "defining technology" in Bolter\'s sense for the 21st century? Discuss.',
+    thesis: 'Strong claim (LLMs reshaping vocabulary of mind/creativity) but contested (third summer? could end in winter). Holds for now, status not settled.',
+    answer: `J. David Bolter defines a "defining technology" as one that becomes a cultural metaphor for human nature — reshaping not just what we do but how we understand ourselves.\n\nThe case that AI is a defining technology: AI systems — particularly large language models and generative AI — are producing new metaphors for mind and creativity. If a machine can write poetry, hold conversations, generate images, and pass bar exams, what does it mean to be human? AI is forcing re-definition: intelligence, creativity, consciousness, and personhood are all being re-examined in light of what machines can and cannot do. This is exactly Bolter's criterion: a defining technology makes us redefine ourselves.\n\nIn medicine, law, education, and art, AI is providing new vocabularies: "hallucination" (AI term) has entered general use; "prompt engineering" is a new profession; "AI-generated" is a new category that forces us to ask what "genuine" human expression means. This spread of AI vocabulary into cultural discourse mirrors how cybernetics spread in the 1960s.\n\nThe complication: Bolter's examples (clock, steam engine, cybernetics) were technologies that dominated their era unambiguously. AI in the 2020s is contested — its capabilities are exaggerated by advocates and minimised by critics. We may be living through a third AI summer that precedes another winter. If so, AI would not be "defining" in the durable sense Bolter requires.\n\nConclusion: AI has strong claims to be the defining technology of the early 21st century, but its status is not yet settled. The critical question is whether the cultural transformation it is producing will persist — or whether, like cybernetics, it will be absorbed into the next paradigm.`,
+    usedConcepts: ['C3', 'C5', 'A10'],
+    keyHooks: ['Bolter 1984', 'LLM', 'Hallucination', 'Prompt engineering', 'Cybernetics 1960s parallel']
+  }
+];
+const PEOPLE = [
+  { name: 'Aiken, Howard', dates: '1900–1973', what: 'Built Harvard Mark I (1937–44). Invoked Babbage\'s legacy as agenda — textbook case of legitimation through historical narrative.', linkedTopics: ['A4', 'C2'] },
+  { name: 'Atanasoff, John', dates: '1903–1995', what: 'ABC computer (1940s) — technically worked but lacked institutional trust/home; passed over.', linkedTopics: ['A2', 'B4'] },
+  { name: 'Babbage, Charles', dates: '1791–1871', what: 'Difference Engine (1822), Analytical Engine (1837) — never completed. Canonical "could-have-been" used by Aiken.', linkedTopics: ['A4', 'A3'] },
+  { name: 'Backus, John', dates: '1924–2007', what: 'Designed FORTRAN (IBM, 1957). Co-designer of ALGOL.', linkedTopics: ['A8', 'A13'] },
+  { name: 'Baran, Paul', dates: '1926–2011', what: 'Packet switching (1964) — survivable network architecture for ARPANET.', linkedTopics: ['B11'] },
+  { name: 'Beer, Stafford', dates: '1926–2002', what: 'Cybernetic management; led Project Cybersyn (Chile, 1971–73) under Allende.', linkedTopics: ['A10'] },
+  { name: 'Berners-Lee, Tim', dates: '1955–', what: 'Invented WWW at CERN (1989). Designed for academic paper sharing — appropriated for commerce.', linkedTopics: ['B11', 'C1'] },
+  { name: 'Bolter, J. David', dates: '1951–', what: 'Author of Turing\'s Man (1984). Coined "defining technology" concept.', linkedTopics: ['C3'] },
+  { name: 'Brand, Stewart', dates: '1938–', what: 'Whole Earth Catalogue (1968). Framed computers as liberation tools — countercultural framing for personal computing.', linkedTopics: ['B8', 'B12'] },
+  { name: 'Brin, Sergey', dates: '1973–', what: 'Co-founded Google (1998) with Page; PageRank algorithm.', linkedTopics: ['B14', 'C4'] },
+  { name: 'Brooks, Frederick', dates: '1931–2022', what: 'The Mythical Man-Month (1975) — adding manpower to a late project makes it later.', linkedTopics: ['A14', 'B5'] },
+  { name: 'Buolamwini, Joy', dates: '1989–', what: 'Algorithmic bias research (facial recognition fails on dark skin). Diversity = AI safety issue.', linkedTopics: ['B10', 'B13'] },
+  { name: 'Church, Alonzo', dates: '1903–1995', what: 'Lambda calculus (1936) — formal foundation for LISP and symbolic AI.', linkedTopics: ['A11'] },
+  { name: 'Crawford, Perry', dates: '1917–2005', what: 'Office of Naval Research; convinced Forrester to make Whirlwind digital (1945).', linkedTopics: ['B7'] },
+  { name: 'Dick, Stephanie', dates: '–', what: 'Computing history reflects cultural dispositions; choice of "what counts" encodes ideology.', linkedTopics: ['A6'] },
+  { name: 'Dijkstra, Edsger', dates: '1930–2002', what: 'Dutch. Structured programming response to software crisis. Mathematical discipline in code.', linkedTopics: ['A14', 'A13', 'A5'] },
+  { name: 'Eckert, J. Presper', dates: '1919–1995', what: 'With Mauchly: built ENIAC (1945), founded EMCC, built UNIVAC. "Irrational but right."', linkedTopics: ['B4', 'B5'] },
+  { name: 'Forrester, Jay', dates: '1918–2016', what: 'Project Whirlwind (1944) at MIT — became foundation for SAGE.', linkedTopics: ['B7'] },
+  { name: 'Goldstine, Herman', dates: '1913–2004', what: 'BRL liaison for ENIAC; key Moore School figure.', linkedTopics: ['B4'] },
+  { name: 'Gödel, Kurt', dates: '1906–1978', what: 'Incompleteness theorems (1931) — limits of formal logic; foundation for computability/AI theory.', linkedTopics: ['A11'] },
+  { name: 'Hinton, Geoffrey', dates: '1947–', what: 'AlexNet (2012) — deep learning revolution by appropriating GPUs.', linkedTopics: ['C1', 'A9'] },
+  { name: 'Hollerith, Herman', dates: '1860–1929', what: 'Punched-card tabulating machine for 1890 US Census. "Trust" story.', linkedTopics: ['A2', 'A1', 'C1'] },
+  { name: 'Hopper, Grace', dates: '1906–1992', what: 'First compiler (A-0, 1952), COBOL (1959), popularised "bug." Naval officer; legitimised women in computing.', linkedTopics: ['A13', 'A8', 'B10'] },
+  { name: 'Jobs, Steve', dates: '1955–2011', what: 'Co-founded Apple (1976). Macintosh (1984). California counterculture + design.', linkedTopics: ['B10', 'B12'] },
+  { name: 'Kemeny, John', dates: '1926–1992', what: 'Co-designed BASIC (Dartmouth, 1963) with Kurtz — programming for non-specialists.', linkedTopics: ['B8'] },
+  { name: 'Kurtz, Thomas', dates: '1928–2024', what: 'Co-designed BASIC (1963) with Kemeny.', linkedTopics: ['B8'] },
+  { name: 'Leibniz, Gottfried', dates: '1646–1716', what: 'Calculus Ratiocinator — 17th c. dream of universal logical reasoning machine. Prehistory of AI.', linkedTopics: ['A3'] },
+  { name: 'Lely, Cornelis', dates: '1854–1929', what: 'Dutch. Zuiderzee waterworks calculations — process-control tradition.', linkedTopics: ['A5'] },
+  { name: 'Lighthill, James', dates: '1924–1998', what: 'Lighthill Report (UK, 1973) — concluded AI had failed; triggered first AI winter.', linkedTopics: ['C5'] },
+  { name: 'Llull, Ramon', dates: '1232–1316', what: 'Ars Magna (13th c.) — combinatorial logic machine; AI prehistory.', linkedTopics: ['A3'] },
+  { name: 'Lorentz, H.A.', dates: '1853–1928', what: 'Dutch physicist. Zuiderzee waterworks calculations.', linkedTopics: ['A5'] },
+  { name: 'Lovelace, Ada', dates: '1815–1852', what: 'Notes on Babbage\'s Analytical Engine (1843) — sometimes called first algorithm.', linkedTopics: ['A4', 'B10'] },
+  { name: 'MacKenzie, Donald', dates: '1950–', what: 'Mechanizing Proof (2001) — proof checking computers in math AND military (Patriot missile).', linkedTopics: ['A11'] },
+  { name: 'Mauchly, John', dates: '1907–1980', what: 'With Eckert: ENIAC (1945), EMCC, UNIVAC. Visited Moore School Differential Analyzer 1941.', linkedTopics: ['B4', 'B5'] },
+  { name: 'McCarthy, John', dates: '1927–2011', what: 'Coined "Artificial Intelligence" (Dartmouth, 1956). Designed LISP (1958).', linkedTopics: ['A3', 'A11', 'A10'] },
+  { name: 'McCorduck, Pamela', dates: '1940–2021', what: 'Machines Who Think — AI history as advocacy. Used "AI winter" to argue for resilience.', linkedTopics: ['C2', 'C5'] },
+  { name: 'Medina, Eden', dates: '–', what: 'Cybernetic Revolutionaries — Project Cybersyn in Chile.', linkedTopics: ['A10'] },
+  { name: 'Moore, Gordon', dates: '1929–2023', what: 'Co-founded Intel (1968). One of the "traitorous eight."', linkedTopics: ['B12'] },
+  { name: 'Newman, Max', dates: '1897–1984', what: 'Manchester. Attended Moore School Lectures (1946) → Manchester Baby (Dec 1948).', linkedTopics: ['B4'] },
+  { name: 'Noble, Safiya Umoja', dates: '–', what: 'Algorithms of Oppression. Argued for structural change over pipeline argument.', linkedTopics: ['B10', 'B13'] },
+  { name: 'Page, Larry', dates: '1973–', what: 'Co-founded Google (1998) with Brin. PageRank.', linkedTopics: ['B14', 'C4'] },
+  { name: 'Papert, Seymour', dates: '1928–2016', what: 'MIT. Designed LOGO (1967) — constructivist alternative to programmed instruction.', linkedTopics: ['A12'] },
+  { name: 'Penn, Jonnie', dates: '–', what: '"Animo Nullius" — data as terra nullius (unclaimed resource). Colonial framing of AI data.', linkedTopics: ['C4'] },
+  { name: 'Piaget, Jean', dates: '1896–1980', what: 'Constructivist learning theory — basis for Papert\'s LOGO.', linkedTopics: ['A12'] },
+  { name: 'Rejewski, Marian', dates: '1905–1980', what: 'Polish mathematician. Broke Enigma (1932), before Turing. Counter-narrative to Bletchley.', linkedTopics: ['A6', 'C2'] },
+  { name: 'Russell, Bertrand', dates: '1872–1970', what: 'Co-author Principia Mathematica (1910–13) with Whitehead. Foundation for AI prehistory.', linkedTopics: ['A11', 'A3'] },
+  { name: 'Różycki, Jerzy', dates: '1909–1942', what: 'Polish codebreaker. Worked with Rejewski on Enigma.', linkedTopics: ['A6'] },
+  { name: 'Samuel, Arthur', dates: '1901–1990', what: 'Self-learning checkers programme (1959) — early machine learning.', linkedTopics: ['A9'] },
+  { name: 'Shannon, Claude', dates: '1916–2001', what: 'Information theory; theoretical paper on chess-playing computers (1950).', linkedTopics: ['A9'] },
+  { name: 'Shockley, William', dates: '1910–1989', what: 'Founded Shockley Semiconductor — origin of Silicon Valley.', linkedTopics: ['B12'] },
+  { name: 'Skinner, B.F.', dates: '1904–1990', what: 'Behaviourist. Programmed instruction = teaching machines, drill-and-practice.', linkedTopics: ['A12'] },
+  { name: 'Strachey, Christopher', dates: '1916–1975', what: 'Programmed Ferranti Mark I to play Nim (1951) — appropriation example. EDSAC anthem (1951).', linkedTopics: ['A9', 'A7', 'C1'] },
+  { name: 'Tomlinson, Ray', dates: '1941–2016', what: 'Email on ARPANET (1971). Key appropriation example.', linkedTopics: ['B11', 'C1'] },
+  { name: 'Turing, Alan', dates: '1912–1954', what: 'Computability (1936); "Computing Machinery and Intelligence" (1950) → Turing Test. Father of both fields?', linkedTopics: ['A11', 'A3'] },
+  { name: 'van Veen, Johan', dates: '1893–1953', what: 'Dutch. Built Deltar at Rijkswaterstaat for Delta flood control.', linkedTopics: ['A5'] },
+  { name: 'van Wijngaarden, Aad', dates: '1916–1987', what: 'Dutch. Visited UK 1946 → Mathematisch Centrum 1947 → ARRA (Jun 21 1952). Co-designed ALGOL 60.', linkedTopics: ['A5', 'A13'] },
+  { name: 'Von Neumann, John', dates: '1903–1957', what: 'Joined ENIAC team 1944. First Draft of Report on EDVAC (1945) — stored-program concept.', linkedTopics: ['B4'] },
+  { name: 'Watson Sr., Thomas', dates: '1874–1956', what: 'IBM CEO. "Rational but wrong" — underestimated computer market.', linkedTopics: ['B5'] },
+  { name: 'Whitehead, Alfred N.', dates: '1861–1947', what: 'Co-author Principia Mathematica (1910–13).', linkedTopics: ['A11'] },
+  { name: 'Wiener, Norbert', dates: '1894–1964', what: 'Cybernetics (1948) — defining technology of the 1960s.', linkedTopics: ['A10', 'C3'] },
+  { name: 'Wilkes, Maurice', dates: '1913–2010', what: 'Cambridge. Built EDSAC (May 6 1949). First programming manual (1951).', linkedTopics: ['B4'] },
+  { name: 'Williams, F.C.', dates: '1911–1977', what: 'Manchester. Attended Moore School Lectures → Manchester Baby (Dec 1948).', linkedTopics: ['B4'] },
+  { name: 'Wozniak, Steve', dates: '1950–', what: 'Co-founded Apple (1976). Apple I, Apple II.', linkedTopics: ['B10', 'B12'] },
+  { name: 'Zuboff, Shoshana', dates: '1951–', what: 'Surveillance Capitalism (2019). Behaviour as raw material → prediction products.', linkedTopics: ['C4', 'B14'] },
+  { name: 'Zygalski, Henryk', dates: '1908–1978', what: 'Polish codebreaker. Worked with Rejewski on Enigma.', linkedTopics: ['A6'] }
+];
+const DATES = [
+  { year: '13th c.', event: 'Ramon Llull — Ars Magna (combinatorial logic)', who: 'Llull', topic: 'A3' },
+  { year: '17th c.', event: 'Leibniz — Calculus Ratiocinator (universal logical reasoning)', who: 'Leibniz', topic: 'A3' },
+  { year: '1822', event: 'Babbage — Difference Engine designed', who: 'Babbage', topic: 'A4' },
+  { year: '1837', event: 'Babbage — Analytical Engine designed', who: 'Babbage', topic: 'A4' },
+  { year: '1843', event: 'Lovelace\'s Notes on the Analytical Engine — "first algorithm"', who: 'Lovelace', topic: 'A4' },
+  { year: '1890', event: 'US Census — Hollerith\'s tabulating machines (2.5 yrs vs. 7.5)', who: 'Hollerith', topic: 'A2' },
+  { year: '1910s–20s', event: 'Zuiderzee waterworks calculations', who: 'Lorentz, Lely', topic: 'A5' },
+  { year: '1910–13', event: 'Russell & Whitehead — Principia Mathematica', who: 'Russell, Whitehead', topic: 'A11' },
+  { year: '1931', event: 'Gödel — incompleteness theorems', who: 'Gödel', topic: 'A11' },
+  { year: '1932', event: 'Polish codebreakers begin breaking Enigma', who: 'Rejewski, Różycki, Zygalski', topic: 'A6' },
+  { year: '1936', event: 'Turing — On Computable Numbers (Turing machines); Church — lambda calculus', who: 'Turing, Church', topic: 'A11' },
+  { year: '1937–44', event: 'Aiken — Harvard Mark I (invokes Babbage agenda)', who: 'Aiken', topic: 'A4' },
+  { year: '1941', event: 'Mauchly visits Moore School Differential Analyzer', who: 'Mauchly', topic: 'B4' },
+  { year: '1944', event: 'Forrester begins Project Whirlwind (aircraft simulator)', who: 'Forrester', topic: 'B7' },
+  { year: '1944', event: 'Von Neumann joins ENIAC team', who: 'Von Neumann', topic: 'B4' },
+  { year: '1945', event: 'ENIAC operational at Moore School', who: 'Mauchly, Eckert, Goldstine', topic: 'B4' },
+  { year: '1945', event: 'Von Neumann — First Draft of a Report on EDVAC (stored-program)', who: 'Von Neumann', topic: 'B4' },
+  { year: '1945', event: 'Crawford convinces Forrester to make Whirlwind digital', who: 'Crawford', topic: 'B7' },
+  { year: '1946', event: 'Moore School Lectures — knowledge transfer to Europe', who: '', topic: 'B4' },
+  { year: '1946', event: 'EMCC founded by Eckert & Mauchly', who: 'Eckert, Mauchly', topic: 'B5' },
+  { year: '1946', event: '"Program" first used in context of ENIAC', who: '', topic: 'A8' },
+  { year: '1947', event: 'Mathematisch Centrum founded in Amsterdam', who: 'van Wijngaarden', topic: 'A5' },
+  { year: '1947', event: '"Bug" — moth found in Mark II relay', who: 'Hopper', topic: 'A8' },
+  { year: '1948', event: 'Wiener — Cybernetics published', who: 'Wiener', topic: 'A10' },
+  { year: '1948 (Dec)', event: 'Manchester Baby — first stored-program computer running', who: 'Newman, Williams', topic: 'B4' },
+  { year: '1948', event: 'Verb "programming" appears', who: '', topic: 'A8' },
+  { year: '1949', event: 'EDSAC — first practical stored-program (May 6)', who: 'Wilkes', topic: 'B4' },
+  { year: '1949', event: 'Diners Club credit card', who: '', topic: 'B7' },
+  { year: '1950', event: 'Turing — Computing Machinery and Intelligence (Turing Test)', who: 'Turing', topic: 'A11' },
+  { year: '1950', event: 'Shannon — theoretical paper on chess-playing computers', who: 'Shannon', topic: 'A9' },
+  { year: '1951', event: 'EDSAC plays "God Save the Queen"', who: 'Strachey', topic: 'A7' },
+  { year: '1951', event: 'Strachey programs Ferranti Mark I to play Nim — appropriation', who: 'Strachey', topic: 'A9' },
+  { year: '1951', event: 'UNIVAC I delivered to Census Bureau', who: 'Eckert, Mauchly', topic: 'B5' },
+  { year: '1951', event: 'Wilkes/Wheeler/Gill — first programming manual', who: 'Wilkes', topic: 'B4' },
+  { year: '1951', event: 'Paris conference on computing — AI as driving force', who: '', topic: 'A10' },
+  { year: '1952', event: 'Hopper — first compiler (A-0 system)', who: 'Hopper', topic: 'A13' },
+  { year: 'Jun 21 1952', event: 'ARRA runs first program — first Dutch electronic computer', who: 'van Wijngaarden', topic: 'A5' },
+  { year: '1952', event: 'UNIVAC predicts Eisenhower election on CBS', who: '', topic: 'B5' },
+  { year: '1953', event: 'Turing writes chess-playing algorithm (never implemented)', who: 'Turing', topic: 'A9' },
+  { year: '1953', event: 'Delta flood disaster (Netherlands) → Deltar', who: 'van Veen', topic: 'A5' },
+  { year: '1954', event: 'IBM 650 — incremental electronics for existing customers', who: 'IBM', topic: 'B5' },
+  { year: '1956', event: 'Dartmouth Conference — McCarthy coins "Artificial Intelligence"', who: 'McCarthy', topic: 'A3' },
+  { year: '1957', event: 'FORTRAN released by IBM', who: 'Backus', topic: 'A13' },
+  { year: '1957', event: 'Traitorous eight leave Shockley → Fairchild', who: '', topic: 'B12' },
+  { year: '1957–64', event: 'SABRE — IBM + American Airlines', who: '', topic: 'B7' },
+  { year: '1958', event: 'McCarthy designs LISP', who: 'McCarthy', topic: 'A11' },
+  { year: '1958', event: 'BankAmericard launched (→ Visa 1970)', who: '', topic: 'B7' },
+  { year: '1958–63', event: 'SAGE deployed (23 direction centres, AN/FSQ-7)', who: '', topic: 'B7' },
+  { year: '1959', event: 'COBOL released', who: 'Hopper', topic: 'A13' },
+  { year: '1959', event: 'Samuel — self-learning checkers programme', who: 'Samuel', topic: 'A9' },
+  { year: '1959', event: 'IBM 1401 launched (12,000 sold)', who: '', topic: 'B6' },
+  { year: '1960', event: 'ALGOL 60 designed', who: 'van Wijngaarden, Backus, Bauer, Rutishauser', topic: 'A13' },
+  { year: '1961', event: 'CTSS at MIT — first timesharing', who: '', topic: 'B8' },
+  { year: '1963', event: 'BASIC at Dartmouth', who: 'Kemeny, Kurtz', topic: 'B8' },
+  { year: '1964', event: 'IBM System/360 announced', who: '', topic: 'B6' },
+  { year: '1964', event: 'Packet switching (Baran)', who: 'Baran', topic: 'B11' },
+  { year: '1967', event: 'LOGO — turtle graphics for children', who: 'Papert', topic: 'A12' },
+  { year: '1967', event: 'Barclays ATM — first', who: '', topic: 'B7' },
+  { year: '1968', event: 'NATO Software Engineering Conference (Garmisch) — software crisis', who: '', topic: 'A14' },
+  { year: '1968', event: 'IBM unbundles software pricing', who: 'IBM', topic: 'A14' },
+  { year: '1968', event: 'Whole Earth Catalogue (Stewart Brand)', who: 'Brand', topic: 'B8' },
+  { year: '1968', event: 'Intel founded', who: 'Noyce, Moore, Grove', topic: 'B12' },
+  { year: '1969', event: 'ARPANET — first nodes connect', who: '', topic: 'B11' },
+  { year: '1970', event: 'Visa launched', who: '', topic: 'B7' },
+  { year: '1970–71', event: 'Recession — RCA, GE exit computing → "BUNCH"', who: '', topic: 'B6' },
+  { year: '1971', event: 'Email on ARPANET (Ray Tomlinson)', who: 'Tomlinson', topic: 'C1' },
+  { year: '1971–73', event: 'Project Cybersyn (Chile)', who: 'Beer, Allende, Medina', topic: 'A10' },
+  { year: '1973', event: 'Lighthill Report (UK) — first AI winter', who: 'Lighthill', topic: 'C5' },
+  { year: '1973', event: 'UPC barcode adopted', who: '', topic: 'B7' },
+  { year: '1975', event: 'Altair 8800; Homebrew Computer Club', who: '', topic: 'B10' },
+  { year: '1975', event: 'Brooks — The Mythical Man-Month', who: 'Brooks', topic: 'A14' },
+  { year: '1976', event: 'Apple founded; Apple I', who: 'Jobs, Wozniak', topic: 'B10' },
+  { year: '1977', event: 'Apple II', who: 'Jobs, Wozniak', topic: 'B10' },
+  { year: '1981', event: 'IBM PC — open architecture for business', who: 'IBM', topic: 'B10' },
+  { year: '1982', event: 'Tron film', who: '', topic: 'A13' },
+  { year: '1983', event: 'Apple Lisa ($9,995) — fails', who: 'Apple', topic: 'B10' },
+  { year: '1983', event: 'WarGames film; Nintendo (Japan)', who: '', topic: 'A13' },
+  { year: '1984', event: 'Apple Macintosh — GUI for "the rest of us"', who: 'Apple', topic: 'B10' },
+  { year: '1984', event: 'Bolter — Turing\'s Man (defining technology)', who: 'Bolter', topic: 'C3' },
+  { year: '1984', event: 'The Terminator film; Nintendo (US)', who: '', topic: 'A13' },
+  { year: '1985', event: 'Aldus PageMaker (killer app for Mac)', who: '', topic: 'B10' },
+  { year: '1987–93', event: 'Expert systems collapse — second AI winter', who: '', topic: 'C5' },
+  { year: '1989', event: 'World Wide Web (Berners-Lee at CERN)', who: 'Berners-Lee', topic: 'B11' },
+  { year: '1993', event: 'Mosaic browser', who: '', topic: 'B11' },
+  { year: '1994', event: 'Amazon founded', who: '', topic: 'B11' },
+  { year: '1995', event: 'eBay founded', who: '', topic: 'B11' },
+  { year: '1996', event: 'Section 230 (US Communications Decency Act)', who: '', topic: 'B15' },
+  { year: '1997', event: 'Deep Blue defeats Kasparov', who: '', topic: 'A9' },
+  { year: '1998', event: 'Google founded — PageRank', who: 'Page, Brin', topic: 'B14' },
+  { year: '2000', event: 'Google AdWords — surveillance capitalism business model', who: 'Google', topic: 'C4' },
+  { year: '2001', event: 'MacKenzie — Mechanizing Proof', who: 'MacKenzie', topic: 'A11' },
+  { year: '2004', event: 'Facebook founded; Gmail launched', who: '', topic: 'C4' },
+  { year: '2005', event: 'YouTube founded', who: '', topic: 'C1' },
+  { year: '2009', event: 'ImageNet released', who: '', topic: 'A8' },
+  { year: '2012', event: 'AlexNet — deep learning revolution (Hinton, GPUs)', who: 'Hinton', topic: 'C1' },
+  { year: '2014', event: 'Google diversity report (30% women, 2% Black)', who: '', topic: 'B10' },
+  { year: '2016', event: 'AlphaGo defeats Lee Sedol', who: '', topic: 'A9' },
+  { year: '2018', event: 'GDPR enters into force (EU)', who: '', topic: 'B15' },
+  { year: '2018', event: 'Amazon hiring AI scrapped (gender bias)', who: '', topic: 'B12' },
+  { year: '2019', event: 'Zuboff — The Age of Surveillance Capitalism', who: 'Zuboff', topic: 'C4' },
+  { year: '2024', event: 'EU AI Act adopted', who: '', topic: 'B15' }
+];
+const CONNECTIONS = {
+  conceptToQuestions: {
+    'Appropriation (C1)': {
+      summary: 'Tech repurposed for unintended use. The single most-deployable concept in the C-question pool.',
+      questions: [
+        { id: 'C-03', note: 'Email as appropriation of ARPANET' },
+        { id: 'C-05', note: 'Nim → AI demos → GPU → deep learning chain' },
+        { id: 'A-06', note: 'Game culture as appropriation' },
+        { id: 'A-13', note: 'PCs entering homes via games (Nintendo)' },
+        { id: 'B-04', note: 'SAGE military → SABRE civilian' }
+      ]
+    },
+    'Agendas (C2)': {
+      summary: 'Histories serve present aims. Use to explain WHY a particular story is told.',
+      questions: [
+        { id: 'C-01', note: 'Choice of starting point (ENIAC vs Babbage vs Hollerith vs Polish)' },
+        { id: 'C-04', note: 'AI winters as funding rhetoric (Babbage→Aiken parallel)' },
+        { id: 'A-02', note: 'Dutch Dinosaurs as counter-narrative' },
+        { id: 'A-07', note: 'Both AI and computing histories use crisis/progress narratives' }
+      ]
+    },
+    'Defining Technology (C3)': {
+      summary: 'Bolter (1984): tech that reshapes self-understanding. Use cybernetics 1960s ↔ AI 2020s.',
+      questions: [
+        { id: 'C-02', note: 'Cybernetics in 1960s — full Bolter application' },
+        { id: 'C-06', note: 'Is AI the defining tech of the 21st c.?' },
+        { id: 'A-10', note: 'Cybernetics + AI as cross-domain vocabularies' }
+      ]
+    },
+    'Surveillance Capitalism (C4)': {
+      summary: 'Zuboff: behaviour → prediction products → influence behaviour. Free service paid in data.',
+      questions: [
+        { id: 'B-11', note: 'Google as the prototype' },
+        { id: 'B-15', note: 'Netflix recommendation engine' },
+        { id: 'A-08', note: 'Web 2.0 created the data infrastructure for AI' },
+        { id: 'A-14', note: 'Data, AI, surveillance capitalism as one entangled system' },
+        { id: 'B-16', note: 'EU GDPR as response' }
+      ]
+    },
+    'AI Winters (C5)': {
+      summary: 'Reduced funding cycles AND the rhetorical use of the narrative. Don\'t just describe — analyse the agenda.',
+      questions: [
+        { id: 'C-04', note: 'AI winters as agenda — Babbage→Aiken parallel' },
+        { id: 'C-06', note: 'Could current AI moment end in a third winter?' },
+        { id: 'A-07', note: 'Comparing computing crises (1968) and AI winters' }
+      ]
+    },
+    'Trust as social achievement': {
+      summary: 'Hollerith → UNIVAC → IBM. Recurs across decades.',
+      questions: [
+        { id: 'A-01', note: 'Direct: technology and trust line of thought' },
+        { id: 'B-02', note: '1952 CBS broadcast = trust through spectacle' }
+      ]
+    },
+    'Three traditions (admin / process / science)': {
+      summary: 'Computing emerged from THREE separate prehistories. Use as scaffolding for any prehistory question.',
+      questions: [
+        { id: 'C-01', note: 'Each starting point foregrounds a different tradition' },
+        { id: 'A-09', note: 'Prehistories of AI vs computing' }
+      ]
+    },
+    'Moore School chain': {
+      summary: 'ENIAC → Von Neumann EDVAC → Moore School Lectures 1946 → EDSAC, Manchester Baby, ARRA.',
+      questions: [
+        { id: 'B-01', note: 'EDSAC as Moore School legacy' },
+        { id: 'B-13', note: 'Pre-war / war / post-war Moore School' },
+        { id: 'A-02', note: 'Dutch ARRA via van Wijngaarden + Moore School knowledge' }
+      ]
+    }
+  },
+  bridges: [
+    { fact: '1968 — twin pivot year', bridges: ['Software crisis (NATO)', 'IBM unbundling', 'Whole Earth Catalogue'], why: 'Same year: profession of software, software industry born, counterculture meets computing. Use to link A14, B5, B8.' },
+    { fact: '1956 Dartmouth — convergence point', bridges: ['Computing prehistory', 'AI prehistory', 'McCarthy\'s naming'], why: 'The single moment where the parallel histories of computing and AI formally merge. Anchor for A3, A9, A-09.' },
+    { fact: '1948 — three foundational events', bridges: ['Wiener Cybernetics', 'Manchester Baby (Dec)', 'Hopper "bug" coined (1947)'], why: 'Cybernetics + first stored-program + early programming culture all clustered. Strong synthesis pivot.' },
+    { fact: '1951 — multi-purpose anchor', bridges: ['Strachey\'s Nim (Ferranti)', 'EDSAC plays anthem', 'Paris conference', 'UNIVAC delivered', 'Wilkes manual'], why: 'Five major moments in one year. If you can name them, you can build any 1950s answer.' },
+    { fact: 'van Wijngaarden — bridge figure', bridges: ['Dutch Dinosaurs', 'ALGOL 60', 'Mathematisch Centrum', 'Moore School knowledge transfer'], why: 'One Dutch person connects the Anglo-American knowledge transfer story to the European programming language story.' },
+    { fact: 'Hollerith → UNIVAC → IBM 1401 — trust arc', bridges: ['1890 Census', '1952 CBS', '1959 mass adoption'], why: 'Same theme (trust as social achievement) over 70 years. Use as evidence for A-01.' },
+    { fact: 'GPU appropriation — closes the loop', bridges: ['Nim 1951 (game on scientific computer)', 'AlexNet 2012 (deep learning on game GPU)'], why: 'Same logic across 60 years: gaming hardware → AI breakthrough. Powerful for any C-question on appropriation.' },
+    { fact: 'Babbage = recurring ghost', bridges: ['Aiken Mark I (agendas)', 'AI winters narrative', 'C-01 starting point'], why: 'Babbage is the empty centre of multiple agenda arguments — used as legitimation by Aiken AND by AI history.' }
+  ],
+  patterns: [
+    { pattern: '"Explain the line of thought"', structure: 'Premise → Mechanism → Historical example → Implication → Connection to a wider concept.', toolkit: ['Lecturer\'s vocabulary', 'Specific dates+names'], example: 'A-01 trust: premise (tech ≠ adoption) → mechanism (social trust) → Hollerith 1890 → IBM marketing → connects to "agendas".' },
+    { pattern: '"To what extent…"', structure: 'Take a position on a SPECTRUM. "To a large extent X because Y, but limited by Z."', toolkit: ['Counter-example', 'Domain qualifier'], example: 'A-2.4 (assignment): To what extent is Turing the father of AI? Large extent (1950 paper, Turing Test) but limited (cybernetics predates, Dartmouth credits McCarthy).' },
+    { pattern: '"Compare A and B" (ABC structure)', structure: 'Explain A with example → Explain B with example → Make the relation EXPLICIT (similarity / tension / causation / common root).', toolkit: ['Relation vocabulary'], example: 'A-05: programmed instruction (Skinner, behaviourism) vs LOGO (Papert, constructivism). Relation: same domain, opposite epistemologies.' },
+    { pattern: '"Give an example of X"', structure: 'Define X → Specific case (NAME + DATE) → Why this case illustrates X → Connect to a broader theme.', toolkit: ['Multiple ready examples per concept'], example: 'C-03 appropriation in Internet: define → email on ARPANET (Tomlinson 1971) → why it counts → broader pattern of Internet evolution.' },
+    { pattern: '"Apply concept X to historical case Y"', structure: 'Define X (cite source) → Brief Y → Map X\'s mechanism onto Y → Note where the fit is imperfect.', toolkit: ['Source attribution (Bolter, Zuboff, etc.)'], example: 'C-02: Apply Bolter\'s defining technology to cybernetics. Define (1984) → Wiener 1948 → vocabulary spread to neuroscience, social science, scifi → 21st c. parallel.' },
+    { pattern: '"Stakeholders / interests"', structure: 'Identify 3–4 stakeholder groups → For each: who, what they wanted, what conflict.', toolkit: ['Multi-actor analysis'], example: 'B-05 software crisis: clients (operational harm) / IBM (revenue) / academics-Dijkstra (discipline) / software industry (professionalisation).' }
+  ]
+};
+const CHEAT = {
+  'Analytical concepts (C-toolkit)': [
+    { term: 'Appropriation', def: 'Tech repurposed for unintended use. Ex: Nim (1951), email, GPU→AI.' },
+    { term: 'Agendas', def: 'Histories serve present aims. Ex: Aiken invokes Babbage; AI winter rhetoric.' },
+    { term: 'Defining technology', def: 'Bolter 1984. Reshapes self-understanding. Cybernetics 60s, AI 20s.' },
+    { term: 'Surveillance capitalism', def: 'Zuboff 2019. Behaviour → prediction products. Google AdWords 2000.' },
+    { term: 'AI winters', def: '1973 (Lighthill), 1987–93 (expert systems). Narrative is itself an agenda.' },
+    { term: 'Digital culture', def: 'Logic of digital tech (data, personalisation, network effects) reshaping practices.' },
+    { term: 'Three traditions', def: 'Administration / Process control / Science. Computing\'s parallel prehistories.' },
+    { term: 'Trust as social achievement', def: 'Hollerith 1890 → UNIVAC 1952 → IBM. Tech adoption needs institutional trust.' },
+    { term: 'Brussels Effect', def: 'EU regulation becomes de facto global standard (Vogel).' },
+    { term: 'Mythical Man-Month', def: 'Brooks 1975. Adding people to a late project makes it later.' }
+  ],
+  'People — instant recall': [
+    { term: 'Hollerith', def: '1890 census. Trust through speed + legibility.' },
+    { term: 'Babbage', def: '1822 Difference, 1837 Analytical. Never completed. Used as legitimation.' },
+    { term: 'Aiken', def: 'Harvard Mark I 1937–44. Babbage agenda.' },
+    { term: 'Mauchly + Eckert', def: 'ENIAC 1945. EMCC 1946. UNIVAC. "Irrational but right."' },
+    { term: 'Von Neumann', def: 'Joined ENIAC 1944. EDVAC report 1945 — stored-program.' },
+    { term: 'Wilkes', def: 'EDSAC May 6 1949. First programming manual 1951.' },
+    { term: 'van Wijngaarden', def: 'Mathematisch Centrum 1947. ARRA Jun 21 1952. ALGOL 60.' },
+    { term: 'van Veen', def: 'Deltar at Rijkswaterstaat. Dutch process-control.' },
+    { term: 'Forrester', def: 'Whirlwind 1944 → SAGE.' },
+    { term: 'Hopper', def: 'A-0 compiler 1952. COBOL 1959. "Bug" 1947.' },
+    { term: 'Turing', def: '1936 computability. 1950 Turing Test.' },
+    { term: 'Church', def: 'Lambda calculus 1936 → LISP.' },
+    { term: 'McCarthy', def: 'Coined "AI" Dartmouth 1956. LISP 1958.' },
+    { term: 'Wiener', def: 'Cybernetics 1948.' },
+    { term: 'Stafford Beer', def: 'Project Cybersyn Chile 1971–73 (with Allende, Medina).' },
+    { term: 'Skinner', def: 'Programmed instruction. Behaviourism.' },
+    { term: 'Papert', def: 'LOGO 1967. Constructivism (Piaget).' },
+    { term: 'Strachey', def: 'Nim on Ferranti Mark I 1951. EDSAC anthem.' },
+    { term: 'Dijkstra', def: 'Dutch. Structured programming. Software crisis response.' },
+    { term: 'Brooks', def: 'Mythical Man-Month 1975.' },
+    { term: 'Berners-Lee', def: 'WWW at CERN 1989.' },
+    { term: 'Tomlinson', def: 'Email on ARPANET 1971.' },
+    { term: 'Page + Brin', def: 'Google 1998. PageRank → AdWords 2000.' },
+    { term: 'Zuboff', def: 'Surveillance Capitalism 2019.' },
+    { term: 'Bolter', def: 'Turing\'s Man 1984. Defining technology.' },
+    { term: 'Rejewski/Różycki/Zygalski', def: 'Polish. Broke Enigma from 1932 (before Turing).' },
+    { term: 'McCorduck', def: 'Machines Who Think. AI history as advocacy.' },
+    { term: 'Lighthill', def: '1973 report → first AI winter.' },
+    { term: 'MacKenzie', def: 'Mechanizing Proof 2001. Patriot missile.' },
+    { term: 'Stewart Brand', def: 'Whole Earth Catalogue 1968. "Access to tools."' }
+  ],
+  'Dates — top 30 to never forget': [
+    { term: '1837', def: 'Babbage Analytical Engine designed.' },
+    { term: '1890', def: 'US Census + Hollerith.' },
+    { term: '1910–13', def: 'Principia Mathematica.' },
+    { term: '1932', def: 'Polish codebreakers begin Enigma.' },
+    { term: '1936', def: 'Turing computability + Church lambda calculus.' },
+    { term: '1945', def: 'ENIAC + Von Neumann EDVAC report.' },
+    { term: '1946', def: 'Moore School Lectures + EMCC founded.' },
+    { term: '1947', def: 'Mathematisch Centrum + Hopper "bug."' },
+    { term: '1948', def: 'Wiener Cybernetics + Manchester Baby (Dec).' },
+    { term: '1949', def: 'EDSAC May 6 + Diners Club.' },
+    { term: '1950', def: 'Turing Test paper + Shannon chess paper.' },
+    { term: '1951', def: 'Strachey Nim + EDSAC anthem + UNIVAC + Wilkes manual + Paris.' },
+    { term: 'Jun 21 1952', def: 'ARRA first program.' },
+    { term: '1952', def: 'UNIVAC predicts Eisenhower on CBS + Hopper A-0.' },
+    { term: '1956', def: 'Dartmouth — McCarthy coins "AI."' },
+    { term: '1957', def: 'FORTRAN.' },
+    { term: '1958', def: 'McCarthy LISP.' },
+    { term: '1959', def: 'COBOL + IBM 1401 + Samuel checkers.' },
+    { term: '1960', def: 'ALGOL 60.' },
+    { term: '1961', def: 'CTSS at MIT (timesharing).' },
+    { term: '1963', def: 'BASIC at Dartmouth.' },
+    { term: '1964', def: 'IBM System/360 + packet switching (Baran).' },
+    { term: '1967', def: 'LOGO + Barclays ATM.' },
+    { term: '1968', def: 'NATO software crisis + IBM unbundling + Whole Earth Catalogue + Intel.' },
+    { term: '1969', def: 'ARPANET first nodes.' },
+    { term: '1971', def: 'Email (Tomlinson) + Cybersyn begins.' },
+    { term: '1973', def: 'Lighthill Report (1st AI winter) + UPC.' },
+    { term: '1984', def: 'Macintosh + Bolter Turing\'s Man + Terminator.' },
+    { term: '1989', def: 'WWW (Berners-Lee CERN).' },
+    { term: '2018', def: 'GDPR.' }
+  ],
+  'Programming languages timeline': [
+    { term: 'FORTRAN 1957', def: 'IBM. American/commercial. For scientists.' },
+    { term: 'LISP 1958', def: 'McCarthy. Lambda calculus. AI lingua franca.' },
+    { term: 'COBOL 1959', def: 'Hopper. Business. English-like. Committee.' },
+    { term: 'ALGOL 60', def: 'European/academic. van Wijngaarden, Backus, Bauer. Structured programming.' },
+    { term: 'BASIC 1963', def: 'Kemeny/Kurtz Dartmouth. For non-specialists. Timesharing era.' }
+  ],
+  'Companies & machines': [
+    { term: 'ENIAC 1945', def: 'Moore School. Ballistics. First electronic general-purpose.' },
+    { term: 'EDVAC', def: 'Stored-program design (paper, 1945).' },
+    { term: 'EDSAC 1949', def: 'Wilkes Cambridge. First practical stored-program.' },
+    { term: 'Manchester Baby Dec 1948', def: 'Newman + Williams. First stored-program running.' },
+    { term: 'ARRA Jun 21 1952', def: 'First Dutch electronic computer. van Wijngaarden.' },
+    { term: 'Deltar', def: 'van Veen. Delta flood control.' },
+    { term: 'UNIVAC I 1951', def: 'Census Bureau. EMCC → Remington Rand.' },
+    { term: 'Ferranti Mark I 1951', def: 'Strachey\'s Nim machine.' },
+    { term: 'IBM 650 (1954)', def: 'Incremental electronics for existing customers.' },
+    { term: 'IBM 1401 (1959)', def: 'Cheap, fast printer (1403). 12,000 sold.' },
+    { term: 'IBM System/360 (1964)', def: 'One compatible family — bet the company.' },
+    { term: 'AN/FSQ-7', def: 'Largest computer ever built. Used in SAGE.' },
+    { term: 'Whirlwind', def: 'MIT. Aircraft sim → real-time digital → SAGE foundation.' },
+    { term: 'SAGE 1958–63', def: '23 direction centres. Air defence. Obsolete on arrival.' },
+    { term: 'SABRE 1957–64', def: 'IBM + American Airlines. 1,100 terminals.' },
+    { term: 'Apple Lisa 1983', def: 'GUI + $9,995 = failure.' },
+    { term: 'Macintosh 1984', def: 'GUI + mouse + design = success.' },
+    { term: 'IBM PC 1981', def: 'Open architecture for business.' },
+    { term: 'Seven dwarfs', def: 'Sperry/UNIVAC, Honeywell, RCA, GE, Control Data, Burroughs, NCR.' },
+    { term: 'BUNCH', def: 'Burroughs, UNIVAC, NCR, Control Data, Honeywell (post-1971 recession).' }
+  ],
+  'Concepts & frameworks (one-liners)': [
+    { term: '"Three desires" (Internet)', def: 'Military (survivability) + academic (sharing) + commercial (revenue).' },
+    { term: 'Stored-program', def: 'Von Neumann\'s key innovation. Program in memory like data.' },
+    { term: 'Real-time vs. batch', def: 'Continuous interaction vs. submit-and-wait.' },
+    { term: 'Timesharing', def: 'Multiple users share one computer via terminals — pioneer of interactive computing.' },
+    { term: 'Off-shoring', def: 'Move work to cheaper countries (India, EE).' },
+    { term: 'Out-sourcing', def: 'Contract IT functions to specialists (EDS, Accenture).' },
+    { term: 'GUI', def: 'Graphical user interface. Xerox PARC origin → Lisa → Mac.' },
+    { term: 'Killer app', def: 'App that drives hardware adoption (VisiCalc for Apple II, Lotus 1-2-3 for IBM PC).' },
+    { term: 'PageRank', def: 'Links as votes. Google\'s search innovation.' },
+    { term: 'Section 230', def: 'US 1996. Platforms not liable for user content.' },
+    { term: 'GDPR Article 22', def: 'Right not to be subject to automated decision-making.' },
+    { term: 'Pipeline argument', def: 'Diversity = supply problem. Critics: structural change needed.' },
+    { term: 'Constructivism', def: 'Piaget. Children build mental models. Basis for LOGO.' },
+    { term: 'Behaviourism', def: 'Skinner. Stimulus-response. Basis for programmed instruction.' }
+  ]
+};
+const STRATEGY = {
+  bothA: [
+    'Technology &amp; trust (Hollerith → UNIVAC → IBM)',
+    'AI and education (Skinner vs Papert)',
+    'Metaphors (electronic brain, program/programming)',
+    'Dutch Dinosaurs',
+    'AI history vs computing history (parallel prehistories)'
+  ],
+  bothB: [
+    'Software crisis (1968 NATO + Dijkstra + Brooks)',
+    'IBM dominance (seven dwarfs, System/360)',
+    'Timesharing &amp; BASIC (CTSS → Whole Earth)',
+    'Internet (three desires)',
+    'Computing governance (US Section 230 vs EU GDPR)'
+  ],
+  bothC: [
+    'Appropriation (Nim → email → GPU)',
+    'Agendas (Aiken-Babbage; AI winter rhetoric)',
+    'Defining technology — Bolter (cybernetics 60s, AI 20s)',
+    'AI winters (1973 Lighthill; 1987–93 expert systems)',
+    'Surveillance capitalism (Google, Netflix)'
+  ],
+  mustNail: [
+    { title: 'The 1956 Dartmouth pivot', body: 'McCarthy coined "AI"; before this, computing &amp; AI prehistories were parallel. Dartmouth = the convergence point. Cite when discussing either history\'s origin.' },
+    { title: 'The trust arc: Hollerith 1890 → UNIVAC 1952 → IBM 1959', body: 'Same theme over 70 years. Build entire A-questions around it. Trust is a SOCIAL achievement.' },
+    { title: 'The Babbage→Aiken legitimation move', body: 'Canonical "agenda" example. Aiken used Babbage\'s ghost to get IBM funding for the Mark I — Babbage as rhetorical resource, not technical ancestor.' },
+    { title: 'Three Dutch anchors', body: 'van Veen + Deltar (process control); van Wijngaarden + ARRA Jun 21 1952 + Mathematisch Centrum + ALGOL 60. Both an A-topic AND a counter-narrative for C-questions.' },
+    { title: 'Surveillance capitalism loop', body: 'Page+Brin 1998 PageRank → AdWords 2000 → user data → targeting → more data. Same logic in Netflix, Facebook, TikTok. GDPR 2018 = European response.' },
+    { title: 'The appropriation chain', body: 'Strachey\'s Nim 1951 (game on scientific computer) → Samuel checkers 1959 → email 1971 → GPU → AlexNet 2012. Same logic, 60 years apart. Powerful for any C-question.' }
+  ]
+};
+
+/* ======================= STATE ======================= */
+const state = {
+  view: 'overview',
+  search: '',
+  mastered: JSON.parse(localStorage.getItem('hai-mastered') || '{}'),
+  filterType: 'all',
+  filterExam: 'all',
+};
+
+function saveProgress() { localStorage.setItem('hai-mastered', JSON.stringify(state.mastered)); }
+function isMastered(id) { return !!state.mastered[id]; }
+function toggleMastered(id) { state.mastered[id] = !state.mastered[id]; saveProgress(); render(); }
+
+/* ======================= COUNTDOWN ======================= */
+function updateCountdown() {
+  const now = new Date();
+  const diff = EXAM_DATE - now;
+  if (diff < 0) { document.getElementById('countdown').innerHTML = 'Exam day!'; return; }
+  const days = Math.floor(diff / 86400000);
+  const hours = Math.floor((diff % 86400000) / 3600000);
+  document.getElementById('countdown').innerHTML = `Exam in <strong>${days}d ${hours}h</strong> · Thu 28 May 15:30`;
+}
+
+/* ======================= UTIL ======================= */
+function esc(s) { return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function highlight(text, q) {
+  if (!q) return esc(text);
+  const re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi');
+  return esc(text).replace(re, '<span class="highlight">$1</span>');
+}
+function matchSearch(...fields) {
+  if (!state.search) return true;
+  const q = state.search.toLowerCase();
+  return fields.some(f => String(f||'').toLowerCase().includes(q));
+}
+
+/* ======================= TAB NAV ======================= */
+document.getElementById('tabs').addEventListener('click', e => {
+  if (e.target.tagName === 'BUTTON') {
+    state.view = e.target.dataset.view;
+    document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('active', b.dataset.view === state.view));
+    document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.id === 'view-' + state.view));
+    window.scrollTo(0,0);
+    render();
+  }
+});
+
+document.getElementById('globalSearch').addEventListener('input', e => {
+  state.search = e.target.value.trim();
+  render();
+});
+
+/* ======================= RENDERERS ======================= */
+function render() {
+  updateProgress();
+  const map = {
+    overview: renderOverview,
+    topics: renderTopics,
+    questions: renderQuestions,
+    connections: renderConnections,
+    people: renderPeople,
+    cheat: renderCheat,
+    practice: renderPractice,
+    templates: renderTemplates,
+  };
+  map[state.view]();
+}
+
+function updateProgress() {
+  const allTopicIds = [...TOPICS.A, ...TOPICS.B, ...TOPICS.C].map(t => t.id);
+  const total = allTopicIds.length;
+  const mastered = allTopicIds.filter(id => isMastered(id)).length;
+  document.getElementById('progressMastered').textContent = mastered;
+  document.getElementById('progressTotal').textContent = total;
+}
+
+/* === OVERVIEW === */
+function renderOverview() {
+  const allTopics = [...TOPICS.A, ...TOPICS.B, ...TOPICS.C];
+  const total = allTopics.length;
+  const mastered = allTopics.filter(t => isMastered(t.id)).length;
+  const pct = total ? Math.round(mastered/total*100) : 0;
+
+  document.getElementById('view-overview').innerHTML = `
+    <h1>Final Prep Dashboard</h1>
+    <p class="lede">Everything from <code>HAI_topics.md</code> + <code>HAI_question_bank.md</code> wired together. Use the search bar at the top to jump anywhere. Mark topics as mastered to track your progress.</p>
+
+    <div class="stat-grid">
+      <div class="stat"><span class="num">${TOPICS.A.length}</span><span class="lbl">A topics</span></div>
+      <div class="stat"><span class="num">${TOPICS.B.length}</span><span class="lbl">B chapters</span></div>
+      <div class="stat"><span class="num">${TOPICS.C.length}</span><span class="lbl">C concepts</span></div>
+      <div class="stat"><span class="num">${QUESTIONS.length}</span><span class="lbl">Past questions</span></div>
+      <div class="stat"><span class="num">${PEOPLE.length}</span><span class="lbl">Key people</span></div>
+      <div class="stat"><span class="num">${pct}%</span><span class="lbl">Mastered</span></div>
+    </div>
+
+    <div class="strategy-box">
+      <h3>How the exam works</h3>
+      <p style="margin:6px 0;"><strong>Thu 28 May 2026, 15:30</strong> · written 2h15 · pick <strong>1A + 2B + 1C</strong> · each = 2 pts · bonus already secured (skip one designated question).</p>
+      <p style="margin:6px 0;">Essay structure (200 words min): <strong>Intro</strong> (thesis + preview) → <strong>Body</strong> (argument → example; counterargument → example) → <strong>Conclusion</strong> (restate thesis + follow-up question).</p>
+      <p style="margin:6px 0;">For comparison questions, use the <strong>ABC structure</strong>: Explain A → Explain B → Explain the relation C explicitly.</p>
+    </div>
+
+    <h2>What appears in BOTH past exams (high probability)</h2>
+    <div class="grid cols-3">
+      <div class="card"><h3 style="color:var(--a-color)">A · Lectures</h3>
+        <ul>${STRATEGY.bothA.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
+      </div>
+      <div class="card"><h3 style="color:var(--b-color)">B · Campbell-Kelly</h3>
+        <ul>${STRATEGY.bothB.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
+      </div>
+      <div class="card"><h3 style="color:var(--c-color)">C · Synthesis</h3>
+        <ul>${STRATEGY.bothC.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
+      </div>
+    </div>
+
+    <h2>The 5 things to absolutely nail</h2>
+    <div class="grid cols-2">
+      ${STRATEGY.mustNail.map(x => `<div class="card compact"><h3 style="color:var(--accent)">${esc(x.title)}</h3><p style="margin:4px 0 0;color:var(--muted);font-size:13px;">${x.body}</p></div>`).join('')}
+    </div>
+
+    <h2>Prefer a workflow?</h2>
+    <div class="strategy-box">
+      <ol style="margin:0;padding-left:20px;">
+        <li><strong>Topic Mastery</strong> — open each card, read the full breakdown, mark mastered when you can rephrase the line of thought from memory.</li>
+        <li><strong>Connections</strong> — see which concepts/dates/people show up in multiple questions. These are your highest-leverage memorization targets.</li>
+        <li><strong>Practice</strong> — pull a random question, draft 200 words, then compare with the model answer.</li>
+        <li><strong>People &amp; Dates</strong> — final-day skim. If you can name what each person did + the year, you can anchor any answer.</li>
+        <li><strong>Cheat Sheet</strong> — dense single-page review the morning of.</li>
+      </ol>
+    </div>
+  `;
+}
+
+/* === TOPICS === */
+function renderTopics() {
+  const sections = [
+    { key: 'A', title: 'A — Lecture Topics (pick 1)', desc: '"Explain the line of thought" questions on lecture themes.', cls: 'a' },
+    { key: 'B', title: 'B — Campbell-Kelly Chapters (pick 2)', desc: 'Chapter-by-chapter content from the textbook.', cls: 'b' },
+    { key: 'C', title: 'C — Analytical Concepts (pick 1)', desc: 'Synthesis: book + lectures + analytical concepts. These appear in EVERY C-question.', cls: 'c' },
+  ];
+
+  let html = `<h1>Topic Mastery</h1>
+    <p class="lede">Each card has the full content + key people/dates + linked questions + an exam tip. Click "Mark mastered" once you can recite the line of thought without looking.</p>
+    <div class="legend">
+      <span><span class="dot" style="background:var(--a-color)"></span>A · lectures</span>
+      <span><span class="dot" style="background:var(--b-color)"></span>B · chapters</span>
+      <span><span class="dot" style="background:var(--c-color)"></span>C · concepts</span>
+    </div>`;
+
+  sections.forEach(sec => {
+    const items = TOPICS[sec.key].filter(t => matchSearch(t.id, t.title, t.body, (t.keyPeople||[]).join(' '), (t.keyDates||[]).join(' '), t.examTip));
+    if (!items.length) return;
+    html += `<h2>${esc(sec.title)} <span class="pill">${items.length}</span></h2><p style="color:var(--muted);font-size:13px;margin:-8px 0 12px;">${esc(sec.desc)}</p>`;
+    items.forEach(t => {
+      const open = state.search ? 'open' : '';
+      const mastered = isMastered(t.id);
+      html += `<div class="topic ${open} ${mastered?'mastered':''}" data-id="${t.id}">
+        <div class="topic-head" onclick="toggleTopic('${t.id}')">
+          <span class="topic-id ${sec.cls}">${t.id}</span>
+          <span class="topic-title">${highlight(t.title, state.search)}</span>
+          ${mastered?'<span class="pill ok">✓ mastered</span>':''}
+          <span class="topic-meta">${esc(t.source||'')}</span>
+        </div>
+        <div class="topic-body">
+          <div style="font-size:13px;line-height:1.7;margin-top:10px;">${highlight(t.body, state.search)}</div>
+          ${t.keyPeople?.length?`<div class="kv"><span class="k">People</span><span class="v">${t.keyPeople.map(p=>`<span class="chip linked-p" onclick="jumpToPerson('${esc(p)}')">${esc(p)}</span>`).join(' ')}</span></div>`:''}
+          ${t.keyDates?.length?`<div class="kv"><span class="k">Dates / events</span><span class="v">${t.keyDates.map(d=>`<span class="chip linked-d">${esc(d)}</span>`).join(' ')}</span></div>`:''}
+          ${t.keyTerms?.length?`<div class="kv"><span class="k">Key terms</span><span class="v">${t.keyTerms.map(d=>`<span class="chip">${esc(d)}</span>`).join(' ')}</span></div>`:''}
+          ${t.connections?.length?`<div class="kv"><span class="k">Connects to</span><span class="v">${t.connections.map(c=>`<span class="chip" onclick="jumpToTopic('${c}')">${c}</span>`).join(' ')}</span></div>`:''}
+          ${t.linkedQuestions?.length?`<div class="kv"><span class="k">Used in Qs</span><span class="v">${t.linkedQuestions.map(q=>`<span class="chip linked-q" onclick="jumpToQuestion('${q}')">${q}</span>`).join(' ')}</span></div>`:''}
+          ${t.examTip?`<div class="tip"><strong>Exam tip:</strong> ${esc(t.examTip)}</div>`:''}
+          <div class="actions">
+            <button class="btn ${mastered?'ok':'primary'}" onclick="event.stopPropagation();toggleMastered('${t.id}')">${mastered?'✓ Mastered (click to unmark)':'Mark as mastered'}</button>
+          </div>
+        </div>
+      </div>`;
+    });
+  });
+
+  document.getElementById('view-topics').innerHTML = html;
+}
+
+function toggleTopic(id) {
+  const el = document.querySelector(`.topic[data-id="${id}"]`);
+  if (el) el.classList.toggle('open');
+}
+function jumpToTopic(id) {
+  state.view = 'topics';
+  document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('active', b.dataset.view === 'topics'));
+  document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.id === 'view-topics'));
+  render();
+  setTimeout(() => {
+    const el = document.querySelector(`.topic[data-id="${id}"]`);
+    if (el) { el.classList.add('open'); el.scrollIntoView({behavior:'smooth', block:'center'}); }
+  }, 50);
+}
+function jumpToQuestion(id) {
+  state.view = 'questions';
+  document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('active', b.dataset.view === 'questions'));
+  document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.id === 'view-questions'));
+  render();
+  setTimeout(() => {
+    const el = document.querySelector(`.question[data-id="${id}"]`);
+    if (el) { el.classList.add('open'); el.scrollIntoView({behavior:'smooth', block:'center'}); }
+  }, 50);
+}
+function jumpToPerson(name) {
+  state.view = 'people';
+  state.search = name;
+  document.getElementById('globalSearch').value = name;
+  document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('active', b.dataset.view === 'people'));
+  document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.id === 'view-people'));
+  render();
+}
+
+/* === QUESTIONS === */
+function renderQuestions() {
+  const filtered = QUESTIONS.filter(q => {
+    if (state.filterType !== 'all' && q.type !== state.filterType) return false;
+    if (state.filterExam !== 'all' && q.exam !== state.filterExam) return false;
+    return matchSearch(q.id, q.title, q.prompt, q.answer, (q.usedConcepts||[]).join(' '));
+  });
+
+  document.getElementById('view-questions').innerHTML = `
+    <h1>Questions + Model Answers</h1>
+    <p class="lede">All past exam + assignment questions with model answers. Each question shows which topics/concepts it pulls from — click those to jump back and review.</p>
+    <div class="filter-bar">
+      <label>Type
+        <select id="fType">
+          <option value="all">All</option>
+          <option value="A" ${state.filterType==='A'?'selected':''}>A · lecture</option>
+          <option value="B" ${state.filterType==='B'?'selected':''}>B · chapters</option>
+          <option value="C" ${state.filterType==='C'?'selected':''}>C · concepts</option>
+        </select>
+      </label>
+      <label>Exam
+        <select id="fExam">
+          <option value="all">All</option>
+          <option value="May 2025" ${state.filterExam==='May 2025'?'selected':''}>May 2025</option>
+          <option value="July 2025" ${state.filterExam==='July 2025'?'selected':''}>July 2025</option>
+        </select>
+      </label>
+      <span style="font-size:12px;color:var(--muted);margin-left:auto;">Showing ${filtered.length} of ${QUESTIONS.length}</span>
+    </div>
+    ${filtered.map(q => {
+      const open = state.search ? 'open' : '';
+      return `<div class="question ${open}" data-id="${q.id}">
+        <div class="q-head" onclick="toggleQuestion('${q.id}')">
+          <div class="q-id"><span class="pill ${q.type.toLowerCase()}">${q.type}</span> ${q.id} · ${esc(q.exam)}</div>
+          <div class="q-title">${highlight(q.title, state.search)}</div>
+          <div class="q-prompt">"${highlight(q.prompt, state.search)}"</div>
+        </div>
+        <div class="q-body">
+          ${q.thesis?`<div class="skeleton"><strong>Thesis to take:</strong> ${esc(q.thesis)}</div>`:''}
+          <div class="answer">${highlight(q.answer, state.search).split('\n\n').map(p=>`<p>${p}</p>`).join('')}</div>
+          ${q.usedConcepts?.length?`<div class="kv"><span class="k">Uses topics</span><span class="v">${q.usedConcepts.map(c=>`<span class="chip" onclick="jumpToTopic('${c}')">${c}</span>`).join(' ')}</span></div>`:''}
+          ${q.keyHooks?.length?`<div class="kv"><span class="k">Anchors</span><span class="v">${q.keyHooks.map(h=>`<span class="chip">${esc(h)}</span>`).join(' ')}</span></div>`:''}
+        </div>
+      </div>`;
+    }).join('')}
+  `;
+
+  document.getElementById('fType').addEventListener('change', e => { state.filterType = e.target.value; render(); });
+  document.getElementById('fExam').addEventListener('change', e => { state.filterExam = e.target.value; render(); });
+}
+
+function toggleQuestion(id) {
+  const el = document.querySelector(`.question[data-id="${id}"]`);
+  if (el) el.classList.toggle('open');
+}
+
+/* === CONNECTIONS === */
+function renderConnections() {
+  document.getElementById('view-connections').innerHTML = `
+    <h1>Connections — How Ideas Wire Together</h1>
+    <p class="lede">The same dates, people, and concepts reappear across questions. This is how to use one piece of knowledge to answer many questions.</p>
+
+    <h2>Concept → Question Map</h2>
+    <p style="color:var(--muted);font-size:13px;">If you've memorized X, here's every question where you can deploy it.</p>
+    <div class="conn-grid">
+      ${Object.entries(CONNECTIONS.conceptToQuestions).map(([concept, info]) => `
+        <div class="conn-card">
+          <h4>${esc(concept)}</h4>
+          <p style="font-size:12px;color:var(--muted);margin:4px 0 10px;">${esc(info.summary)}</p>
+          <div class="conn-list"><strong style="font-size:12px;color:var(--muted);">Use in:</strong>
+            <ul style="margin:4px 0 0;padding-left:18px;">
+              ${info.questions.map(q => `<li><span class="chip linked-q" onclick="jumpToQuestion('${q.id}')">${q.id}</span> ${esc(q.note)}</li>`).join('')}
+            </ul>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+
+    <h2>Bridges — single facts that span multiple traditions</h2>
+    <p style="color:var(--muted);font-size:13px;">Use these "bridge facts" to make synthesis answers feel cohesive.</p>
+    <div class="grid cols-2">
+      ${CONNECTIONS.bridges.map(b => `
+        <div class="card">
+          <h3 style="color:var(--accent)">${esc(b.fact)}</h3>
+          <div class="kv">
+            <span class="k">Bridges</span><span class="v">${b.bridges.map(x=>`<span class="chip">${esc(x)}</span>`).join(' ')}</span>
+            <span class="k">Why it matters</span><span class="v" style="font-size:13px;">${esc(b.why)}</span>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+
+    <h2>Question pattern → Toolkit</h2>
+    <p style="color:var(--muted);font-size:13px;">When you see a phrase like "explain the line of thought" or "to what extent", here's the structure + concepts to deploy.</p>
+    <div class="grid cols-2">
+      ${CONNECTIONS.patterns.map(p => `
+        <div class="card">
+          <h3>${esc(p.pattern)}</h3>
+          <p style="font-size:13px;margin:6px 0;">${esc(p.structure)}</p>
+          <div class="kv"><span class="k">Pull from</span><span class="v">${p.toolkit.map(x=>`<span class="chip">${esc(x)}</span>`).join(' ')}</span></div>
+          ${p.example?`<div class="tip" style="font-size:12px;"><strong>Example:</strong> ${esc(p.example)}</div>`:''}
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+/* === PEOPLE === */
+function renderPeople() {
+  const peopleFiltered = PEOPLE.filter(p => matchSearch(p.name, p.what, p.dates, (p.linkedTopics||[]).join(' ')));
+  const datesFiltered = DATES.filter(d => matchSearch(d.year, d.event, d.who, d.topic));
+
+  document.getElementById('view-people').innerHTML = `
+    <h1>People &amp; Dates Reference</h1>
+    <p class="lede">Anchors for every answer. If you can name the person and the year, you've already done half the work.</p>
+
+    <h2>People</h2>
+    <div class="scroll-x">
+    <table>
+      <thead><tr><th>Name</th><th>Years</th><th>Why they matter</th><th>Linked topics</th></tr></thead>
+      <tbody>
+        ${peopleFiltered.map(p => `<tr>
+          <td><strong>${highlight(p.name, state.search)}</strong></td>
+          <td style="color:var(--muted);font-family:ui-monospace,monospace;font-size:12px;">${esc(p.dates||'—')}</td>
+          <td>${highlight(p.what, state.search)}</td>
+          <td>${(p.linkedTopics||[]).map(t=>`<span class="chip" onclick="jumpToTopic('${t}')">${t}</span>`).join(' ')}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
+    </div>
+
+    <h2>Timeline of dates that show up in answers</h2>
+    <div class="timeline">
+      ${datesFiltered.sort((a,b) => parseInt(a.year)-parseInt(b.year)).map(d => `
+        <div class="timeline-item">
+          <span class="timeline-year">${esc(d.year)}</span>
+          <span class="timeline-text">${highlight(d.event, state.search)}${d.who?` <em style="color:var(--muted);">— ${esc(d.who)}</em>`:''} ${d.topic?`<span class="chip" onclick="jumpToTopic('${d.topic}')" style="margin-left:6px;">${d.topic}</span>`:''}</span>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+/* === CHEAT === */
+function renderCheat() {
+  let html = `<h1>Cheat Sheet</h1>
+    <p class="lede">Dense, scannable. Every key term, person, date, and analytical move in one view. Use this on exam morning.</p>`;
+
+  Object.entries(CHEAT).forEach(([section, items]) => {
+    html += `<div class="cheat-section">
+      <h2>${esc(section)}</h2>
+      <div class="cheat-grid">
+        ${items.filter(i => matchSearch(i.term, i.def)).map(i => `
+          <div class="cheat-item">
+            <span class="term">${highlight(i.term, state.search)}</span>
+            <span class="def">${highlight(i.def, state.search)}</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>`;
+  });
+
+  document.getElementById('view-cheat').innerHTML = html;
+}
+
+/* === PRACTICE === */
+function renderPractice() {
+  if (!state.practiceQ) state.practiceQ = pickRandomQuestion();
+  const q = state.practiceQ;
+  const showAnswer = state.practiceShow || false;
+
+  document.getElementById('view-practice').innerHTML = `
+    <h1>Practice Mode</h1>
+    <p class="lede">Random question. Draft your 200-word answer, then reveal the model. Aim for: thesis → claim+example → counter+example → conclusion.</p>
+    <div class="practice-card">
+      <div class="practice-meta"><span class="pill ${q.type.toLowerCase()}">${q.type}</span> ${q.id} · ${esc(q.exam)} · ${esc(q.title)}</div>
+      <div class="practice-prompt">"${esc(q.prompt)}"</div>
+      ${q.thesis?`<div class="skeleton"><strong>Hint — thesis to take:</strong> ${esc(q.thesis)}</div>`:''}
+      <h3>Your draft</h3>
+      <textarea class="draft" id="practiceDraft" placeholder="Write your 200+ word answer here. The textarea saves locally."></textarea>
+      <div class="actions">
+        <button class="btn primary" onclick="state.practiceShow=true; render();">Reveal model answer</button>
+        <button class="btn" onclick="state.practiceQ=null; state.practiceShow=false; render();">New random question</button>
+        <button class="btn" onclick="document.getElementById('practiceDraft').value='';">Clear draft</button>
+        <span style="margin-left:auto;font-size:11px;color:var(--muted);align-self:center;" id="wordCount">0 words</span>
+      </div>
+      ${showAnswer?`<h3 style="margin-top:24px;">Model answer</h3>
+        <div class="answer" style="padding:14px;background:var(--panel-2);border-radius:8px;">${q.answer.split('\n\n').map(p=>`<p>${esc(p)}</p>`).join('')}</div>
+        ${q.usedConcepts?.length?`<div class="kv" style="margin-top:12px;"><span class="k">Pulls from</span><span class="v">${q.usedConcepts.map(c=>`<span class="chip" onclick="jumpToTopic('${c}')">${c}</span>`).join(' ')}</span></div>`:''}
+      `:''}
+    </div>
+  `;
+
+  const ta = document.getElementById('practiceDraft');
+  const wc = document.getElementById('wordCount');
+  if (ta && wc) {
+    const saved = localStorage.getItem('hai-draft-' + q.id) || '';
+    ta.value = saved;
+    const update = () => {
+      const w = ta.value.trim().split(/\s+/).filter(Boolean).length;
+      wc.textContent = `${w} words`;
+      wc.style.color = w >= 200 ? 'var(--ok)' : 'var(--muted)';
+      localStorage.setItem('hai-draft-' + q.id, ta.value);
+    };
+    ta.addEventListener('input', update);
+    update();
+  }
+}
+function pickRandomQuestion() { return QUESTIONS[Math.floor(Math.random()*QUESTIONS.length)]; }
+
+/* === TEMPLATES === */
+function renderTemplates() {
+  document.getElementById('view-templates').innerHTML = `
+    <h1>Answer Templates</h1>
+    <p class="lede">The skeleton you fill in. Use these every time. Examiners reward structure as much as content.</p>
+
+    <h2>Standard answer (200+ words)</h2>
+    <div class="card">
+      <pre style="white-space:pre-wrap;font-family:inherit;font-size:13px;line-height:1.7;margin:0;">
+<strong style="color:var(--accent);">INTRO (1–2 sentences)</strong>
+- Restate the question as a clear thesis
+- Preview your answer structure ("This answer argues X by examining Y and Z")
+
+<strong style="color:var(--accent);">BODY 1 — main argument (3–5 sentences)</strong>
+- Claim: [the central idea]
+- Mechanism / evidence: [the analytical concept or historical mechanism]
+- Example: [specific historical case with NAME + DATE]
+
+<strong style="color:var(--accent);">BODY 2 — counterpoint or second argument (3–5 sentences)</strong>
+- Claim: [contrasting idea or complication]
+- Mechanism / evidence
+- Example: [different historical case with NAME + DATE]
+
+<strong style="color:var(--accent);">CONCLUSION (1–2 sentences)</strong>
+- Restate the thesis in new words
+- Optional: a follow-up question that opens further discussion
+      </pre>
+    </div>
+
+    <h2>"To what extent…" — spectrum answer</h2>
+    <div class="card">
+      <p style="font-size:13px;">Take a position on a spectrum. Be explicit about both ends.</p>
+      <pre style="white-space:pre-wrap;font-family:inherit;font-size:13px;line-height:1.7;margin:0;">
+"To a <strong>large</strong> extent, X is true because Y [example].
+However, this is <strong>limited</strong> by Z [counter-example].
+On balance, X holds in domain A but not domain B."
+      </pre>
+    </div>
+
+    <h2>"Explain the line of thought" — process answer</h2>
+    <div class="card">
+      <p style="font-size:13px;">Walk the examiner through the reasoning step by step. Use the lecturer's vocabulary.</p>
+      <pre style="white-space:pre-wrap;font-family:inherit;font-size:13px;line-height:1.7;margin:0;">
+1. Premise the lecturer started from
+2. Mechanism / argument introduced
+3. Historical example used to illustrate
+4. Implication or "so what"
+4. Connection to a wider concept (appropriation / agendas / defining technology)
+      </pre>
+    </div>
+
+    <h2>"Compare A and B" — ABC structure</h2>
+    <div class="card">
+      <pre style="white-space:pre-wrap;font-family:inherit;font-size:13px;line-height:1.7;margin:0;">
+<strong style="color:var(--a-color);">A:</strong> Explain A with at least one specific example
+<strong style="color:var(--b-color);">B:</strong> Explain B with at least one specific example
+<strong style="color:var(--c-color);">C:</strong> The relation — make it EXPLICIT
+   - Similarity? Tension? Causation? Common root?
+   - "Both X and Y illustrate Z" / "A enabled B but at the cost of…"
+      </pre>
+    </div>
+
+    <h2>Concepts you can ALWAYS plug in</h2>
+    <div class="grid cols-2">
+      <div class="card">
+        <h3 style="color:var(--c-color);">Appropriation</h3>
+        <p style="font-size:13px;">"This is a clear case of <em>appropriation</em>: a technology designed for X being repurposed for Y, illustrating that technological trajectories are not predetermined." — Examples: Nim on Ferranti Mark I, SAGE → SABRE, GPU → deep learning.</p>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--c-color);">Agendas</h3>
+        <p style="font-size:13px;">"This narrative serves a particular <em>agenda</em>: by foregrounding X, the historian / actor secures Y." — Examples: Aiken invoking Babbage, McCorduck framing AI winters as resilience.</p>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--c-color);">Defining technology (Bolter)</h3>
+        <p style="font-size:13px;">"X functions as a <em>defining technology</em> in Bolter's sense: it does not merely change practice, it reshapes how humans understand themselves." — Examples: cybernetics in 1960s, AI in 2020s.</p>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--c-color);">Surveillance capitalism (Zuboff)</h3>
+        <p style="font-size:13px;">"This exhibits the logic of <em>surveillance capitalism</em>: behaviour is collected as raw material → prediction products → sold to influence further behaviour." — Examples: Google AdWords, Netflix, Facebook.</p>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--c-color);">AI winters as agenda</h3>
+        <p style="font-size:13px;">"The <em>AI winter</em> narrative is not just descriptive — it is rhetorical, used to argue for sustained funding ('this time is different') or as a warning ('another bubble')."</p>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--c-color);">Trust as social achievement</h3>
+        <p style="font-size:13px;">"Trust in computing is a <em>social</em> achievement, not a technical one — Hollerith (1890), UNIVAC (1952), IBM marketing all needed to build it institutionally."</p>
+      </div>
+    </div>
+  `;
+}
+
+/* ======================= INIT ======================= */
+updateCountdown();
+setInterval(updateCountdown, 60000);
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Practice Test — Statistical Methods Final 2025</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f7f4; --surface: #ffffff; --surface2: #f2f0ec;
+  --border: #e5e2db; --border2: #ccc9c0;
+  --text: #1c1b18; --text2: #4b4840; --muted: #928e86;
+  --orange: #c4571f; --orange-bg: #fdf3ed; --orange-border: #f2c4a8;
+  --blue: #2856b8; --blue-bg: #edf2fc; --blue-border: #b8caef;
+  --green: #1f7a4a; --green-bg: #edf7f2; --green-border: #a6d9be;
+  --red: #b82828; --red-bg: #fef2f2; --red-border: #f4bbbb;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.65;}
+
+.exam-header{background:var(--text);color:white;padding:20px 48px;display:flex;justify-content:space-between;align-items:center;gap:16px;}
+.exam-header h1{font-family:'Fraunces',serif;font-size:18px;font-weight:700;}
+.exam-header p{font-family:'DM Mono',monospace;font-size:11px;color:#aaa;margin-top:3px;}
+.vu-badge{background:#0035a0;color:white;font-family:'DM Mono',monospace;font-size:11px;font-weight:500;padding:6px 14px;border-radius:4px;white-space:nowrap;}
+
+.meta-bar{background:var(--surface2);border-bottom:1px solid var(--border);padding:9px 48px;display:flex;gap:28px;flex-wrap:wrap;}
+.meta-item{font-family:'DM Mono',monospace;font-size:11.5px;color:var(--text2);}
+.meta-item strong{color:var(--text);}
+
+.instructions{background:var(--blue-bg);border-bottom:1px solid var(--blue-border);padding:12px 48px;font-size:13.5px;color:var(--text2);display:flex;align-items:flex-start;gap:10px;}
+.instructions::before{content:'ℹ';font-size:16px;color:var(--blue);flex-shrink:0;margin-top:1px;}
+
+.score-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 48px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:50;box-shadow:0 1px 8px rgba(0,0,0,.06);}
+.score-bar span{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);}
+.score-display{font-family:'DM Mono',monospace;font-size:15px;font-weight:500;color:var(--blue);}
+.btn{padding:7px 18px;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:13.5px;font-weight:500;cursor:pointer;border:none;transition:all .15s;}
+.btn-primary{background:var(--orange);color:white;margin-left:auto;}
+.btn-primary:hover{background:#a8481a;}
+.btn-secondary{background:var(--surface2);color:var(--text2);border:1px solid var(--border2);}
+.btn-secondary:hover{background:var(--border);}
+
+.progress-bar-wrap{height:3px;background:var(--border);position:fixed;top:0;left:0;right:0;z-index:200;}
+.progress-bar{height:100%;background:var(--orange);transition:width .3s;width:0%;}
+
+main{max-width:820px;margin:0 auto;padding:32px 24px 80px;}
+
+#results-panel{display:none;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:28px;margin-bottom:24px;text-align:center;}
+#results-panel.show{display:block;}
+.result-score{font-family:'Fraunces',serif;font-size:52px;font-weight:700;color:var(--text);}
+.result-sub{font-size:14px;color:var(--muted);margin-top:4px;}
+.result-grade{display:inline-block;margin-top:14px;padding:6px 20px;border-radius:20px;font-family:'DM Mono',monospace;font-size:14px;font-weight:500;}
+.grade-pass{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border);}
+.grade-fail{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border);}
+
+.q-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:20px;overflow:hidden;}
+.q-card:hover{box-shadow:0 2px 12px rgba(0,0,0,.06);}
+.q-head{display:flex;align-items:center;gap:12px;padding:14px 20px;border-bottom:1px solid var(--border);background:var(--surface2);}
+.q-num{width:28px;height:28px;background:var(--text);color:white;border-radius:50%;font-family:'DM Mono',monospace;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.q-title{font-size:12px;font-family:'DM Mono',monospace;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;}
+.q-type{margin-left:auto;font-family:'DM Mono',monospace;font-size:10.5px;padding:2px 8px;border-radius:20px;background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-border);white-space:nowrap;}
+.q-type.fill{background:var(--orange-bg);color:var(--orange);border-color:var(--orange-border);}
+.q-type.tf{background:var(--green-bg);color:var(--green);border-color:var(--green-border);}
+.q-type.multi{background:#f5f0ff;color:#6d28d9;border-color:#d8c5f8;}
+.q-body{padding:20px 22px;}
+.q-text{font-size:15px;line-height:1.65;color:var(--text);margin-bottom:18px;}
+
+.options{display:flex;flex-direction:column;gap:8px;}
+.option{display:flex;align-items:flex-start;gap:12px;padding:11px 14px;border:1.5px solid var(--border);border-radius:7px;cursor:pointer;transition:all .12s;background:var(--surface);user-select:none;}
+.option:hover{border-color:var(--blue);background:var(--blue-bg);}
+.option.selected{border-color:var(--blue);background:var(--blue-bg);}
+.option.correct{border-color:var(--green);background:var(--green-bg);}
+.option.wrong{border-color:var(--red);background:var(--red-bg);}
+.opt-letter{width:24px;height:24px;border:1.5px solid var(--border2);border-radius:50%;font-family:'DM Mono',monospace;font-size:11.5px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--muted);transition:all .12s;}
+.option:hover .opt-letter{border-color:var(--blue);color:var(--blue);}
+.option.selected .opt-letter{border-color:var(--blue);color:var(--blue);background:white;}
+.option.correct .opt-letter{border-color:var(--green);color:var(--green);background:white;}
+.option.wrong .opt-letter{border-color:var(--red);color:var(--red);background:white;}
+.opt-letter.sq{border-radius:4px;}
+.opt-text{font-size:14.5px;color:var(--text2);line-height:1.5;padding-top:1px;}
+
+.tf-options{display:flex;flex-direction:column;gap:10px;}
+.tf-row{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--border);border-radius:7px;background:var(--surface);}
+.tf-statement{flex:1;font-size:14px;color:var(--text2);line-height:1.5;}
+.tf-btns{display:flex;gap:8px;flex-shrink:0;}
+.tf-btn{padding:5px 14px;border-radius:5px;font-size:12.5px;font-weight:500;cursor:pointer;border:1.5px solid var(--border2);background:var(--surface2);color:var(--muted);font-family:'DM Sans',sans-serif;transition:all .12s;}
+.tf-btn:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-bg);}
+.tf-btn.true-selected{border-color:var(--green);color:var(--green);background:var(--green-bg);}
+.tf-btn.false-selected{border-color:var(--red);color:var(--red);background:var(--red-bg);}
+.tf-btn.correct-answer{border-color:var(--green);color:var(--green);background:var(--green-bg);font-weight:600;}
+.tf-btn.wrong-answer{border-color:var(--red);color:var(--red);background:var(--red-bg);}
+
+.fill-input{display:flex;align-items:center;gap:10px;margin-top:4px;}
+.fill-input input{padding:9px 14px;border:1.5px solid var(--border2);border-radius:7px;font-family:'DM Mono',monospace;font-size:14px;color:var(--text);background:var(--surface);width:180px;transition:border-color .12s;}
+.fill-input input:focus{outline:none;border-color:var(--blue);}
+.fill-input input.correct{border-color:var(--green);background:var(--green-bg);}
+.fill-input input.wrong{border-color:var(--red);background:var(--red-bg);}
+.fill-hint{font-size:12.5px;color:var(--muted);}
+
+.q-feedback{display:none;margin-top:14px;padding:12px 14px;border-radius:7px;font-size:13.5px;line-height:1.55;}
+.q-feedback.correct-fb{background:var(--green-bg);border:1px solid var(--green-border);color:var(--green);}
+.q-feedback.wrong-fb{background:var(--red-bg);border:1px solid var(--red-border);color:var(--red);}
+.q-feedback.show{display:block;}
+.fb-label{font-weight:600;margin-bottom:4px;font-family:'DM Mono',monospace;font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;}
+.fb-body{color:var(--text2);font-size:13px;margin-top:4px;line-height:1.55;}
+
+code{font-family:'DM Mono',monospace;font-size:12.5px;background:var(--surface2);padding:1px 5px;border-radius:3px;border:1px solid var(--border);}
+</style>
+</head>
+<body>
+
+<div class="progress-bar-wrap"><div class="progress-bar" id="progressBar"></div></div>
+
+<div class="exam-header">
+  <div>
+    <h1>Statistical Methods Final 2025 — X_401020</h1>
+    <p>October 2025 · Practice Test · 16 questions · 16 points</p>
+  </div>
+  <div class="vu-badge">VU Amsterdam</div>
+</div>
+
+<div class="meta-bar">
+  <div class="meta-item"><strong>Tools:</strong> Calculator (non-programmable), Formula sheet</div>
+  <div class="meta-item"><strong>Scoring:</strong> No deduction for wrong answers</div>
+  <div class="meta-item"><strong>Decimal separator:</strong> Use a point (0.4, not 0,4)</div>
+  <div class="meta-item"><strong>Questions:</strong> 16</div>
+</div>
+
+<div class="instructions">
+  Answer all questions. Multiple choice: select one. Multiple response: select all that apply. Fill-in: type your numerical answer. Submit to see your score and full explanations.
+</div>
+
+<div class="score-bar">
+  <span>Progress:</span>
+  <span class="score-display" id="progressText">0 / 16 answered</span>
+  <button class="btn btn-secondary" onclick="location.reload()">Reset</button>
+  <button class="btn btn-primary" onclick="submitTest()">Submit &amp; See Answers</button>
+</div>
+
+<main>
+  <div id="results-panel">
+    <div class="result-score" id="resultScore">–</div>
+    <div class="result-sub" id="resultSub">–</div>
+    <div id="resultGrade"></div>
+  </div>
+
+  <!-- Q1 -->
+  <div class="q-card" data-q="1" data-type="mc" data-answer="A">
+    <div class="q-head"><div class="q-num">1</div><div class="q-title">Confidence Interval</div><div class="q-type">Multiple choice</div></div>
+    <div class="q-body">
+      <div class="q-text">Let X ~ N(θ, 1) with unknown expected value but <strong>known variance</strong>. Running the experiment 4 times gives x₁=2, x₂=3, x₃=1, x₄=2. Which interval is the resulting <strong>90% confidence interval</strong> for θ (rounded to 2 decimals)?</div>
+      <div class="options">
+        <div class="option" onclick="selectMC(this,'1','A')"><div class="opt-letter">A</div><div class="opt-text">[1.18, 2.82]</div></div>
+        <div class="option" onclick="selectMC(this,'1','B')"><div class="opt-letter">B</div><div class="opt-text">[1.36, 2.64]</div></div>
+        <div class="option" onclick="selectMC(this,'1','C')"><div class="opt-letter">C</div><div class="opt-text">[1.22, 2.78]</div></div>
+        <div class="option" onclick="selectMC(this,'1','D')"><div class="opt-letter">D</div><div class="opt-text">[1.11, 2.11]</div></div>
+      </div>
+      <div class="q-feedback" id="fb-1"></div>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="q-card" data-q="2" data-type="multi" data-answer="AB">
+    <div class="q-head"><div class="q-num">2</div><div class="q-title">Expected Value — Discrete</div><div class="q-type multi">Multiple response</div></div>
+    <div class="q-body">
+      <div class="q-text">Which of the following random variables X has expected value <strong>E(X) = 2</strong>? Select all correct answers.</div>
+      <div class="options">
+        <div class="option" onclick="selectMulti(this,'2','A')"><div class="opt-letter sq">A</div><div class="opt-text">X ~ Geometric(0.5)</div></div>
+        <div class="option" onclick="selectMulti(this,'2','B')"><div class="opt-letter sq">B</div><div class="opt-text">X ~ Binomial(40, 0.05)</div></div>
+        <div class="option" onclick="selectMulti(this,'2','C')"><div class="opt-letter sq">C</div><div class="opt-text">X ~ Uniform(0, 2)</div></div>
+        <div class="option" onclick="selectMulti(this,'2','D')"><div class="opt-letter sq">D</div><div class="opt-text">X ~ Exponential(2)</div></div>
+      </div>
+      <div class="q-feedback" id="fb-2"></div>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="q-card" data-q="3" data-type="mc" data-answer="A">
+    <div class="q-head"><div class="q-num">3</div><div class="q-title">E(X²) — LOTUS</div><div class="q-type">Multiple choice</div></div>
+    <div class="q-body">
+      <div class="q-text">For a random variable X, let f_X(x) denote its PDF and F_X(x) its CDF. Which formula computes the <strong>expected value of X²</strong>?</div>
+      <div class="options">
+        <div class="option" onclick="selectMC(this,'3','A')"><div class="opt-letter">A</div><div class="opt-text">∫ x² f_X(x) dx</div></div>
+        <div class="option" onclick="selectMC(this,'3','B')"><div class="opt-letter">B</div><div class="opt-text">∫ x² F_X(x) dx</div></div>
+        <div class="option" onclick="selectMC(this,'3','C')"><div class="opt-letter">C</div><div class="opt-text">( ∫ x f_X(x) dx )²</div></div>
+        <div class="option" onclick="selectMC(this,'3','D')"><div class="opt-letter">D</div><div class="opt-text">( ∫ x F_X(x) dx )²</div></div>
+        <div class="option" onclick="selectMC(this,'3','E')"><div class="opt-letter">E</div><div class="opt-text">None of the above</div></div>
+      </div>
+      <div class="q-feedback" id="fb-3"></div>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="q-card" data-q="4" data-type="mc" data-answer="A">
+    <div class="q-head"><div class="q-num">4</div><div class="q-title">Hypothesis Test — Error Type</div><div class="q-type">Multiple choice</div></div>
+    <div class="q-body">
+      <div class="q-text">The speed μ of a car is measured (km/h). H₀ = {μ ≤ 50}, H₁ = {μ > 50}, rejection region K = [55, ∞). The <strong>measured speed is T = 54</strong>, while the <strong>actual speed is μ = 52</strong>. After applying the decision rule, what is true?</div>
+      <div class="options">
+        <div class="option" onclick="selectMC(this,'4','A')"><div class="opt-letter">A</div><div class="opt-text">One makes a type II error.</div></div>
+        <div class="option" onclick="selectMC(this,'4','B')"><div class="opt-letter">B</div><div class="opt-text">One makes a type I error.</div></div>
+        <div class="option" onclick="selectMC(this,'4','C')"><div class="opt-letter">C</div><div class="opt-text">One makes a type III error.</div></div>
+        <div class="option" onclick="selectMC(this,'4','D')"><div class="opt-letter">D</div><div class="opt-text">One makes the correct decision.</div></div>
+        <div class="option" onclick="selectMC(this,'4','E')"><div class="opt-letter">E</div><div class="opt-text">No decision is possible.</div></div>
+      </div>
+      <div class="q-feedback" id="fb-4"></div>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="q-card" data-q="5" data-type="fill" data-answer="0.4">
+    <div class="q-head"><div class="q-num">5</div><div class="q-title">Maximum Likelihood — Geometric</div><div class="q-type fill">Fill in</div></div>
+    <div class="q-body">
+      <div class="q-text">A box has blue and red balls. The probability θ of drawing red is unknown. You draw with replacement until the first red ball, twice. The realisations are <strong>x₁ = 3, x₂ = 2</strong> from X₁, X₂ ~ Geometric(θ). Estimate θ using MLE. <em>(Give one decimal)</em></div>
+      <div class="fill-input">
+        <input type="text" id="fill-5" placeholder="e.g. 0.4" oninput="updateProgress()">
+        <span class="fill-hint">One decimal</span>
+      </div>
+      <div class="q-feedback" id="fb-5"></div>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="q-card" data-q="6" data-type="mc" data-answer="A">
+    <div class="q-head"><div class="q-num">6</div><div class="q-title">Linear Transform of Normal</div><div class="q-type">Multiple choice</div></div>
+    <div class="q-body">
+      <div class="q-text">Assume X ~ N(2, 1) and define <strong>Y = 2X − 1</strong>. Then Y ~ N(μ, σ²) with:</div>
+      <div class="options">
+        <div class="option" onclick="selectMC(this,'6','A')"><div class="opt-letter">A</div><div class="opt-text">μ = 3, σ = 2</div></div>
+        <div class="option" onclick="selectMC(this,'6','B')"><div class="opt-letter">B</div><div class="opt-text">μ = 3, σ = 1</div></div>
+        <div class="option" onclick="selectMC(this,'6','C')"><div class="opt-letter">C</div><div class="opt-text">μ = 2, σ = 2</div></div>
+        <div class="option" onclick="selectMC(this,'6','D')"><div class="opt-letter">D</div><div class="opt-text">μ = 2, σ = 1</div></div>
+        <div class="option" onclick="selectMC(this,'6','E')"><div class="opt-letter">E</div><div class="opt-text">None of them</div></div>
+      </div>
+      <div class="q-feedback" id="fb-6"></div>
+    </div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="q-card" data-q="7" data-type="fill" data-answer="0.12">
+    <div class="q-head"><div class="q-num">7</div><div class="q-title">Pascal Distribution</div><div class="q-type fill">Fill in</div></div>
+    <div class="q-body">
+      <div class="q-text">You are waiting in line. There are <strong>5 people ahead of you</strong>. The probability a person pays with cash is <strong>30%</strong>. What is the probability that the <strong>last person in front of you (5th) is the 2nd one to pay with cash</strong>? <em>(Round to 2 decimals)</em></div>
+      <div class="fill-input">
+        <input type="text" id="fill-7" placeholder="e.g. 0.12" oninput="updateProgress()">
+        <span class="fill-hint">Round to 2 decimals</span>
+      </div>
+      <div class="q-feedback" id="fb-7"></div>
+    </div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="q-card" data-q="8" data-type="fill" data-answer="0.75">
+    <div class="q-head"><div class="q-num">8</div><div class="q-title">PDF → CDF</div><div class="q-type fill">Fill in</div></div>
+    <div class="q-body">
+      <div class="q-text">A random variable X has PDF <strong>f_X(x) = x⁻²</strong> for x ≥ 1 and f_X(x) = 0 for x &lt; 1. What is the value of <strong>F_X(4)</strong>? <em>(Round to 2 decimals)</em></div>
+      <div class="fill-input">
+        <input type="text" id="fill-8" placeholder="e.g. 0.75" oninput="updateProgress()">
+        <span class="fill-hint">Round to 2 decimals</span>
+      </div>
+      <div class="q-feedback" id="fb-8"></div>
+    </div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="q-card" data-q="9" data-type="fill" data-answer="0.75">
+    <div class="q-head"><div class="q-num">9</div><div class="q-title">PMF → CDF at Non-Integer</div><div class="q-type fill">Fill in</div></div>
+    <div class="q-body">
+      <div class="q-text">For a random variable X we know <strong>P_X(k) = 2⁻ᵏ</strong> for all natural numbers k = 1, 2, … What is <strong>F_X(2.5)</strong>? <em>(Round to 2 decimals)</em></div>
+      <div class="fill-input">
+        <input type="text" id="fill-9" placeholder="e.g. 0.75" oninput="updateProgress()">
+        <span class="fill-hint">Round to 2 decimals</span>
+      </div>
+      <div class="q-feedback" id="fb-9"></div>
+    </div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="q-card" data-q="10" data-type="mc" data-answer="AC">
+    <div class="q-head"><div class="q-num">10</div><div class="q-title">Normal Probability with Φ</div><div class="q-type multi">Multiple response</div></div>
+    <div class="q-body">
+      <div class="q-text">Assume X ~ N(μ, σ²) with <strong>μ = 4 and σ = 2</strong>. Which formula(s) compute <strong>P(X &gt; 2)</strong>? Select all correct answers.</div>
+      <div class="options">
+        <div class="option" onclick="selectMulti(this,'10','A')"><div class="opt-letter sq">A</div><div class="opt-text">1 − Φ(−1)</div></div>
+        <div class="option" onclick="selectMulti(this,'10','B')"><div class="opt-letter sq">B</div><div class="opt-text">1 − Φ(2)</div></div>
+        <div class="option" onclick="selectMulti(this,'10','C')"><div class="opt-letter sq">C</div><div class="opt-text">Φ(1)</div></div>
+        <div class="option" onclick="selectMulti(this,'10','D')"><div class="opt-letter sq">D</div><div class="opt-text">Φ(−2)</div></div>
+        <div class="option" onclick="selectMulti(this,'10','E')"><div class="opt-letter sq">E</div><div class="opt-text">None of them</div></div>
+      </div>
+      <div class="q-feedback" id="fb-10"></div>
+    </div>
+  </div>
+
+  <!-- Q11 -->
+  <div class="q-card" data-q="11" data-type="multi" data-answer="C">
+    <div class="q-head"><div class="q-num">11</div><div class="q-title">Random Experiments — True Statements</div><div class="q-type multi">Multiple response</div></div>
+    <div class="q-body">
+      <div class="q-text">Give <strong>all true statements</strong> about random experiments.</div>
+      <div class="options">
+        <div class="option" onclick="selectMulti(this,'11','A')"><div class="opt-letter sq">A</div><div class="opt-text">If P({ω}) = 0 for every ω ∈ A, then P(A) = 0.</div></div>
+        <div class="option" onclick="selectMulti(this,'11','B')"><div class="opt-letter sq">B</div><div class="opt-text">The sample space is the set of events.</div></div>
+        <div class="option" onclick="selectMulti(this,'11','C')"><div class="opt-letter sq">C</div><div class="opt-text">If P(A) ≠ 0 and P(B | A) ≠ 0, then P(B) ≠ 0.</div></div>
+      </div>
+      <div class="q-feedback" id="fb-11"></div>
+    </div>
+  </div>
+
+  <!-- Q12 -->
+  <div class="q-card" data-q="12" data-type="fill" data-answer="0.25">
+    <div class="q-head"><div class="q-num">12</div><div class="q-title">Dice — Joint Probability</div><div class="q-type fill">Fill in</div></div>
+    <div class="q-body">
+      <div class="q-text">A person rolls a fair die twice. What is the probability that the <strong>first roll is greater than 4</strong> and, at the same time, the <strong>second roll is less than the first roll</strong>? <em>(Round to 2 decimals)</em></div>
+      <div class="fill-input">
+        <input type="text" id="fill-12" placeholder="e.g. 0.25" oninput="updateProgress()">
+        <span class="fill-hint">Round to 2 decimals</span>
+      </div>
+      <div class="q-feedback" id="fb-12"></div>
+    </div>
+  </div>
+
+  <!-- Q13 -->
+  <div class="q-card" data-q="13" data-type="fill" data-answer="0.2">
+    <div class="q-head"><div class="q-num">13</div><div class="q-title">Variance of Sample Mean</div><div class="q-type fill">Fill in</div></div>
+    <div class="q-body">
+      <div class="q-text">A random experiment is performed <strong>20 times</strong>. The outcomes X₁,…,X₂₀ have expected value μ = 3 and variance <strong>σ² = 4</strong>. What is the <strong>variance of the sample mean</strong> X̄₂₀? <em>(Give one decimal)</em></div>
+      <div class="fill-input">
+        <input type="text" id="fill-13" placeholder="e.g. 0.2" oninput="updateProgress()">
+        <span class="fill-hint">One decimal</span>
+      </div>
+      <div class="q-feedback" id="fb-13"></div>
+    </div>
+  </div>
+
+  <!-- Q14 -->
+  <div class="q-card" data-q="14" data-type="fill" data-answer="4">
+    <div class="q-head"><div class="q-num">14</div><div class="q-title">Sample Variance by Hand</div><div class="q-type fill">Fill in</div></div>
+    <div class="q-body">
+      <div class="q-text">A realisation of a random sample X₁, X₂, X₃ is given by <strong>x₁ = −2, x₂ = 0, x₃ = 2</strong>. Compute the corresponding <strong>sample variance S²</strong>.</div>
+      <div class="fill-input">
+        <input type="text" id="fill-14" placeholder="e.g. 4" oninput="updateProgress()">
+        <span class="fill-hint">Exact value</span>
+      </div>
+      <div class="q-feedback" id="fb-14"></div>
+    </div>
+  </div>
+
+  <!-- Q15 -->
+  <div class="q-card" data-q="15" data-type="mc" data-answer="B">
+    <div class="q-head"><div class="q-num">15</div><div class="q-title">Variance of Discrete RV</div><div class="q-type">Multiple choice</div></div>
+    <div class="q-body">
+      <div class="q-text">From a random variable X with range {−2, +2} it is known that <strong>P(X = −2) = P(X = +2)</strong>. What is the <strong>variance of X</strong>?</div>
+      <div class="options">
+        <div class="option" onclick="selectMC(this,'15','A')"><div class="opt-letter">A</div><div class="opt-text">2</div></div>
+        <div class="option" onclick="selectMC(this,'15','B')"><div class="opt-letter">B</div><div class="opt-text">4</div></div>
+        <div class="option" onclick="selectMC(this,'15','C')"><div class="opt-letter">C</div><div class="opt-text">16</div></div>
+        <div class="option" onclick="selectMC(this,'15','D')"><div class="opt-letter">D</div><div class="opt-text">None of the given values</div></div>
+      </div>
+      <div class="q-feedback" id="fb-15"></div>
+    </div>
+  </div>
+
+  <!-- Q16 -->
+  <div class="q-card" data-q="16" data-type="fill" data-answer="0.5">
+    <div class="q-head"><div class="q-num">16</div><div class="q-title">Central Limit Theorem</div><div class="q-type fill">Fill in</div></div>
+    <div class="q-body">
+      <div class="q-text">Let X₁,…,X₁₀₀₀ be iid with <strong>μ = 0.4</strong> and <strong>σ² = 1</strong>. Then <strong>P(X₁ + … + X₁₀₀₀ ≤ 400)</strong> is approximately equal to which number? <em>(Give one decimal)</em></div>
+      <div class="fill-input">
+        <input type="text" id="fill-16" placeholder="e.g. 0.5" oninput="updateProgress()">
+        <span class="fill-hint">One decimal</span>
+      </div>
+      <div class="q-feedback" id="fb-16"></div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+const answers = {};
+const tfAnswers = {};
+const multiAnswers = {};
+
+const explanations = {
+  1: "<div class='fb-body'>X ~ N(θ,1) so σ=1, n=4. X̄ = (2+3+1+2)/4 = 2. 90% CI uses z_{0.05} = 1.645.<br>CI = 2 ± 1.645·(1/√4) = 2 ± 1.645·0.5 = 2 ± 0.823 = <strong>[1.18, 2.82]</strong></div>",
+  2: "<div class='fb-body'>Check E(X) for each: Geometric(0.5) → 1/0.5 = <strong>2 ✓</strong>. Binomial(40,0.05) → 40×0.05 = <strong>2 ✓</strong>. Uniform(0,2) → (0+2)/2 = 1 ✗. Exponential(2) → 1/2 = 0.5 ✗.</div>",
+  3: "<div class='fb-body'>LOTUS: E[g(X)] = ∫ g(x)·f(x) dx. For g(X)=X², this is ∫ x²·f_X(x) dx. <strong>Never square the whole integral</strong> — that would give [E(X)]², not E(X²). Never use F_X (the CDF).</div>",
+  4: "<div class='fb-body'>T=54 is not in rejection region K=[55,∞), so H₀ is accepted. But actual μ=52 > 50, meaning H₁ is TRUE. Accepting H₀ when H₁ is true = <strong>Type II error</strong>.</div>",
+  5: "<div class='fb-body'>L(θ) = P(X₁=3)·P(X₂=2) = (1−θ)²θ · (1−θ)¹θ = θ²(1−θ)³<br>log L = 2 log θ + 3 log(1−θ). Set d/dθ = 0: 2/θ − 3/(1−θ) = 0 → 2(1−θ) = 3θ → θ = 2/5 = <strong>0.4</strong></div>",
+  6: "<div class='fb-body'>Y = 2X−1. E(Y) = 2·E(X)−1 = 2·2−1 = <strong>3</strong>. Var(Y) = 2²·Var(X) = 4·1 = 4, so σ_Y = <strong>2</strong>. Answer: μ=3, σ=2.</div>",
+  7: "<div class='fb-body'>X ~ Pascal(5, 0.3): want the 5th person to be the 2nd cash payer. P(X=5) = C(4,1)·0.3²·0.7³ = 4·0.09·0.343 = <strong>0.12</strong></div>",
+  8: "<div class='fb-body'>F_X(4) = ∫₁⁴ x⁻² dx = [−1/x]₁⁴ = (−1/4) − (−1) = −0.25 + 1 = <strong>0.75</strong></div>",
+  9: "<div class='fb-body'>F(2.5) = P(X≤2) = P(X=1) + P(X=2) = 2⁻¹ + 2⁻² = 1/2 + 1/4 = <strong>0.75</strong>. For discrete RVs, F(x) = sum of PMF values at all integers ≤ x.</div>",
+  10: "<div class='fb-body'>P(X>2) = P(Z > (2−4)/2) = P(Z > −1) = 1−Φ(−1). By symmetry: Φ(−1) = 1−Φ(1), so 1−Φ(−1) = Φ(1). <strong>Both A and C are correct</strong> — they're equal.</div>",
+  11: "<div class='fb-body'>A: FALSE — for continuous RVs every single point has P=0 but the whole interval can have P>0. B: FALSE — sample space is the set of <em>outcomes</em>, not events. C: TRUE — P(B|A) = P(A∩B)/P(A), if both P(A)≠0 and P(B|A)≠0, then P(A∩B)≠0, so P(B)≥P(A∩B)>0.</div>",
+  12: "<div class='fb-body'>First roll > 4 means 5 or 6. List pairs where second < first: (5,1),(5,2),(5,3),(5,4),(6,1),(6,2),(6,3),(6,4),(6,5) = 9 outcomes. P = 9/36 = <strong>0.25</strong></div>",
+  13: "<div class='fb-body'>Var(X̄ₙ) = σ²/n = 4/20 = <strong>0.2</strong>. Always divide σ² by n. Never divide by √n.</div>",
+  14: "<div class='fb-body'>X̄ = (−2+0+2)/3 = 0. S² = 1/(3−1)·[(−2−0)²+(0−0)²+(2−0)²] = 1/2·[4+0+4] = <strong>4</strong></div>",
+  15: "<div class='fb-body'>P(X=−2)=P(X=+2)=1/2. E(X) = −2·(1/2)+2·(1/2) = 0. Var(X) = E(X²)−[E(X)]² = E(X²). E(X²) = (−2)²·(1/2)+(2)²·(1/2) = 4·(1/2)+4·(1/2) = <strong>4</strong></div>",
+  16: "<div class='fb-body'>Y=ΣXᵢ ~ N(1000·0.4, 1000·1) = N(400, 1000). P(Y≤400) = P(Z≤(400−400)/√1000) = P(Z≤0) = Φ(0) = <strong>0.5</strong></div>"
+};
+
+function selectMC(el, q, letter) {
+  const card = document.querySelector(`[data-q="${q}"]`);
+  card.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  answers[q] = letter;
+  updateProgress();
+}
+
+function selectMulti(el, q, letter) {
+  if (!multiAnswers[q]) multiAnswers[q] = new Set();
+  if (el.classList.contains('selected')) { el.classList.remove('selected'); multiAnswers[q].delete(letter); }
+  else { el.classList.add('selected'); multiAnswers[q].add(letter); }
+  answers[q] = Array.from(multiAnswers[q]).sort().join('');
+  updateProgress();
+}
+
+function updateProgress() {
+  let count = 0;
+  for (let i = 1; i <= 16; i++) {
+    const card = document.querySelector(`[data-q="${i}"]`);
+    const type = card.dataset.type;
+    if (type === 'fill') { if (document.getElementById(`fill-${i}`)?.value?.trim()) count++; }
+    else if (answers[i]) count++;
+  }
+  document.getElementById('progressText').textContent = `${count} / 16 answered`;
+  document.getElementById('progressBar').style.width = `${(count/16)*100}%`;
+}
+
+function submitTest() {
+  let score = 0;
+  for (let i = 1; i <= 16; i++) {
+    const card = document.querySelector(`[data-q="${i}"]`);
+    const type = card.dataset.type;
+    const correct = card.dataset.answer;
+    const fb = document.getElementById(`fb-${i}`);
+    let userAnswer = answers[i] || '';
+    let isCorrect = false;
+
+    if (type === 'fill') {
+      const raw = document.getElementById(`fill-${i}`)?.value?.trim() || '';
+      isCorrect = Math.abs(parseFloat(raw) - parseFloat(correct)) < 0.015;
+      const inp = document.getElementById(`fill-${i}`);
+      if (inp) { inp.classList.add(isCorrect ? 'correct' : 'wrong'); inp.disabled = true; }
+    } else if (type === 'mc') {
+      isCorrect = userAnswer === correct;
+      card.querySelectorAll('.option').forEach(o => {
+        const l = o.querySelector('.opt-letter').textContent.trim();
+        if (l === correct) o.classList.add('correct');
+        else if (o.classList.contains('selected')) o.classList.add('wrong');
+      });
+    } else if (type === 'multi') {
+      isCorrect = userAnswer === correct;
+      const correctLetters = correct.split('');
+      card.querySelectorAll('.option').forEach(o => {
+        const l = o.querySelector('.opt-letter').textContent.trim();
+        if (correctLetters.includes(l)) o.classList.add('correct');
+        else if (o.classList.contains('selected')) o.classList.add('wrong');
+      });
+    }
+
+    if (isCorrect) score++;
+    fb.className = `q-feedback ${isCorrect ? 'correct-fb' : 'wrong-fb'} show`;
+    fb.innerHTML = `<div class="fb-label">${isCorrect ? '✓ Correct' : '✗ Incorrect'}</div>${explanations[i]}`;
+  }
+
+  document.querySelectorAll('.option').forEach(o => o.style.pointerEvents = 'none');
+  const pct = Math.round((score/16)*100);
+  const panel = document.getElementById('results-panel');
+  panel.classList.add('show');
+  document.getElementById('resultScore').textContent = `${score} / 16`;
+  document.getElementById('resultSub').textContent = `${pct}% correct`;
+  const gradeNum = (1 + (score/16)*9).toFixed(1);
+  const g = document.getElementById('resultGrade');
+  g.className = `result-grade ${score >= 8 ? 'grade-pass' : 'grade-fail'}`;
+  g.textContent = `Grade ≈ ${gradeNum} — ${score >= 8 ? 'Pass ✓' : 'Not yet — keep practising!'}`;
+  panel.scrollIntoView({behavior:'smooth'});
+  document.getElementById('progressText').textContent = `Score: ${score} / 16`;
+}
+</script>
+</body>
+</html>
