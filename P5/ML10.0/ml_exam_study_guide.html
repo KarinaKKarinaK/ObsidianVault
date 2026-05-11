@@ -273,6 +273,46 @@
       </ul>
       <p style="margin-top:8px; font-size:13px; color:var(--text2)">L1/L2 require real-valued parameter vectors — can't apply to decision trees (discrete model space).</p>
     </div>
+
+    <div class="card">
+      <span class="tag tag-amber">Imbalanced classes — undersampling vs oversampling</span>
+      <ul>
+        <li><strong>Undersampling</strong>: drop random instances of the MAJORITY class until balanced. No duplicates, but loses data.</li>
+        <li><strong>Oversampling</strong>: REPEAT instances of the MINORITY class until balanced. Creates <strong>duplicate</strong> rows.</li>
+        <li>Both before splitting risks data leakage — apply only on the training set.</li>
+        <li>Stratified k-fold preserves the original class ratio in each fold.</li>
+      </ul>
+      <div class="exam-tip">Past-exam fact (final-2022 Q4): "Oversampling leads to duplicate instances in your data." (Undersampling does not.)</div>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-purple">Categorical features — integer vs one-hot coding</span>
+      <ul>
+        <li><strong>Integer coding</strong>: assign 0,1,2,… to each category → 1 numeric column. Imposes a fake ordering.</li>
+        <li><strong>One-hot coding</strong>: 1 binary column per category → k categories give k columns. Always TURNS ONE FEATURE INTO MULTIPLE.</li>
+        <li>One-hot becomes inefficient when there are <em>too many</em> categories (sparse, wide).</li>
+        <li>Integer coding works only if a true ordering exists (small, medium, large).</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-blue">Probability foundations — sample / event space, frequentist / Bayesian</span>
+      <p><strong>Sample space</strong> = set of atomic outcomes (rolling a die: {1,…,6}). <strong>Event space</strong> = subsets of outcomes ("rolling an even number" = {2,4,6}).</p>
+      <ul style="margin-top:6px">
+        <li><strong>Frequentist</strong>: probability = long-run frequency of repeatable random events. A fixed quantity (like the mean Italian woman's height) is NOT random → frequentist rejects "the mean has high probability of being &lt; 2 m."</li>
+        <li><strong>Bayesian</strong>: probability = degree of belief; can be assigned to fixed unknowns.</li>
+        <li><strong>Subjectivist</strong>: probability = personal credence; even more permissive than Bayesian.</li>
+      </ul>
+      <div class="exam-tip">Past exam (final-2022 Q6): "There is a high probability that the mean height of Italian women is below 2 m." → A strict <em>frequentist</em> would reject this as improper use.</div>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-teal">Time-series &amp; recommender quirks</span>
+      <ul>
+        <li><strong>Walk-forward validation</strong>: train on t≤T, test on T+1; then include T+1 in training, test on T+2; repeat. Respects time order; lets the model retrain.</li>
+        <li><strong>Cold-start problem</strong> (recommenders): a brand-new user/item has no rating history → matrix factorisation cannot learn an embedding for it. Mitigations: hybrid models with content/side features, popularity baselines.</li>
+      </ul>
+    </div>
   </div>
 </div>
 
@@ -339,6 +379,27 @@
         <h4>Connection: MLE → Least squares</h4>
         <p>Assuming normally distributed errors, MLE derivation gives you exactly the least squares loss. The squaring is a consequence of the Gaussian assumption.</p>
       </div>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-blue">Linear algebra basics — orthonormal basis</span>
+      <p>An <strong>orthonormal</strong> matrix Q has columns that are unit-length and mutually orthogonal: QᵀQ = I.</p>
+      <p style="margin-top:6px"><strong>Key advantage:</strong> Q⁻¹ = Qᵀ. The inverse is just the transpose — exact, O(n²), no actual inversion needed.</p>
+      <ul style="margin-top:6px">
+        <li>Useful for fast change-of-basis</li>
+        <li>Whitening / PCA after projection</li>
+        <li>Stable numerical computation (no large condition number)</li>
+      </ul>
+      <div class="exam-tip">Past exam (final-2022 Q17): "Why do we choose an orthonormal basis?" → "Because the inverse equals the transpose."</div>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-coral">Mean = L2 minimizer; Median = L1 minimizer</span>
+      <ul>
+        <li>argmin_μ Σ (xᵢ − μ)² = <strong>mean</strong> → squaring penalises outliers <em>quadratically</em> → mean is sensitive to outliers</li>
+        <li>argmin_μ Σ |xᵢ − μ| = <strong>median</strong> → linear penalty → median is robust</li>
+      </ul>
+      <div class="exam-tip">Past exam phrasing: "The mean is sensitive to outliers because the mean minimizes the SQUARED distances to all instances."</div>
     </div>
   </div>
 </div>

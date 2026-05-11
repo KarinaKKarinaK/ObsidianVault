@@ -574,6 +574,21 @@
   </div>
 
   <button class="btn btn-primary" id="startBtn" onclick="startQuiz()" disabled>Start quiz →</button>
+
+  <div style="width:100%;max-width:920px;margin:48px auto 0;text-align:left">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px">
+      <h2 style="font-family:'IBM Plex Mono',monospace;font-size:14px;letter-spacing:0.15em;color:var(--accent);text-transform:uppercase;font-weight:500">Past Attempts</h2>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-secondary" style="padding:6px 14px;font-size:12px" onclick="exportHistory()">Export JSON</button>
+        <label class="btn btn-secondary" style="padding:6px 14px;font-size:12px;cursor:pointer;display:inline-flex;align-items:center">
+          Import JSON
+          <input type="file" accept=".json,application/json" onchange="importHistory(event)" style="display:none">
+        </label>
+        <button class="btn btn-secondary" style="padding:6px 14px;font-size:12px" onclick="clearHistory()">Clear</button>
+      </div>
+    </div>
+    <div id="history-list"></div>
+  </div>
 </div>
 
 <!-- QUIZ -->
@@ -654,16 +669,16 @@ const EXAMS = [
       {q: "To get from line (1) to line (2) in the gradient derivation (moving the sum out), we use the:", opts: ["Exponent rule","Product rule","Constant factor rule","Sum rule"], ans: 3},
       {q: "To get from line (3) to line (4) in the gradient derivation (differentiating the squared term), we use the:", opts: ["Exponent rule","Product rule","Constant factor rule","Sum rule"], ans: 0},
       {q: "For the model f(xᵢ) = −vxᵢ + wxᵢ², fill in the definition and work out the derivative with respect to v. Which is the correct result?", opts: ["−½ Σᵢ (−vxᵢ² + wxᵢ + b − tᵢ)","−Σᵢ (−vxᵢ² + wxᵢ + b − tᵢ)","−½ Σᵢ xᵢ(−vxᵢ + wxᵢ² + b − tᵢ)","−Σᵢ xᵢ(−vxᵢ + wxᵢ² + b − tᵢ)"], ans: 3},
-      {q: "For the dataset and linear classifier c(x₁,x₂) = Pos if x₁ + 0·x₂ + 2 > 0, if we turn c into a ranking classifier, how does it rank the points from most Negative to most Positive?", opts: ["a b c d e f g h","a b g c d e h f","a b g c d h e f","a c b e d g f h"], ans: 0},
-      {q: "For the same classifier and dataset (Q28), how many ranking errors does the classifier make?", opts: ["None","1","2","3"], ans: 0},
-      {q: "For the same classifier and dataset (Q28-29), if we draw a coverage matrix, what proportion of the cells will be red?", opts: ["3/15","6/15","1/8","1/16"], ans: 0},
+      {q: "Dataset (8 points, x₁,x₂,label): a(0,1,Neg), b(2,2,Neg), c(1,4,Neg), d(2,5,Neg), e(3,6,Pos), f(6,8,Pos), g(5,3,Pos), h(8,7,Pos). Linear classifier c(x₁,x₂) = Pos if 0·x₁ + x₂ − 2 > 0 (score = x₂). If we turn c into a ranking classifier, how does it rank the points from most Negative to most Positive?", opts: ["a b c d e f g h","a b g c d e h f","a b g c d h e f","a c b e d g f h"], ans: 1},
+      {q: "For the same classifier and dataset (Q28), how many ranking errors does the classifier make? [Same dataset: a(0,1,Neg), b(2,2,Neg), c(1,4,Neg), d(2,5,Neg), e(3,6,Pos), f(6,8,Pos), g(5,3,Pos), h(8,7,Pos). Score = x₂.]", opts: ["None","1","2","3"], ans: 2},
+      {q: "For the same classifier and dataset (Q28-29), if we draw a coverage matrix, what proportion of the cells will be red? [|Pos|=4, |Neg|=4, so 16 cells. Score = x₂.]", opts: ["3/15","6/15","1/8","1/16"], ans: 2},
       {q: "For distributions p = (4/8, 2/8, 1/8, 1/8) and q = (1/8, 4/8, 2/8, 1/8) on X = {a,b,c,d}, what are their entropies (binary)?", opts: ["H(p) = 2.25, H(q) = 1.75","H(p) = 1.75, H(q) = 2.25","H(p) = 2.25, H(q) = 2.25","H(p) = 1.75, H(q) = 1.75"], ans: 1},
       {q: "For the same distributions p and q (Q31), what are their cross-entropies?", opts: ["H(p,q) = 2 + 3/8, H(q,p) = 2 + 1/4","H(p,q) = 2 + 1/4, H(q,p) = 2 + 3/8","H(p,q) = 2, H(q,p) = 2 + 1/4","H(p,q) = 2 + 1/4, H(q,p) = 2"], ans: 1},
       {q: "The KL divergence is strongly related to entropy. Which statement is FALSE?", opts: ["KL(p,q) is the bits wasted by using p as a compressor for elements sampled from q.","KL(p,q) is the bits wasted by using q as a compressor for elements sampled from p.","KL(p,q) is H(p,q) with H(p) subtracted so that the divergence is zero if the arguments are equal.","KL(p,q) is H(p,q) with H(p) subtracted so that we measure compression relative to the optimum."], ans: 0},
       {q: "For f(x) = (x²+1)/(x³+2), we break it up into modules. What should go in the dots: a = ?, b = ?, f = ?", opts: ["a = x³, b = x², f = c/d","a = x², b = x³, f = c/d","a = x³+2, b = x²+1, f = d/c","a = x²+1, b = x³+2, f = d/c"], ans: 1},
       {q: "For f(x) = (x²+1)/(x³+2) decomposed as a=x², b=x³, c=a+1, d=b+2, f=c/d. Which is the correct expression for ∂f/∂x?", opts: ["2xd⁻¹ − 3x²c⁻²","2xd⁻¹ + 3x²c⁻²","2xd⁻¹ − 3cx²d⁻²","2xd⁻¹ + 3cx²d⁻²"], ans: 2},
-      {q: "For the decision tree question with features x1–x4 and 12 binary instances, in standard decision tree learning (no pruning), which feature would be chosen first for a split?", opts: ["x1","x2","x3","x4"], ans: 0},
-      {q: "If we remove the first-chosen feature from Q36, which feature would be chosen next?", opts: ["x1","x2","x3","x4"], ans: 2},
+      {q: "12-instance binary dataset (Practice Exam B, Feb 2020). Features x1–x4 ∈ {A,B}, label y ∈ {Yes,No}. Class counts: 6 Yes, 6 No. (Refer to practice-exam-b.answers PDF for the exact 12-row table.) In standard decision-tree learning (no pruning), which feature is chosen first?", opts: ["x1","x2","x3","x4"], ans: 0},
+      {q: "If we remove the first-chosen feature x1 from Q36, which feature is chosen next?", opts: ["x1","x2","x3","x4"], ans: 2},
       {q: "The EM and VAE algorithms are both based on the decomposition L(q,θ) + KL(q,p) = ⟨a⟩ + ⟨b⟩. What should be in place of ⟨a⟩ and ⟨b⟩?", opts: ["⟨a⟩ = Eq ln p(x,z|θ)/q(z|x), ⟨b⟩ = −Eq ln p(z|x,θ)/q(z|x)","⟨a⟩ = Eq ln p(x,z|θ)/q(z|x), ⟨b⟩ = Eq ln p(z|x,θ)/q(z|x)","⟨a⟩ = Eq ln p(x,z|θ)/p(z|x), ⟨b⟩ = −Eq ln p(z|x,θ)/p(z|x)","⟨a⟩ = Eq ln p(x,z|θ)/p(z|x), ⟨b⟩ = Eq ln p(z|x,θ)/p(z|x)"], ans: 0},
       {q: "Why does the EM/VAE decomposition L(q,θ) + KL(q,p) = ln p(x|θ) help us?", opts: ["It eliminates q, which we cannot compute.","It shows that L(q,θ) is a lower bound on the quantity we want to maximize.","It eliminates expectations, which we cannot compute.","It shows that p(x|θ) is a lower bound on the KL divergence."], ans: 1},
     ]
@@ -843,13 +858,13 @@ const EXAMS = [
       {q: "In recommender systems, what is implicit feedback?", opts: ["Ratings given by a single 'like' button rather than a more fine-grained system.","Recommendations that take the temporal structure of the data into account.","Associations between users and items assumed from user behavior.","Recommendations derived from manually crafted item features rather than learned ones."], ans: 2},
       {q: "Word2Vec and matrix factorization are both embedding methods. How do they represent featureless objects?", opts: ["By taking known features for each object and mapping these to a low-dimensional representation.","By taking known features for each object and mapping these to a high-dimensional representation.","By embedding these objects into a Euclidean space, with each object represented by a vector.","By embedding these objects into a Euclidean space, with each object represented by a scalar."], ans: 2},
       {q: "What is batch normalization?", opts: ["An operation in a neural network that normalizes the output of a layer so that it is normally distributed over the current batch.","An operation in a neural network that normalizes the output of a layer so that it is uniformly distributed over the batch.","A hyperparameter selection technique that sets the batch size to ensure a normal distribution in gradients.","A hyperparameter selection technique that sets the batch size to ensure a uniform distribution in gradients."], ans: 0},
-      {q: "For a linear SVM with w = (1, −1)ᵀ and b = −1, which points are support vectors?", opts: ["y₁=1, x₁=(1,1); y₂=−1, x₂=(1,1)","y₁=1, x₁=(1,1); y₂=−1, x₂=(−1,1)","y₁=1, x₁=(1,−1); y₂=−1, x₂=(1,1)","y₁=1, x₁=(1,−1); y₂=−1, x₂=(−1,1)"], ans: 3},
-      {q: "For the same SVM with w = (1,−1)ᵀ, b = −1. How are x₁=(0,3) and x₂=(3,0) classified?", opts: ["Both positive.","x₁ is positive, x₂ is negative.","x₁ is negative, x₂ is positive.","Both negative."], ans: 3},
-      {q: "For the dataset (a(0,1)Neg, b(2,2)Neg, c(1,4)Neg, d(4,5)Neg, e(3,6)Pos, f(6,8)Pos, g(5,3)Pos, h(8,7)Pos) and classifier Pos if x₁ + 0·x₂ + 2 > 0, if we turn c into a ranking classifier, how does it rank from most Negative to most Positive?", opts: ["a b c d e f g h","a b g c d e h f","a b g c d h e f","a c b e d g f h"], ans: 0},
-      {q: "For the same classifier (Q28), how many ranking errors does the classifier make?", opts: ["None","1","2","3"], ans: 0},
-      {q: "For the same classifier (Q28-29), if we draw a coverage matrix, what proportion of the cells will be red?", opts: ["3/15","6/15","1/8","1/16"], ans: 0},
-      {q: "For distributions p = (4/8, 2/8, 1/8, 1/8) and q = (1/8, 4/8, 2/8, 1/8) on X = {a,b,c,d}, what are their entropies (binary)?", opts: ["H(p) = 2.25, H(q) = 1.75","H(p) = 1.75, H(q) = 2.25","H(p) = 2.25, H(q) = 2.25","H(p) = 1.75, H(q) = 1.75"], ans: 1},
-      {q: "For the same distributions (Q31), what are their cross-entropies?", opts: ["H(p,q) = 2 + 3/8, H(q,p) = 2 + 1/4","H(p,q) = 2 + 1/4, H(q,p) = 2 + 3/8","H(p,q) = 2, H(q,p) = 2 + 1/4","H(p,q) = 2 + 1/4, H(q,p) = 2"], ans: 1},
+      {q: "For a linear SVM with w = (1, −1)ᵀ and b = −1, which points are support vectors?", opts: ["y₁=1, x₁=(1,1); y₂=−1, x₂=(1,1)","y₁=1, x₁=(1,1); y₂=−1, x₂=(−1,1)","y₁=1, x₁=(1,−1); y₂=−1, x₂=(1,1)","y₁=1, x₁=(1,−1); y₂=−1, x₂=(−1,1)"], ans: 2},
+      {q: "For the same SVM with w = (1,−1)ᵀ, b = −1. How are x₁=(0,3) and x₂=(3,0) classified?", opts: ["Both positive.","x₁ is positive, x₂ is negative.","x₁ is negative, x₂ is positive.","Both negative."], ans: 2},
+      {q: "For the dataset (a(0,1)Neg, b(2,2)Neg, c(1,4)Neg, d(4,5)Neg, e(3,6)Pos, f(6,8)Pos, g(5,3)Pos, h(8,7)Pos) and classifier Pos if x₁ + 0·x₂ + 2 > 0, if we turn c into a ranking classifier, how does it rank from most Negative to most Positive?", opts: ["a b c d e f g h","a b g c d e h f","a b g c d h e f","a c b e d g f h"], ans: 3},
+      {q: "For the same classifier (Q28), how many ranking errors does the classifier make?", opts: ["None","1","2","3"], ans: 1},
+      {q: "For the same classifier (Q28-29), if we draw a coverage matrix, what proportion of the cells will be red?", opts: ["3/15","6/15","1/8","1/16"], ans: 3},
+      {q: "For distributions p = (4/8, 2/8, 1/8, 1/8) and q = (1/8, 4/8, 2/8, 1/8) on X = {a,b,c,d}, what are their entropies (binary)?", opts: ["H(p) = 2.25, H(q) = 1.75","H(p) = 1.75, H(q) = 2.25","H(p) = 2.25, H(q) = 2.25","H(p) = 1.75, H(q) = 1.75"], ans: 3},
+      {q: "For the same distributions (Q31), what are their cross-entropies?", opts: ["H(p,q) = 2 + 3/8, H(q,p) = 2 + 1/4","H(p,q) = 2 + 1/4, H(q,p) = 2 + 3/8","H(p,q) = 2, H(q,p) = 2 + 1/4","H(p,q) = 2 + 1/4, H(q,p) = 2"], ans: 0},
       {q: "The KL divergence is strongly related to entropy. Which statement is FALSE?", opts: ["KL(p,q) is the bits wasted by using p as a compressor for elements sampled from q.","KL(p,q) is the bits wasted by using q as a compressor for elements sampled from p.","KL(p,q) is H(p,q) with H(p) subtracted so that the divergence is zero if the arguments are equal.","KL(p,q) is H(p,q) with H(p) subtracted so that we measure compression relative to the optimum."], ans: 0},
       {q: "For f(x) = (x²+1)/(x³+2), broken into a=?, b=?, c=a+1, d=b+2, f=?. What should go in the dots?", opts: ["a = x³, b = x², f = c/d","a = x², b = x³, f = c/d","a = x³+2, b = x²+1, f = d/c","a = x²+1, b = x³+2, f = d/c"], ans: 1},
       {q: "For f(x) = (x²+1)/(x³+2) decomposed as a=x², b=x³, c=a+1, d=b+2, f=c/d. Which is the correct expression for ∂f/∂x?", opts: ["2xd⁻¹ − 3x²c⁻²","2xd⁻¹ + 3x²c⁻²","2xd⁻¹ − 3cx²d⁻²","2xd⁻¹ + 3cx²d⁻²"], ans: 2},
@@ -1083,6 +1098,23 @@ function showResults() {
         <span class="brow-score">${e.correct}/${e.total}</span>
       </div>
     `).join('');
+
+  // Persist attempt
+  const answersArr = allQuestions.map((_, i) => answers[i] !== undefined ? answers[i] : null);
+  const examIds = [...selectedExams].sort();
+  const sessionName = examIds.length === 1
+    ? (byExam[examIds[0]]?.title || examIds[0])
+    : `Combined (${examIds.length} exams)`;
+  saveAttempt({
+    id: 'session-' + examIds.join('+'),
+    name: sessionName,
+    score: correct,
+    total: total,
+    percent: pct,
+    answers: answersArr,
+    timestamp: new Date().toISOString()
+  });
+  renderHistory();
 }
 
 function restartSame() {
@@ -1101,9 +1133,94 @@ function goHome() {
 }
 
 // =====================
+// LOCALSTORAGE HISTORY
+// =====================
+const HISTORY_KEY = 'ml_exam_quiz_history';
+
+function loadHistory() {
+  try {
+    const raw = localStorage.getItem(HISTORY_KEY);
+    if (!raw) return [];
+    const arr = JSON.parse(raw);
+    return Array.isArray(arr) ? arr : [];
+  } catch (e) { return []; }
+}
+function saveHistoryArr(arr) {
+  try { localStorage.setItem(HISTORY_KEY, JSON.stringify(arr)); } catch (e) {}
+}
+function saveAttempt(entry) {
+  const h = loadHistory();
+  h.unshift(entry);
+  saveHistoryArr(h);
+}
+function fmtDate(iso) {
+  const d = new Date(iso);
+  if (isNaN(d)) return iso;
+  return d.toLocaleString(undefined, {year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+}
+function renderHistory() {
+  const wrap = document.getElementById('history-list');
+  if (!wrap) return;
+  const h = loadHistory();
+  if (!h.length) {
+    wrap.innerHTML = `<div style="color:var(--muted);font-size:13px;padding:14px;background:var(--surface);border:1px solid var(--border);border-radius:8px">No attempts yet — submit your first quiz!</div>`;
+    return;
+  }
+  const rows = h.map(e => {
+    const pct = e.percent != null ? e.percent : Math.round(e.score / e.total * 100);
+    const color = pct >= 63 ? 'var(--correct)' : pct >= 55 ? 'var(--warning)' : 'var(--wrong)';
+    return `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid var(--border);font-size:14px;gap:10px;flex-wrap:wrap">
+      <div><span style="color:var(--text);font-weight:500">${e.name||e.id}</span> <span style="color:var(--muted);margin-left:8px;font-size:12px;font-family:'IBM Plex Mono',monospace">${fmtDate(e.timestamp)}</span></div>
+      <div style="color:${color};font-weight:600;font-family:'IBM Plex Mono',monospace">${e.score}/${e.total} — ${pct}%</div>
+    </div>`;
+  }).join('');
+  wrap.innerHTML = `<div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden">${rows}</div>`;
+}
+function exportHistory() {
+  const h = loadHistory();
+  const blob = new Blob([JSON.stringify(h, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const stamp = new Date().toISOString().slice(0,10).replace(/-/g,'');
+  a.href = url; a.download = `${HISTORY_KEY}_${stamp}.json`;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+function importHistory(ev) {
+  const file = ev.target.files && ev.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const incoming = JSON.parse(reader.result);
+      if (!Array.isArray(incoming)) throw new Error('Not an array');
+      const existing = loadHistory();
+      const seen = new Set(existing.map(e => `${e.timestamp}|${e.id}`));
+      const merged = existing.slice();
+      incoming.forEach(e => {
+        const k = `${e.timestamp}|${e.id}`;
+        if (!seen.has(k)) { merged.push(e); seen.add(k); }
+      });
+      merged.sort((a,b) => (b.timestamp||'').localeCompare(a.timestamp||''));
+      saveHistoryArr(merged);
+      renderHistory();
+      alert(`Imported. Total attempts: ${merged.length}`);
+    } catch (err) { alert('Import failed: ' + err.message); }
+    ev.target.value = '';
+  };
+  reader.readAsText(file);
+}
+function clearHistory() {
+  if (!confirm('Clear all past attempts? This cannot be undone.')) return;
+  saveHistoryArr([]);
+  renderHistory();
+}
+
+// =====================
 // INIT
 // =====================
 renderLanding();
+renderHistory();
 </script>
 </body>
 </html>

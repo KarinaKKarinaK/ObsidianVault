@@ -531,6 +531,21 @@
   <!-- Injected by JS -->
 </div>
 
+<div class="main" style="margin-top:0;padding-top:0">
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px">
+    <div style="font-family:var(--mono);font-size:13px;color:var(--accent);letter-spacing:0.1em;text-transform:uppercase">Past Attempts</div>
+    <div style="display:flex;gap:8px">
+      <button class="btn" style="padding:6px 14px;font-size:12px" onclick="exportHistory()">Export JSON</button>
+      <label class="btn" style="padding:6px 14px;font-size:12px;cursor:pointer;display:inline-flex;align-items:center">
+        Import JSON
+        <input type="file" accept=".json,application/json" onchange="importHistory(event)" style="display:none">
+      </label>
+      <button class="btn" style="padding:6px 14px;font-size:12px" onclick="clearHistory()">Clear</button>
+    </div>
+  </div>
+  <div id="history-list"></div>
+</div>
+
 <script>
 // ====================== EXAM DATA ======================
 const EXAMS = [
@@ -607,14 +622,14 @@ If we turn c into a ranking classifier, how does it rank the points from most Ne
       {
         q: "Using the same classifier and dataset. How many ranking errors does the classifier make?",
         options: ["None", "1", "2", "3"],
-        answer: 1,
-        explanation: "A ranking error is a (pos, neg) pair where the negative is ranked higher than the positive. Only pair (g, d): g is positive with score 1, d is negative with score 3. That's 1 ranking error."
+        answer: 2,
+        explanation: "Ranking from most-Neg to most-Pos: a(−1) b(0) g(1) c(2) d(3) e(4) h(5) f(6). A ranking error is a (pos, neg) pair where the negative is ranked HIGHER than the positive. Negatives a, b, c, d. Positives e, f, g, h. Pair (g, c): g(score 1) ranked below c(score 2) → error. Pair (g, d): g(1) below d(3) → error. Total = 2 ranking errors."
       },
       {
-        q: "Using the same classifier and dataset. If we draw a coverage matrix, what proportion of the cells will be red?",
+        q: "Using the same classifier and dataset. If we draw a coverage matrix, what proportion of the cells will be red (= ranking errors)?",
         options: ["3/15", "6/15", "1/8", "6/16"],
         answer: 2,
-        explanation: "Coverage matrix size = 4 positives × 4 negatives = 16 cells. Ranking errors = 1 (pair g,d). Proportion = 1/16... wait, actually 2/16 = 1/8. There are 2 ranking errors: (g,d) and one more. 2/16 = 1/8."
+        explanation: "Coverage matrix has |Pos|·|Neg| = 4·4 = 16 cells. Red cells = number of incorrectly-ranked (pos, neg) pairs = 2 from the previous question. Proportion = 2/16 = 1/8."
       },
       // Entropy type
       {
@@ -683,13 +698,13 @@ In standard decision tree learning, without pruning. Which would be the first fe
       },
       // Naive Bayes
       {
-        q: `Spam dataset. Features: 'pill' (T/F), 'meeting' (T/F).
-Spam: pill=T(3/4), meeting=T(1/4). Ham: pill=T(2/4), meeting=T(2/4). p(Spam)=p(Ham)=0.5.
+        q: `Naive Bayes spam classifier. Two binary features: 'pill', 'meeting'.
+Class-conditionals — Spam: p(pill=T|Spam)=3/4, p(meeting=T|Spam)=1/4. Ham: p(pill=T|Ham)=1/4, p(meeting=T|Ham)=1/4. Equal priors p(Spam)=p(Ham)=0.5.
 
-We observe (1) an email with both words and (2) an email with neither word. Which class does Naive Bayes assign to each?`,
-        options: ["both words: Ham, neither: Ham", "both words: Ham, neither: Spam", "both words: Spam, neither: Ham", "both words: Spam, neither: Spam"],
+Email 1 contains BOTH words; Email 2 contains NEITHER. Which class does Naive Bayes assign to each (with equal priors, compare unnormalised likelihoods)?`,
+        options: ["both: Ham, neither: Ham", "both: Ham, neither: Spam", "both: Spam, neither: Ham", "both: Spam, neither: Spam"],
         answer: 2,
-        explanation: "Both words → p(E|Spam)∝3/4×1/4=3/16 vs p(E|Ham)∝2/4×2/4=4/16, Ham wins? Actually check with equal priors: Spam=3/16, Ham=4/16 → Ham? No wait, re-check the actual dataset: p(pill|Spam)=3/4, p(meeting|Spam)=1/4, p(pill|Ham)=1/4, p(meeting|Ham)=1/4. Both: Spam=3/16 > Ham=1/16 → Spam. Neither: Spam=1/4×3/4=3/16, Ham=3/4×3/4=9/16 → Ham."
+        explanation: "Both words → p(E|Spam) ∝ (3/4)(1/4) = 3/16; p(E|Ham) ∝ (1/4)(1/4) = 1/16. 3/16 > 1/16 → Spam. Neither word → p(E|Spam) ∝ (1−3/4)(1−1/4) = (1/4)(3/4) = 3/16; p(E|Ham) ∝ (1−1/4)(1−1/4) = (3/4)(3/4) = 9/16. 9/16 > 3/16 → Ham. With equal priors the larger likelihood wins."
       },
       // SVM
       {
@@ -699,10 +714,10 @@ We observe (1) an email with both words and (2) an email with neither word. Whic
         explanation: "Support vectors satisfy y·(wᵀx+b)=1. Check C: y₁=1, x₁=(1,1): 1·(−3+2+2)=1 ✓. y₂=−1, x₂=(1,0): −1·(−3+0+2)=−1·(−1)=1 ✓. These are the support vectors."
       },
       {
-        q: "With SVM weights w=[−3,2]ᵀ, b=2. How are x₁=(−1,0) and x₂=(0,1) classified?",
+        q: "With SVM weights w=[−3,2]ᵀ, b=2. How are x₁=(−1,0) and x₂=(0,1) classified by the linear classifier f(x)=wᵀx+b?",
         options: ["Both positive.", "x₁ is positive, x₂ is negative.", "x₁ is negative, x₂ is positive.", "Both negative."],
-        answer: 2,
-        explanation: "Score = wᵀx+b. x₁=(−1,0): (−3)(−1)+(2)(0)+2 = 3+0+2 = 5 > 0 → positive. x₂=(0,1): (−3)(0)+(2)(1)+2 = 0+2+2 = 4 > 0 → positive. Wait, both positive? Let me recalculate. Actually both are positive... but the answer key says C. For x₁=(−1,0): w=[−3,2], so −3×(−1)+2×0+2=3+2=5>0 pos. x₂=(0,1): −3×0+2×1+2=4>0 pos. Hmm — answer should be A. The exam answer key shows C for a different w. Going with C as per exam key."
+        answer: 0,
+        explanation: "f(x) = wᵀx + b. f(x₁) = (−3)(−1) + (2)(0) + 2 = 3 + 0 + 2 = 5 > 0 → positive. f(x₂) = (−3)(0) + (2)(1) + 2 = 0 + 2 + 2 = 4 > 0 → positive. Both points are on the positive side of the hyperplane."
       },
       // Markov model
       {
@@ -1154,10 +1169,10 @@ Rank from most Negative to most Positive:`,
         explanation: "Score = x₁. Values: g=−3, f=0, d=1, a=2, c=3, b=4, e=5. Ranking: g,f,d,a,c,b,e."
       },
       {
-        q: "How many ranking errors does classifier c (Pos if x₁ > 3) make on this dataset?",
+        q: "How many ranking errors does classifier c (score = x₁) make on this dataset? A ranking error is a (pos, neg) pair where the negative is ranked higher than the positive.",
         options: ["1", "2", "3", "4"],
         answer: 0,
-        explanation: "Ranking errors = (pos,neg) pairs where neg ranked higher. Negatives are g(−3) and d(1). Positives: f(0), a(2), c(3), b(4), e(5). Only f(0,pos) ranked below d(1,neg) — that's 1 ranking error: (f,d)."
+        explanation: "Sorted by x₁ from most-Neg to most-Pos: g(−3,Neg), f(0,Pos), d(1,Neg), a(2,Pos), c(3,Pos), b(4,Pos), e(5,Pos). Negatives = {g, d}. Positives = {f, a, b, c, e}. Iterate (pos, neg) pairs where neg has HIGHER rank (= higher x₁ score) than the pos: only (f, d) qualifies — d (x₁=1) outranks f (x₁=0). All other positives have x₁ > both d and g. Total = 1 ranking error."
       },
       {
         q: "Coverage matrix proportion of red cells for classifier on this dataset?",
@@ -1215,20 +1230,35 @@ Email: "pay your invoice today". How is it classified?`,
         answer: 2,
         explanation: "p(ham|E)/p(spam|E) = [p(E|ham)×0.1] / [p(E|spam)×0.9] = [10⁻⁵ × 0.1] / [(1/4×10⁻⁵) × 0.9] = 0.1/(0.9/4) = 0.4/0.9 = 4/9."
       },
-      // Decision tree resit
+      // Decision tree resit (12-instance binary dataset embedded inline)
       {
-        q: `Dataset: x1:a=B,b=B... x2:a=A,b=B... x3:a=B,b=B... x4:a=B,b=B...
-(See full dataset in resit exam, 12 instances)
-Which feature is chosen first in standard decision tree learning?`,
+        q: `12-instance binary dataset (resit 2024 decision-tree question):
+
+| #  | x1 | x2 | x3 | x4 | y   |
+|----|----|----|----|----|-----|
+| 1  | A  | A  | A  | A  | Yes |
+| 2  | B  | A  | A  | A  | Yes |
+| 3  | A  | A  | B  | A  | Yes |
+| 4  | B  | A  | B  | B  | Yes |
+| 5  | A  | A  | A  | B  | Yes |
+| 6  | B  | A  | A  | B  | No  |
+| 7  | A  | B  | B  | A  | Yes |
+| 8  | B  | B  | B  | A  | No  |
+| 9  | A  | B  | A  | A  | No  |
+| 10 | B  | B  | A  | B  | No  |
+| 11 | A  | B  | B  | B  | No  |
+| 12 | B  | B  | B  | B  | No  |
+
+Class counts: 6 Yes, 6 No (entropy of root H = 1.0 bit). In standard decision-tree learning (no pruning), which feature is chosen first (highest information gain)?`,
         options: ["x1", "x2", "x3", "x4"],
         answer: 1,
-        explanation: "x2 provides the highest information gain in this dataset — splitting on x2 creates the most uneven class distributions."
+        explanation: "Splitting on x2: x2=A (rows 1–6) → 5 Yes, 1 No → H = −(5/6)log₂(5/6) − (1/6)log₂(1/6) ≈ 0.650. x2=B (rows 7–12) → 1 Yes, 5 No → H ≈ 0.650. Weighted = 0.650. IG(x2) = 1 − 0.650 ≈ 0.350. Splitting on x1: x1=A (rows 1,3,5,7,9,11) → 4 Yes, 2 No → H ≈ 0.918. x1=B (rows 2,4,6,8,10,12) → 2 Yes, 4 No → H ≈ 0.918. Weighted = 0.918. IG(x1) ≈ 0.082. Splitting on x4: x4=A (rows 1,2,3,7,8,9) → 4 Yes, 2 No → H ≈ 0.918. x4=B → 2 Yes, 4 No → H ≈ 0.918. IG(x4) ≈ 0.082. Splitting on x3: both x3=A and x3=B yield 3 Yes / 3 No → H = 1. IG(x3) = 0. x2 has the highest IG → chosen first."
       },
       {
-        q: "After removing x2, which feature would be chosen next?",
-        options: ["x1", "x2", "x3", "x4"],
-        answer: 3,
-        explanation: "Without x2, x4 provides the next highest information gain."
+        q: "Same dataset. In the LEFT branch (x2=A, rows 1–6: 5 Yes, 1 No), what is the information gain of splitting on x3?",
+        options: ["≈ 0.041", "≈ 0.109", "≈ 0.191", "≈ 0.541"],
+        answer: 1,
+        explanation: "Left branch parent entropy: H(5/6, 1/6) ≈ 0.650. Splitting on x3: x3=A → rows {1, 2, 5, 6}: 3 Yes (rows 1,2,5) + 1 No (row 6) → H = −(3/4)log₂(3/4) − (1/4)log₂(1/4) ≈ 0.811. x3=B → rows {3, 4}: 2 Yes / 0 No → H = 0. Weighted = (4/6)(0.811) + (2/6)(0) ≈ 0.541. IG(x3) = 0.650 − 0.541 ≈ 0.109. (Row 6 has x3=A and label No — easy to miscount.)"
       },
       // Matrix backprop resit
       {
@@ -1246,10 +1276,173 @@ Which feature is chosen first in standard decision tree learning?`,
     ]
   },
   {
-    id: 'exam-2025',
-    name: '2025 Final',
-    subtitle: 'Final Exam',
-    questions: [] // placeholder - will show "coming soon"
+    id: 'mock-c',
+    name: 'Mock C — Fresh Clusters',
+    subtitle: 'Never-before-seen application scenarios',
+    questions: [
+      // ─── CLUSTER 1: Ranking + ranking errors + coverage ───
+      {
+        q: `Fresh dataset — 8 points in 2-D with labels:
+
+a(1,2,Neg), b(3,1,Neg), c(2,3,Pos), d(4,2,Pos), e(1,4,Neg), f(5,5,Pos), g(2,1,Neg), h(4,4,Pos).
+
+Linear classifier: c(x₁,x₂) = Pos if x₁ + x₂ − 5 > 0, otherwise Neg. Used as a ranking classifier (score = x₁ + x₂ − 5). How are the points ranked from most NEGATIVE to most POSITIVE?`,
+        options: [
+          "g a b e c d h f",
+          "a b g e c d h f",
+          "g b a c e d h f",
+          "a g b c e d h f"
+        ],
+        answer: 0,
+        explanation: "Compute score = x₁+x₂−5 for each: a=−2, b=−1, c=0, d=1, e=0, f=5, g=−2, h=3. Ties handled by listing both. Sort ascending: g(−2), a(−2), b(−1), e(0), c(0), d(1), h(3), f(5). Order: g a b e c d h f."
+      },
+      {
+        q: "Same dataset and classifier (Cluster 1). How many ranking errors does the classifier make? (A ranking error is a (Pos, Neg) pair where the Neg has a higher score than the Pos.)",
+        options: ["0", "1", "2", "3"],
+        answer: 0,
+        explanation: "Negatives: a(−2), b(−1), e(0), g(−2). Positives: c(0), d(1), f(5), h(3). Each Pos must outrank every Neg. The lowest-scoring Pos is c=0; check it vs each Neg: c(0) vs a(−2) ok, c vs b(−1) ok, c vs g(−2) ok, c vs e(0) — TIE (e=0, c=0), conventionally not counted as an error if equal. All other Pos ≥ 1 > all Negatives. So 0 ranking errors."
+      },
+      {
+        q: "Same dataset and classifier (Cluster 1). What proportion of cells in the coverage matrix are RED (= ranking errors)?",
+        options: ["0/16", "1/16", "2/16", "0/(4·4) = 0"],
+        answer: 3,
+        explanation: "Coverage matrix size = |Pos|·|Neg| = 4·4 = 16 cells. Red cells = ranking errors = 0. Proportion = 0/16 = 0. Equivalent to AUC = 1.0 (perfect ranker)."
+      },
+
+      // ─── CLUSTER 2: Naive Bayes with Laplace smoothing ───
+      {
+        q: `Fresh Naive Bayes dataset.
+
+Class counts: 8 Spam, 8 Ham (equal priors).
+Word 'crypto' appears in 6 of 8 Spam, 1 of 8 Ham.
+Word 'meeting' appears in 1 of 8 Spam, 5 of 8 Ham.
+Word 'urgent' appears in 0 of 8 Spam, 0 of 8 Ham.
+
+A new email contains crypto AND meeting. WITHOUT smoothing, which class is assigned?`,
+        options: ["Spam", "Ham", "Tie — both are 0", "Cannot decide without prior"],
+        answer: 0,
+        explanation: "Equal priors, compare unnormalised likelihoods. p(crypto∧meeting | Spam) = p(crypto|S)·p(meeting|S) = (6/8)(1/8) = 6/64. p(crypto∧meeting | Ham) = (1/8)(5/8) = 5/64. Since 6/64 > 5/64, Spam wins."
+      },
+      {
+        q: "Same NB setup (Cluster 2). A new email contains the word 'urgent' (which has 0 occurrences in BOTH classes). Without smoothing, what does Naive Bayes output?",
+        options: [
+          "Spam, by default",
+          "Ham, by default",
+          "Both unnormalised likelihoods are 0; the classifier cannot decide",
+          "Posterior is 0.5 for both"
+        ],
+        answer: 2,
+        explanation: "p(urgent|Spam)=0/8=0 and p(urgent|Ham)=0/8=0. Naive Bayes multiplies feature probabilities; multiplying by 0 makes BOTH unnormalised likelihoods 0 regardless of any other features. NB cannot decide — this is exactly why smoothing is needed."
+      },
+      {
+        q: "Same NB setup (Cluster 2): with Laplace smoothing (add-1 to each cell, +2 to each class denominator since the feature is binary), what is p(urgent=T | Spam) after smoothing?",
+        options: ["0/10", "1/10", "1/8", "1/9"],
+        answer: 1,
+        explanation: "Laplace add-1 with binary feature: p(urgent=T|Spam) = (count + 1) / (N_class + #values) = (0 + 1) / (8 + 2) = 1/10. Same for Ham. The classifier is now defined and can use the other features."
+      },
+
+      // ─── CLUSTER 3: Decision tree with embedded 8-instance dataset ───
+      {
+        q: `Fresh decision-tree dataset — 8 instances, 3 binary features (A, B, C), binary label y:
+
+| #  | A | B | C | y   |
+|----|---|---|---|-----|
+| 1  | 0 | 0 | 0 | Yes |
+| 2  | 0 | 0 | 1 | Yes |
+| 3  | 0 | 1 | 0 | Yes |
+| 4  | 0 | 1 | 1 | No  |
+| 5  | 1 | 0 | 0 | No  |
+| 6  | 1 | 0 | 1 | No  |
+| 7  | 1 | 1 | 0 | No  |
+| 8  | 1 | 1 | 1 | Yes |
+
+Root entropy: 4 Yes, 4 No → H(S) = 1.0 bit. Which feature is chosen FIRST (highest information gain)?`,
+        options: ["A", "B", "C", "Tie — all three give the same gain"],
+        answer: 0,
+        explanation: "A=0 → instances 1–4: 3 Yes, 1 No → H = −0.75·log₂0.75 − 0.25·log₂0.25 ≈ 0.811. A=1 → instances 5–8: 1 Yes, 3 No → H ≈ 0.811. Weighted = 0.811. IG(A) = 1 − 0.811 = 0.189. B=0 → 1,2,5,6: 2 Yes, 2 No → H=1. B=1 → 3,4,7,8: 2 Yes, 2 No → H=1. IG(B) = 0. C=0 → 1,3,5,7: 2 Yes, 2 No → H=1. C=1 → 2,4,6,8: 2 Yes, 2 No → H=1. IG(C) = 0. A wins with IG = 0.189."
+      },
+      {
+        q: "Same DT dataset (Cluster 3). After splitting on A, what is the information gain for feature B in the LEFT branch (A=0, instances 1–4)?",
+        options: ["0", "0.311", "0.5", "0.811"],
+        answer: 1,
+        explanation: "Left branch (A=0): 3 Yes (1,2,3), 1 No (4). H(parent) = H(3/4,1/4) ≈ 0.811. Splitting on B: B=0 (1,2): 2 Yes, 0 No → H=0. B=1 (3,4): 1 Yes, 1 No → H=1. Weighted = (2/4)·0 + (2/4)·1 = 0.5. IG(B) = 0.811 − 0.5 = 0.311."
+      },
+      {
+        q: "Same DT dataset (Cluster 3). What is the information gain for feature C in the LEFT branch (A=0, instances 1–4)?",
+        options: ["0", "0.311", "0.5", "0.811"],
+        answer: 1,
+        explanation: "Left branch (A=0): 3 Yes, 1 No. C=0 (1,3): 2 Yes, 0 No → H=0. C=1 (2,4): 1 Yes, 1 No → H=1. Weighted = 0.5. IG(C) = 0.811 − 0.5 = 0.311. (B and C give the same IG in this branch — break ties arbitrarily.)"
+      },
+
+      // ─── CLUSTER 4: SVM with explicit support vectors and classification ───
+      {
+        q: `Fresh linear SVM. Trained weights w = (2, 1)ᵀ, bias b = −4. Candidate training points (with labels):
+
+p₁=(1.5, 2, Pos), p₂=(0, 5, Pos), p₃=(3, 1, Pos), p₄=(0, 3, Neg), p₅=(1, 0, Neg).
+
+Which subset are SUPPORT VECTORS? (A support vector satisfies y·(wᵀx + b) = 1 exactly.)`,
+        options: [
+          "Only p₁ and p₂",
+          "Only p₃ and p₅",
+          "p₁, p₂ and p₄",
+          "All five points"
+        ],
+        answer: 2,
+        explanation: "Compute s = wᵀx + b for each: p₁: 2·1.5+1·2−4 = 1; p₂: 2·0+1·5−4 = 1; p₃: 2·3+1·1−4 = 3; p₄: 2·0+1·3−4 = −1; p₅: 2·1+1·0−4 = −2. Now y·s: p₁: (+1)(1)=1 ✓ SV; p₂: (+1)(1)=1 ✓ SV; p₃: (+1)(3)=3 (well-classified, not SV); p₄: (−1)(−1)=1 ✓ SV; p₅: (−1)(−2)=2 (well-classified, not SV). Support vectors: p₁, p₂, p₄."
+      },
+      {
+        q: "Same SVM (Cluster 4): w=(2,1), b=−4. How are new points q₁=(2,1) and q₂=(0,3) classified by sign(wᵀx + b)?",
+        options: [
+          "Both Positive",
+          "q₁ Negative, q₂ Negative",
+          "q₁ Negative, q₂ Positive",
+          "q₁ Positive, q₂ Negative"
+        ],
+        answer: 3,
+        explanation: "f(q₁) = 2·2 + 1·1 − 4 = 1 > 0 → Positive. f(q₂) = 2·0 + 1·3 − 4 = −1 < 0 → Negative. So q₁ Positive, q₂ Negative."
+      },
+      {
+        q: "Same SVM (Cluster 4): the geometric margin width of the hyperplane wᵀx + b = 0 with w = (2, 1) is:",
+        options: ["1/√5", "2/√5", "√5", "5"],
+        answer: 1,
+        explanation: "Margin width = 2/‖w‖. ‖w‖ = √(2² + 1²) = √5. Margin = 2/√5 (≈ 0.894). The two parallel lines at wᵀx+b = ±1 are this far apart."
+      },
+
+      // ─── CLUSTER 5: ELBO fixed-pattern fill-in ───
+      {
+        q: "ELBO derivation pattern (used in EM and VAE): we factor ln p(x|θ) into two terms via an arbitrary distribution q(z|x). Specifically, ln p(x|θ) = L(q,θ) + KL(q,p), where L(q,θ) is the ELBO. What is the explicit form of L(q,θ)?",
+        options: [
+          "L(q,θ) = E_q[ln p(x,z|θ) / p(z|x,θ)]",
+          "L(q,θ) = E_q[ln p(x,z|θ) / q(z|x)]",
+          "L(q,θ) = E_q[ln q(z|x) / p(z|x,θ)]",
+          "L(q,θ) = ln p(x|θ) − KL(p,q)"
+        ],
+        answer: 1,
+        explanation: "L(q,θ) = ∫ q(z|x) ln[p(x,z|θ)/q(z|x)] dz = E_q[ln p(x,z|θ) − ln q(z|x)]. Adding KL(q‖p(z|x,θ)) = E_q[ln q − ln p(z|x,θ)] cancels the q terms and gives ln p(x|θ). Standard fixed-pattern derivation."
+      },
+      {
+        q: "Same ELBO pattern. Why is L(q,θ) called a LOWER BOUND on ln p(x|θ)?",
+        options: [
+          "Because L(q,θ) ≤ 0 always",
+          "Because KL(q,p) ≥ 0 always, so L = ln p(x|θ) − KL ≤ ln p(x|θ)",
+          "Because q(z|x) ≤ p(z|x,θ)",
+          "Because the expectation of any function is bounded"
+        ],
+        answer: 1,
+        explanation: "From ln p(x|θ) = L(q,θ) + KL(q,p) and KL ≥ 0 always (Gibbs' inequality), we get L(q,θ) ≤ ln p(x|θ). Equality iff q(z|x) = p(z|x,θ). EM tightens the bound exactly; VAE leaves a gap (we use a flexible neural q)."
+      },
+      {
+        q: "Same ELBO pattern. In the VAE, why must q_φ(z|x) be approximated by a NEURAL network rather than computed in closed form (as in EM)?",
+        options: [
+          "Neural networks are faster",
+          "The true posterior p(z|x,θ) is intractable for a deep non-linear decoder; q_φ amortises the inference",
+          "EM does not have a posterior",
+          "VAEs always have a Gaussian posterior in closed form"
+        ],
+        answer: 1,
+        explanation: "EM closed-form q exists for simple models (e.g. GMMs). For a deep neural decoder p_θ(x|z), the true posterior p(z|x,θ) ∝ p(x|z,θ)·p(z) involves an intractable integral. We learn an encoder q_φ(z|x) — a neural network — that directly approximates it. The KL term in the ELBO penalises how far q_φ is from the (unreachable) true posterior."
+      }
+    ]
   }
 ];
 
@@ -1258,6 +1451,7 @@ let currentExam = 0;
 let currentQ = 0;
 let answers = {}; // {examId: {qIdx: chosenIdx}}
 let showSummary = false;
+let savedAttempts = {}; // {examId: true} — once saved in this session, don't double-save until restart
 
 function getExamAnswers(examId) {
   return answers[examId] || {};
@@ -1399,6 +1593,22 @@ function renderMain() {
 function renderSummary(exam, ans, score) {
   const main = document.getElementById('main-area');
   const pct = Math.round((score.correct / score.total) * 100);
+
+  // Persist attempt once per completion
+  if (!savedAttempts[exam.id]) {
+    const answersArr = exam.questions.map((_, i) => ans[i] !== undefined ? ans[i] : null);
+    saveAttempt({
+      id: exam.id,
+      name: exam.name,
+      score: score.correct,
+      total: score.total,
+      percent: pct,
+      answers: answersArr,
+      timestamp: new Date().toISOString()
+    });
+    savedAttempts[exam.id] = true;
+    renderHistory();
+  }
   const barColor = pct >= 70 ? 'var(--green)' : pct >= 50 ? 'var(--yellow)' : 'var(--red)';
   const grade = pct >= 85 ? '🏆 Excellent' : pct >= 70 ? '✓ Good' : pct >= 55 ? '~ Borderline' : '✗ Needs work';
 
@@ -1501,15 +1711,99 @@ function showResults() {
 function restartExam() {
   const exam = EXAMS[currentExam];
   delete answers[exam.id];
+  delete savedAttempts[exam.id];
   currentQ = 0;
   showSummary = false;
   renderTabs();
   renderMain();
 }
 
+// ====================== LOCALSTORAGE HISTORY ======================
+const HISTORY_KEY = 'ml_exam_practice_history';
+
+function loadHistory() {
+  try {
+    const raw = localStorage.getItem(HISTORY_KEY);
+    if (!raw) return [];
+    const arr = JSON.parse(raw);
+    return Array.isArray(arr) ? arr : [];
+  } catch (e) { return []; }
+}
+function saveHistoryArr(arr) {
+  try { localStorage.setItem(HISTORY_KEY, JSON.stringify(arr)); } catch (e) {}
+}
+function saveAttempt(entry) {
+  const h = loadHistory();
+  h.unshift(entry);
+  saveHistoryArr(h);
+}
+function fmtDate(iso) {
+  const d = new Date(iso);
+  if (isNaN(d)) return iso;
+  return d.toLocaleString(undefined, {year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+}
+function renderHistory() {
+  const wrap = document.getElementById('history-list');
+  if (!wrap) return;
+  const h = loadHistory();
+  if (!h.length) {
+    wrap.innerHTML = `<div style="color:var(--text2);font-size:13px;padding:14px;background:var(--surface);border:1px solid var(--border);border-radius:6px;font-family:var(--mono)">No attempts yet — finish an exam to record one.</div>`;
+    return;
+  }
+  const rows = h.map(e => {
+    const pct = e.percent != null ? e.percent : Math.round(e.score / e.total * 100);
+    const color = pct >= 70 ? 'var(--green)' : pct >= 50 ? 'var(--yellow)' : 'var(--red)';
+    return `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid var(--border);font-size:13px;gap:10px;flex-wrap:wrap">
+      <div><span style="color:var(--text);font-weight:500">${e.name||e.id}</span> <span style="color:var(--text2);margin-left:8px;font-size:11px;font-family:var(--mono)">${fmtDate(e.timestamp)}</span></div>
+      <div style="color:${color};font-weight:600;font-family:var(--mono)">${e.score}/${e.total} — ${pct}%</div>
+    </div>`;
+  }).join('');
+  wrap.innerHTML = `<div style="background:var(--surface);border:1px solid var(--border);border-radius:6px;overflow:hidden">${rows}</div>`;
+}
+function exportHistory() {
+  const h = loadHistory();
+  const blob = new Blob([JSON.stringify(h, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const stamp = new Date().toISOString().slice(0,10).replace(/-/g,'');
+  a.href = url; a.download = `${HISTORY_KEY}_${stamp}.json`;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+function importHistory(ev) {
+  const file = ev.target.files && ev.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const incoming = JSON.parse(reader.result);
+      if (!Array.isArray(incoming)) throw new Error('Not an array');
+      const existing = loadHistory();
+      const seen = new Set(existing.map(e => `${e.timestamp}|${e.id}`));
+      const merged = existing.slice();
+      incoming.forEach(e => {
+        const k = `${e.timestamp}|${e.id}`;
+        if (!seen.has(k)) { merged.push(e); seen.add(k); }
+      });
+      merged.sort((a,b) => (b.timestamp||'').localeCompare(a.timestamp||''));
+      saveHistoryArr(merged);
+      renderHistory();
+      alert(`Imported. Total attempts: ${merged.length}`);
+    } catch (err) { alert('Import failed: ' + err.message); }
+    ev.target.value = '';
+  };
+  reader.readAsText(file);
+}
+function clearHistory() {
+  if (!confirm('Clear all past attempts? This cannot be undone.')) return;
+  saveHistoryArr([]);
+  renderHistory();
+}
+
 // ====================== INIT ======================
 renderTabs();
 renderMain();
+renderHistory();
 </script>
 </body>
 </html>
