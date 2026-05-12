@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>iSubmit Exam :: Databases</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">iSubmit :: Databases</div>
+    <nav class="topnav">
+      <a href="index.html">Home</a>
+      <a href="practice.html">Practice</a>
+      <a href="exam.html">Exam Mode</a>
+      <a href="isubmit-exam.html" class="active">iSubmit Exam</a>
+    </nav>
+    <div class="exam-timer" id="exam-timer" hidden>
+      <span class="timer-label">Time remaining</span>
+      <span class="timer-value" id="timer-value">02:45:00</span>
+    </div>
+  </header>
+
+  <div class="isubmit-layout">
+    <aside class="isubmit-sidebar" id="exam-sidebar" hidden>
+      <h3 style="margin:0 0 12px 4px; font-size:12px; text-transform:uppercase; letter-spacing:0.6px; color:var(--text-muted); font-weight:600;">Tasks</h3>
+      <nav id="task-nav"></nav>
+      <div class="submit-area">
+        <button id="submit-exam" class="primary-btn full">Submit exam</button>
+      </div>
+    </aside>
+
+    <main class="isubmit-content" id="content">
+      <div id="start-pane">
+        <h1 style="color:var(--accent); margin-top:0;">iSubmit Exam — Mock Final</h1>
+        <p>Same structure as the past final exam:</p>
+        <ul style="font-size:14px; line-height:1.7;">
+          <li><strong>5 tasks</strong> with sub-questions (Conceptual Design, Normalization, SQL, Transactions, Database APIs)</li>
+          <li><strong>8 points total</strong> — grade = points ÷ max × 10 (so 7.2 / 8 = 90% = grade 9.0)</li>
+          <li><strong>2h 45m</strong> countdown · results locked until submit</li>
+          <li><strong>Task 1(a)</strong> uses the in-browser <strong>E/R Editor</strong> (entity / attribute / relationship / isA — with weak, key, multi-value, derived, identifying, aggregation, disjoint, total)</li>
+          <li>Each subquestion has an auto-grade plus a <strong>rubric checklist</strong> you can self-adjust after seeing the model answer</li>
+        </ul>
+        <button id="start-exam" class="primary-btn">Start exam</button>
+      </div>
+    </main>
+  </div>
+
+  <script src="data/questions-data.js"></script>
+  <script src="data/isubmit-exam-data.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/grader.js"></script>
+  <script src="js/question.js"></script>
+  <script src="js/er-editor.js"></script>
+  <script src="js/isubmit-exam.js"></script>
+</body>
+</html>

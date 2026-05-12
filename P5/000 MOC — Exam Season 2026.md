@@ -41,6 +41,10 @@
 
 ### Databases (DB)
 - [[HTML Study Tools/DB — Practice Tool.html|DB Practice Tool]]
+- [[Databases/exam_prep/index.html|DB Exam Prep — Home]] — light-theme iSubmit-style site (3 modes)
+- [[Databases/exam_prep/practice.html|DB Practice — by topic]] — 106 Qs across 10 topics
+- [[Databases/exam_prep/exam.html|DB Exam Mode]] — 20 Qs · 2 per topic · 2h45m timer
+- [[Databases/exam_prep/isubmit-exam.html|DB iSubmit Mock Exam]] — full 5-task mock final · point-weighted (8 pts) · grade calc · interactive E/R editor
 
 ### Text Mining (TM)
 - [[HTML Study Tools/TM — Study Tool.html|TM Study Tool]] — flashcards + quiz + literature

@@ -1,0 +1,1597 @@
+// Inline question bank — loaded as window.__QUESTIONS_BANK so the site works without a server.
+window.__QUESTIONS_BANK = {
+  "topics": [
+    { "id": "modelling",         "name": "Conceptual Modelling" },
+    { "id": "sql_basic_joins",   "name": "Basic SQL & Joins" },
+    { "id": "sql_nonmonotonic",  "name": "Non-Monotonic Queries" },
+    { "id": "sql_nested",        "name": "Nested Subqueries" },
+    { "id": "sql_aggregations",  "name": "Aggregations & Case Distinctions" },
+    { "id": "fd_keys",           "name": "Functional Dependencies & Minimal Keys" },
+    { "id": "normal_forms",      "name": "Normal Forms (1NF/BCNF/3NF)" },
+    { "id": "normalization",     "name": "Transformation to BCNF / 3NF" },
+    { "id": "tx_schedules",      "name": "Schedules, Conflicts & Serializability" },
+    { "id": "tx_2pl",            "name": "Two-Phase Locking & Cascading Rollbacks" }
+  ],
+  "questions": [
+    {
+      "id": "mod-01",
+      "topicId": "modelling",
+      "subtopic": "Cardinalities",
+      "type": "radio",
+      "prompt": "Every preschool consists of at least 2 groups, and a group belongs to exactly one preschool. Which cardinality (min..max) annotation on the Group side of the Preschool–Group relationship correctly captures 'a preschool has at least 2 groups'?",
+      "options": ["0..1", "1..1", "2..*", "0..*"],
+      "answer": { "value": 2 },
+      "explanation": "On the Group side of the relationship 'preschool has groups', the minimum is 2 (at least 2 groups per preschool) and the maximum is unbounded, so the annotation is 2..*."
+    },
+    {
+      "id": "mod-02",
+      "topicId": "modelling",
+      "subtopic": "Weak entities",
+      "type": "radio",
+      "prompt": "A Group has an identifier that is unique within its preschool but not globally. How should this be modelled in the ER diagram?",
+      "options": [
+        "As a strong entity with the group id as primary key",
+        "As a weak entity whose discriminator is the group id and whose identifying entity is Preschool",
+        "As a multivalued attribute of Preschool",
+        "By generalisation from Preschool"
+      ],
+      "answer": { "value": 1 },
+      "explanation": "When an entity has no global key but is uniquely identified by a discriminator together with an owner entity (here Preschool), it is modelled as a weak entity with that owner as the identifying entity."
+    },
+    {
+      "id": "mod-03",
+      "topicId": "modelling",
+      "subtopic": "Generalisation",
+      "type": "radio",
+      "prompt": "Employees and Children are both Persons that share the attributes name, date of birth, gender, address. Employees additionally have a social security number, Children additionally have a picture. What is the cleanest ER modelling choice?",
+      "options": [
+        "One table Person with all attributes, leaving employee/child fields NULL when not applicable",
+        "Two unrelated entity sets Employee and Child, each repeating name, dob, gender",
+        "A generalisation: Person as the superclass, Employee and Child as subclasses inheriting Person's attributes",
+        "Aggregate Employee and Child into a relationship 'IsA' on Person"
+      ],
+      "answer": { "value": 2 },
+      "explanation": "Shared attributes plus subtype-specific attributes is the canonical case for generalisation (ISA). Person is the supertype; Employee and Child specialise it."
+    },
+    {
+      "id": "mod-04",
+      "topicId": "modelling",
+      "subtopic": "Translation to relational",
+      "type": "radio",
+      "prompt": "A 1..1 relationship 'Preschool has exactly one Principal (an Employee)' is translated into the relational model. What is the most cardinality-preserving translation?",
+      "options": [
+        "Create a separate relation HasPrincipal(preschool_id, employee_id)",
+        "Add principal_id as a foreign key to Preschool, declared NOT NULL and UNIQUE",
+        "Add preschool_id as a multivalued column on Employee",
+        "Add principal_id to Preschool, allowing NULL"
+      ],
+      "answer": { "value": 1 },
+      "explanation": "A mandatory 1..1 side is best expressed by inlining the foreign key with NOT NULL (the 1 minimum) and UNIQUE (the 1 maximum on the other side). A separate relation cannot enforce the 1..1 cardinality."
+    },
+    {
+      "id": "mod-05",
+      "topicId": "modelling",
+      "subtopic": "N-ary relationships",
+      "type": "radio",
+      "prompt": "When a graduate student works on a project, exactly one professor must supervise their work, and the supervisor may differ per project. Which design is most appropriate?",
+      "options": [
+        "A binary relation Works(graduate, project) plus a separate binary Supervises(graduate, professor)",
+        "A ternary relationship WorksOn among Graduate, Project, Professor (the supervisor), with key {graduate, project}",
+        "Add a supervisor column to Graduate",
+        "Aggregate Supervises and Works into one entity with an artificial key"
+      ],
+      "answer": { "value": 1 },
+      "explanation": "The supervisor depends on the (graduate, project) pair, so a ternary relationship is required. The key {graduate, project} reflects that there is exactly one professor per (graduate, project)."
+    },
+    {
+      "id": "mod-06",
+      "topicId": "modelling",
+      "subtopic": "Cardinalities",
+      "type": "short_text",
+      "prompt": "In min..max notation, give the cardinality on the Person side of the relationship 'Person has Address', if every person has exactly one address but an address may be shared by many persons. Format: a..b",
+      "answer": {
+        "canonical": "1..1",
+        "acceptedAnswers": ["1..1", "(1,1)", "1,1"]
+      },
+      "explanation": "'Every person has exactly one address' means min = max = 1 on the Person side, written 1..1."
+    },
+    {
+      "id": "mod-07",
+      "topicId": "modelling",
+      "subtopic": "Primary keys",
+      "type": "radio",
+      "prompt": "A relation Works(employeeName -> Employee, companyName -> Company, salary) records that employees work for companies. An employee may work for several companies, and a company may employ several people. What is the primary key of Works?",
+      "options": [
+        "{employeeName}",
+        "{companyName}",
+        "{employeeName, companyName}",
+        "{employeeName, salary}"
+      ],
+      "answer": { "value": 2 },
+      "explanation": "Since one employee can have rows for multiple companies (and vice versa), only the combination (employeeName, companyName) uniquely identifies a row. Salary is not part of the key."
+    },
+    {
+      "id": "mod-08",
+      "topicId": "modelling",
+      "subtopic": "Foreign keys",
+      "type": "radio",
+      "prompt": "Knows(id1 -> Person, id2 -> Person). What does the arrow notation '-> Person' indicate?",
+      "options": [
+        "id1 and id2 must be equal",
+        "id1 and id2 are both foreign keys referencing the primary key of Person",
+        "Knows is a subtype of Person",
+        "id1 and id2 cannot be NULL"
+      ],
+      "answer": { "value": 1 },
+      "explanation": "The arrow notation 'attr -> Rel' in the course indicates that the attribute is a foreign key referencing the primary key of relation Rel."
+    },
+    {
+      "id": "mod-09",
+      "topicId": "modelling",
+      "subtopic": "Translation to relational",
+      "type": "radio",
+      "prompt": "A relationship 'Employee works for at most one Preschool (mandatory: works for exactly one)' is translated. What is the simplest correct schema?",
+      "options": [
+        "Employee(empId, ..., preschool_id NOT NULL) with preschool_id referencing Preschool",
+        "A separate WorksFor(empId, preschoolId) with empId UNIQUE",
+        "Add a list-valued attribute preschools to Employee",
+        "Make preschool_id a primary key of Employee"
+      ],
+      "answer": { "value": 0 },
+      "explanation": "A mandatory many-to-one relationship is encoded by inlining the foreign key on the 'many' side with NOT NULL. No separate relation is needed."
+    },
+    {
+      "id": "mod-10",
+      "topicId": "modelling",
+      "subtopic": "Aggregation",
+      "type": "radio",
+      "prompt": "We want to record, per group within a preschool, the position an employee holds and how many hours/week they work in that group. Which construct best captures this?",
+      "options": [
+        "A unary relationship on Employee",
+        "A ternary relationship among Employee, Group, JobFunction with attribute hoursPerWeek",
+        "A new entity GroupPosition with attribute hoursPerWeek and no relationships",
+        "A multivalued attribute on Employee"
+      ],
+      "answer": { "value": 1 },
+      "explanation": "The fact (hoursPerWeek) depends on the combination of Employee, Group, and JobFunction. That is a ternary relationship; the attribute hoursPerWeek lives on the relationship."
+    },
+    {
+      "id": "mod-11",
+      "topicId": "modelling",
+      "subtopic": "Ordered attributes",
+      "type": "radio",
+      "prompt": "Each child has an ordered list of emergency phone numbers. How is 'ordered list' translated into a relational schema?",
+      "options": [
+        "Add a single phoneList VARCHAR column on Child",
+        "A separate relation EmergencyPhone(child_id, position, phone, contactName) with primary key {child_id, position}",
+        "Add phone1, phone2, phone3 columns on Child",
+        "Make phone the primary key of Child"
+      ],
+      "answer": { "value": 1 },
+      "explanation": "Ordered multivalued attributes become a separate relation with the owner's key plus a position/order attribute as part of the primary key."
+    },
+    {
+      "id": "mod-12",
+      "topicId": "modelling",
+      "subtopic": "Discriminator",
+      "type": "short_text",
+      "prompt": "What is the term for the attribute(s) of a weak entity that uniquely identify it relative to its identifying entity?",
+      "answer": {
+        "canonical": "discriminator",
+        "acceptedAnswers": ["discriminator", "partial key", "partial-key"]
+      },
+      "explanation": "A weak entity has a discriminator (also called partial key) that, combined with the identifying entity's key, forms a full key."
+    },
+
+    {
+      "id": "joins-01",
+      "topicId": "sql_basic_joins",
+      "subtopic": "Simple selection",
+      "type": "sql",
+      "prompt": "Find the name of all persons that are younger than 40.",
+      "tables": [
+        {
+          "name": "Person",
+          "columns": [
+            { "name": "id", "isKey": true },
+            { "name": "name" },
+            { "name": "city" },
+            { "name": "age" }
+          ]
+        }
+      ],
+      "answer": {
+        "canonical": "SELECT name FROM Person WHERE age < 40",
+        "requiredPatterns": ["\\bSELECT\\b", "\\bname\\b", "\\bFROM\\s+Person\\b", "\\bage\\s*<\\s*40\\b"]
+      },
+      "explanation": "A simple selection: project the name attribute from the Person relation, filtering rows where age is strictly less than 40."
+    },
+    {
+      "id": "joins-02",
+      "topicId": "sql_basic_joins",
+      "subtopic": "Self-join",
+      "type": "sql",
+      "prompt": "Find all people that know at least two different people. Do NOT use GROUP BY. (A knows-pair (id1, id2) means id1 knows id2.)",
+      "tables": [
+        {
+          "name": "Person",
+          "columns": [{ "name": "id", "isKey": true }, { "name": "name" }, { "name": "age" }]
+        },
+        {
+          "name": "Knows",
+          "columns": [{ "name": "id1", "isKey": true }, { "name": "id2", "isKey": true }],
+          "foreignKeys": [
+            { "column": "id1", "refTable": "Person", "refColumn": "id" },
+            { "column": "id2", "refTable": "Person", "refColumn": "id" }
+          ]
+        }
+      ],
+      "hint": "Join Knows with itself on the same first id (id1) and require the two second ids to differ.",
+      "answer": {
+        "canonical": "SELECT name FROM Person P, Knows K1, Knows K2 WHERE P.id = K1.id1 AND P.id = K2.id1 AND K1.id2 <> K2.id2",
+        "requiredPatterns": ["\\bKnows\\b.*\\bKnows\\b", "\\bK1\\.id2\\b", "\\bK2\\.id2\\b", "<>"]
+      },
+      "explanation": "Two distinct rows in Knows with the same id1 and different id2 values mean that person knows two different people. Self-joining Knows on id1 with K1.id2 <> K2.id2 expresses this without aggregation."
+    },
+    {
+      "id": "joins-03",
+      "topicId": "sql_basic_joins",
+      "subtopic": "Self-join (symmetric relation)",
+      "type": "sql",
+      "prompt": "Find the names of all persons that have at least one friend. The Friend relation is symmetric (if (A,B) is in Friend then so is (B,A) implicitly, but stored once). Use only joins; allow duplicates in the result.",
+      "tables": [
+        {
+          "name": "Person",
+          "columns": [{ "name": "id", "isKey": true }, { "name": "name" }]
+        },
+        {
+          "name": "Friend",
+          "columns": [{ "name": "id1", "isKey": true }, { "name": "id2", "isKey": true }],
+          "foreignKeys": [
+            { "column": "id1", "refTable": "Person", "refColumn": "id" },
+            { "column": "id2", "refTable": "Person", "refColumn": "id" }
+          ]
+        }
+      ],
+      "answer": {
+        "canonical": "SELECT name FROM Person P, Friend F WHERE P.id = F.id1 OR P.id = F.id2",
+        "requiredPatterns": ["\\bFriend\\b", "P\\.id\\s*=\\s*F\\.id1", "P\\.id\\s*=\\s*F\\.id2", "\\bOR\\b"]
+      },
+      "explanation": "Friend is symmetric, so a person has a friend if their id appears as id1 OR as id2 in some Friend tuple. Joining with OR captures both cases."
+    },
+    {
+      "id": "joins-04",
+      "topicId": "sql_basic_joins",
+      "subtopic": "Inner join with FK chain",
+      "type": "sql",
+      "prompt": "Find the names of all persons that have a bank account containing more than 1000 euros.",
+      "tables": [
+        { "name": "Person", "columns": [{ "name": "id", "isKey": true }, { "name": "name" }] },
+        { "name": "Account", "columns": [{ "name": "accountNr", "isKey": true }, { "name": "balance" }] },
+        {
+          "name": "BelongsTo",
+          "columns": [{ "name": "id", "isKey": true }, { "name": "accountNr", "isKey": true }],
+          "foreignKeys": [
+            { "column": "id", "refTable": "Person", "refColumn": "id" },
+            { "column": "accountNr", "refTable": "Account", "refColumn": "accountNr" }
+          ]
+        }
+      ],
+      "answer": {
+        "canonical": "SELECT name FROM Person P, BelongsTo B, Account A WHERE P.id = B.id AND B.accountNr = A.accountNr AND A.balance > 1000",
+        "requiredPatterns": ["\\bPerson\\b", "\\bBelongsTo\\b", "\\bAccount\\b", "balance\\s*>\\s*1000"]
+      },
+      "explanation": "Join the three relations along their foreign keys (Person.id = BelongsTo.id, BelongsTo.accountNr = Account.accountNr) and filter on balance > 1000."
+    },
+    {
+      "id": "joins-05",
+      "topicId": "sql_basic_joins",
+      "subtopic": "Join with constant filter",
+      "type": "sql",
+      "prompt": "Find the names and the cities of residence of all employees who work for 'First Bank Corporation'.",
+      "tables": [
+        {
+          "name": "Employee",
+          "columns": [{ "name": "employeeName", "isKey": true }, { "name": "street" }, { "name": "city" }]
+        },
+        {
+          "name": "Works",
+          "columns": [{ "name": "employeeName", "isKey": true }, { "name": "companyName", "isKey": true }, { "name": "salary" }],
+          "foreignKeys": [{ "column": "employeeName", "refTable": "Employee", "refColumn": "employeeName" }]
+        }
+      ],
+      "answer": {
+        "canonical": "SELECT employeeName, city FROM Employee E, Works W WHERE E.employeeName = W.employeeName AND W.companyName = 'First Bank Corporation'",
+        "requiredPatterns": ["\\bEmployee\\b", "\\bWorks\\b", "First Bank Corporation"]
+      },
+      "explanation": "Join Employee with Works on employeeName and select rows where the company is 'First Bank Corporation'."
+    },
+    {
+      "id": "joins-06",
+      "topicId": "sql_basic_joins",
+      "subtopic": "Multi-condition join",
+      "type": "sql",
+      "prompt": "Find the names, street addresses and cities of residence of all employees who work for 'First Bank Corporation' and earn more than 10000.",
+      "tables": [
+        {
+          "name": "Employee",
+          "columns": [{ "name": "employeeName", "isKey": true }, { "name": "street" }, { "name": "city" }]
+        },
+        {
+          "name": "Works",
+          "columns": [{ "name": "employeeName", "isKey": true }, { "name": "companyName", "isKey": true }, { "name": "salary" }]
+        }
+      ],
+      "answer": {
+        "canonical": "SELECT employeeName, street, city FROM Employee E, Works W WHERE E.employeeName = W.employeeName AND W.companyName = 'First Bank Corporation' AND salary > 10000",
+        "requiredPatterns": ["\\bemployeeName\\b", "\\bstreet\\b", "\\bcity\\b", "First Bank Corporation", "salary\\s*>\\s*10000"]
+      },
+      "explanation": "Combine the join condition E.employeeName = W.employeeName with the two filters (company and salary). Project the three required columns."
+    },
+    {
+      "id": "joins-07",
+      "topicId": "sql_basic_joins",
+      "subtopic": "LEFT JOIN with IS NULL",
+      "type": "sql",
+      "prompt": "Find the names of all persons that have NO bank account. Use a LEFT OUTER JOIN and IS NULL.",
+      "tables": [
+        { "name": "Person", "columns": [{ "name": "id", "isKey": true }, { "name": "name" }] },
+        {
+          "name": "BelongsTo",
+          "columns": [{ "name": "id", "isKey": true }, { "name": "accountNr", "isKey": true }],
+          "foreignKeys": [{ "column": "id", "refTable": "Person", "refColumn": "id" }]
+        }
+      ],
+      "answer": {
+        "canonical": "SELECT P.name FROM Person P LEFT JOIN BelongsTo B ON P.id = B.id WHERE B.id IS NULL",
+        "requiredPatterns": ["\\bLEFT\\s+(OUTER\\s+)?JOIN\\b", "\\bIS\\s+NULL\\b"]
+      },
+      "explanation": "A LEFT JOIN keeps all Persons; rows for Persons without a BelongsTo entry have B.id = NULL, so 'WHERE B.id IS NULL' selects exactly those without an account."
+    },
+    {
+      "id": "joins-08",
+      "topicId": "sql_basic_joins",
+      "subtopic": "Distinct vs duplicates",
+      "type": "radio",
+      "prompt": "Query: SELECT name FROM Person P, Friend F WHERE P.id = F.id1 OR P.id = F.id2; Is the duplicate problem solved by simply adding DISTINCT?",
+      "options": [
+        "Yes — DISTINCT removes the duplicates we want to remove",
+        "No — DISTINCT also collapses two different persons that happen to share the same name into one row",
+        "Yes, but only if we also add an ORDER BY",
+        "No — DISTINCT is not allowed after a join"
+      ],
+      "answer": { "value": 1 },
+      "explanation": "DISTINCT eliminates duplicates from the final projection. Two distinct persons with the same name would also be collapsed, which is not what we intend. The correct fix is to filter via id (e.g., IN / EXISTS) and then project name."
+    },
+    {
+      "id": "joins-09",
+      "topicId": "sql_basic_joins",
+      "subtopic": "Inequality join",
+      "type": "sql",
+      "prompt": "Find all pairs of distinct persons (by id) that live in the same city. Return name1, name2, city. Avoid listing each pair twice (i.e. only show (A,B), not also (B,A)).",
+      "tables": [
+        {
+          "name": "Person",
+          "columns": [{ "name": "id", "isKey": true }, { "name": "name" }, { "name": "city" }, { "name": "age" }]
+        }
+      ],
+      "answer": {
+        "canonical": "SELECT P1.name, P2.name, P1.city FROM Person P1, Person P2 WHERE P1.city = P2.city AND P1.id < P2.id",
+        "requiredPatterns": ["\\bPerson\\b.*\\bPerson\\b", "P1\\.city\\s*=\\s*P2\\.city", "P1\\.id\\s*<\\s*P2\\.id"]
+      },
+      "explanation": "Self-join Person with itself on city, and use the strict inequality on id to keep only one ordered pair per unordered pair of distinct persons."
+    },
+    {
+      "id": "joins-10",
+      "topicId": "sql_basic_joins",
+      "subtopic": "Three-way join",
+      "type": "sql",
+      "prompt": "List, for each pair (employee, company), the employeeName, companyName, and the city in which that company is located.",
+      "tables": [
+        { "name": "Employee", "columns": [{ "name": "employeeName", "isKey": true }, { "name": "street" }, { "name": "city" }] },
+        { "name": "Works", "columns": [{ "name": "employeeName", "isKey": true }, { "name": "companyName", "isKey": true }, { "name": "salary" }] },
+        { "name": "Company", "columns": [{ "name": "companyName", "isKey": true }, { "name": "city" }] }
+      ],
+      "answer": {
+        "canonical": "SELECT W.employeeName, W.companyName, C.city FROM Works W, Company C WHERE W.companyName = C.companyName",
+        "requiredPatterns": ["\\bWorks\\b", "\\bCompany\\b", "W\\.companyName\\s*=\\s*C\\.companyName"]
+      },
+      "explanation": "Join Works with Company on companyName. Employee is not needed because employeeName is already in Works."
+    },
+
+    {
+      "id": "nonm-01",
+      "topicId": "sql_nonmonotonic",
+      "subtopic": "NOT IN",
+      "type": "sql",
+      "prompt": "Find the names of all people that have no friends. Use NOT IN.",
+      "tables": [
+        { "name": "Person", "columns": [{ "name": "id", "isKey": true }, { "name": "name" }] },
+        {
+          "name": "Friend",
+          "columns": [{ "name": "id1", "isKey": true }, { "name": "id2", "isKey": true }],
+          "foreignKeys": [
+            { "column": "id1", "refTable": "Person", "refColumn": "id" },
+            { "column": "id2", "refTable": "Person", "refColumn": "id" }
+          ]
+        }
+      ],
+      "answer": {
+        "canonical": "SELECT name FROM Person P WHERE P.id NOT IN (SELECT id1 FROM Friend) AND P.id NOT IN (SELECT id2 FROM Friend)",
+        "requiredPatterns": ["\\bNOT\\s+IN\\b", "\\bFriend\\b"]
+      },
+      "explanation": "A person has no friend iff their id does not appear as id1 of any Friend tuple AND does not appear as id2 either. Two NOT IN subqueries combined with AND express this."
+    },
+    {
+      "id": "nonm-02",
+      "topicId": "sql_nonmonotonic",
+      "subtopic": "NOT EXISTS",
+      "type": "sql",
+      "prompt": "Find the names of all people that have no friends. Use NOT EXISTS.",
+      "tables": [
+        { "name": "Person", "columns": [{ "name": "id", "isKey": true }, { "name": "name" }] },
+        { "name": "Friend", "columns": [{ "name": "id1", "isKey": true }, { "name": "id2", "isKey": true }] }
+      ],
+      "answer": {
+        "canonical": "SELECT name FROM Person P WHERE NOT EXISTS (SELECT * FROM Friend F WHERE P.id = F.id1 OR P.id = F.id2)",
+        "requiredPatterns": ["\\bNOT\\s+EXISTS\\b", "\\bFriend\\b"]
+      },
+      "explanation": "NOT EXISTS with a correlated subquery that searches for any Friend tuple involving P.id returns rows for which no such tuple exists — i.e., persons with no friends."
+    },
+    {
+      "id": "nonm-03",
+      "topicId": "sql_nonmonotonic",
+      "subtopic": "Negation",
+      "type": "sql",
+      "prompt": "Find all employees who do NOT work for 'First Bank Corporation'.",
+      "tables": [
+        { "name": "Works", "columns": [{ "name": "employeeName", "isKey": true }, { "name": "companyName", "isKey": true }, { "name": "salary" }] }
+      ],
+      "answer": {
+        "canonical": "SELECT employeeName FROM Works W WHERE W.companyName <> 'First Bank Corporation'",
+        "acceptedAnswers": ["SELECT employeeName FROM Works WHERE companyName != 'First Bank Corporation'"],
+        "requiredPatterns": ["\\bWorks\\b", "First Bank Corporation"]
+      },
+      "explanation": "Simply select rows from Works whose companyName is not 'First Bank Corporation'."
+    },
+    {
+      "id": "nonm-04",
+      "topicId": "sql_nonmonotonic",
+      "subtopic": "> ALL",
+      "type": "sql",
+      "prompt": "Find all employees who earn more than every employee of 'Small Bank Corporation'.",
+      "tables": [
+        { "name": "Works", "columns": [{ "name": "employeeName", "isKey": true }, { "name": "companyName", "isKey": true }, { "name": "salary" }] }
+      ],
+      "answer": {
+        "canonical": "SELECT employeeName FROM Works W WHERE salary > ALL (SELECT salary FROM Works WHERE companyName = 'Small Bank Corporation')",
+        "requiredPatterns": ["\\bALL\\b", "Small Bank Corporation"]
+      },
+      "explanation": "'>= every salary in SBC' is exactly the SQL > ALL construct applied to the subquery returning SBC's salaries."
+    },
+    {
+      "id": "nonm-05",
+      "topicId": "sql_nonmonotonic",
+      "subtopic": "For-all via double negation",
+      "type": "sql",
+      "prompt": "Find the names of suppliers who sell ALL black parts. Use double NOT EXISTS (no GROUP BY).",
+      "tables": [
+        { "name": "Suppliers", "columns": [{ "name": "sid", "isKey": true }, { "name": "sname" }, { "name": "saddress" }] },
+        { "name": "Parts", "columns": [{ "name": "pid", "isKey": true }, { "name": "pname" }, { "name": "color" }] },
+        {
+          "name": "Catalog",
+          "columns": [{ "name": "sid", "isKey": true }, { "name": "pid", "isKey": true }, { "name": "cost" }],
+          "foreignKeys": [
+            { "column": "sid", "refTable": "Suppliers", "refColumn": "sid" },
+            { "column": "pid", "refTable": "Parts", "refColumn": "pid" }
+          ]
+        }
+      ],
+      "hint": "Pattern: there is no black part that the supplier does NOT carry.",
+      "answer": {
+        "canonical": "SELECT S.sname FROM Suppliers S WHERE NOT EXISTS (SELECT * FROM Parts P WHERE P.color = 'black' AND NOT EXISTS (SELECT * FROM Catalog C WHERE C.sid = S.sid AND C.pid = P.pid))",
+        "requiredPatterns": ["\\bNOT\\s+EXISTS\\b.*\\bNOT\\s+EXISTS\\b", "black"]
+      },
+      "explanation": "'For all black parts P, the supplier sells P' is equivalent to 'there is no black part P that the supplier does not sell'. The double NOT EXISTS expresses this universal quantification."
+    },
+    {
+      "id": "nonm-06",
+      "topicId": "sql_nonmonotonic",
+      "subtopic": "Exactly one",
+      "type": "sql",
+      "prompt": "Find the pids of parts that are supplied by exactly one supplier. Do not use GROUP BY.",
+      "tables": [
+        { "name": "Catalog", "columns": [{ "name": "sid", "isKey": true }, { "name": "pid", "isKey": true }, { "name": "cost" }] }
+      ],
+      "answer": {
+        "canonical": "SELECT C.pid FROM Catalog C WHERE NOT EXISTS (SELECT * FROM Catalog C1 WHERE C1.pid = C.pid AND C1.sid <> C.sid)",
+        "requiredPatterns": ["\\bNOT\\s+EXISTS\\b", "C1\\.pid\\s*=\\s*C\\.pid", "<>"]
+      },
+      "explanation": "A part is supplied by exactly one supplier when there is no other supplier (different sid) supplying the same pid. The NOT EXISTS expresses this."
+    },
+    {
+      "id": "nonm-07",
+      "topicId": "sql_nonmonotonic",
+      "subtopic": "Subset via NOT IN",
+      "type": "sql",
+      "prompt": "Find the names of persons that have NO bank account using NOT IN.",
+      "tables": [
+        { "name": "Person", "columns": [{ "name": "id", "isKey": true }, { "name": "name" }] },
+        { "name": "BelongsTo", "columns": [{ "name": "id", "isKey": true }, { "name": "accountNr", "isKey": true }] }
+      ],
+      "answer": {
+        "canonical": "SELECT name FROM Person WHERE id NOT IN (SELECT id FROM BelongsTo)",
+        "requiredPatterns": ["\\bNOT\\s+IN\\b", "\\bBelongsTo\\b"]
+      },
+      "explanation": "A person has no account iff their id is not in the set of ids that have an entry in BelongsTo."
+    },
+    {
+      "id": "nonm-08",
+      "topicId": "sql_nonmonotonic",
+      "subtopic": "ANY/SOME",
+      "type": "sql",
+      "prompt": "Find all employees who earn more than at least one employee of 'Small Bank Corporation'. Use ANY (or SOME).",
+      "tables": [
+        { "name": "Works", "columns": [{ "name": "employeeName", "isKey": true }, { "name": "companyName", "isKey": true }, { "name": "salary" }] }
+      ],
+      "answer": {
+        "canonical": "SELECT employeeName FROM Works W WHERE salary > ANY (SELECT salary FROM Works WHERE companyName = 'Small Bank Corporation')",
+        "acceptedAnswers": ["SELECT employeeName FROM Works W WHERE salary > SOME (SELECT salary FROM Works WHERE companyName = 'Small Bank Corporation')"],
+        "requiredPatterns": ["\\b(ANY|SOME)\\b", "Small Bank Corporation"]
+      },
+      "explanation": "> ANY / > SOME means: greater than at least one of the values returned by the subquery. This is the existential dual of > ALL."
+    },
+    {
+      "id": "nonm-09",
+      "topicId": "sql_nonmonotonic",
+      "subtopic": "Companies only in SBC's cities",
+      "type": "sql",
+      "prompt": "Companies may be located in several cities. Find all company names whose cities are a SUBSET of the set of cities in which 'Small Bank Corporation' (SBC) is located.",
+      "tables": [
+        { "name": "Company", "columns": [{ "name": "companyName", "isKey": true }, { "name": "city", "isKey": true }] }
+      ],
+      "hint": "Use a double NOT IN: find companies that are NOT among those that have a city not used by SBC.",
+      "answer": {
+        "canonical": "SELECT companyName FROM Company WHERE companyName NOT IN (SELECT companyName FROM Company WHERE city NOT IN (SELECT city FROM Company WHERE companyName = 'SBC'))",
+        "requiredPatterns": ["\\bNOT\\s+IN\\b.*\\bNOT\\s+IN\\b", "SBC"]
+      },
+      "explanation": "Inner: SBC's cities. Middle: companies that have at least one city outside SBC's. Outer: all companies that are NOT in this middle set = companies whose cities are entirely SBC's."
+    },
+    {
+      "id": "nonm-10",
+      "topicId": "sql_nonmonotonic",
+      "subtopic": "EXISTS",
+      "type": "sql",
+      "prompt": "Find the names of all persons that have at least one friend, using EXISTS.",
+      "tables": [
+        { "name": "Person", "columns": [{ "name": "id", "isKey": true }, { "name": "name" }] },
+        { "name": "Friend", "columns": [{ "name": "id1", "isKey": true }, { "name": "id2", "isKey": true }] }
+      ],
+      "answer": {
+        "canonical": "SELECT name FROM Person P WHERE EXISTS (SELECT * FROM Friend F WHERE P.id = F.id1 OR P.id = F.id2)",
+        "requiredPatterns": ["\\bEXISTS\\b", "\\bFriend\\b"]
+      },
+      "explanation": "A correlated EXISTS subquery checks whether there is any Friend tuple involving the outer Person's id."
+    },
+
+    {
+      "id": "nest-01",
+      "topicId": "sql_nested",
+      "subtopic": "IN subquery",
+      "type": "sql",
+      "prompt": "Find the names of persons that have a bank account with balance > 1000, using a single IN subquery.",
+      "tables": [
+        { "name": "Person", "columns": [{ "name": "id", "isKey": true }, { "name": "name" }] },
+        { "name": "Account", "columns": [{ "name": "accountNr", "isKey": true }, { "name": "balance" }] },
+        { "name": "BelongsTo", "columns": [{ "name": "id", "isKey": true }, { "name": "accountNr", "isKey": true }] }
+      ],
+      "answer": {
+        "canonical": "SELECT name FROM Person P WHERE P.id IN (SELECT B.id FROM BelongsTo B, Account A WHERE B.accountNr = A.accountNr AND A.balance > 1000)",
+        "requiredPatterns": ["\\bIN\\b", "balance\\s*>\\s*1000"]
+      },
+      "explanation": "Compute the set of person ids that have a rich account, then use IN to filter Person. This avoids duplicates in the outer projection."
+    },
+    {
+      "id": "nest-02",
+      "topicId": "sql_nested",
+      "subtopic": "Subquery in FROM",
+      "type": "sql",
+      "prompt": "For each city, give the city name and the maximum age of persons in that city (use a subquery in the FROM clause).",
+      "tables": [
+        { "name": "Person", "columns": [{ "name": "id", "isKey": true }, { "name": "name" }, { "name": "city" }, { "name": "age" }] }
+      ],
+      "answer": {
+        "canonical": "SELECT city, maxAge FROM (SELECT city, MAX(age) AS maxAge FROM Person GROUP BY city) AS T",
+        "requiredPatterns": ["\\bFROM\\s*\\(", "\\bMAX\\s*\\(", "\\bGROUP\\s+BY\\b"]
+      },
+      "explanation": "Compute the per-city max age in a derived (sub)table T and then select from it. Subqueries in FROM are standard for staging aggregates."
+    },
+    {
+      "id": "nest-03",
+      "topicId": "sql_nested",
+      "subtopic": "Single-value subquery",
+      "type": "sql",
+      "prompt": "Find the name(s) of the oldest person(s). Use a scalar subquery for the maximum age.",
+      "tables": [
+        { "name": "Person", "columns": [{ "name": "id", "isKey": true }, { "name": "name" }, { "name": "age" }] }
+      ],
+      "answer": {
+        "canonical": "SELECT name FROM Person WHERE age = (SELECT MAX(age) FROM Person)",
+        "requiredPatterns": ["\\bMAX\\s*\\(\\s*age\\s*\\)", "age\\s*=\\s*\\("]
+      },
+      "explanation": "(SELECT MAX(age) FROM Person) returns a single value (the maximum age) which we compare with age in the outer query."
+    },
+    {
+      "id": "nest-04",
+      "topicId": "sql_nested",
+      "subtopic": "Correlated subquery",
+      "type": "sql",
+      "prompt": "Find each person whose age is strictly greater than the average age in their own city. Return name and city.",
+      "tables": [
+        { "name": "Person", "columns": [{ "name": "id", "isKey": true }, { "name": "name" }, { "name": "city" }, { "name": "age" }] }
+      ],
+      "answer": {
+        "canonical": "SELECT name, city FROM Person P WHERE age > (SELECT AVG(age) FROM Person P2 WHERE P2.city = P.city)",
+        "requiredPatterns": ["\\bAVG\\s*\\(\\s*age\\s*\\)", "P2\\.city\\s*=\\s*P\\.city"]
+      },
+      "explanation": "The correlated subquery computes the average age within the SAME city as the outer person, by referencing P.city from outside."
+    },
+    {
+      "id": "nest-05",
+      "topicId": "sql_nested",
+      "subtopic": "IN with multi-column",
+      "type": "sql",
+      "prompt": "Find the (sname) of suppliers that supply at least one part that costs less than 10 in their catalog. Use IN with a single column.",
+      "tables": [
+        { "name": "Suppliers", "columns": [{ "name": "sid", "isKey": true }, { "name": "sname" }, { "name": "saddress" }] },
+        { "name": "Catalog", "columns": [{ "name": "sid", "isKey": true }, { "name": "pid", "isKey": true }, { "name": "cost" }] }
+      ],
+      "answer": {
+        "canonical": "SELECT sname FROM Suppliers WHERE sid IN (SELECT sid FROM Catalog WHERE cost < 10)",
+        "requiredPatterns": ["\\bIN\\b", "cost\\s*<\\s*10"]
+      },
+      "explanation": "Compute the sids whose catalog has a cheap part, then filter Suppliers by IN. Avoids duplicates a join would create."
+    },
+    {
+      "id": "nest-06",
+      "topicId": "sql_nested",
+      "subtopic": "Subquery in SELECT",
+      "type": "sql",
+      "prompt": "For every supplier, list their sname together with the number of parts they sell. Use a scalar subquery in the SELECT clause.",
+      "tables": [
+        { "name": "Suppliers", "columns": [{ "name": "sid", "isKey": true }, { "name": "sname" }] },
+        { "name": "Catalog", "columns": [{ "name": "sid", "isKey": true }, { "name": "pid", "isKey": true }, { "name": "cost" }] }
+      ],
+      "answer": {
+        "canonical": "SELECT sname, (SELECT COUNT(*) FROM Catalog C WHERE C.sid = S.sid) AS partCount FROM Suppliers S",
+        "requiredPatterns": ["\\bCOUNT\\s*\\(", "C\\.sid\\s*=\\s*S\\.sid"]
+      },
+      "explanation": "A correlated scalar subquery in SELECT evaluates once per outer row, giving the count of catalog entries for that supplier."
+    },
+    {
+      "id": "nest-07",
+      "topicId": "sql_nested",
+      "subtopic": "Subquery in HAVING",
+      "type": "sql",
+      "prompt": "Find each city whose number of persons exceeds the average city size. Return city.",
+      "tables": [
+        { "name": "Person", "columns": [{ "name": "id", "isKey": true }, { "name": "name" }, { "name": "city" }] }
+      ],
+      "answer": {
+        "canonical": "SELECT city FROM Person GROUP BY city HAVING COUNT(*) > (SELECT AVG(c) FROM (SELECT COUNT(*) AS c FROM Person GROUP BY city) AS T)",
+        "requiredPatterns": ["\\bGROUP\\s+BY\\b", "\\bHAVING\\b", "\\bAVG\\b"]
+      },
+      "explanation": "Inner derived table T gives one row per city with its count. The outer subquery averages those counts. HAVING then compares each city's count to that average."
+    },
+    {
+      "id": "nest-08",
+      "topicId": "sql_nested",
+      "subtopic": "EXISTS correlated",
+      "type": "sql",
+      "prompt": "Find supplier names that supply at least one red part. Use EXISTS.",
+      "tables": [
+        { "name": "Suppliers", "columns": [{ "name": "sid", "isKey": true }, { "name": "sname" }] },
+        { "name": "Parts", "columns": [{ "name": "pid", "isKey": true }, { "name": "pname" }, { "name": "color" }] },
+        { "name": "Catalog", "columns": [{ "name": "sid", "isKey": true }, { "name": "pid", "isKey": true }, { "name": "cost" }] }
+      ],
+      "answer": {
+        "canonical": "SELECT sname FROM Suppliers S WHERE EXISTS (SELECT * FROM Catalog C, Parts P WHERE C.sid = S.sid AND C.pid = P.pid AND P.color = 'red')",
+        "requiredPatterns": ["\\bEXISTS\\b", "red"]
+      },
+      "explanation": "EXISTS checks whether the supplier has at least one catalog entry for a red part. The correlation C.sid = S.sid ties the subquery to the current supplier."
+    },
+
+    {
+      "id": "agg-01",
+      "topicId": "sql_aggregations",
+      "subtopic": "GROUP BY + HAVING",
+      "type": "sql",
+      "prompt": "Find all persons that know at least two people, using GROUP BY.",
+      "tables": [
+        { "name": "Person", "columns": [{ "name": "id", "isKey": true }, { "name": "name" }] },
+        { "name": "Knows", "columns": [{ "name": "id1", "isKey": true }, { "name": "id2", "isKey": true }] }
+      ],
+      "answer": {
+        "canonical": "SELECT name FROM Person P, Knows K WHERE P.id = K.id1 GROUP BY P.id, name HAVING COUNT(*) >= 2",
+        "requiredPatterns": ["\\bGROUP\\s+BY\\b", "\\bHAVING\\b", "COUNT\\s*\\(\\s*\\*\\s*\\)\\s*>=\\s*2"]
+      },
+      "explanation": "Group the Knows rows by the knower (id1, joined to Person.id). HAVING COUNT(*) >= 2 keeps those with at least two distinct known persons."
+    },
+    {
+      "id": "agg-02",
+      "topicId": "sql_aggregations",
+      "subtopic": "GROUP BY",
+      "type": "sql",
+      "prompt": "For each city, report the city and how many persons live there. Order by count descending.",
+      "tables": [
+        { "name": "Person", "columns": [{ "name": "id", "isKey": true }, { "name": "name" }, { "name": "city" }] }
+      ],
+      "answer": {
+        "canonical": "SELECT city, COUNT(*) AS n FROM Person GROUP BY city ORDER BY n DESC",
+        "requiredPatterns": ["\\bGROUP\\s+BY\\s+city\\b", "\\bCOUNT\\s*\\(", "\\bORDER\\s+BY\\b", "\\bDESC\\b"]
+      },
+      "explanation": "Standard GROUP BY + COUNT(*) per city, then ORDER BY the count descending."
+    },
+    {
+      "id": "agg-03",
+      "topicId": "sql_aggregations",
+      "subtopic": "CASE WHEN",
+      "type": "sql",
+      "prompt": "For each person, return name and a column 'category' that is 'minor' if age < 18, 'adult' if 18 <= age < 65, otherwise 'senior'. Use CASE WHEN.",
+      "tables": [
+        { "name": "Person", "columns": [{ "name": "id", "isKey": true }, { "name": "name" }, { "name": "age" }] }
+      ],
+      "answer": {
+        "canonical": "SELECT name, CASE WHEN age < 18 THEN 'minor' WHEN age < 65 THEN 'adult' ELSE 'senior' END AS category FROM Person",
+        "requiredPatterns": ["\\bCASE\\s+WHEN\\b", "\\bEND\\b", "minor", "adult", "senior"]
+      },
+      "explanation": "CASE WHEN ... THEN ... ELSE ... END is the SQL conditional expression for row-level case distinctions."
+    },
+    {
+      "id": "agg-04",
+      "topicId": "sql_aggregations",
+      "subtopic": "UNION",
+      "type": "sql",
+      "prompt": "Return a single list of all distinct ids that appear either in Friend.id1 or in Friend.id2. Use UNION.",
+      "tables": [
+        { "name": "Friend", "columns": [{ "name": "id1", "isKey": true }, { "name": "id2", "isKey": true }] }
+      ],
+      "answer": {
+        "canonical": "SELECT id1 AS id FROM Friend UNION SELECT id2 AS id FROM Friend",
+        "requiredPatterns": ["\\bUNION\\b", "\\bFriend\\b"]
+      },
+      "explanation": "UNION (without ALL) already eliminates duplicates, so the result is the set of all persons that appear in any Friend tuple."
+    },
+    {
+      "id": "agg-05",
+      "topicId": "sql_aggregations",
+      "subtopic": "GROUP BY + HAVING",
+      "type": "sql",
+      "prompt": "Find each company name and its average salary, but only for companies with more than 5 employees.",
+      "tables": [
+        { "name": "Works", "columns": [{ "name": "employeeName", "isKey": true }, { "name": "companyName", "isKey": true }, { "name": "salary" }] }
+      ],
+      "answer": {
+        "canonical": "SELECT companyName, AVG(salary) AS avgSalary FROM Works GROUP BY companyName HAVING COUNT(*) > 5",
+        "requiredPatterns": ["\\bAVG\\s*\\(\\s*salary\\s*\\)", "\\bGROUP\\s+BY\\b", "\\bHAVING\\b", "COUNT\\s*\\(\\s*\\*\\s*\\)\\s*>\\s*5"]
+      },
+      "explanation": "Group by company; HAVING filters groups by an aggregate condition (more than 5 rows = more than 5 employees)."
+    },
+    {
+      "id": "agg-06",
+      "topicId": "sql_aggregations",
+      "subtopic": "ORDER BY + LIMIT",
+      "type": "sql",
+      "prompt": "Return the names and ages of the 3 oldest persons, ordered from oldest to youngest.",
+      "tables": [
+        { "name": "Person", "columns": [{ "name": "id", "isKey": true }, { "name": "name" }, { "name": "age" }] }
+      ],
+      "answer": {
+        "canonical": "SELECT name, age FROM Person ORDER BY age DESC LIMIT 3",
+        "acceptedAnswers": ["SELECT name, age FROM Person ORDER BY age DESC FETCH FIRST 3 ROWS ONLY"],
+        "requiredPatterns": ["\\bORDER\\s+BY\\s+age\\s+DESC\\b", "\\b(LIMIT|FETCH)\\b"]
+      },
+      "explanation": "ORDER BY age DESC sorts oldest first; LIMIT 3 (or FETCH FIRST 3) keeps only the top three rows."
+    },
+    {
+      "id": "agg-07",
+      "topicId": "sql_aggregations",
+      "subtopic": "GROUP BY multiple columns",
+      "type": "sql",
+      "prompt": "For each (companyName, city) combination where the company is located in multiple cities, count the employees that work for the company in that city. Return companyName, city, n.",
+      "tables": [
+        { "name": "Works", "columns": [{ "name": "employeeName", "isKey": true }, { "name": "companyName", "isKey": true }, { "name": "salary" }] },
+        { "name": "Employee", "columns": [{ "name": "employeeName", "isKey": true }, { "name": "street" }, { "name": "city" }] }
+      ],
+      "answer": {
+        "canonical": "SELECT W.companyName, E.city, COUNT(*) AS n FROM Works W, Employee E WHERE W.employeeName = E.employeeName GROUP BY W.companyName, E.city",
+        "requiredPatterns": ["\\bGROUP\\s+BY\\b", "\\bcompanyName\\b", "\\bcity\\b", "\\bCOUNT\\s*\\("]
+      },
+      "explanation": "Group by both columns to count rows per (company, city) pair; the join ties an employee's city to the row."
+    },
+    {
+      "id": "agg-08",
+      "topicId": "sql_aggregations",
+      "subtopic": "CASE WHEN with SUM",
+      "type": "sql",
+      "prompt": "For each company, count how many employees earn more than 10000 and how many earn 10000 or less. Use CASE WHEN inside SUM.",
+      "tables": [
+        { "name": "Works", "columns": [{ "name": "employeeName", "isKey": true }, { "name": "companyName", "isKey": true }, { "name": "salary" }] }
+      ],
+      "answer": {
+        "canonical": "SELECT companyName, SUM(CASE WHEN salary > 10000 THEN 1 ELSE 0 END) AS high, SUM(CASE WHEN salary <= 10000 THEN 1 ELSE 0 END) AS low FROM Works GROUP BY companyName",
+        "requiredPatterns": ["\\bCASE\\s+WHEN\\b", "\\bSUM\\s*\\(", "\\bGROUP\\s+BY\\b"]
+      },
+      "explanation": "SUM(CASE WHEN cond THEN 1 ELSE 0 END) is the standard idiom for conditional counting per group."
+    },
+    {
+      "id": "agg-09",
+      "topicId": "sql_aggregations",
+      "subtopic": "UNION ALL vs UNION",
+      "type": "radio",
+      "prompt": "What is the difference between UNION and UNION ALL?",
+      "options": [
+        "UNION ALL preserves duplicates; UNION eliminates them",
+        "UNION concatenates rows in order; UNION ALL sorts them",
+        "UNION ALL only works on identical schemas; UNION accepts any schemas",
+        "There is no difference"
+      ],
+      "answer": { "value": 0 },
+      "explanation": "UNION performs set union (duplicates removed). UNION ALL is bag union (duplicates preserved) and is therefore typically cheaper."
+    },
+    {
+      "id": "agg-10",
+      "topicId": "sql_aggregations",
+      "subtopic": "Multi-aggregate",
+      "type": "sql",
+      "prompt": "For each city, report city, the number of persons, the minimum age, and the maximum age.",
+      "tables": [
+        { "name": "Person", "columns": [{ "name": "id", "isKey": true }, { "name": "name" }, { "name": "city" }, { "name": "age" }] }
+      ],
+      "answer": {
+        "canonical": "SELECT city, COUNT(*) AS n, MIN(age) AS minAge, MAX(age) AS maxAge FROM Person GROUP BY city",
+        "requiredPatterns": ["\\bCOUNT\\s*\\(", "\\bMIN\\s*\\(\\s*age", "\\bMAX\\s*\\(\\s*age", "\\bGROUP\\s+BY\\s+city\\b"]
+      },
+      "explanation": "Group by city, then apply the three aggregates side by side in the SELECT clause."
+    },
+
+    {
+      "id": "fd-01",
+      "topicId": "fd_keys",
+      "subtopic": "Cover (attribute closure)",
+      "type": "short_text",
+      "prompt": "R(A,B,C,D,E,F,G) with FDs: A->EF, ABC->DG, E->CG, C->BG, BC->E, ABC->D, F->DE, EG->CD. Compute the closure {C}+ (give attributes as a comma-separated set, e.g. A,B,C).",
+      "answer": {
+        "canonical": "B,C,D,E,G",
+        "acceptedAnswers": ["B,C,D,E,G", "C,B,D,E,G", "B, C, D, E, G", "{B,C,D,E,G}"]
+      },
+      "explanation": "Start with {C}. C->BG adds B and G, giving {B,C,G}. BC->E adds E -> {B,C,E,G}. EG->CD adds D (C already in). Final closure: {B,C,D,E,G}."
+    },
+    {
+      "id": "fd-02",
+      "topicId": "fd_keys",
+      "subtopic": "FD implication",
+      "type": "checkbox",
+      "prompt": "Given the FDs of R(A,B,C,D,E,F,G): A->EF, ABC->DG, E->CG, C->BG, BC->E, F->DE, EG->CD. Which of the following FDs are implied? (Hint: {C}+ = {B,C,D,E,G})",
+      "options": [
+        "C -> A,F",
+        "C -> D",
+        "C -> B,D",
+        "C -> F",
+        "C -> A,C"
+      ],
+      "answer": { "values": [1, 2] },
+      "explanation": "{C}+ = {B,C,D,E,G}. So C->X is implied iff X subset of {B,C,D,E,G}. Only C->D and C->B,D fit. A and F are not in the closure, so C->A,F, C->F, C->A,C are not implied (C,A is not since A isn't reachable)."
+    },
+    {
+      "id": "fd-03",
+      "topicId": "fd_keys",
+      "subtopic": "Minimal keys",
+      "type": "text_lines",
+      "prompt": "R(A,B,C,D,E) with FDs: A->B, ADE->BC, BE->A, C->BE. Find ALL minimal keys. Write one key per line, attributes comma-separated.",
+      "answer": {
+        "lines": ["C,D", "A,D,E", "B,D,E"]
+      },
+      "explanation": "D never appears on the right-hand side, so it must be in every key. Computing closures of D-extensions: {C,D}+ = ABCDE (key), {A,D,E}+ = ABCDE (key), {B,D,E}+ = ABCDE (key). Other supersets are not minimal."
+    },
+    {
+      "id": "fd-04",
+      "topicId": "fd_keys",
+      "subtopic": "Minimal keys",
+      "type": "text_lines",
+      "prompt": "R(A,B,C,D,E) with FDs: A->DB, B->D, AE->ED, E->A. Find ALL minimal keys. Write one key per line, attributes comma-separated.",
+      "answer": {
+        "lines": ["C,E"]
+      },
+      "explanation": "C never appears on any right-hand side; E never appears on any right-hand side (its appearance in AE->ED is on the LHS). So C,E must be in every key. {C,E}+: E->A adds A; A->DB adds D,B. So {C,E}+ = ABCDE. Hence CE is the unique minimal key."
+    },
+    {
+      "id": "fd-05",
+      "topicId": "fd_keys",
+      "subtopic": "Determinant",
+      "type": "short_text",
+      "prompt": "R(A,B,C,D) with FDs: A->B, B->C, C->D. What is the closure {A}+ ? Give attributes comma-separated.",
+      "answer": {
+        "canonical": "A,B,C,D",
+        "acceptedAnswers": ["A,B,C,D", "{A,B,C,D}", "A, B, C, D"]
+      },
+      "explanation": "A->B adds B; B->C adds C; C->D adds D. So {A}+ = {A,B,C,D}. A is a key."
+    },
+    {
+      "id": "fd-06",
+      "topicId": "fd_keys",
+      "subtopic": "Is X a key?",
+      "type": "radio",
+      "prompt": "R(A,B,C,D,E) with FDs: AB->C, C->D, D->E. Is {A,B} a key of R?",
+      "options": ["Yes", "No"],
+      "answer": { "value": 0 },
+      "explanation": "{A,B}+: AB->C adds C; then C->D adds D; then D->E adds E. Closure = {A,B,C,D,E} = all of R, so {A,B} is a key."
+    },
+    {
+      "id": "fd-07",
+      "topicId": "fd_keys",
+      "subtopic": "Is X a key?",
+      "type": "radio",
+      "prompt": "R(A,B,C,D) with FDs: A->B, C->D. Is {A,C} a key?",
+      "options": ["Yes", "No"],
+      "answer": { "value": 0 },
+      "explanation": "{A,C}+: A->B adds B; C->D adds D. Closure = {A,B,C,D} = all of R. So {A,C} is a key. It is also minimal (neither A nor C alone reaches all attributes)."
+    },
+    {
+      "id": "fd-08",
+      "topicId": "fd_keys",
+      "subtopic": "Superkey vs minimal key",
+      "type": "radio",
+      "prompt": "R(A,B,C,D) with FDs: A->B,C,D. Which of the following is the minimal key?",
+      "options": [
+        "{A,B}",
+        "{A,B,C}",
+        "{A}",
+        "{B}"
+      ],
+      "answer": { "value": 2 },
+      "explanation": "A alone determines B, C, D, so {A}+ = {A,B,C,D}. Therefore {A} is a key, and since it is a singleton no proper subset is a key. So {A} is THE minimal key."
+    },
+    {
+      "id": "fd-09",
+      "topicId": "fd_keys",
+      "subtopic": "Canonical FD set",
+      "type": "checkbox",
+      "prompt": "We start with FDs: D->A, BC->D, ABC->DE, C->D, BE->AC on R(A,B,C,D,E). Which of the following FDs are in a canonical (minimal) set?",
+      "options": [
+        "BC -> D",
+        "C -> D",
+        "BC -> E",
+        "BE -> C",
+        "D -> A",
+        "BE -> A"
+      ],
+      "answer": { "values": [1, 2, 3, 4] },
+      "explanation": "Canonical form: BC->E, BE->C, C->D, D->A. BC->D is removed (implied by C->D). BE->A is removed (implied by BE->C, C->D, D->A). So options 1,2,3,4 are in the canonical set."
+    },
+    {
+      "id": "fd-10",
+      "topicId": "fd_keys",
+      "subtopic": "Trivial FD",
+      "type": "radio",
+      "prompt": "Which of the following FDs is TRIVIAL (always holds regardless of data)?",
+      "options": [
+        "A -> B",
+        "AB -> A",
+        "A -> AB",
+        "AB -> C"
+      ],
+      "answer": { "value": 1 },
+      "explanation": "AB -> A is trivial because the RHS (A) is a subset of the LHS (AB). Trivial FDs always hold by reflexivity."
+    },
+    {
+      "id": "fd-11",
+      "topicId": "fd_keys",
+      "subtopic": "Cover",
+      "type": "short_text",
+      "prompt": "R(A,B,C,D,E) with FDs: AB->C, B->D, CD->E, E->A. Compute the closure {A,B}+. Give attributes comma-separated.",
+      "answer": {
+        "canonical": "A,B,C,D,E",
+        "acceptedAnswers": ["A,B,C,D,E", "{A,B,C,D,E}", "A, B, C, D, E"]
+      },
+      "explanation": "{A,B}+: start {A,B}. AB->C adds C -> {A,B,C}. B->D adds D -> {A,B,C,D}. CD->E adds E -> {A,B,C,D,E}. (E->A is then trivially satisfied.) Closure = {A,B,C,D,E}, so AB is a key."
+    },
+    {
+      "id": "fd-12",
+      "topicId": "fd_keys",
+      "subtopic": "Cover",
+      "type": "short_text",
+      "prompt": "R(A,B,C,D,E) with FDs: B,C,D->E, A->B, E->B, E->C, AE->D, A->C. Compute the closure {A}+. Give attributes comma-separated.",
+      "answer": {
+        "canonical": "A,B,C",
+        "acceptedAnswers": ["A,B,C", "A, B, C", "{A,B,C}"]
+      },
+      "explanation": "From {A}: A->B gives B; A->C gives C. Now {A,B,C}. To use BCD->E we'd need D. To use AE->D we'd need E. Neither D nor E is reachable, so {A}+ = {A,B,C}. (Note A alone is NOT a key.)"
+    },
+
+    {
+      "id": "nf-01",
+      "topicId": "normal_forms",
+      "subtopic": "BCNF check",
+      "type": "radio",
+      "prompt": "R(A,B,C,D,E) with FDs: A->BD, B->D, AE->ED, E->A. Is R in BCNF?",
+      "options": ["Yes", "No"],
+      "answer": { "value": 1 },
+      "explanation": "The canonical set is {A->B, B->D, E->A}. None of A, B, E is a superkey of R (the only minimal key is {C,E}), so the FDs violate BCNF. R is NOT in BCNF."
+    },
+    {
+      "id": "nf-02",
+      "topicId": "normal_forms",
+      "subtopic": "BCNF definition",
+      "type": "radio",
+      "prompt": "A relation R is in BCNF iff for every non-trivial FD X -> Y that holds on R, X is a ____ of R.",
+      "options": ["primary key", "candidate key", "superkey", "minimal key only"],
+      "answer": { "value": 2 },
+      "explanation": "BCNF requires every non-trivial FD's left side to be a SUPERKEY (any set whose closure contains all attributes). Minimal/candidate keys are special superkeys."
+    },
+    {
+      "id": "nf-03",
+      "topicId": "normal_forms",
+      "subtopic": "3NF definition",
+      "type": "radio",
+      "prompt": "A relation R is in 3NF iff for every non-trivial FD X -> A, at least one of the following holds:",
+      "options": [
+        "X is a superkey, OR A is a prime attribute (part of some minimal key)",
+        "X is a superkey, OR A is a non-prime attribute",
+        "Only: X is a superkey",
+        "Only: A is a prime attribute"
+      ],
+      "answer": { "value": 0 },
+      "explanation": "3NF relaxes BCNF: an FD X->A is allowed if X is a superkey OR A is prime (member of at least one minimal key)."
+    },
+    {
+      "id": "nf-04",
+      "topicId": "normal_forms",
+      "subtopic": "Which FDs violate BCNF",
+      "type": "checkbox",
+      "prompt": "R(A,B,C,D,E) with canonical FDs: BCD->E, A->BC, AE->D, E->BC. The minimal keys are {A} and {A,E}. Select the FDs that VIOLATE BCNF.",
+      "options": [
+        "BCD -> E",
+        "A -> BC",
+        "AE -> D",
+        "E -> BC"
+      ],
+      "answer": { "values": [0, 3] },
+      "explanation": "An FD violates BCNF iff its LHS is not a superkey. A is a key, so A->BC and AE->D (AE is a superkey) are fine. BCD is not a superkey (its closure does not give A) and E is not a superkey either. So BCD->E and E->BC violate BCNF."
+    },
+    {
+      "id": "nf-05",
+      "topicId": "normal_forms",
+      "subtopic": "1NF",
+      "type": "radio",
+      "prompt": "What is the defining property of First Normal Form (1NF)?",
+      "options": [
+        "Every non-key attribute fully depends on the key",
+        "All attribute values are atomic (no sets, lists or nested tables in a cell)",
+        "Every relation has exactly one minimal key",
+        "There are no transitive dependencies"
+      ],
+      "answer": { "value": 1 },
+      "explanation": "1NF requires atomic attribute values. The other options describe higher normal forms (2NF, 3NF, BCNF)."
+    },
+    {
+      "id": "nf-06",
+      "topicId": "normal_forms",
+      "subtopic": "BCNF check",
+      "type": "radio",
+      "prompt": "R(A,B,C) with FDs: AB->C, C->A. The minimal keys are {A,B} and {B,C}. Is R in BCNF?",
+      "options": ["Yes", "No"],
+      "answer": { "value": 1 },
+      "explanation": "C->A is non-trivial. C is not a superkey (its closure {C,A} does not include B). So R violates BCNF. It IS, however, in 3NF since A is prime (part of key {A,B})."
+    },
+    {
+      "id": "nf-07",
+      "topicId": "normal_forms",
+      "subtopic": "3NF check",
+      "type": "radio",
+      "prompt": "R(A,B,C) with FDs: AB->C, C->A, where minimal keys are {A,B} and {B,C}. Is R in 3NF?",
+      "options": ["Yes", "No"],
+      "answer": { "value": 0 },
+      "explanation": "3NF allows X->Y when Y is a prime attribute. A is prime (in key {A,B}), so C->A is OK. AB is a key, so AB->C is OK. Hence R is in 3NF (even though it is not in BCNF)."
+    },
+    {
+      "id": "nf-08",
+      "topicId": "normal_forms",
+      "subtopic": "Why BCNF",
+      "type": "radio",
+      "prompt": "Which is a guarantee provided by a BCNF decomposition but NOT always by a 3NF decomposition?",
+      "options": [
+        "Lossless join",
+        "Dependency preservation",
+        "Elimination of all redundancy from non-trivial FDs",
+        "1NF compliance"
+      ],
+      "answer": { "value": 2 },
+      "explanation": "Both BCNF and 3NF decompositions can be made lossless. The synthesis 3NF algorithm preserves all FDs; BCNF may lose FDs but eliminates the redundancy these FDs cause. So 'no redundancy from non-trivial FDs' is unique to BCNF."
+    },
+    {
+      "id": "nf-09",
+      "topicId": "normal_forms",
+      "subtopic": "Trade-off",
+      "type": "radio",
+      "prompt": "Which property is GUARANTEED by the 3NF synthesis algorithm but NOT always by a BCNF decomposition?",
+      "options": [
+        "Lossless join",
+        "Dependency preservation",
+        "Atomicity (1NF)",
+        "Unique minimal key"
+      ],
+      "answer": { "value": 1 },
+      "explanation": "3NF synthesis always preserves all FDs (dependency preservation). BCNF decomposition can lose FDs. Both produce lossless decompositions."
+    },
+    {
+      "id": "nf-10",
+      "topicId": "normal_forms",
+      "subtopic": "BCNF violators",
+      "type": "checkbox",
+      "prompt": "R(A,B,C,D,E) has canonical FDs: A->B, A->C, AE->D, BCD->E, E->B, E->C. Minimal keys are {A,E} (and only this one). Select FDs that VIOLATE BCNF.",
+      "options": [
+        "A -> B",
+        "A -> C",
+        "AE -> D",
+        "BCD -> E",
+        "E -> B",
+        "E -> C"
+      ],
+      "answer": { "values": [0, 1, 3, 4, 5] },
+      "explanation": "Only AE is a superkey. A alone, BCD, and E are not superkeys, so any FD with LHS A, BCD, or E violates BCNF. Hence 5 FDs violate BCNF; only AE->D is fine."
+    },
+    {
+      "id": "nf-11",
+      "topicId": "normal_forms",
+      "subtopic": "Prime attribute",
+      "type": "radio",
+      "prompt": "An attribute is 'prime' if it ____ .",
+      "options": [
+        "is part of every minimal key",
+        "is part of at least one minimal key",
+        "is on the right-hand side of some FD",
+        "is functionally determined by the primary key"
+      ],
+      "answer": { "value": 1 },
+      "explanation": "A prime attribute is one that belongs to at least one minimal (candidate) key. The other options describe different concepts."
+    },
+
+    {
+      "id": "norm-01",
+      "topicId": "normalization",
+      "subtopic": "BCNF decomposition",
+      "type": "multi_line",
+      "prompt": "R(A,B,C,D,E) with canonical FDs: BCD->E, A->B, E->B, E->C, AE->D, A->C. Apply the BCNF synthesis algorithm. Give the resulting relations (one per line), in the order the algorithm produces them when splitting on BCD->E first, then on E->BC, then on A->BC. Format each line as 'R(attrs)' with attributes comma-separated.",
+      "answer": {
+        "orderedLines": [
+          "R(A,D)",
+          "R(D,E)",
+          "R(B,C,E)",
+          "R(A,B,C)"
+        ]
+      },
+      "explanation": "Maximised RHSs: A->BC, AE->BCD, BCD->E, E->BC. Split R(ABCDE) on BCD->E -> R(ABCD), R2(BCDE). Split R2 on E->BC -> R(ABCD), R2(DE), R3(BCE). Split R(ABCD) on A->BC -> R(AD), R2(DE), R3(BCE), R4(ABC)."
+    },
+    {
+      "id": "norm-02",
+      "topicId": "normalization",
+      "subtopic": "3NF synthesis",
+      "type": "multi_line",
+      "prompt": "R(A,B,C,D,E) with canonical FDs: BCD->E, A->B, E->B, E->C, AE->D, A->C. Apply the 3NF synthesis algorithm. After merging same-LHS FDs you get A->BC, AE->D, BCD->E, E->BC. Give the final 3NF relations (after removing relations subsumed by others). One relation per line as 'R(attrs)'.",
+      "answer": {
+        "orderedLines": [
+          "R(A,B,C)",
+          "R(A,D,E)",
+          "R(B,C,D,E)"
+        ]
+      },
+      "explanation": "One relation per merged FD: R1(A,B,C), R2(A,D,E), R3(B,C,D,E), R4(B,C,E). {A,D,E} is a key of R, so no fresh key relation needed. R4(B,C,E) is subsumed by R3(B,C,D,E) and is removed. Final: R(A,B,C), R(A,D,E), R(B,C,D,E)."
+    },
+    {
+      "id": "norm-03",
+      "topicId": "normalization",
+      "subtopic": "Lost FDs",
+      "type": "checkbox",
+      "prompt": "Continuing the BCNF decomposition of R(A,B,C,D,E) producing R(A,D), R(D,E), R(B,C,E), R(A,B,C) from canonical FDs {BCD->E, A->B, E->B, E->C, AE->D, A->C}: which FDs are LOST?",
+      "options": [
+        "BCD -> E",
+        "A -> B",
+        "E -> B",
+        "E -> C",
+        "AE -> D",
+        "A -> C"
+      ],
+      "answer": { "values": [0, 4] },
+      "explanation": "After splitting: A->B, A->C are kept in R(A,B,C); E->B, E->C are kept in R(B,C,E). But BCD->E and AE->D span multiple resulting relations, so they cannot be enforced locally and are lost."
+    },
+    {
+      "id": "norm-04",
+      "topicId": "normalization",
+      "subtopic": "Canonical FD set",
+      "type": "text_lines",
+      "prompt": "R(A,B,C,D,E) with FDs: D->A, BC->D, ABC->DE, C->D, BE->AC. Give a canonical (minimal) set of FDs. Each line is one FD in the form 'LHS->RHS' with single-attribute RHS and comma-separated LHS.",
+      "answer": {
+        "lines": ["B,C->E", "B,E->C", "C->D", "D->A"]
+      },
+      "explanation": "After making RHSs singular and removing implied FDs (BC->D implied by C->D; ABC->D implied by C->D; BE->A implied by BE->C,C->D,D->A) we get ABC->E, BE->C, C->D, D->A. Then A in ABC can be dropped because A ∈ {BC}+, giving BC->E. Final canonical set: BC->E, BE->C, C->D, D->A."
+    },
+    {
+      "id": "norm-05",
+      "topicId": "normalization",
+      "subtopic": "BCNF decomposition",
+      "type": "multi_line",
+      "prompt": "R(A,B,C,D,E) with FDs: A->DB, B->D, AE->ED, E->A. Make this BCNF. Minimal key is {C,E}. Apply the BCNF algorithm. Give the resulting relations in the order: first split on the FD A->BD (more general than A->D, A->B), then on B->D, then on E->A. Output each relation as 'R(attrs)'.",
+      "answer": {
+        "orderedLines": [
+          "R(C,E)",
+          "R(E,A)",
+          "R(A,B)",
+          "R(B,D)"
+        ]
+      },
+      "explanation": "Canonical FDs: A->B, B->D, E->A. Each violates BCNF since none of A, B, E is a superkey (the only minimal key is {C,E}). Successive splits produce R(C,E) (the key relation), R(E,A) (from E->A), R(A,B) (from A->B), and R(B,D) (from B->D). No FDs are lost in this decomposition."
+    },
+    {
+      "id": "norm-06",
+      "topicId": "normalization",
+      "subtopic": "3NF synthesis",
+      "type": "multi_line",
+      "prompt": "R(A,B,C,D,E) with canonical FDs: A->B, B->D, E->A. The minimal key is {C,E}. Apply 3NF synthesis (one relation per FD, then add a key relation if needed, then remove subsumed ones). Output each resulting relation as 'R(attrs)'.",
+      "answer": {
+        "orderedLines": [
+          "R(A,B)",
+          "R(B,D)",
+          "R(A,E)",
+          "R(C,E)"
+        ]
+      },
+      "explanation": "One relation per FD: R1(A,B), R2(B,D), R3(A,E). None of these contains a key of R; the only minimal key is {C,E}. Add R4(C,E). No relation is subsumed. The 3NF result coincides (up to renaming) with the BCNF result."
+    },
+    {
+      "id": "norm-07",
+      "topicId": "normalization",
+      "subtopic": "Lossless join",
+      "type": "radio",
+      "prompt": "A binary decomposition of R into R1 and R2 is LOSSLESS iff what condition holds?",
+      "options": [
+        "R1 ∪ R2 contains all attributes of R",
+        "R1 ∩ R2 is a key of R1 or a key of R2",
+        "R1 ∩ R2 = ∅",
+        "There exist no FDs between R1 and R2"
+      ],
+      "answer": { "value": 1 },
+      "explanation": "The classical lossless-join condition (Heath's theorem) for binary decompositions: the intersection of attributes must be a (super)key of at least one of the two pieces."
+    },
+    {
+      "id": "norm-08",
+      "topicId": "normalization",
+      "subtopic": "BCNF decomposition steps",
+      "type": "multi_line",
+      "prompt": "R(A,B,C) with FDs: AB->C, C->A. Decompose into BCNF. The minimal keys are {A,B} and {B,C}. C->A violates BCNF. Give the final BCNF relations (one per line as 'R(attrs)').",
+      "answer": {
+        "orderedLines": [
+          "R(B,C)",
+          "R(A,C)"
+        ]
+      },
+      "explanation": "Split R on C->A: take R1 = (C,A) (the FD), and R2 = R minus (A - C) = (B,C). Final: R(B,C), R(A,C). The FD AB->C is lost in this BCNF decomposition."
+    },
+    {
+      "id": "norm-09",
+      "topicId": "normalization",
+      "subtopic": "Why 3NF over BCNF here",
+      "type": "radio",
+      "prompt": "R(A,B,C) with FDs AB->C, C->A is in 3NF but not BCNF. Why might one prefer to leave it in 3NF rather than decompose to BCNF?",
+      "options": [
+        "BCNF decomposition would introduce a new attribute",
+        "BCNF decomposition (e.g. into R(C,A) and R(B,C)) loses the FD AB->C, which would no longer be locally enforceable",
+        "BCNF decomposition makes the schema lossy",
+        "BCNF requires a manual key choice"
+      ],
+      "answer": { "value": 1 },
+      "explanation": "The classical trade-off: 3NF preserves FDs, BCNF can lose them. Here AB->C cannot be enforced after splitting C->A out, so the application would have to enforce it manually."
+    },
+    {
+      "id": "norm-10",
+      "topicId": "normalization",
+      "subtopic": "Canonical RHS singularisation",
+      "type": "text_lines",
+      "prompt": "Given the FD set { A->BC, AE->ED, BE->A, C->BE }, produce a canonical (minimal) FD set. One FD per line, RHS singular.",
+      "answer": {
+        "lines": ["A->B", "A->C", "A->D", "B,E->A", "C->B", "C->E"]
+      },
+      "explanation": "Step 1, split RHSs: A->B, A->C, AE->E (trivial, drop), AE->D, BE->A, C->B, C->E. Step 2, minimize LHSs: in AE->D, since {A}+ already contains E (via A->C, C->E), we can drop E and write A->D. Step 3, check no FD is implied by the others — each remaining FD is required. Final canonical set: A->B, A->C, A->D, BE->A, C->B, C->E."
+    },
+
+    {
+      "id": "sch-01",
+      "topicId": "tx_schedules",
+      "subtopic": "Conflict serializability (precedence graph)",
+      "type": "radio",
+      "prompt": "Schedule:\nT1: R(Z)              R(Y)\nT2:        R(Y)  W(Y) R(V)\nT3: W(V)                    W(Z)\nIs this schedule conflict-serializable?",
+      "options": ["Yes", "No"],
+      "answer": { "value": 1 },
+      "explanation": "Build the precedence graph from conflicting op pairs (different transactions, same item, at least one write). T1:R(Z) precedes T3:W(Z) -> edge T1->T3. T3:W(V) precedes T2:R(V) -> edge T3->T2. T2:W(Y) precedes T1:R(Y) -> edge T2->T1. This gives a cycle T1->T3->T2->T1, so the schedule is NOT conflict-serializable."
+    },
+    {
+      "id": "sch-02",
+      "topicId": "tx_schedules",
+      "subtopic": "Equivalent serial order",
+      "type": "short_text",
+      "prompt": "Schedule:\nT1: R(A) W(B)\nT2:           R(B) W(C)\nT3:                       R(C) W(A)\nThe precedence graph is T1->T2, T2->T3, T1->T3. Give an equivalent serial order as a comma-separated list of transactions (e.g. 'T1, T2, T3').",
+      "answer": {
+        "canonical": "T1, T2, T3",
+        "acceptedAnswers": ["T1, T2, T3", "T1,T2,T3", "T1 T2 T3"]
+      },
+      "explanation": "Topologically sort the acyclic precedence graph T1->T2->T3 (and T1->T3): T1, T2, T3."
+    },
+    {
+      "id": "sch-03",
+      "topicId": "tx_schedules",
+      "subtopic": "Cascadeless schedule",
+      "type": "radio",
+      "prompt": "Which property defines a cascadeless schedule?",
+      "options": [
+        "Every transaction commits before any other starts",
+        "Every read in transaction T reads a value written by an already COMMITTED transaction",
+        "Every transaction reads only its own writes",
+        "No transaction performs both reads and writes"
+      ],
+      "answer": { "value": 1 },
+      "explanation": "Cascadeless means: no transaction reads dirty data. Reads must be from already committed transactions, so an abort of one transaction never forces another to roll back (no cascading abort)."
+    },
+    {
+      "id": "sch-04",
+      "topicId": "tx_schedules",
+      "subtopic": "Recoverable schedule",
+      "type": "radio",
+      "prompt": "Which property defines a recoverable schedule?",
+      "options": [
+        "Every transaction commits before reading anything",
+        "For every transaction T, T's commit comes AFTER the commits of all transactions from which T has read values",
+        "No two transactions ever access the same data item",
+        "Every read is followed by a write"
+      ],
+      "answer": { "value": 1 },
+      "explanation": "Recoverable: if T reads from T', then T' must commit before T does. This ensures we never commit a transaction that depends on later aborted work."
+    },
+    {
+      "id": "sch-05",
+      "topicId": "tx_schedules",
+      "subtopic": "Conflict types",
+      "type": "checkbox",
+      "prompt": "Which pairs of operations on the SAME data item by DIFFERENT transactions are CONFLICTING?",
+      "options": [
+        "R(X) and R(X)",
+        "R(X) and W(X)",
+        "W(X) and R(X)",
+        "W(X) and W(X)"
+      ],
+      "answer": { "values": [1, 2, 3] },
+      "explanation": "Conflicts arise when at least one operation is a write. R-R does not conflict. R-W, W-R and W-W all do."
+    },
+    {
+      "id": "sch-06",
+      "topicId": "tx_schedules",
+      "subtopic": "Method to test serializability",
+      "type": "radio",
+      "prompt": "What is the standard, most efficient method to decide whether a schedule is conflict-serializable?",
+      "options": [
+        "Try all permutations of transactions and check equivalence",
+        "Build a precedence (conflict) graph; the schedule is conflict-serializable iff the graph has NO cycle",
+        "Check that every transaction reads only committed data",
+        "Apply the 2-phase locking protocol"
+      ],
+      "answer": { "value": 1 },
+      "explanation": "Precedence graph: nodes = transactions; edge Ti->Tj whenever Ti has an operation before a conflicting operation of Tj. The schedule is conflict-serializable iff this graph is acyclic, found via topological sort."
+    },
+    {
+      "id": "sch-07",
+      "topicId": "tx_schedules",
+      "subtopic": "Equivalent serial order",
+      "type": "short_text",
+      "prompt": "Schedule on items X,Y:\nT1: W(X)\nT2:       R(X) W(Y)\nT3:                  R(Y)\nThis schedule is conflict-serializable. Give the equivalent serial order as comma-separated.",
+      "answer": {
+        "canonical": "T1, T2, T3",
+        "acceptedAnswers": ["T1, T2, T3", "T1,T2,T3"]
+      },
+      "explanation": "Edges: T1->T2 (T1:W(X) before T2:R(X)) and T2->T3 (T2:W(Y) before T3:R(Y)). Topological order: T1, T2, T3."
+    },
+    {
+      "id": "sch-08",
+      "topicId": "tx_schedules",
+      "subtopic": "Serializable but not conflict-serializable?",
+      "type": "radio",
+      "prompt": "Is every conflict-serializable schedule also (view-)serializable?",
+      "options": ["Yes", "No"],
+      "answer": { "value": 0 },
+      "explanation": "Conflict-serializability is a STRICTER condition than view-serializability. So every conflict-serializable schedule is view-serializable, but not vice versa."
+    },
+    {
+      "id": "sch-09",
+      "topicId": "tx_schedules",
+      "subtopic": "Conflict-serializable check",
+      "type": "radio",
+      "prompt": "Schedule:\nT1: R(A) W(A)\nT2:           R(A) W(A)\nIs this schedule conflict-serializable?",
+      "options": ["Yes", "No"],
+      "answer": { "value": 0 },
+      "explanation": "T1 fully precedes T2 on A; the precedence graph has only the edge T1->T2 and no cycle, so the schedule is conflict-serializable, equivalent to the serial order T1, T2."
+    },
+    {
+      "id": "sch-10",
+      "topicId": "tx_schedules",
+      "subtopic": "Optimistic concurrency control",
+      "type": "radio",
+      "prompt": "Under backward-oriented optimistic concurrency control (BOCC), when does a committing transaction T abort?",
+      "options": [
+        "If its write set intersects the write set of any concurrent committed transaction",
+        "If its READ set intersects the WRITE set of any transaction that committed AFTER T started",
+        "Whenever any other transaction is still active",
+        "Whenever a deadlock is detected"
+      ],
+      "answer": { "value": 1 },
+      "explanation": "BOCC validation: T aborts if there exists a transaction T' that committed after T started, with RS(T) ∩ WS(T') ≠ ∅. Otherwise T can commit."
+    },
+    {
+      "id": "sch-11",
+      "topicId": "tx_schedules",
+      "subtopic": "Strict schedule",
+      "type": "radio",
+      "prompt": "Which is the chain of strictness for schedules, from most to least restrictive?",
+      "options": [
+        "Serial > Strict > Cascadeless > Recoverable",
+        "Recoverable > Cascadeless > Strict > Serial",
+        "Cascadeless > Strict > Serial > Recoverable",
+        "Strict > Recoverable > Cascadeless > Serial"
+      ],
+      "answer": { "value": 0 },
+      "explanation": "Serial ⊂ Strict ⊂ Cascadeless ⊂ Recoverable ⊂ All schedules. Each stricter class is contained in the next, so 'Serial > Strict > Cascadeless > Recoverable' is the correct order from most to least restrictive."
+    },
+
+    {
+      "id": "lock-01",
+      "topicId": "tx_2pl",
+      "subtopic": "Cascading rollback",
+      "type": "checkbox",
+      "prompt": "Schedule:\nT1:               R(Z) W(Y)\nT2: W(X)                       R(Y)\nT3:                                    R(Z)\nT4: W(Z)                                    R(X)\nT5:                       W(Z)\nT6:                                    R(X)\nT4 is aborted. Which other transactions must be rolled back (cascading rollback)?",
+      "options": [
+        "T1 must be rolled back",
+        "T2 must be rolled back",
+        "T3 must be rolled back",
+        "T5 must be rolled back",
+        "T6 must be rolled back"
+      ],
+      "answer": { "values": [0, 1, 4] },
+      "explanation": "T1 read Z written by T4 -> rollback T1. T2 read Y written by T1 -> rollback T2. T6 read X written by T2 -> rollback T6. T3 read Z written by T5 (not T4), so T3 is safe. T5 wrote independently; not affected."
+    },
+    {
+      "id": "lock-02",
+      "topicId": "tx_2pl",
+      "subtopic": "Strict 2PL",
+      "type": "radio",
+      "prompt": "Schedule:\nT1: start W(X) commit\nT2: start                 R(Y) ... R(X) commit\nT3: start W(Z) ... W(Y) commit\n(interleaved). Can this schedule be achieved using STRICT two-phase locking?",
+      "options": ["Yes", "No"],
+      "answer": { "value": 1 },
+      "explanation": "Strict 2PL holds every lock until commit. T2 needs a shared lock on Y from before R(Y) until T2 commits — but in this interleaving T2 is still running when T3 needs an exclusive lock on Y for W(Y). The locks conflict, so the schedule is impossible under strict 2PL."
+    },
+    {
+      "id": "lock-03",
+      "topicId": "tx_2pl",
+      "subtopic": "Preclaiming 2PL",
+      "type": "radio",
+      "prompt": "Same schedule:\nT1: start W(X) commit\nT2: start R(Y) ... R(X) commit\nT3: start W(Z) ... W(Y) commit\nCan it be achieved using PRECLAIMING two-phase locking?",
+      "options": ["Yes", "No"],
+      "answer": { "value": 1 },
+      "explanation": "Preclaiming 2PL acquires ALL locks at start. T2 must declare shared locks on Y and X at its start; but T1 also needs an exclusive lock on X for W(X). These locks conflict, so the schedule cannot be realised."
+    },
+    {
+      "id": "lock-04",
+      "topicId": "tx_2pl",
+      "subtopic": "Strict 2PL",
+      "type": "radio",
+      "prompt": "Schedule:\nT1: start R(X) ... W(Y) commit\nT2: start R(X) W(Y) commit\nCan this schedule be achieved using STRICT 2PL?",
+      "options": ["Yes", "No"],
+      "answer": { "value": 0 },
+      "explanation": "Both transactions only need a shared lock on X (compatible) and exclusive on Y. T1 acquires X(Y) before W(Y) and releases at commit; T2 likewise. With proper ordering of commits, the two W(Y)s do not overlap, so strict 2PL works."
+    },
+    {
+      "id": "lock-05",
+      "topicId": "tx_2pl",
+      "subtopic": "Preclaiming 2PL",
+      "type": "radio",
+      "prompt": "Schedule:\nT1: start R(X) ... W(Y) commit\nT2: start R(X) W(Y) commit\n(T1's W(Y) comes AFTER T2's W(Y) in the interleaving). Can this schedule be achieved using PRECLAIMING 2PL?",
+      "options": ["Yes", "No"],
+      "answer": { "value": 1 },
+      "explanation": "Under preclaiming 2PL, T1 declares X(Y) at its start, before T2 starts its W(Y). T2's W(Y) requires an exclusive lock on Y, which conflicts with T1's already-held exclusive lock. So the schedule cannot be realised."
+    },
+    {
+      "id": "lock-06",
+      "topicId": "tx_2pl",
+      "subtopic": "Deadlock",
+      "type": "radio",
+      "prompt": "Consider:\nT1: X(A) ... wants X(B)\nT2: X(B) ... wants X(A)\nNeither releases. Is there a deadlock?",
+      "options": ["Yes", "No"],
+      "answer": { "value": 0 },
+      "explanation": "Classic two-transaction deadlock: T1 holds A and waits for B; T2 holds B and waits for A. Neither can progress; the wait-for graph has a cycle T1->T2->T1."
+    },
+    {
+      "id": "lock-07",
+      "topicId": "tx_2pl",
+      "subtopic": "Lock compatibility",
+      "type": "checkbox",
+      "prompt": "Which lock combinations on the SAME data item by DIFFERENT transactions are COMPATIBLE (both can be held simultaneously)?",
+      "options": [
+        "Shared (S) and Shared (S)",
+        "Shared (S) and Exclusive (X)",
+        "Exclusive (X) and Shared (S)",
+        "Exclusive (X) and Exclusive (X)"
+      ],
+      "answer": { "values": [0] },
+      "explanation": "Only S-S is compatible. Any combination involving X is incompatible: writers need exclusive access."
+    },
+    {
+      "id": "lock-08",
+      "topicId": "tx_2pl",
+      "subtopic": "2PL definition",
+      "type": "radio",
+      "prompt": "What is the defining property of (basic) Two-Phase Locking (2PL)?",
+      "options": [
+        "Every transaction takes all its locks at start and releases them at commit",
+        "Each transaction has a growing phase (only acquires locks) followed by a shrinking phase (only releases locks)",
+        "Every read is preceded by an exclusive lock",
+        "Locks are exchanged between transactions"
+      ],
+      "answer": { "value": 1 },
+      "explanation": "2PL: a transaction may not acquire any new lock after releasing one. The lock set first grows monotonically, then shrinks monotonically — two phases."
+    },
+    {
+      "id": "lock-09",
+      "topicId": "tx_2pl",
+      "subtopic": "Strict 2PL property",
+      "type": "radio",
+      "prompt": "What does STRICT 2PL guarantee on top of regular 2PL?",
+      "options": [
+        "Deadlock freedom",
+        "Cascadeless (and hence recoverable) schedules, by holding all WRITE locks (or all locks) until commit",
+        "Higher throughput",
+        "Lossless decomposition"
+      ],
+      "answer": { "value": 1 },
+      "explanation": "Strict 2PL holds all exclusive (write) locks until the transaction commits/aborts. As a result, no other transaction can read dirty data, so the schedule is cascadeless (and recoverable)."
+    },
+    {
+      "id": "lock-10",
+      "topicId": "tx_2pl",
+      "subtopic": "Cascading rollback (simple)",
+      "type": "checkbox",
+      "prompt": "Schedule:\nT1: W(A)\nT2:        R(A) W(B)\nT3:                  R(B)\nT1 is aborted. Which transactions must also be rolled back?",
+      "options": [
+        "T2 must be rolled back",
+        "T3 must be rolled back"
+      ],
+      "answer": { "values": [0, 1] },
+      "explanation": "T2 read A written by T1 -> T2 must roll back. T3 read B written by T2 -> T3 must also roll back. Classic cascade."
+    },
+    {
+      "id": "lock-11",
+      "topicId": "tx_2pl",
+      "subtopic": "Strict 2PL",
+      "type": "radio",
+      "prompt": "Schedule (T2's R(X) interleaves BEFORE T1 commits):\nT1: start W(X) ... R(X) commit\nT2: start            R(X) commit\nCan this be achieved using STRICT 2PL?",
+      "options": ["Yes", "No"],
+      "answer": { "value": 1 },
+      "explanation": "T1 needs an exclusive lock on X for W(X) and must hold it until commit (strict). Meanwhile T2 needs a shared lock on X for R(X). These locks conflict, so under strict 2PL T2 cannot proceed before T1 commits — the interleaving shown is impossible."
+    },
+    {
+      "id": "lock-12",
+      "topicId": "tx_2pl",
+      "subtopic": "Preclaiming 2PL",
+      "type": "radio",
+      "prompt": "Schedule (T2's R(X) interleaves BEFORE T1 commits):\nT1: start W(X) ... R(X) commit\nT2: start            R(X) commit\nCan this be achieved using PRECLAIMING 2PL?",
+      "options": ["Yes", "No"],
+      "answer": { "value": 1 },
+      "explanation": "Under preclaiming 2PL, T1 acquires X(X) at start and holds it until commit; T2 must preclaim S(X) at its start, which conflicts with T1's already-held X(X). So T2 cannot start before T1 commits — the interleaving shown is impossible."
+    }
+  ]
+};

@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Exam Mode :: Databases</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">iSubmit :: Databases</div>
+    <nav class="topnav">
+      <a href="index.html">Home</a>
+      <a href="practice.html">Practice</a>
+      <a href="exam.html" class="active">Exam Mode</a>
+      <a href="isubmit-exam.html">iSubmit Exam</a>
+    </nav>
+    <div class="exam-timer" id="exam-timer" hidden>
+      <span class="timer-label">Time remaining</span>
+      <span class="timer-value" id="timer-value">02:45:00</span>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar" id="exam-sidebar" hidden>
+      <h3>Questions</h3>
+      <nav class="question-pager" id="question-pager"></nav>
+      <button id="submit-exam" class="primary-btn full">Submit exam</button>
+    </aside>
+
+    <main class="content" id="content">
+      <div class="empty-state" id="start-pane">
+        <h1>Exam Mode</h1>
+        <p><strong>Duration:</strong> 2 hours 45 minutes</p>
+        <p><strong>Length:</strong> 20 questions, 2 per topic</p>
+        <p><strong>Format:</strong> Same question types as iSubmit — SQL queries, minimal keys, normal-form checks, decomposition steps, schedule analysis, cascading rollbacks.</p>
+        <p>Results are locked until you submit (or the timer expires). You can move between questions freely.</p>
+        <button id="start-exam" class="primary-btn">Start exam</button>
+      </div>
+    </main>
+  </div>
+
+  <script src="data/questions-data.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/grader.js"></script>
+  <script src="js/question.js"></script>
+  <script src="js/exam.js"></script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Databases :: Exam Prep</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">iSubmit :: Databases</div>
+    <nav class="topnav">
+      <a href="index.html" class="active">Home</a>
+      <a href="practice.html">Practice</a>
+      <a href="exam.html">Exam Mode</a>
+      <a href="isubmit-exam.html">iSubmit Exam</a>
+    </nav>
+  </header>
+
+  <main class="home">
+    <section class="hero">
+      <h1>Databases Final Exam Prep</h1>
+      <p class="subtitle">
+        Practice mode and timed exam mode — same question types and structure as iSubmit.
+      </p>
+
+      <div class="mode-grid">
+        <a class="mode-card" href="practice.html">
+          <div class="mode-icon">📝</div>
+          <h2>Practice Mode</h2>
+          <p>Pick a topic. Work through questions one at a time. Submit, get graded, see the explanation.</p>
+          <span class="mode-cta">Start practicing →</span>
+        </a>
+        <a class="mode-card exam" href="exam.html">
+          <div class="mode-icon">⏱</div>
+          <h2>Exam Mode</h2>
+          <p>20 questions · 2 per topic · 2 hours 45 minutes. Results locked until submit.</p>
+          <span class="mode-cta">Begin exam →</span>
+        </a>
+        <a class="mode-card exam" href="isubmit-exam.html" style="grid-column: 1 / -1;">
+          <div class="mode-icon">📄</div>
+          <h2>iSubmit Exam — Mock Final</h2>
+          <p>Full mock exam mirroring the past exam: 5 tasks · point-weighted (8.0 pts max) · grade calculated automatically · includes the interactive E/R Editor for Task 1.</p>
+          <span class="mode-cta">Take mock exam →</span>
+        </a>
+      </div>
+
+      <div class="meta-box" id="meta-box">
+        <strong>Question bank:</strong>
+        <span id="meta-count">loading…</span>
+        <span id="meta-topics"></span>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>Light-theme exam prep · mirrors iSubmit question types</span>
+  </footer>
+
+  <script src="data/questions-data.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/progress.js"></script>
+  <script>
+    DataStore.load().then(() => {
+      const bank = DataStore.bank;
+      const overall = Progress.overall(bank);
+      const stats = Progress.statsByTopic(bank);
+      document.getElementById('meta-count').textContent =
+        bank.questions.length + ' questions · ' +
+        overall.attempted + ' attempted · ' + overall.correct + ' correct (saved across reloads)';
+      const list = bank.topics
+        .map(t => {
+          const s = stats[t.id] || { total: 0, attempted: 0, correct: 0 };
+          const tick = (s.total > 0 && s.attempted === s.total) ? ' ✓' : '';
+          return '<li><span>' + t.name + tick + '</span><b>' + s.attempted + ' / ' + s.total + '</b></li>';
+        })
+        .join('');
+      document.getElementById('meta-topics').innerHTML = '<ul class="topic-counts">' + list + '</ul>';
+    }).catch(err => {
+      document.getElementById('meta-count').textContent =
+        'Could not load question bank (' + err.message + ')';
+    });
+  </script>
+</body>
+</html>

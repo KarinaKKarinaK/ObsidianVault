@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Practice :: Databases</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">iSubmit :: Databases</div>
+    <nav class="topnav">
+      <a href="index.html">Home</a>
+      <a href="practice.html" class="active">Practice</a>
+      <a href="exam.html">Exam Mode</a>
+      <a href="isubmit-exam.html">iSubmit Exam</a>
+    </nav>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <h3>Databases</h3>
+      <nav class="topic-tree" id="topic-tree"><!-- filled by JS --></nav>
+    </aside>
+
+    <main class="content" id="content">
+      <div class="empty-state">
+        <h1>Practice Mode</h1>
+        <p>Choose a topic from the left to start practicing. Submit each answer to get graded. The model answer and explanation are shown after grading.</p>
+      </div>
+    </main>
+  </div>
+
+  <script src="data/questions-data.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/progress.js"></script>
+  <script src="js/grader.js"></script>
+  <script src="js/question.js"></script>
+  <script src="js/practice.js"></script>
+</body>
+</html>

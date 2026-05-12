@@ -1,0 +1,289 @@
+// Inline iSubmit-exam definition — loaded as window.__ISUBMIT_EXAM.
+window.__ISUBMIT_EXAM = {
+  "title": "Databases — Mock Final Exam (iSubmit Style)",
+  "durationMinutes": 165,
+  "maxPoints": 8.0,
+  "gradeFormula": "score / maxPoints * 10",
+  "tasks": [
+    {
+      "id": "1",
+      "title": "1 Conceptual Design",
+      "intro": "Consider the following case for a regional hospital network: Doctors have a medical licence number (LIC), a name, an age, and a specialty (e.g. cardiology, neurology). Patients have a patient number (PNR), a name, a date of birth, and a blood type. Hospitals have a hospital code, a name, and an address. Each hospital is run by exactly one doctor (known as the medical director). A doctor may work in one or more hospitals; for each hospital a doctor works in, a contract type (e.g. full-time, part-time, locum) is recorded. Every patient is registered at exactly one hospital as their home hospital. Treatments have a code, a name, and a standard fee. When a doctor administers a treatment to a patient, the date and the prescribed dosage are recorded; the same patient may receive the same treatment from different doctors on different dates. Hospitals organise wards: a ward has a number that is unique only within its hospital, plus a name and a bed count; a ward ceases to exist if its hospital is removed. Patients can be admitted to wards, and for every admission we record an admission date and a discharge date; one patient may be admitted multiple times. Both doctors and patients are persons: they share name, date of birth, and address. Finally, every patient has another, more senior patient registered as their next of kin (the 'contact patient') in case of emergency.",
+      "subquestions": [
+        {
+          "id": "1a",
+          "label": "Question 1(a)",
+          "prompt": "Provide a conceptual database model in the form of an ER Diagram. Explain the most important design choices and document relevant assumptions.",
+          "type": "er_diagram",
+          "points": 1.5,
+          "hint": "Remember: weak entities use double-line rectangles and identifying relationships use double-line diamonds. A ternary relationship is needed when an attribute depends on three participating entities simultaneously (here: date and dosage depend on doctor + patient + treatment). The next-of-kin link is a recursive relationship on Patient.",
+          "rubric": [
+            { "id": "ent_doctor",      "label": "Entity set Doctor with key LIC and attributes name, age, specialty",                          "weight": 0.12, "match": { "type": "entity", "name": "doctor", "keyAttribute": "lic" } },
+            { "id": "ent_patient",     "label": "Entity set Patient with key PNR and attributes name, dob, bloodType",                          "weight": 0.12, "match": { "type": "entity", "name": "patient", "keyAttribute": "pnr" } },
+            { "id": "ent_hospital",    "label": "Entity set Hospital with key code and attributes name, address",                                "weight": 0.1,  "match": { "type": "entity", "name": "hospital", "keyAttribute": "code" } },
+            { "id": "ent_treatment",   "label": "Entity set Treatment with key code and attributes name, fee",                                   "weight": 0.1,  "match": { "type": "entity", "name": "treatment", "keyAttribute": "code" } },
+            { "id": "ent_ward_weak",   "label": "Weak entity Ward (identified by Hospital + ward number)",                                       "weight": 0.12, "match": { "type": "entity", "name": "ward", "weak": true } },
+            { "id": "rel_directs",     "label": "Relationship 'directs' between Hospital (1..1) and Doctor (0..1) for medical director",         "weight": 0.1,  "match": { "type": "relationship", "name": "directs", "connects": ["hospital", "doctor"] } },
+            { "id": "rel_works_in",    "label": "Relationship 'works_in' between Doctor (1..*) and Hospital (1..*) with attribute contractType", "weight": 0.1,  "match": { "type": "relationship", "name": "works_in", "connects": ["doctor", "hospital"] } },
+            { "id": "rel_registered",  "label": "Relationship 'registered_at' between Patient (1..*) and Hospital (1..1)",                       "weight": 0.08, "match": { "type": "relationship", "name": "registered_at", "connects": ["patient", "hospital"] } },
+            { "id": "ter_treats",      "label": "Ternary relationship 'treats' among Doctor, Patient, Treatment with attributes date, dosage",   "weight": 0.15, "match": { "type": "relationship", "name": "treats" } },
+            { "id": "rel_admitted",    "label": "Relationship 'admitted_to' between Patient and Ward with attributes admissionDate, dischargeDate", "weight": 0.08, "match": { "type": "relationship", "name": "admitted_to", "connects": ["patient", "ward"] } },
+            { "id": "rec_nextofkin",   "label": "Recursive relationship 'next_of_kin' on Patient (contact patient)",                             "weight": 0.05, "match": { "type": "relationship", "name": "next_of_kin", "connects": ["patient", "patient"] } },
+            { "id": "isa_person",      "label": "isA hierarchy: Person → Doctor, Patient (shared attributes lifted to Person)",                  "weight": 0.08, "match": { "type": "isA", "super": "person", "subs": ["doctor", "patient"] } }
+          ],
+          "modelAnswer": "Entities (strong, unless noted):\n  • Person (supertype): name, dateOfBirth, address\n      ↳ Doctor (subtype): LIC (key), age, specialty\n      ↳ Patient (subtype): PNR (key), bloodType\n  • Hospital: code (key), name, address\n  • Treatment: code (key), name, fee\n  • Ward (WEAK, identified by its Hospital): wardNumber (discriminator), name, bedCount\n\nRelationships:\n  • directs : Hospital(1..1) — Doctor(0..1)   -- medical director\n  • works_in : Doctor(1..*) — Hospital(1..*) with attribute contractType\n  • registered_at : Patient(*) — Hospital(1)\n  • treats : ternary among Doctor, Patient, Treatment with attributes date, dosage\n        (key is the full triple plus date because the same patient may receive the same treatment from different doctors on different days)\n  • admitted_to : Patient(*) — Ward(*) with attributes admissionDate, dischargeDate\n        (key includes admissionDate because the same patient may be re-admitted to the same ward)\n  • next_of_kin : recursive on Patient (contact patient), 0..1 — 0..*\n\nKey design choices:\n  – isA hierarchy on Person avoids repeating name/dob/address for both doctors and patients (overlapping in principle is allowed; the scenario does not imply disjointness).\n  – Ward is modelled as a weak entity because its number is unique only within its hospital; the identifying relationship to Hospital is drawn with a double-line diamond.\n  – treats is ternary, not three binary relationships, because date and dosage depend simultaneously on doctor, patient, and treatment.\n  – Multiple admissions of the same patient to the same ward require admissionDate to be part of the relationship's key (or to introduce an Admission weak entity).",
+          "explanation": "The trickiest modelling decisions are (i) recognising that the (date, dosage) tuple is functionally dependent on the triple (doctor, patient, treatment) and therefore demands a ternary relationship; (ii) modelling Ward as a weak entity because its number is only locally unique; and (iii) deciding whether to introduce the Person supertype — it pays off whenever shared attributes are non-trivial and querying across all persons makes sense."
+        },
+        {
+          "id": "1b",
+          "label": "Question 1(b)",
+          "prompt": "Give the associated relational schema. Indicate primary keys (underline by writing _attr_) and foreign keys (→ Relation). Comment on any attributes that may be NULL and on the constraints a relational database could check (including candidate keys).",
+          "type": "long_text",
+          "points": 0.5,
+          "rubric": [
+            { "id": "rel_doctor",      "label": "doctor(_lic_, name, dob, address, age, specialty)",                                                             "weight": 0.08 },
+            { "id": "rel_patient",     "label": "patient(_pnr_, name, dob, address, bloodType, contactPatient → patient, homeHospital → hospital)",              "weight": 0.1  },
+            { "id": "rel_hospital",    "label": "hospital(_code_, name, address, director → doctor)",                                                            "weight": 0.08 },
+            { "id": "rel_treatment",   "label": "treatment(_code_, name, fee)",                                                                                  "weight": 0.06 },
+            { "id": "rel_ward",        "label": "ward(_hospital → hospital, wardNumber_, name, bedCount) — composite PK including FK to hospital",               "weight": 0.1  },
+            { "id": "rel_works_in",    "label": "worksIn(_lic → doctor, code → hospital_, contractType)",                                                        "weight": 0.08 },
+            { "id": "rel_treats",      "label": "treats(_lic → doctor, pnr → patient, treatmentCode → treatment, date_, dosage)",                                "weight": 0.12 },
+            { "id": "rel_admitted",    "label": "admittedTo(_pnr → patient, hospital → hospital, wardNumber, admissionDate_, dischargeDate)",                    "weight": 0.1  },
+            { "id": "nullable_comment","label": "Mentions that contactPatient and dischargeDate may be NULL; director may be NULL while a hospital has no director; ward's (hospital,wardNumber) is a FK pair", "weight": 0.1  },
+            { "id": "constraints",     "label": "Mentions DB-enforceable constraints: NOT NULL on mandatory FKs, UNIQUE on (hospital, name) for ward if desired, CHECK that contactPatient ≠ pnr, FK ON DELETE CASCADE for ward when its hospital is removed", "weight": 0.1  }
+          ],
+          "modelAnswer": "Relational schema (PKs in _underscores_, FKs marked with →):\n\n  doctor(_lic_, name, dob, address, age, specialty)\n  patient(_pnr_, name, dob, address, bloodType,\n          contactPatient → patient,\n          homeHospital → hospital)\n  hospital(_code_, name, address,\n           director → doctor)\n  treatment(_code_, name, fee)\n  ward(_hospital → hospital, wardNumber_, name, bedCount)\n  worksIn(_lic → doctor, code → hospital_, contractType)\n  treats(_lic → doctor, pnr → patient, treatmentCode → treatment, date_, dosage)\n  admittedTo(_pnr → patient, hospital, wardNumber, admissionDate_, dischargeDate)\n      with (hospital, wardNumber) → ward as a composite FK\n\nNULLable attributes and constraints:\n  • patient.contactPatient is NULLable (a brand-new patient may not yet have declared next-of-kin); declare CHECK (contactPatient <> pnr).\n  • hospital.director may temporarily be NULL between two directors; alternatively keep it NOT NULL and require any deletion of a doctor first to reassign directorships.\n  • admittedTo.dischargeDate is NULLable while the patient is still admitted.\n  • Composite FK (admittedTo.hospital, admittedTo.wardNumber) → ward must be declared together.\n  • Mandatory NOT NULLs: patient.homeHospital, worksIn.contractType, ward.bedCount, treats.dosage.\n  • Candidate keys: every relation listed has exactly one minimal key (the underlined attributes). Additionally, (hospital, name) on ward could be declared UNIQUE if ward names are unique within a hospital.\n  • Referential integrity for ward should be ON DELETE CASCADE so that removing a hospital removes its wards (matching the weak-entity semantics).\n\nDesign note on 'directs': the 1..1 medical-director relationship is folded into hospital.director rather than kept as a separate table — this naturally enforces the 1-on-the-hospital-side. The 0..1 on the doctor side (a doctor may or may not direct a hospital) is enforced by adding a UNIQUE constraint on hospital.director if we want to forbid a doctor directing more than one hospital.",
+          "explanation": "The main translation choices: (1) fold 1..1 relationships into one of the participating entities via an FK; (2) make worksIn a separate relation because it has its own attribute (contractType) and is many-to-many; (3) ward becomes a relation whose PK includes the FK to its hospital (weak entity → identifying-relationship attribute joins the key); (4) ternary treats becomes a relation whose PK is the union of all three FKs plus 'date' to allow repeated treatments over time."
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "title": "2 Normalization",
+      "intro": "Given R(A, B, C, D, E) and the set of functional dependencies\n\n    F = { AB → C,  A → D,  D → E,  CE → B,  A → B }.\n\nShow your intermediate steps in all the answers below.",
+      "subquestions": [
+        {
+          "id": "2a",
+          "label": "Question 2(a)",
+          "prompt": "Is F canonical (a minimal basis)? If not, make it so. Give the canonical set of FDs, one per line.",
+          "type": "text_lines",
+          "points": 0.5,
+          "answer": {
+            "lines": ["A->C", "A->D", "D->E", "CE->B"],
+            "acceptedVariants": ["A→C", "A→D", "D→E", "CE→B"]
+          },
+          "rubric": [
+            { "id": "step_split",     "label": "Splits RHSs so that every FD has a single attribute on the RHS",                                  "weight": 0.2 },
+            { "id": "step_lhs_reduce","label": "Reduces LHS of AB→C to A→C by showing B is extraneous (A+ already contains B via A→B, then C follows)", "weight": 0.3 },
+            { "id": "step_drop_ab",   "label": "Drops A→B as redundant (A+ without A→B still contains B via A→D→E and CE→B... actually via A→C, A→D, D→E giving CE, then CE→B)", "weight": 0.3 },
+            { "id": "final_set",      "label": "Final canonical set is exactly { A→C, A→D, D→E, CE→B }",                                            "weight": 0.2 }
+          ],
+          "modelAnswer": "Step 1 — single attributes on every RHS:\n   All four original FDs already have single-attribute RHSs; only the LHSs need attention.\n\nStep 2 — eliminate extraneous attributes from LHSs:\n   Consider AB → C. Is B extraneous? Compute A+ under F: A+ = {A}; apply A→D ⇒ {A,D}; apply D→E ⇒ {A,D,E}; apply A→B ⇒ {A,B,D,E}; apply AB→C ⇒ {A,B,C,D,E}. So {A}+ = ABCDE ⊇ {C}, meaning B is extraneous in AB→C. Replace it with A → C.\n   For all other FDs the LHS is a single attribute, so nothing to reduce.\n\nWorking set: { A→C, A→D, D→E, CE→B, A→B }.\n\nStep 3 — drop redundant FDs (test each one for removal):\n   • Drop A → B?  Compute A+ under F \\ {A→B}: A+ = {A}; A→C ⇒ {A,C}; A→D ⇒ {A,C,D}; D→E ⇒ {A,C,D,E}; CE→B ⇒ {A,B,C,D,E}. So B is still derivable, A→B is redundant.\n   • Drop A → C? A+ under F \\ {A→C, A→B} = {A}; A→D ⇒ {A,D}; D→E ⇒ {A,D,E}. C not reachable. NOT redundant.\n   • Drop A → D? A+ under remaining set = {A,C}; no way to get D. NOT redundant.\n   • Drop D → E? D+ = {D}; no way to get E. NOT redundant.\n   • Drop CE → B? C+ ∪ E+ does not give B. NOT redundant.\n\nFinal canonical set:\n   F* = { A → C,  A → D,  D → E,  CE → B }.",
+          "explanation": "Canonicalisation = (1) make every RHS a single attribute, (2) remove extraneous LHS attributes, (3) iteratively drop any FD whose RHS is still implied by the rest. The interesting moves here were spotting that B is extraneous in AB→C (because A already implies B transitively) and that A→B itself is therefore redundant once the chain A→C, A→D, D→E, CE→B is in place."
+        },
+        {
+          "id": "2b",
+          "label": "Question 2(b)",
+          "prompt": "What are the minimal (candidate) keys of R(A, B, C, D, E)?",
+          "type": "text_lines",
+          "points": 0.5,
+          "answer": {
+            "lines": ["{A}"],
+            "acceptedVariants": ["A", "(A)"]
+          },
+          "rubric": [
+            { "id": "method",          "label": "Uses the 'attributes that never appear on a RHS must be in every key' rule",                                 "weight": 0.4 },
+            { "id": "closure",         "label": "Computes A+ = ABCDE and concludes {A} is a superkey",                                                          "weight": 0.4 },
+            { "id": "unique_minimal",  "label": "Argues {A} is the unique minimal key (no proper subset can be a key, and no other attribute set is needed)",   "weight": 0.2 }
+          ],
+          "modelAnswer": "Optimised candidate-key algorithm.\n\nLook at the canonical set F* = { A→C, A→D, D→E, CE→B }.\n  • Attributes never on the RHS of any FD: only A.\n  • Attributes always derivable: B (via CE→B), C (via A→C), D (via A→D), E (via D→E).\n\nSince A appears in no RHS, A must be contained in every candidate key.\n\nCompute the closure of {A}:\n   A+ = {A}\n         ∪ {C}  (A→C)\n         ∪ {D}  (A→D)\n         ∪ {E}  (D→E)\n         ∪ {B}  (CE→B, since both C and E are in the set)\n       = {A,B,C,D,E}.\n\nSo {A} already determines all attributes — {A} is a superkey, and being a single attribute it is minimal.\n\nUnique minimal (candidate) key: {A}.",
+          "explanation": "Because A is the only attribute that never appears on a right-hand side, it must lie in every candidate key. Then checking A+ = ABCDE confirms {A} is enough, so it is the one and only candidate key."
+        },
+        {
+          "id": "2c",
+          "label": "Question 2(c)",
+          "prompt": "Is R in BCNF already? If not, decompose it into BCNF and state whether any FDs were lost.",
+          "type": "multi_line",
+          "points": 0.5,
+          "rubric": [
+            { "id": "bcnf_diagnosis", "label": "Correctly diagnoses that R is not in BCNF because D→E and CE→B have non-superkey LHSs", "weight": 0.25 },
+            { "id": "split_step",     "label": "Performs at least one valid BCNF split (e.g. splits out R1(D,E) for D→E)",                "weight": 0.25 },
+            { "id": "final_decomp",   "label": "Reaches a correct BCNF decomposition such as R1(D,E), R2(A,C,D), R3(A,B)",                "weight": 0.3  },
+            { "id": "fd_lost",        "label": "Identifies that CE → B is lost in the BCNF decomposition",                                "weight": 0.2  }
+          ],
+          "modelAnswer": "BCNF check. The unique key is {A}, so every BCNF FD must have a LHS that contains A.\n   • A → C    LHS contains A           OK\n   • A → D    LHS contains A           OK\n   • D → E    LHS = D, no A            VIOLATES BCNF\n   • CE → B   LHS = CE, no A           VIOLATES BCNF\n\nSo R is NOT in BCNF.\n\nDecomposition (one valid order):\n\n   Step 1. Split on D → E (maximise RHS first: D→E stays D→E).\n      R1(D, E)   with FD  D → E,  key = D    -- BCNF ✓\n      Remaining R' = (A, B, C, D)\n      Project F* onto R': A→C, A→D survive. CE→B requires E, which is not in R', so it does not project.\n      The relation R'(A,B,C,D) has key {A} (since A+ in R' = {A,B,C,D} once we add A→B from… wait, A→B is no longer in F*).\n      In fact in R', without CE→B and without A→B, B is not determined by A. So the key of R' is {A,B}.\n\n   Step 2. R'(A,B,C,D) with FDs { A→C, A→D } and key {A,B}.\n      A → C violates BCNF (A is not a superkey of R'). Split:\n      R2(A, C, D)   with FDs A→C, A→D, key = A   -- BCNF ✓\n      R3(A, B)      no non-trivial FDs, key = (A,B) -- BCNF ✓\n\nFinal BCNF schema:\n   R1(D, E),   R2(A, C, D),   R3(A, B).\n\nFD preservation:\n   • A → C  enforceable in R2 ✓\n   • A → D  enforceable in R2 ✓\n   • D → E  enforceable in R1 ✓\n   • CE → B LOST — C lives in R2, E in R1, B in R3, so this FD cannot be enforced inside any single sub-relation.\n\nSo BCNF decomposition is lossless-join but loses CE → B.",
+          "explanation": "The classic BCNF/FD-preservation trade-off: every BCNF decomposition is lossless-join, but some FDs (here CE→B) may be split across relations and become un-enforceable without joins. Compare this with the 3NF synthesis in 2(d), which keeps everything."
+        },
+        {
+          "id": "2d",
+          "label": "Question 2(d)",
+          "prompt": "Is R in 3NF already? If not, decompose it into 3NF.",
+          "type": "multi_line",
+          "points": 0.5,
+          "rubric": [
+            { "id": "threenf_diagnosis", "label": "Argues R is not in 3NF: no FD's RHS is contained in a candidate key, and several LHSs are not superkeys", "weight": 0.25 },
+            { "id": "synthesis_method",  "label": "Applies the synthesis algorithm — one relation per FD in the canonical cover (or per group with common LHS)", "weight": 0.3  },
+            { "id": "key_relation",      "label": "Adds a relation containing a candidate key (e.g. ensures {A} appears as a key in some relation)",         "weight": 0.2  },
+            { "id": "final_decomp",      "label": "Reaches { R1(A,C,D), R2(D,E), R3(C,E,B) } or equivalent, all FDs preserved",                              "weight": 0.25 }
+          ],
+          "modelAnswer": "3NF check. R is in 3NF iff for every non-trivial FD X → Y in F*, either X is a superkey or every attribute in Y belongs to some candidate key. The unique candidate key is {A}, so the only 'prime' attribute is A.\n   • A → C : RHS = C, not prime, and A is a superkey — OK\n   • A → D : RHS = D, not prime, and A is a superkey — OK\n   • D → E : RHS = E, not prime, and D is NOT a superkey — VIOLATES 3NF\n   • CE → B : RHS = B, not prime, and CE is NOT a superkey — VIOLATES 3NF\n\nSo R is NOT in 3NF.\n\n3NF synthesis from the canonical cover F* = { A→C, A→D, D→E, CE→B }:\n\n   Step 1. Group FDs with the same LHS and make one relation per group:\n      {A→C, A→D}      ⇒  R1(A, C, D)   with key A\n      {D→E}           ⇒  R2(D, E)      with key D\n      {CE→B}          ⇒  R3(C, E, B)   with key (C,E)\n\n   Step 2. Ensure at least one relation contains a candidate key of R.\n      The candidate key is {A}. R1 already contains A as its key, so we are done — no extra relation needed.\n\n   Step 3. Remove any relation whose attributes are a subset of another's. None here.\n\nFinal 3NF schema:\n   R1(A, C, D),   R2(D, E),   R3(C, E, B).\n\nProperties:\n   • Lossless join: guaranteed because R1 contains the key {A} of the original relation.\n   • FD preservation: all four FDs of F* are enforceable inside a single relation\n        A→C in R1, A→D in R1, D→E in R2, CE→B in R3.\n\nNote that 3NF preserved CE → B which BCNF could not, at the cost of allowing a transitive dependency through the schema as a whole.",
+          "explanation": "3NF synthesis is mechanical: one relation per FD-group of the canonical cover, plus a key-bearing relation if none of the generated ones already contains a key. It always yields a lossless and FD-preserving decomposition — that is the practical advantage over BCNF whenever the two differ."
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "title": "3 SQL",
+      "intro": "Consider the following schema (primary keys underlined, arrows indicate foreign-key references):\n\n    Suppliers( _sid_ , sname, saddress )\n    Parts    ( _pid_ , pname, color )\n    Catalog  ( _sid → Suppliers, pid → Parts_ , cost )\n\nFormulate the queries below in SQL. You will only obtain full marks if your answers avoid GROUP BY in favour of existential quantification (EXISTS / NOT EXISTS).",
+      "subquestions": [
+        {
+          "id": "3a",
+          "label": "Question 3(a)",
+          "prompt": "Find the sids of suppliers that supply at least two different red parts.",
+          "type": "sql",
+          "points": 1.0,
+          "tables": [
+            { "name": "Suppliers", "columns": [
+              { "name": "sid", "type": "INTEGER", "pk": true },
+              { "name": "sname", "type": "VARCHAR" },
+              { "name": "saddress", "type": "VARCHAR" }
+            ]},
+            { "name": "Parts", "columns": [
+              { "name": "pid", "type": "INTEGER", "pk": true },
+              { "name": "pname", "type": "VARCHAR" },
+              { "name": "color", "type": "VARCHAR" }
+            ]},
+            { "name": "Catalog", "columns": [
+              { "name": "sid", "type": "INTEGER", "pk": true, "fk": "Suppliers.sid" },
+              { "name": "pid", "type": "INTEGER", "pk": true, "fk": "Parts.pid" },
+              { "name": "cost", "type": "DECIMAL" }
+            ]}
+          ],
+          "answer": {
+            "canonical": "SELECT DISTINCT C1.sid\nFROM Catalog C1, Parts P1\nWHERE C1.pid = P1.pid\n  AND P1.color = 'red'\n  AND EXISTS (\n      SELECT *\n      FROM Catalog C2, Parts P2\n      WHERE C2.sid = C1.sid\n        AND C2.pid = P2.pid\n        AND P2.color = 'red'\n        AND C2.pid <> C1.pid\n  );",
+            "requiredPatterns": ["EXISTS", "red", "<>"]
+          },
+          "rubric": [
+            { "id": "uses_exists",      "label": "Uses EXISTS (or a self-join) with an inequality, instead of GROUP BY / COUNT",       "weight": 0.4 },
+            { "id": "filters_red",      "label": "Filters Parts.color = 'red' on both occurrences of the part",                        "weight": 0.2 },
+            { "id": "two_different",    "label": "Enforces the two parts are different (C2.pid <> C1.pid)",                             "weight": 0.2 },
+            { "id": "correct_result",   "label": "Query returns exactly the sids of suppliers with two or more distinct red parts",     "weight": 0.2 }
+          ],
+          "modelAnswer": "SELECT DISTINCT C1.sid\nFROM Catalog C1, Parts P1\nWHERE C1.pid = P1.pid\n  AND P1.color = 'red'\n  AND EXISTS (\n      SELECT *\n      FROM Catalog C2, Parts P2\n      WHERE C2.sid = C1.sid\n        AND C2.pid = P2.pid\n        AND P2.color = 'red'\n        AND C2.pid <> C1.pid\n  );",
+          "explanation": "The trick is to assert that there exists a second red part supplied by the same sid that is distinct from the first one. SELECT DISTINCT is kept on the outer query because the join with Parts may produce duplicate sid rows. No GROUP BY needed."
+        },
+        {
+          "id": "3b",
+          "label": "Question 3(b)",
+          "prompt": "Find the names of suppliers who supply every part whose name begins with the letter 'B'.",
+          "type": "sql",
+          "points": 1.0,
+          "tables": [
+            { "name": "Suppliers", "columns": [
+              { "name": "sid", "type": "INTEGER", "pk": true },
+              { "name": "sname", "type": "VARCHAR" },
+              { "name": "saddress", "type": "VARCHAR" }
+            ]},
+            { "name": "Parts", "columns": [
+              { "name": "pid", "type": "INTEGER", "pk": true },
+              { "name": "pname", "type": "VARCHAR" },
+              { "name": "color", "type": "VARCHAR" }
+            ]},
+            { "name": "Catalog", "columns": [
+              { "name": "sid", "type": "INTEGER", "pk": true, "fk": "Suppliers.sid" },
+              { "name": "pid", "type": "INTEGER", "pk": true, "fk": "Parts.pid" },
+              { "name": "cost", "type": "DECIMAL" }
+            ]}
+          ],
+          "answer": {
+            "canonical": "SELECT S.sname\nFROM Suppliers S\nWHERE NOT EXISTS (\n    SELECT *\n    FROM Parts P\n    WHERE P.pname LIKE 'B%'\n      AND NOT EXISTS (\n          SELECT *\n          FROM Catalog C\n          WHERE C.sid = S.sid\n            AND C.pid = P.pid\n      )\n);",
+            "requiredPatterns": ["NOT EXISTS", "LIKE", "B%"]
+          },
+          "rubric": [
+            { "id": "double_neg",     "label": "Uses the double-negation pattern (NOT EXISTS … NOT EXISTS) to express universal quantification", "weight": 0.4 },
+            { "id": "filter_bparts",  "label": "Correctly restricts the inner Parts loop to pname LIKE 'B%'",                                    "weight": 0.2 },
+            { "id": "correlated",     "label": "Correctly correlates Catalog.sid with the outer supplier (C.sid = S.sid)",                       "weight": 0.2 },
+            { "id": "correct_result", "label": "Query returns the names of suppliers who carry every B-part",                                    "weight": 0.2 }
+          ],
+          "modelAnswer": "SELECT S.sname\nFROM Suppliers S\nWHERE NOT EXISTS (\n    SELECT *\n    FROM Parts P\n    WHERE P.pname LIKE 'B%'\n      AND NOT EXISTS (\n          SELECT *\n          FROM Catalog C\n          WHERE C.sid = S.sid\n            AND C.pid = P.pid\n      )\n);",
+          "explanation": "Read this as: 'there is no B-part that this supplier does NOT supply', i.e. the supplier supplies all of them. The outer NOT EXISTS turns the universal quantifier into existential form; the inner NOT EXISTS expresses 'this supplier does not supply that part'. Both EXISTS clauses are correlated through S.sid."
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "title": "4 Transactions",
+      "intro": "Two short questions on transaction theory.",
+      "subquestions": [
+        {
+          "id": "4a",
+          "label": "Question 4(a)",
+          "prompt": "Explain the notion of a conflict-serializable schedule. Why is conflict-serializability a stronger requirement than view-serializability — and why do practical DBMSs nevertheless rely on it?",
+          "type": "long_text",
+          "points": 0.5,
+          "rubric": [
+            { "id": "def_conflict",      "label": "Defines a conflict between two operations (different transactions, same item, at least one a write)",       "weight": 0.25 },
+            { "id": "def_serializable",  "label": "Defines conflict-serializability: schedule is equivalent (by swapping non-conflicting ops) to some serial order", "weight": 0.25 },
+            { "id": "view_vs_conflict",  "label": "Notes that conflict-serializable ⊂ view-serializable, with the gap exactly the 'blind-write' schedules",      "weight": 0.25 },
+            { "id": "why_practical",     "label": "Explains DBMSs prefer it because it is decidable in polynomial time via the precedence graph",                "weight": 0.25 }
+          ],
+          "modelAnswer": "Conflict and conflict-serializability.\n  Two operations are said to conflict when (1) they belong to different transactions, (2) they access the same data item, and (3) at least one of them is a write. A schedule is conflict-serializable if it can be transformed, by a sequence of swaps of adjacent NON-conflicting operations, into some serial schedule (one transaction at a time, no interleaving).\n\nRelation to view-serializability.\n  Every conflict-serializable schedule is also view-serializable, but the converse is false. The classic counter-example involves 'blind writes' (a transaction writes a value without first reading it). Such schedules can produce the same final database state as a serial order — making them view-serializable — while their precedence graph still contains a cycle, so they are not conflict-serializable.\n  Formally: conflict-serializable ⊊ view-serializable.\n\nWhy DBMSs use conflict-serializability anyway.\n  Deciding view-serializability is NP-complete, whereas conflict-serializability can be tested in O(|V|+|E|) on the precedence graph (just check for a cycle). Lock-based protocols such as 2-Phase Locking produce only conflict-serializable schedules by construction, which keeps the runtime overhead minimal and the correctness proof tractable.",
+          "explanation": "Key contrast: view-serializability is the more permissive theoretical notion, but conflict-serializability is the one DBMSs actually enforce because (i) the test is fast (cycle-check on the precedence graph) and (ii) widely used protocols (S2PL, SS2PL) naturally produce only conflict-serializable schedules."
+        },
+        {
+          "id": "4b",
+          "label": "Question 4(b)",
+          "prompt": "Use the precedence-graph method to decide whether the following schedule is conflict-serializable. Draw the edges of the precedence graph, list the cycles (if any), and conclude.\n\n  T1:  R(X)                  W(Y)\n  T2:        R(Y)                       W(X)\n  T3:              W(X)                              R(Y)\n\n(Time runs left-to-right; columns are time slots so the global order is T1:R(X), T2:R(Y), T3:W(X), T1:W(Y), T2:W(X), T3:R(Y).)",
+          "type": "long_text",
+          "points": 0.5,
+          "rubric": [
+            { "id": "method",        "label": "States the method: build a precedence graph with one node per transaction and an edge Ti→Tj when Ti has an operation that conflicts with a later operation of Tj", "weight": 0.2  },
+            { "id": "edge_t1_t3",    "label": "Identifies edge T1 → T3 (T1:R(X) before T3:W(X))",                                                   "weight": 0.15 },
+            { "id": "edge_t1_t2",    "label": "Identifies edge T1 → T2 (T1:R(X) before T2:W(X), and T1:W(Y) before nothing of T2 on Y after it)",   "weight": 0.15 },
+            { "id": "edge_t2_t1",    "label": "Identifies edge T2 → T1 (T2:R(Y) before T1:W(Y))",                                                   "weight": 0.15 },
+            { "id": "edge_t3_t2",    "label": "Identifies edge T3 → T2 (T3:W(X) before T2:W(X))",                                                   "weight": 0.15 },
+            { "id": "cycle_conclude","label": "Spots the cycle T1 → T2 → T1 (or any cycle) and concludes the schedule is NOT conflict-serializable", "weight": 0.2  }
+          ],
+          "modelAnswer": "Method.\n  Build a directed precedence graph G = (V, E) with V = {T1, T2, T3}. Add an edge Ti → Tj whenever Ti has an operation that occurs before — and conflicts with — a later operation of Tj. Two ops conflict if they touch the same item and at least one is a write. The schedule is conflict-serializable iff G is acyclic.\n\nConflict scan in time order:\n  T1:R(X) … T3:W(X)   ⇒  T1 → T3   (read-then-write on X)\n  T1:R(X) … T2:W(X)   ⇒  T1 → T2   (read-then-write on X)\n  T2:R(Y) … T1:W(Y)   ⇒  T2 → T1   (read-then-write on Y)\n  T3:W(X) … T2:W(X)   ⇒  T3 → T2   (write-then-write on X)\n  T1:W(Y) … T3:R(Y)   ⇒  T1 → T3   (already present)\n\nEdges of G:\n  T1 → T3\n  T1 → T2\n  T2 → T1\n  T3 → T2\n\nCycles.\n  T1 → T2 → T1  (length-2 cycle).\n  Also T1 → T3 → T2 → T1.\n\nConclusion.\n  G contains at least one cycle, therefore the schedule is NOT conflict-serializable. No serial order of {T1, T2, T3} is equivalent to it.",
+          "explanation": "The precedence-graph test runs in linear time in the size of the graph. Any single cycle is enough to refute conflict-serializability; in this schedule there are two cycles, with T1 ↔ T2 being the most direct witness."
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "title": "5 Database APIs",
+      "intro": "Two short questions on how applications talk to a database.",
+      "subquestions": [
+        {
+          "id": "5a",
+          "label": "Question 5(a)",
+          "prompt": "Compare the practice of assembling SQL queries as strings (concatenating user input on the fly) with the practice of using parameterised / prepared statements. Discuss security and performance.",
+          "type": "long_text",
+          "points": 0.5,
+          "rubric": [
+            { "id": "string_pro_flex", "label": "Notes a real advantage of string-built queries — flexibility in shaping the query at runtime",      "weight": 0.2 },
+            { "id": "sqli",            "label": "Identifies SQL injection as the headline vulnerability of string concatenation",                     "weight": 0.3 },
+            { "id": "prepared_perf",   "label": "Explains the performance benefit of prepared statements: parse + plan once, execute many times",     "weight": 0.25 },
+            { "id": "prepared_safety", "label": "Explains that parameter values are sent out-of-band so they cannot be re-interpreted as SQL syntax",  "weight": 0.25 }
+          ],
+          "modelAnswer": "String-built queries.\n  The application concatenates literal SQL with values from variables or user input and sends the resulting string to the database. The advantage is flexibility: identifiers, optional WHERE clauses, dynamically chosen ORDER BY columns and similar are easy to splice in.\n\nDisadvantages.\n  • Security: any unsanitised input becomes part of the SQL grammar, so a hostile value like x' OR '1'='1 changes the meaning of the query — this is the classic SQL-injection attack. Manual escaping is fragile and easy to forget.\n  • Performance: every distinct string is parsed, semantically analysed and planned from scratch by the DBMS. Even when the same query shape is executed thousands of times with different literals, the optimiser cannot recognise it.\n\nParameterised / prepared statements.\n  The application sends a query template (e.g. SELECT * FROM Suppliers WHERE sid = ?) once; the DBMS parses, plans and caches it. At execution time only the parameter values are shipped, bound to placeholders.\n  Benefits:\n  • Security: parameters are transmitted out-of-band as typed values, not concatenated into SQL text, so they cannot escape into the SQL grammar. SQL injection through these parameters is structurally impossible.\n  • Performance: parse and plan are amortised over many executions of the same prepared statement. The DBMS can also reuse plan caches across sessions.\n\nUpshot.\n  Use prepared statements wherever the query shape is fixed. Reserve string-built queries for the rare cases where the shape itself must vary, and even then always validate identifiers against an allow-list.",
+          "explanation": "The exam-friendly summary: string queries trade safety and speed for flexibility; prepared statements give you safety and (often) speed in exchange for slightly less expressive runtime shaping."
+        },
+        {
+          "id": "5b",
+          "label": "Question 5(b)",
+          "prompt": "Name the three levels of the ANSI/SPARC three-level architecture. At which of those levels do object-relational mappers such as Hibernate or Entity Framework sit, and what is the purpose (function) of that level?",
+          "type": "long_text",
+          "points": 0.5,
+          "rubric": [
+            { "id": "three_levels", "label": "Names all three levels: external / conceptual / internal (a.k.a. external view / logical / physical)",         "weight": 0.3 },
+            { "id": "orm_level",    "label": "Places ORMs at the external (highest) level — a.k.a. the conceptual view layer for an application",            "weight": 0.3 },
+            { "id": "purpose",      "label": "Explains that the external level gives each application its own view, decoupling app code from schema changes", "weight": 0.4 }
+          ],
+          "modelAnswer": "ANSI/SPARC three levels.\n  1. External (view) level — what each individual application sees: subsets, joins, renames, projections.\n  2. Conceptual (logical) level — the global, application-independent description of the database, e.g. the relational schema.\n  3. Internal (physical) level — how the data is actually stored, indexed and accessed on disk.\n\nWhere ORMs fit.\n  ORMs such as Hibernate, JPA, the .NET Entity Framework or SQLAlchemy operate at the EXTERNAL (highest) level. They expose to the application a per-application view of the data: object classes, associations and inheritance hierarchies that match the application's domain model, while delegating the translation to the conceptual relational schema underneath.\n\nPurpose of the external level.\n  • Logical data independence: changes to the conceptual schema (add a column, split a table, rename, denormalise for performance) need not break the application — the ORM mapping is updated, but the domain classes seen by the application stay the same.\n  • Per-application customisation: different applications can have different views of the same database, exposing only the entities they need.\n  • Type safety and idiomatic access: objects, not row dictionaries, so the application can use its own language's type system and tooling.",
+          "explanation": "Mnemonic: External = each application's tailored view, Conceptual = the one true relational schema, Internal = bytes on disk. ORMs live at the External level so the application can evolve independently of the underlying tables."
+        }
+      ]
+    }
+  ]
+};
