@@ -7,6 +7,7 @@
     activeSubqId: null,
     answers: {},      // subqId -> answer payload (varies by type)
     rubricMarks: {},  // subqId -> { rubricItemId -> bool }   (self-grade overrides)
+    attempts: {},     // subqId -> { count, locked, lockedAs }
     erEditors: {},    // subqId -> editor instance
     endsAt: 0,
     submitted: false,
@@ -156,8 +157,198 @@
       block.appendChild(renderTables(sq.tables));
     }
 
+    // Dataset preview (for runnable SQL)
+    if (sq.type === 'sql' && sq.datasetId && sq.runnable !== false && typeof SqlUI !== 'undefined') {
+      const preview = SqlUI.renderDatasetPreview(sq.datasetId);
+      if (preview) block.appendChild(preview);
+    }
+
     block.appendChild(renderInput(sq));
+
+    // Run + Grade buttons for SQL questions (with 3-attempt lock)
+    if (sq.type === 'sql' && sq.datasetId && sq.runnable !== false) {
+      block.appendChild(renderSqlActions(sq));
+    }
+
     return block;
+  }
+
+  // ---------- SQL Run / Grade / Lock ----------
+  function getAttemptInfo(sqId) {
+    return state.attempts && state.attempts[sqId] || { count: 0, locked: false, lockedAs: null };
+  }
+  function setAttemptInfo(sqId, info) {
+    if (!state.attempts) state.attempts = {};
+    state.attempts[sqId] = info;
+  }
+
+  function renderSqlActions(sq) {
+    const wrap = document.createElement('div');
+    wrap.className = 'actions';
+
+    const info = getAttemptInfo(sq.id);
+
+    const runBtn = document.createElement('button');
+    runBtn.type = 'button';
+    runBtn.className = 'btn run';
+    runBtn.textContent = 'Run Query';
+    runBtn.addEventListener('click', () => onRunSql(sq));
+    wrap.appendChild(runBtn);
+
+    const gradeBtn = document.createElement('button');
+    gradeBtn.type = 'button';
+    gradeBtn.className = 'btn primary';
+    gradeBtn.textContent = 'Grade Solution';
+    gradeBtn.addEventListener('click', () => onGradeSql(sq));
+    wrap.appendChild(gradeBtn);
+
+    const attemptsLine = document.createElement('div');
+    attemptsLine.className = 'attempts-line';
+    attemptsLine.dataset.attemptsLine = sq.id;
+    attemptsLine.innerHTML = attemptsLineHtml(info);
+    wrap.appendChild(attemptsLine);
+
+    if (info.locked) requestAnimationFrame(() => applyLockState(sq));
+
+    return wrap;
+  }
+
+  function attemptsLineHtml(info) {
+    const remaining = Math.max(0, 3 - info.count);
+    if (info.locked && info.lockedAs === 'correct') {
+      return '<span class="attempts-ok"><b>✓ Answer locked — correct</b></span>';
+    }
+    if (info.locked) {
+      return '<span class="attempts-used"><b>Answer locked</b> after 3 attempts. Model answer shown below.</span>';
+    }
+    const used = info.count;
+    return 'You have <b>' + remaining + ' attempt' + (remaining === 1 ? '' : 's') + '</b> remaining (' + used + '/3 used).';
+  }
+
+  function applyLockState(sq, actionsWrap) {
+    const block = document.querySelector('[data-subq-block="' + sq.id + '"]');
+    if (!block) return;
+    block.classList.add('locked');
+    const info = getAttemptInfo(sq.id);
+    // Insert locked banner if not present
+    if (!block.querySelector('.locked-banner')) {
+      const banner = document.createElement('div');
+      banner.className = 'locked-banner';
+      banner.innerHTML = info.lockedAs === 'correct'
+        ? '<strong>✓ Solved.</strong> Your answer counts as correct for this question.'
+        : '<strong>Locked.</strong> You used all 3 attempts. Model answer below.';
+      // Insert banner near the input
+      const input = block.querySelector('.subq-input');
+      if (input) input.parentNode.insertBefore(banner, input.nextSibling);
+      else block.appendChild(banner);
+    }
+    // Show model answer (if not already shown)
+    if (info.lockedAs !== 'correct' && !block.querySelector('.locked-model')) {
+      const model = document.createElement('div');
+      model.className = 'feedback locked-model';
+      model.style.borderColor = '#b8c0cf';
+      model.style.background = '#fafbfc';
+      model.style.color = 'var(--text)';
+      const title = document.createElement('h4');
+      title.textContent = 'Model answer';
+      model.appendChild(title);
+      const code = document.createElement('div');
+      code.className = 'model';
+      code.textContent = (sq.answer && sq.answer.canonical) || sq.modelAnswer || '';
+      model.appendChild(code);
+      if (sq.explanation) {
+        const exp = document.createElement('div');
+        exp.className = 'explanation';
+        exp.textContent = sq.explanation;
+        model.appendChild(exp);
+      }
+      block.appendChild(model);
+    }
+  }
+
+  function userSqlFor(sq) {
+    const block = document.querySelector('[data-subq-block="' + sq.id + '"]');
+    if (!block) return '';
+    const ta = block.querySelector('.sql-editor');
+    return ta ? ta.value : '';
+  }
+
+  function clearOldFeedback(sq) {
+    const block = document.querySelector('[data-subq-block="' + sq.id + '"]');
+    if (!block) return;
+    [...block.querySelectorAll('.sql-result-block, .feedback:not(.locked-model)')].forEach(n => n.remove());
+  }
+
+  function appendFeedback(sq, node) {
+    const block = document.querySelector('[data-subq-block="' + sq.id + '"]');
+    if (!block) return;
+    block.appendChild(node);
+  }
+
+  function onRunSql(sq) {
+    const user = userSqlFor(sq);
+    if (!user.trim()) { alert('Type a SQL query first.'); return; }
+    clearOldFeedback(sq);
+    const loading = SqlUI.renderLoadingBlock('Running query…');
+    appendFeedback(sq, loading);
+    SqlRunner.run(user, sq.datasetId).then(result => {
+      loading.remove();
+      appendFeedback(sq, SqlUI.renderResultTable(result, { title: 'Your result' }));
+    }, err => {
+      loading.remove();
+      appendFeedback(sq, SqlUI.renderResultTable({ error: 'Engine error: ' + (err.message || err) }, { title: 'Error' }));
+    });
+  }
+
+  function onGradeSql(sq) {
+    const info = getAttemptInfo(sq.id);
+    if (info.locked) return;
+    const user = userSqlFor(sq);
+    if (!user.trim()) { alert('Write a query before grading.'); return; }
+    state.answers[sq.id] = user;
+    clearOldFeedback(sq);
+    const loading = SqlUI.renderLoadingBlock('Grading your query…');
+    appendFeedback(sq, loading);
+    Grader.gradeAsync(sq, user).then(result => {
+      loading.remove();
+      info.count = (info.count || 0) + 1;
+      if (result.correct) { info.locked = true; info.lockedAs = 'correct'; }
+      else if (info.count >= 3) { info.locked = true; info.lockedAs = 'wrong'; }
+      setAttemptInfo(sq.id, info);
+
+      // Show result table (user)
+      if (result.userResult) {
+        appendFeedback(sq, SqlUI.renderResultTable(result.userResult, { title: 'Your result' }));
+      }
+      // If wrong and not locked, show model result table for hint
+      if (!result.correct && (!info.locked) && result.modelResult) {
+        appendFeedback(sq, SqlUI.renderResultTable(result.modelResult, { title: 'Expected result (' + result.modelResult.rows.length + ' row' + (result.modelResult.rows.length === 1 ? '' : 's') + ')' }));
+      }
+
+      // Feedback box
+      const fb = document.createElement('div');
+      fb.className = 'feedback ' + (result.correct ? 'correct' : 'wrong');
+      const heading = document.createElement('h4');
+      heading.textContent = result.correct ? '✓ Correct' : '✗ Not correct';
+      fb.appendChild(heading);
+      const txt = document.createElement('div');
+      txt.textContent = result.summary || '';
+      fb.appendChild(txt);
+      appendFeedback(sq, fb);
+
+      // Update attempts line
+      const line = document.querySelector('[data-attempts-line="' + sq.id + '"]');
+      if (line) line.innerHTML = attemptsLineHtml(info);
+
+      // Update sidebar marker
+      renderTaskNav();
+
+      // Lock UI if newly locked
+      if (info.locked) applyLockState(sq);
+    }, err => {
+      loading.remove();
+      appendFeedback(sq, SqlUI.renderResultTable({ error: 'Engine error: ' + (err.message || err) }, { title: 'Error' }));
+    });
   }
 
   function renderInput(sq) {
@@ -366,7 +557,13 @@
 
   // ---------- Results & grading ----------
   function autoGradeSubq(sq, answer) {
-    // For types with an answer key, run the standard grader and convert to a single auto-rubric mark.
+    // For SQL questions that have been graded during the exam, the locked attempt result IS the auto-grade.
+    if (sq.type === 'sql') {
+      const info = state.attempts && state.attempts[sq.id];
+      if (info && info.locked) {
+        return { correct: info.lockedAs === 'correct', summary: info.lockedAs === 'correct' ? 'Locked correct.' : 'Locked after 3 attempts.', model: (sq.answer && sq.answer.canonical) || '' };
+      }
+    }
     if (!sq.answer) return null;
     if (sq.type === 'sql' || sq.type === 'short_text' || sq.type === 'text_lines' ||
         sq.type === 'multi_line' || sq.type === 'radio' || sq.type === 'checkbox') {

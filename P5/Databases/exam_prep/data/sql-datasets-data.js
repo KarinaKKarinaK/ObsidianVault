@@ -1,0 +1,112 @@
+window.__SQL_DATASETS = {
+  "persons_friends_knows_accounts": {
+    "name": "Persons / Friends / Knows / Accounts",
+    "description": "A social-network style dataset: persons in three cities, an undirected Friend relation (stored once per pair), a directed Knows relation, bank accounts and a BelongsTo link.",
+    "schema": [
+      "CREATE TABLE Person (id INTEGER PRIMARY KEY, name TEXT NOT NULL, city TEXT, age INTEGER);",
+      "CREATE TABLE Friend (id1 INTEGER, id2 INTEGER, PRIMARY KEY (id1, id2), FOREIGN KEY (id1) REFERENCES Person(id), FOREIGN KEY (id2) REFERENCES Person(id));",
+      "CREATE TABLE Knows (id1 INTEGER, id2 INTEGER, PRIMARY KEY (id1, id2), FOREIGN KEY (id1) REFERENCES Person(id), FOREIGN KEY (id2) REFERENCES Person(id));",
+      "CREATE TABLE Account (accountNr INTEGER PRIMARY KEY, balance REAL);",
+      "CREATE TABLE BelongsTo (id INTEGER, accountNr INTEGER, PRIMARY KEY (id, accountNr), FOREIGN KEY (id) REFERENCES Person(id), FOREIGN KEY (accountNr) REFERENCES Account(accountNr));"
+    ],
+    "data": [
+      "INSERT INTO Person VALUES (1, 'Alice',   'Brussels', 30);",
+      "INSERT INTO Person VALUES (2, 'Bob',     'Brussels', 45);",
+      "INSERT INTO Person VALUES (3, 'Carol',   'Antwerp',  35);",
+      "INSERT INTO Person VALUES (4, 'Dave',    'Antwerp',  60);",
+      "INSERT INTO Person VALUES (5, 'Eve',     'Brussels', 25);",
+      "INSERT INTO Person VALUES (6, 'Frank',   'Ghent',    70);",
+      "INSERT INTO Person VALUES (7, 'Grace',   'Ghent',    22);",
+      "INSERT INTO Person VALUES (8, 'Heidi',   'Brussels', 38);",
+      "INSERT INTO Person VALUES (9, 'Alice',   'Ghent',    50);",
+      "INSERT INTO Friend VALUES (1, 2);",
+      "INSERT INTO Friend VALUES (3, 4);",
+      "INSERT INTO Friend VALUES (1, 9);",
+      "INSERT INTO Knows VALUES (1, 2);",
+      "INSERT INTO Knows VALUES (1, 3);",
+      "INSERT INTO Knows VALUES (1, 5);",
+      "INSERT INTO Knows VALUES (2, 1);",
+      "INSERT INTO Knows VALUES (3, 4);",
+      "INSERT INTO Knows VALUES (9, 6);",
+      "INSERT INTO Account VALUES (100, 1500);",
+      "INSERT INTO Account VALUES (101, 500);",
+      "INSERT INTO Account VALUES (102, 2000);",
+      "INSERT INTO Account VALUES (103, 100);",
+      "INSERT INTO Account VALUES (104, 3000);",
+      "INSERT INTO BelongsTo VALUES (1, 100);",
+      "INSERT INTO BelongsTo VALUES (1, 101);",
+      "INSERT INTO BelongsTo VALUES (2, 102);",
+      "INSERT INTO BelongsTo VALUES (3, 103);",
+      "INSERT INTO BelongsTo VALUES (9, 104);"
+    ]
+  },
+  "employees_works_companies": {
+    "name": "Employees / Works / Companies",
+    "description": "Employees, the companies they work for (with salary) and where companies are located. Includes 'First Bank Corporation', 'Small Bank Corporation', 'SBC' and 'Acme Industries'.",
+    "schema": [
+      "CREATE TABLE Employee (employeeName TEXT PRIMARY KEY, street TEXT, city TEXT);",
+      "CREATE TABLE Works (employeeName TEXT, companyName TEXT, salary REAL, PRIMARY KEY (employeeName, companyName), FOREIGN KEY (employeeName) REFERENCES Employee(employeeName));",
+      "CREATE TABLE Company (companyName TEXT, city TEXT, PRIMARY KEY (companyName, city));"
+    ],
+    "data": [
+      "INSERT INTO Employee VALUES ('Smith',  '10 Elm St',     'Brussels');",
+      "INSERT INTO Employee VALUES ('Jones',  '20 Oak Rd',     'Antwerp');",
+      "INSERT INTO Employee VALUES ('Brown',  '30 Pine Ave',   'Brussels');",
+      "INSERT INTO Employee VALUES ('Davis',  '40 Maple St',   'Ghent');",
+      "INSERT INTO Employee VALUES ('Wilson', '50 Birch Ln',   'Antwerp');",
+      "INSERT INTO Employee VALUES ('Taylor', '60 Cedar Dr',   'Brussels');",
+      "INSERT INTO Employee VALUES ('Adams',  '70 Spruce Way', 'Ghent');",
+      "INSERT INTO Works VALUES ('Smith',  'First Bank Corporation', 12000);",
+      "INSERT INTO Works VALUES ('Jones',  'First Bank Corporation',  8000);",
+      "INSERT INTO Works VALUES ('Brown',  'First Bank Corporation', 15000);",
+      "INSERT INTO Works VALUES ('Davis',  'First Bank Corporation',  7000);",
+      "INSERT INTO Works VALUES ('Wilson', 'First Bank Corporation',  9000);",
+      "INSERT INTO Works VALUES ('Taylor', 'First Bank Corporation', 11000);",
+      "INSERT INTO Works VALUES ('Adams',  'First Bank Corporation',  6000);",
+      "INSERT INTO Works VALUES ('Smith',  'Acme Industries',         5000);",
+      "INSERT INTO Works VALUES ('Adams',  'Acme Industries',         9000);",
+      "INSERT INTO Works VALUES ('Davis',  'Small Bank Corporation',  4000);",
+      "INSERT INTO Works VALUES ('Wilson', 'Small Bank Corporation',  3000);",
+      "INSERT INTO Works VALUES ('Taylor', 'Small Bank Corporation',  6000);",
+      "INSERT INTO Company VALUES ('First Bank Corporation', 'Brussels');",
+      "INSERT INTO Company VALUES ('First Bank Corporation', 'Antwerp');",
+      "INSERT INTO Company VALUES ('Small Bank Corporation', 'Ghent');",
+      "INSERT INTO Company VALUES ('Acme Industries',         'Brussels');",
+      "INSERT INTO Company VALUES ('SBC',                     'Ghent');",
+      "INSERT INTO Company VALUES ('SBC',                     'Antwerp');"
+    ]
+  },
+  "suppliers_parts_catalog": {
+    "name": "Suppliers / Parts / Catalog",
+    "description": "Classic suppliers-parts-catalog. Acme sells every black part and every B-prefixed part; Bolts sells just one red part; Gizmo sells a couple of niche items; NoSell has no catalog entries.",
+    "schema": [
+      "CREATE TABLE Suppliers (sid INTEGER PRIMARY KEY, sname TEXT NOT NULL, saddress TEXT);",
+      "CREATE TABLE Parts (pid INTEGER PRIMARY KEY, pname TEXT NOT NULL, color TEXT);",
+      "CREATE TABLE Catalog (sid INTEGER, pid INTEGER, cost REAL, PRIMARY KEY (sid, pid), FOREIGN KEY (sid) REFERENCES Suppliers(sid), FOREIGN KEY (pid) REFERENCES Parts(pid));"
+    ],
+    "data": [
+      "INSERT INTO Suppliers VALUES (1, 'Acme',   '1 Main St');",
+      "INSERT INTO Suppliers VALUES (2, 'Bolts',  '2 Oak St');",
+      "INSERT INTO Suppliers VALUES (3, 'Gizmo',  '3 Pine St');",
+      "INSERT INTO Suppliers VALUES (4, 'NoSell', '4 Elm St');",
+      "INSERT INTO Parts VALUES (10, 'Bolt-S',  'red');",
+      "INSERT INTO Parts VALUES (11, 'Bolt-L',  'red');",
+      "INSERT INTO Parts VALUES (12, 'Bolt-XL', 'red');",
+      "INSERT INTO Parts VALUES (13, 'Nut',     'blue');",
+      "INSERT INTO Parts VALUES (14, 'Washer',  'black');",
+      "INSERT INTO Parts VALUES (15, 'Screw',   'black');",
+      "INSERT INTO Parts VALUES (16, 'Beam',    'green');",
+      "INSERT INTO Catalog VALUES (1, 10,  0.50);",
+      "INSERT INTO Catalog VALUES (1, 11,  0.70);",
+      "INSERT INTO Catalog VALUES (1, 12,  0.90);",
+      "INSERT INTO Catalog VALUES (1, 13,  5.00);",
+      "INSERT INTO Catalog VALUES (1, 14,  2.00);",
+      "INSERT INTO Catalog VALUES (1, 15,  3.00);",
+      "INSERT INTO Catalog VALUES (1, 16, 11.00);",
+      "INSERT INTO Catalog VALUES (2, 10,  0.60);",
+      "INSERT INTO Catalog VALUES (2, 14,  2.50);",
+      "INSERT INTO Catalog VALUES (3, 13,  4.00);",
+      "INSERT INTO Catalog VALUES (3, 16, 12.00);"
+    ]
+  }
+};

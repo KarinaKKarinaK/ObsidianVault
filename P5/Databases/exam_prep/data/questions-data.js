@@ -1,4 +1,3 @@
-// Inline question bank — loaded as window.__QUESTIONS_BANK so the site works without a server.
 window.__QUESTIONS_BANK = {
   "topics": [
     { "id": "modelling",         "name": "Conceptual Modelling" },
@@ -188,6 +187,7 @@ window.__QUESTIONS_BANK = {
       "topicId": "sql_basic_joins",
       "subtopic": "Simple selection",
       "type": "sql",
+      "datasetId": "persons_friends_knows_accounts",
       "prompt": "Find the name of all persons that are younger than 40.",
       "tables": [
         {
@@ -211,6 +211,7 @@ window.__QUESTIONS_BANK = {
       "topicId": "sql_basic_joins",
       "subtopic": "Self-join",
       "type": "sql",
+      "datasetId": "persons_friends_knows_accounts",
       "prompt": "Find all people that know at least two different people. Do NOT use GROUP BY. (A knows-pair (id1, id2) means id1 knows id2.)",
       "tables": [
         {
@@ -238,6 +239,7 @@ window.__QUESTIONS_BANK = {
       "topicId": "sql_basic_joins",
       "subtopic": "Self-join (symmetric relation)",
       "type": "sql",
+      "datasetId": "persons_friends_knows_accounts",
       "prompt": "Find the names of all persons that have at least one friend. The Friend relation is symmetric (if (A,B) is in Friend then so is (B,A) implicitly, but stored once). Use only joins; allow duplicates in the result.",
       "tables": [
         {
@@ -264,6 +266,7 @@ window.__QUESTIONS_BANK = {
       "topicId": "sql_basic_joins",
       "subtopic": "Inner join with FK chain",
       "type": "sql",
+      "datasetId": "persons_friends_knows_accounts",
       "prompt": "Find the names of all persons that have a bank account containing more than 1000 euros.",
       "tables": [
         { "name": "Person", "columns": [{ "name": "id", "isKey": true }, { "name": "name" }] },
@@ -288,6 +291,8 @@ window.__QUESTIONS_BANK = {
       "topicId": "sql_basic_joins",
       "subtopic": "Join with constant filter",
       "type": "sql",
+      "datasetId": "employees_works_companies",
+      "runnable": false,
       "prompt": "Find the names and the cities of residence of all employees who work for 'First Bank Corporation'.",
       "tables": [
         {
@@ -311,6 +316,8 @@ window.__QUESTIONS_BANK = {
       "topicId": "sql_basic_joins",
       "subtopic": "Multi-condition join",
       "type": "sql",
+      "datasetId": "employees_works_companies",
+      "runnable": false,
       "prompt": "Find the names, street addresses and cities of residence of all employees who work for 'First Bank Corporation' and earn more than 10000.",
       "tables": [
         {
@@ -333,6 +340,7 @@ window.__QUESTIONS_BANK = {
       "topicId": "sql_basic_joins",
       "subtopic": "LEFT JOIN with IS NULL",
       "type": "sql",
+      "datasetId": "persons_friends_knows_accounts",
       "prompt": "Find the names of all persons that have NO bank account. Use a LEFT OUTER JOIN and IS NULL.",
       "tables": [
         { "name": "Person", "columns": [{ "name": "id", "isKey": true }, { "name": "name" }] },
@@ -368,6 +376,7 @@ window.__QUESTIONS_BANK = {
       "topicId": "sql_basic_joins",
       "subtopic": "Inequality join",
       "type": "sql",
+      "datasetId": "persons_friends_knows_accounts",
       "prompt": "Find all pairs of distinct persons (by id) that live in the same city. Return name1, name2, city. Avoid listing each pair twice (i.e. only show (A,B), not also (B,A)).",
       "tables": [
         {
@@ -386,6 +395,7 @@ window.__QUESTIONS_BANK = {
       "topicId": "sql_basic_joins",
       "subtopic": "Three-way join",
       "type": "sql",
+      "datasetId": "employees_works_companies",
       "prompt": "List, for each pair (employee, company), the employeeName, companyName, and the city in which that company is located.",
       "tables": [
         { "name": "Employee", "columns": [{ "name": "employeeName", "isKey": true }, { "name": "street" }, { "name": "city" }] },
@@ -404,6 +414,7 @@ window.__QUESTIONS_BANK = {
       "topicId": "sql_nonmonotonic",
       "subtopic": "NOT IN",
       "type": "sql",
+      "datasetId": "persons_friends_knows_accounts",
       "prompt": "Find the names of all people that have no friends. Use NOT IN.",
       "tables": [
         { "name": "Person", "columns": [{ "name": "id", "isKey": true }, { "name": "name" }] },
@@ -427,6 +438,7 @@ window.__QUESTIONS_BANK = {
       "topicId": "sql_nonmonotonic",
       "subtopic": "NOT EXISTS",
       "type": "sql",
+      "datasetId": "persons_friends_knows_accounts",
       "prompt": "Find the names of all people that have no friends. Use NOT EXISTS.",
       "tables": [
         { "name": "Person", "columns": [{ "name": "id", "isKey": true }, { "name": "name" }] },
@@ -443,6 +455,7 @@ window.__QUESTIONS_BANK = {
       "topicId": "sql_nonmonotonic",
       "subtopic": "Negation",
       "type": "sql",
+      "datasetId": "employees_works_companies",
       "prompt": "Find all employees who do NOT work for 'First Bank Corporation'.",
       "tables": [
         { "name": "Works", "columns": [{ "name": "employeeName", "isKey": true }, { "name": "companyName", "isKey": true }, { "name": "salary" }] }
@@ -459,6 +472,8 @@ window.__QUESTIONS_BANK = {
       "topicId": "sql_nonmonotonic",
       "subtopic": "> ALL",
       "type": "sql",
+      "datasetId": "employees_works_companies",
+      "runnable": false,
       "prompt": "Find all employees who earn more than every employee of 'Small Bank Corporation'.",
       "tables": [
         { "name": "Works", "columns": [{ "name": "employeeName", "isKey": true }, { "name": "companyName", "isKey": true }, { "name": "salary" }] }
@@ -474,6 +489,7 @@ window.__QUESTIONS_BANK = {
       "topicId": "sql_nonmonotonic",
       "subtopic": "For-all via double negation",
       "type": "sql",
+      "datasetId": "suppliers_parts_catalog",
       "prompt": "Find the names of suppliers who sell ALL black parts. Use double NOT EXISTS (no GROUP BY).",
       "tables": [
         { "name": "Suppliers", "columns": [{ "name": "sid", "isKey": true }, { "name": "sname" }, { "name": "saddress" }] },
@@ -499,6 +515,7 @@ window.__QUESTIONS_BANK = {
       "topicId": "sql_nonmonotonic",
       "subtopic": "Exactly one",
       "type": "sql",
+      "datasetId": "suppliers_parts_catalog",
       "prompt": "Find the pids of parts that are supplied by exactly one supplier. Do not use GROUP BY.",
       "tables": [
         { "name": "Catalog", "columns": [{ "name": "sid", "isKey": true }, { "name": "pid", "isKey": true }, { "name": "cost" }] }
@@ -514,6 +531,7 @@ window.__QUESTIONS_BANK = {
       "topicId": "sql_nonmonotonic",
       "subtopic": "Subset via NOT IN",
       "type": "sql",
+      "datasetId": "persons_friends_knows_accounts",
       "prompt": "Find the names of persons that have NO bank account using NOT IN.",
       "tables": [
         { "name": "Person", "columns": [{ "name": "id", "isKey": true }, { "name": "name" }] },
@@ -530,6 +548,8 @@ window.__QUESTIONS_BANK = {
       "topicId": "sql_nonmonotonic",
       "subtopic": "ANY/SOME",
       "type": "sql",
+      "datasetId": "employees_works_companies",
+      "runnable": false,
       "prompt": "Find all employees who earn more than at least one employee of 'Small Bank Corporation'. Use ANY (or SOME).",
       "tables": [
         { "name": "Works", "columns": [{ "name": "employeeName", "isKey": true }, { "name": "companyName", "isKey": true }, { "name": "salary" }] }
@@ -546,6 +566,7 @@ window.__QUESTIONS_BANK = {
       "topicId": "sql_nonmonotonic",
       "subtopic": "Companies only in SBC's cities",
       "type": "sql",
+      "datasetId": "employees_works_companies",
       "prompt": "Companies may be located in several cities. Find all company names whose cities are a SUBSET of the set of cities in which 'Small Bank Corporation' (SBC) is located.",
       "tables": [
         { "name": "Company", "columns": [{ "name": "companyName", "isKey": true }, { "name": "city", "isKey": true }] }
@@ -562,6 +583,7 @@ window.__QUESTIONS_BANK = {
       "topicId": "sql_nonmonotonic",
       "subtopic": "EXISTS",
       "type": "sql",
+      "datasetId": "persons_friends_knows_accounts",
       "prompt": "Find the names of all persons that have at least one friend, using EXISTS.",
       "tables": [
         { "name": "Person", "columns": [{ "name": "id", "isKey": true }, { "name": "name" }] },
@@ -579,6 +601,7 @@ window.__QUESTIONS_BANK = {
       "topicId": "sql_nested",
       "subtopic": "IN subquery",
       "type": "sql",
+      "datasetId": "persons_friends_knows_accounts",
       "prompt": "Find the names of persons that have a bank account with balance > 1000, using a single IN subquery.",
       "tables": [
         { "name": "Person", "columns": [{ "name": "id", "isKey": true }, { "name": "name" }] },
@@ -596,6 +619,7 @@ window.__QUESTIONS_BANK = {
       "topicId": "sql_nested",
       "subtopic": "Subquery in FROM",
       "type": "sql",
+      "datasetId": "persons_friends_knows_accounts",
       "prompt": "For each city, give the city name and the maximum age of persons in that city (use a subquery in the FROM clause).",
       "tables": [
         { "name": "Person", "columns": [{ "name": "id", "isKey": true }, { "name": "name" }, { "name": "city" }, { "name": "age" }] }
@@ -611,6 +635,7 @@ window.__QUESTIONS_BANK = {
       "topicId": "sql_nested",
       "subtopic": "Single-value subquery",
       "type": "sql",
+      "datasetId": "persons_friends_knows_accounts",
       "prompt": "Find the name(s) of the oldest person(s). Use a scalar subquery for the maximum age.",
       "tables": [
         { "name": "Person", "columns": [{ "name": "id", "isKey": true }, { "name": "name" }, { "name": "age" }] }
@@ -626,6 +651,7 @@ window.__QUESTIONS_BANK = {
       "topicId": "sql_nested",
       "subtopic": "Correlated subquery",
       "type": "sql",
+      "datasetId": "persons_friends_knows_accounts",
       "prompt": "Find each person whose age is strictly greater than the average age in their own city. Return name and city.",
       "tables": [
         { "name": "Person", "columns": [{ "name": "id", "isKey": true }, { "name": "name" }, { "name": "city" }, { "name": "age" }] }
@@ -641,6 +667,7 @@ window.__QUESTIONS_BANK = {
       "topicId": "sql_nested",
       "subtopic": "IN with multi-column",
       "type": "sql",
+      "datasetId": "suppliers_parts_catalog",
       "prompt": "Find the (sname) of suppliers that supply at least one part that costs less than 10 in their catalog. Use IN with a single column.",
       "tables": [
         { "name": "Suppliers", "columns": [{ "name": "sid", "isKey": true }, { "name": "sname" }, { "name": "saddress" }] },
@@ -657,6 +684,7 @@ window.__QUESTIONS_BANK = {
       "topicId": "sql_nested",
       "subtopic": "Subquery in SELECT",
       "type": "sql",
+      "datasetId": "suppliers_parts_catalog",
       "prompt": "For every supplier, list their sname together with the number of parts they sell. Use a scalar subquery in the SELECT clause.",
       "tables": [
         { "name": "Suppliers", "columns": [{ "name": "sid", "isKey": true }, { "name": "sname" }] },
@@ -673,6 +701,7 @@ window.__QUESTIONS_BANK = {
       "topicId": "sql_nested",
       "subtopic": "Subquery in HAVING",
       "type": "sql",
+      "datasetId": "persons_friends_knows_accounts",
       "prompt": "Find each city whose number of persons exceeds the average city size. Return city.",
       "tables": [
         { "name": "Person", "columns": [{ "name": "id", "isKey": true }, { "name": "name" }, { "name": "city" }] }
@@ -688,6 +717,7 @@ window.__QUESTIONS_BANK = {
       "topicId": "sql_nested",
       "subtopic": "EXISTS correlated",
       "type": "sql",
+      "datasetId": "suppliers_parts_catalog",
       "prompt": "Find supplier names that supply at least one red part. Use EXISTS.",
       "tables": [
         { "name": "Suppliers", "columns": [{ "name": "sid", "isKey": true }, { "name": "sname" }] },
@@ -706,6 +736,7 @@ window.__QUESTIONS_BANK = {
       "topicId": "sql_aggregations",
       "subtopic": "GROUP BY + HAVING",
       "type": "sql",
+      "datasetId": "persons_friends_knows_accounts",
       "prompt": "Find all persons that know at least two people, using GROUP BY.",
       "tables": [
         { "name": "Person", "columns": [{ "name": "id", "isKey": true }, { "name": "name" }] },
@@ -722,6 +753,7 @@ window.__QUESTIONS_BANK = {
       "topicId": "sql_aggregations",
       "subtopic": "GROUP BY",
       "type": "sql",
+      "datasetId": "persons_friends_knows_accounts",
       "prompt": "For each city, report the city and how many persons live there. Order by count descending.",
       "tables": [
         { "name": "Person", "columns": [{ "name": "id", "isKey": true }, { "name": "name" }, { "name": "city" }] }
@@ -737,6 +769,7 @@ window.__QUESTIONS_BANK = {
       "topicId": "sql_aggregations",
       "subtopic": "CASE WHEN",
       "type": "sql",
+      "datasetId": "persons_friends_knows_accounts",
       "prompt": "For each person, return name and a column 'category' that is 'minor' if age < 18, 'adult' if 18 <= age < 65, otherwise 'senior'. Use CASE WHEN.",
       "tables": [
         { "name": "Person", "columns": [{ "name": "id", "isKey": true }, { "name": "name" }, { "name": "age" }] }
@@ -752,6 +785,7 @@ window.__QUESTIONS_BANK = {
       "topicId": "sql_aggregations",
       "subtopic": "UNION",
       "type": "sql",
+      "datasetId": "persons_friends_knows_accounts",
       "prompt": "Return a single list of all distinct ids that appear either in Friend.id1 or in Friend.id2. Use UNION.",
       "tables": [
         { "name": "Friend", "columns": [{ "name": "id1", "isKey": true }, { "name": "id2", "isKey": true }] }
@@ -767,6 +801,7 @@ window.__QUESTIONS_BANK = {
       "topicId": "sql_aggregations",
       "subtopic": "GROUP BY + HAVING",
       "type": "sql",
+      "datasetId": "employees_works_companies",
       "prompt": "Find each company name and its average salary, but only for companies with more than 5 employees.",
       "tables": [
         { "name": "Works", "columns": [{ "name": "employeeName", "isKey": true }, { "name": "companyName", "isKey": true }, { "name": "salary" }] }
@@ -782,6 +817,7 @@ window.__QUESTIONS_BANK = {
       "topicId": "sql_aggregations",
       "subtopic": "ORDER BY + LIMIT",
       "type": "sql",
+      "datasetId": "persons_friends_knows_accounts",
       "prompt": "Return the names and ages of the 3 oldest persons, ordered from oldest to youngest.",
       "tables": [
         { "name": "Person", "columns": [{ "name": "id", "isKey": true }, { "name": "name" }, { "name": "age" }] }
@@ -798,6 +834,7 @@ window.__QUESTIONS_BANK = {
       "topicId": "sql_aggregations",
       "subtopic": "GROUP BY multiple columns",
       "type": "sql",
+      "datasetId": "employees_works_companies",
       "prompt": "For each (companyName, city) combination where the company is located in multiple cities, count the employees that work for the company in that city. Return companyName, city, n.",
       "tables": [
         { "name": "Works", "columns": [{ "name": "employeeName", "isKey": true }, { "name": "companyName", "isKey": true }, { "name": "salary" }] },
@@ -814,6 +851,7 @@ window.__QUESTIONS_BANK = {
       "topicId": "sql_aggregations",
       "subtopic": "CASE WHEN with SUM",
       "type": "sql",
+      "datasetId": "employees_works_companies",
       "prompt": "For each company, count how many employees earn more than 10000 and how many earn 10000 or less. Use CASE WHEN inside SUM.",
       "tables": [
         { "name": "Works", "columns": [{ "name": "employeeName", "isKey": true }, { "name": "companyName", "isKey": true }, { "name": "salary" }] }
@@ -844,6 +882,7 @@ window.__QUESTIONS_BANK = {
       "topicId": "sql_aggregations",
       "subtopic": "Multi-aggregate",
       "type": "sql",
+      "datasetId": "persons_friends_knows_accounts",
       "prompt": "For each city, report city, the number of persons, the minimum age, and the maximum age.",
       "tables": [
         { "name": "Person", "columns": [{ "name": "id", "isKey": true }, { "name": "name" }, { "name": "city" }, { "name": "age" }] }

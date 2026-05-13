@@ -124,5 +124,48 @@
     return { correct: false, summary: summary.trim(), model: (a.values || []).map(i => q.options[i]).join(' / ') };
   }
 
-  window.Grader = { grade, normalizeSql };
+  // Async grader — for SQL questions with a datasetId, run user + canonical against sql.js and compare result sets.
+  // Falls back to the sync grader for everything else.
+  function gradeAsync(question, userAnswer) {
+    if (question.type !== 'sql') return Promise.resolve(grade(question, userAnswer));
+    if (!question.datasetId || question.runnable === false || typeof SqlRunner === 'undefined') {
+      return Promise.resolve(grade(question, userAnswer));
+    }
+    const canonical = (question.answer && question.answer.canonical) || '';
+    if (!canonical || !userAnswer || !String(userAnswer).trim()) {
+      return Promise.resolve(grade(question, userAnswer));
+    }
+    return SqlRunner.compare(userAnswer, canonical, question.datasetId).then(cmp => {
+      if (cmp.error) {
+        // Execution error — fall back to text grader so the user still gets some feedback,
+        // but surface the error for clarity.
+        const textResult = grade(question, userAnswer);
+        return {
+          correct: false,
+          summary: cmp.error + (textResult.summary ? '  ·  Text-grader: ' + textResult.summary : ''),
+          model: canonical,
+          userResult: cmp.userResult,
+          modelResult: cmp.modelResult
+        };
+      }
+      if (cmp.match) {
+        return {
+          correct: true,
+          summary: 'Correct — your query produces the same result as the model.',
+          model: canonical,
+          userResult: cmp.userResult,
+          modelResult: cmp.modelResult
+        };
+      }
+      return {
+        correct: false,
+        summary: 'Result differs from the model. ' + (cmp.reason || ''),
+        model: canonical,
+        userResult: cmp.userResult,
+        modelResult: cmp.modelResult
+      };
+    });
+  }
+
+  window.Grader = { grade, gradeAsync, normalizeSql };
 })();

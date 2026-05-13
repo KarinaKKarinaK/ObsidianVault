@@ -208,8 +208,18 @@
       else root.insertBefore(badge, root.firstChild);
     }
 
+    // Dataset preview for runnable SQL
+    if (q.type === 'sql' && q.datasetId && q.runnable !== false && typeof SqlUI !== 'undefined') {
+      const preview = SqlUI.renderDatasetPreview(q.datasetId);
+      if (preview) root.appendChild(preview);
+    }
+
     const actions = document.createElement('div');
     actions.className = 'actions';
+    if (q.type === 'sql' && q.datasetId && q.runnable !== false) {
+      const runBtn = btn('Run Query', 'btn run', () => onRunSql(root, q));
+      actions.appendChild(runBtn);
+    }
     const grade = btn('Grade Solution', 'btn primary', () => onGrade(root, q));
     const next  = btn('Next question →', 'btn', nextQuestion);
     const reset = btn('Try again', 'btn', () => renderCurrent());
@@ -239,21 +249,53 @@
   function onGrade(root, q) {
     const user = QuestionUI.readAnswer(q, root);
     state.attempts++;
-    const result = Grader.grade(q, user);
+    // Remove old feedback / result tables
+    [...root.querySelectorAll('.feedback, .sql-result-block')].forEach(n => n.remove());
 
-    // Persist progress (sticky correct)
-    Progress.record(q.id, result.correct);
-    renderTopicTree();
+    const showLoading = q.type === 'sql' && q.datasetId && q.runnable !== false;
+    const loading = showLoading ? SqlUI.renderLoadingBlock('Grading your query…') : null;
+    if (loading) root.appendChild(loading);
 
-    const existing = root.querySelector('.feedback');
-    if (existing) existing.remove();
-    const fb = QuestionUI.renderFeedback({
-      correct: result.correct,
-      summary: result.summary,
-      model: result.model,
-      explanation: q.explanation || ''
+    Grader.gradeAsync(q, user).then(result => {
+      if (loading) loading.remove();
+      // Persist progress (sticky correct)
+      Progress.record(q.id, result.correct);
+      renderTopicTree();
+
+      // For SQL: show result table(s)
+      if (q.type === 'sql' && q.datasetId && q.runnable !== false) {
+        if (result.userResult) root.appendChild(SqlUI.renderResultTable(result.userResult, { title: 'Your result' }));
+        if (!result.correct && result.modelResult) {
+          root.appendChild(SqlUI.renderResultTable(result.modelResult, { title: 'Expected result' }));
+        }
+      }
+
+      const fb = QuestionUI.renderFeedback({
+        correct: result.correct,
+        summary: result.summary,
+        model: result.model,
+        explanation: q.explanation || ''
+      });
+      root.appendChild(fb);
+    }, err => {
+      if (loading) loading.remove();
+      root.appendChild(SqlUI.renderResultTable({ error: 'Engine error: ' + (err.message || err) }, { title: 'Error' }));
     });
-    root.appendChild(fb);
+  }
+
+  function onRunSql(root, q) {
+    const user = QuestionUI.readAnswer(q, root);
+    if (!user || !user.trim()) { alert('Type a SQL query first.'); return; }
+    [...root.querySelectorAll('.sql-result-block')].forEach(n => n.remove());
+    const loading = SqlUI.renderLoadingBlock('Running query…');
+    root.appendChild(loading);
+    SqlRunner.run(user, q.datasetId).then(result => {
+      loading.remove();
+      root.appendChild(SqlUI.renderResultTable(result, { title: 'Your result' }));
+    }, err => {
+      loading.remove();
+      root.appendChild(SqlUI.renderResultTable({ error: 'Engine error: ' + (err.message || err) }, { title: 'Error' }));
+    });
   }
 
   function markDoneManual(q) {

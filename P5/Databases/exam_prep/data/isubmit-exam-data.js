@@ -1,4 +1,3 @@
-// Inline iSubmit-exam definition — loaded as window.__ISUBMIT_EXAM.
 window.__ISUBMIT_EXAM = {
   "title": "Databases — Mock Final Exam (iSubmit Style)",
   "durationMinutes": 165,
@@ -141,6 +140,7 @@ window.__ISUBMIT_EXAM = {
           "label": "Question 3(a)",
           "prompt": "Find the sids of suppliers that supply at least two different red parts.",
           "type": "sql",
+          "datasetId": "suppliers_parts_catalog",
           "points": 1.0,
           "tables": [
             { "name": "Suppliers", "columns": [
@@ -177,6 +177,7 @@ window.__ISUBMIT_EXAM = {
           "label": "Question 3(b)",
           "prompt": "Find the names of suppliers who supply every part whose name begins with the letter 'B'.",
           "type": "sql",
+          "datasetId": "suppliers_parts_catalog",
           "points": 1.0,
           "tables": [
             { "name": "Suppliers", "columns": [
