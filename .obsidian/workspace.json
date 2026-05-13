@@ -68,12 +68,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Showcase of ME.md",
+                "file": "P5/HoAI/HAI_9_playbook.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Showcase of ME"
+              "title": "HAI_9_playbook"
             }
           }
         ],
@@ -241,10 +241,14 @@
   },
   "active": "b81ac4a260c6d2a6",
   "lastOpenFiles": [
+    "P5/Databases/FINAL_EXAM_REVIEW.md",
+    "P5/HoAI/Past_Exams/Exam XB_0113 2025 I (1).pdf",
     "P5/HoAI/HAI_9_playbook.md",
     "P5/HoAI/computer-a-history-of-the-information-machine-4nbsped-1032203471-9781032203478_compress.pdf",
-    "Untitled 3.base",
+    "P5/HoAI/Lectures/HoAI Seminar 2.pdf",
+    "P5/HoAI/Lectures/HoAI Seminar 3.pdf",
     "Showcase of ME.md",
+    "Untitled 3.base",
     "Untitled 2.base",
     "Robotics Papers Notes.md",
     "Robotics.md",
@@ -254,9 +258,6 @@
     "P5/Databases/exam_prep/data/sql-datasets-data.js",
     "P5/Databases/exam_prep/data/sql-datasets.json",
     "P5/Databases/exam_prep/js/sql-ui.js",
-    "P5/Databases/exam_prep/js/sql-runner.js",
-    "P5/Databases/exam_prep/vendor/sqljs/sql-wasm.wasm",
-    "P5/Databases/exam_prep/vendor/sqljs/sql-wasm.js",
     "P5/Databases/exam_prep/README.md",
     "P5/Text Mining/_changes_iteration_3.md",
     "P5/Text Mining/_audit_iteration_3.md",
@@ -276,7 +277,6 @@
     "P5/HoAI/HAI_topics.md",
     "P5/HoAI/HAI_mindmap_data.md",
     "P5/HoAI/HAI_exam_feedback.md",
-    "P5/Databases/other_resources.md",
     "P5/Text Mining/Quizzes/Screenshot 2026-05-01 at 12.07.57 AM.png",
     "P5/Text Mining/Quizzes/Screenshot 2026-05-01 at 12.08.28 AM.png",
     "P5/Text Mining/Quizzes/Screenshot 2026-05-01 at 12.21.30 AM.png",

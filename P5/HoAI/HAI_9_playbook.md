@@ -21,6 +21,7 @@
 
 **The 9.0 strategy in one sentence:** prepare 3 A-themes deeply, 6 B-chapters deeply, 3 C-concepts deeply — then on exam day, pick the questions where your prep aligns best with the wording.
 
+
 ---
 
 ## 2. PRIORITY RANKING — WHAT TO ACTUALLY STUDY
@@ -373,3 +374,101 @@ To stay sane in 4 days:
 - ❌ Topics the past exams didn't touch and that aren't in §2's priority list
 
 Trust your existing notes. They're already very good. This playbook just narrows your aim.
+
+---
+
+## 9. THE 10.0 LAYER — PUSHING FROM 9 TO PERFECT
+
+**Reality check:** 10s are rare in the Dutch system. Beckers himself wrote that "a gpa of 8 at a Dutch university is considered excellent." Aiming for 10.0 means aiming for clean 2.0s on all four questions with zero half-marks lost.
+
+**The math:** 1.0 gratispunt + 8 (four 2.0 answers) + 1 bonus = 10.0. There is no margin. One 1.5 caps you at 9.5.
+
+### The seven differentiators between 9.5 and 10.0
+
+This prof is a **historian of science**. He grades not only what happened but *how the story is told*. The 10.0 layer is about making *thinking* visible, not just facts.
+
+**1. Historiographical move in every answer.** State the fact, then add one sentence about why this is the dominant telling and who benefits. Example: not "ENIAC was built at the Moore School in 1945" but "ENIAC is conventionally placed at the origin of computing because the Moore School narrative served IBM-Harvard-NSF agendas in the post-war period — but as Stephanie Dick has argued, histories of computing encode cultural dispositions that exclude other origins."
+
+**2. Quote the question back.** First paragraph of every answer should explicitly engage the question's wording. *"Campbell-Kelly's phrase 'broadened the appeal' is doing two distinct kinds of work here — technical accessibility on the one hand, cultural legitimacy on the other. This essay addresses both."* Signals you are thinking *with* the prof.
+
+**3. One secondary author per answer.** Beyond CK, drop one of these names with a one-line argument:
+- **Bolter** (*Turing's Man*, 1984) — defining technology
+- **Zuboff** (*Surveillance Capitalism*, 2019) — behaviour as raw material
+- **McCorduck** (*Machines Who Think*) — AI history as advocacy
+- **Brooks** (*Mythical Man-Month*) — adding people to a late project makes it later
+- **Stephanie Dick** — computing history encodes cultural dispositions
+- **Jonnie Penn** ("Animo Nullius") — data as colonial *terra nullius*
+- **Paul Edwards** (*The Closed World*) — Cold War shaped computer architecture
+- **Medina** (*Cybernetic Revolutionaries*) — Project Cybersyn
+- **Dijkstra** — structured programming as mathematical discipline
+
+Even a parenthetical lift: *"(as Zuboff argues, the user is not the customer — the user is the product.)"*
+
+**4. Take a clear position on "to what extent" questions.** Don't hedge with "somewhat" or "in some ways." Use the formula: *"To a* **large** *extent — for three reasons. However, one important qualification: …"* Beckers wrote in your feedback that "the purpose for the flashback here is unclear" — he wants you to *defend* your structural choices, not just make them. Always be explicit about what you are doing and why.
+
+**5. A counterpoint that you then resolve.** A 9.5 answer is monotone — assertion, evidence, conclusion. A 10.0 answer has the move:
+
+> *"One might object that the IBM PC's open architecture was an unintended consequence of haste rather than a deliberate broadening strategy. This is true — but the unintended-vs-deliberate distinction does not undo the effect. CK's claim is about outcomes for users, not intentions in Armonk."*
+
+30 extra seconds, one extra paragraph, large grading payoff.
+
+**6. A forward-pointing conclusion.** End every answer with an implication that opens further discussion — your topics.md prescribes this ("repeat thesis + follow-up question") but execute it cleanly every time. Examples:
+- "This raises the question whether the same surveillance-capitalism dynamic will be replicated by foundation-model providers in the 2020s."
+- "Whether LOGO-style constructivism has any future in the era of LLM tutors is an open question."
+- "The unresolved tension between academic openness and commercial control persists in the current debate over open-weight AI."
+
+**7. Mechanical perfectionism.** At the 10.0 margin these small things matter:
+- **Spelling and grammar.** Rule (2) explicitly grades this. Pick US OR UK English and stay consistent (decide before the exam — "behaviour" vs "behavior", "organisation" vs "organization").
+- **Word count discipline.** 250–280 words per answer. Under 200 looks thin. Over 350 looks padded.
+- **Question labelling.** Rule (4): label each answer with the question number AND title.
+- **Name + student number on every page.** Rule (1).
+- **Visible structure.** Use paragraph topic sentences. Don't write five-sentence paragraphs. Each paragraph carries one argumentative beat.
+- **Date accuracy.** Verify every date in your head before you write it. Wrong date = grader notices = loses trust.
+
+### Two examples — what the 10.0 layer looks like in practice
+
+**Example A — Same opening, two levels:**
+
+> *9.5 version:* "The IBM PC, launched in 1981, had open architecture and helped broaden the appeal of computers."
+>
+> *10.0 version:* "Campbell-Kelly's claim that the IBM PC 'broadened the appeal' is partly accidental: IBM's August 1981 decision to use off-the-shelf parts and an open architecture was driven by speed-to-market, not by a broadening strategy. Yet the consequence — a clone industry led by Compaq from 1982 — broadened the appeal more decisively than any deliberate Apple-style design choice could have. This is the appropriation pattern in miniature: a technology's social effect is determined in use, not in design intent."
+
+The 10.0 version names a firm (Compaq), a date (August 1981, 1982), introduces a complication (unintended vs. deliberate), and ties to a course concept (appropriation). Same length, dramatically richer.
+
+**Example B — A model 10.0 conclusion paragraph:**
+
+> "Three currents — military survivability, academic information-sharing, and commercial communication — converged to produce the Internet. Their persistence as separate desires explains why the current Internet remains contradictory: open enough for academic inquiry, militarised enough for state surveillance, commercial enough for surveillance capitalism. *Whether these three desires can remain in productive tension as AI-mediated content reshapes the medium is the open question of the 2020s.*"
+
+Compare to a competent 1.5–2.0 conclusion: "These three desires together explain the rise of the Internet." Both are correct. Only one earns the 2.0.
+
+### Time management for 10.0
+
+In a 2h15 exam answering 4 questions:
+
+| Phase | Time | What |
+|---|---|---|
+| Read all 26 questions | 5 min | Decide picks. Mark them with a small "✓". |
+| Outline all 4 answers | 8 min (~2 min each) | Bullet thesis + 3 body beats + conclusion line. Outline ALL four before writing ANY. |
+| Write 4 answers | 4 × 25 min = 100 min | One question fully (intro+body+conclusion) before moving to next. |
+| Edit / sweep | 12 min (~3 min each) | Check chronology, spelling, exact-phrase use, question labels, name on each page. |
+| Buffer | 10 min | For the answer that runs over. |
+
+The outline-first approach is what separates 9.5 from 10.0. Most students go all-in on Q1 and run out of time on Q4. The last answer is where the 10 is lost. Outlining all four first guarantees the fourth answer is as developed as the first.
+
+### The single biggest 10.0 lever
+
+If you do only one thing differently: **add the historiographical sentence to every answer.** Beckers cares about agendas, prejudice, metaphors, and the construction of histories more than any other framing in the course. An answer that ends with "this telling serves [X] agenda" or "the story is constructed this way because [Y]" demonstrates exactly the analytical move the course is designed to teach. It is the single move most likely to push a 1.5 to a clean 2.0.
+
+---
+The math: 1.0 gratispunt + 8 (four clean 2.0s) + 1 bonus = 10.0. Zero half-marks allowed.      
+  - The single biggest lever: Add one historiographical sentence to every answer — who tells this  
+  story this way, and what agenda does it serve. Beckers is a historian of science; this is the    
+  analytical move the course is built around.                                                      
+  - The other six differentiators: quote the question back; drop one secondary author per answer   
+  (Bolter, Zuboff, McCorduck, Brooks, Stephanie Dick, Jonnie Penn, Paul Edwards, Medina, Dijkstra);
+   take a clear position on "to what extent"; include a counterpoint you then resolve;
+  forward-pointing conclusion; mechanical perfectionism (spelling, word count, labels).            
+  - Time management: outline all 4 answers before writing any. That's what protects the last
+  question — where 10s are usually lost.                                                           
+  - The honest caveat: 10s are rare in the Dutch system. Beckers himself said 8 is excellent.
+  Targeting 10 is reasonable but treat 9.5 as the realistic ceiling and 10 as the stretch.   
