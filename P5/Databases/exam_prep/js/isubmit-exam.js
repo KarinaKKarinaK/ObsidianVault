@@ -1,7 +1,8 @@
 /* iSubmit-style mock exam controller — multi-task, point-weighted, timer, grade computation. */
 (function () {
   const state = {
-    bank: null,
+    banks: null,      // array of available exam variants
+    bank: null,       // currently selected exam
     started: false,
     activeTaskId: null,
     activeSubqId: null,
@@ -15,23 +16,66 @@
   };
 
   function init() {
-    loadBank().then(b => {
-      state.bank = b;
-      const start = document.getElementById('start-exam');
-      if (start) start.addEventListener('click', startExam);
+    loadBanks().then(banks => {
+      state.banks = banks;
+      // If exactly one variant exists, behave like the old single-exam flow.
+      if (banks.length === 1) {
+        state.bank = banks[0];
+        const start = document.getElementById('start-exam');
+        if (start) start.addEventListener('click', startExam);
+      } else {
+        renderVariantPicker(banks);
+      }
     }).catch(err => {
       document.getElementById('content').innerHTML =
         '<div class="empty-state"><h1>Could not load exam</h1><p>' + err.message + '</p></div>';
     });
   }
 
-  function loadBank() {
+  function loadBanks() {
     // Prefer inline data (works from file:// without a server).
+    if (Array.isArray(window.__ISUBMIT_EXAMS) && window.__ISUBMIT_EXAMS.length) {
+      return Promise.resolve(window.__ISUBMIT_EXAMS);
+    }
     if (window.__ISUBMIT_EXAM && Array.isArray(window.__ISUBMIT_EXAM.tasks)) {
-      return Promise.resolve(window.__ISUBMIT_EXAM);
+      return Promise.resolve([window.__ISUBMIT_EXAM]);
     }
     return fetch('data/isubmit-exam.json', { cache: 'no-store' })
-      .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); });
+      .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(j => Array.isArray(j) ? j : [j]);
+  }
+
+  function renderVariantPicker(banks) {
+    const startPane = document.getElementById('start-pane');
+    if (!startPane) return;
+    // Replace the existing "Start exam" button with a grid of variant cards.
+    const startBtn = document.getElementById('start-exam');
+    if (startBtn) startBtn.remove();
+    const intro = document.createElement('p');
+    intro.style.marginTop = '14px';
+    intro.style.fontSize = '13px';
+    intro.style.color = 'var(--text-soft)';
+    intro.innerHTML = '<strong>' + banks.length + ' mock final variants available.</strong> Pick one to start — every variant has the same 5-task / 8-point / 2h 45m format, but different cases, FDs, schedules and prompts.';
+    startPane.appendChild(intro);
+    const grid = document.createElement('div');
+    grid.className = 'variant-grid';
+    for (const b of banks) {
+      const card = document.createElement('button');
+      card.type = 'button';
+      card.className = 'variant-card';
+      const totalPts = b.maxPoints || b.tasks.reduce((s,t)=>s+t.subquestions.reduce((s2,q)=>s2+q.points,0),0);
+      card.innerHTML =
+        '<div class="variant-card-title">' + escapeHtml(b.title) + '</div>' +
+        (b.tagline ? '<div class="variant-card-tagline">' + escapeHtml(b.tagline) + '</div>' : '') +
+        '<div class="variant-card-meta"><span>' + b.tasks.length + ' tasks</span><span>' + totalPts.toFixed(1) + ' pts</span><span>' + (b.durationMinutes || 165) + ' min</span></div>' +
+        '<span class="variant-card-cta">Start this exam →</span>';
+      card.addEventListener('click', () => {
+        state.bank = b;
+        startExam();
+      });
+      grid.appendChild(card);
+    }
+    startPane.appendChild(grid);
   }
 
   function startExam() {

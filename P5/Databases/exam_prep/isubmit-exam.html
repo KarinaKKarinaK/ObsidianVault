@@ -14,6 +14,7 @@
       <a href="practice.html">Practice</a>
       <a href="exam.html">Exam Mode</a>
       <a href="isubmit-exam.html" class="active">iSubmit Exam</a>
+      <a href="mcq.html">MCQ Practice</a>
     </nav>
     <div class="exam-timer" id="exam-timer" hidden>
       <span class="timer-label">Time remaining</span>
@@ -32,14 +33,15 @@
 
     <main class="isubmit-content" id="content">
       <div id="start-pane">
-        <h1 style="color:var(--accent); margin-top:0;">iSubmit Exam — Mock Final</h1>
-        <p>Same structure as the past final exam:</p>
+        <h1 style="color:var(--accent); margin-top:0;">iSubmit Exam — Mock Finals</h1>
+        <p>Same structure as the past final exam, picked from a library of variants for repeat practice:</p>
         <ul style="font-size:14px; line-height:1.7;">
           <li><strong>5 tasks</strong> with sub-questions (Conceptual Design, Normalization, SQL, Transactions, Database APIs)</li>
           <li><strong>8 points total</strong> — grade = points ÷ max × 10 (so 7.2 / 8 = 90% = grade 9.0)</li>
           <li><strong>2h 45m</strong> countdown · results locked until submit</li>
           <li><strong>Task 1(a)</strong> uses the in-browser <strong>E/R Editor</strong> (entity / attribute / relationship / isA — with weak, key, multi-value, derived, identifying, aggregation, disjoint, total)</li>
           <li>Each subquestion has an auto-grade plus a <strong>rubric checklist</strong> you can self-adjust after seeing the model answer</li>
+          <li><strong>Multiple mock variants:</strong> Hospital, University, Airline, Library, Marketplace, Streaming, Restaurant — same topics, all different questions, FDs and schedules</li>
         </ul>
         <button id="start-exam" class="primary-btn">Start exam</button>
       </div>

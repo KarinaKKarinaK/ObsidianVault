@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MCQ Practice :: Databases</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">iSubmit :: Databases</div>
+    <nav class="topnav">
+      <a href="index.html">Home</a>
+      <a href="practice.html">Practice</a>
+      <a href="exam.html">Exam Mode</a>
+      <a href="isubmit-exam.html">iSubmit Exam</a>
+      <a href="mcq.html" class="active">MCQ Practice</a>
+    </nav>
+  </header>
+
+  <main class="content mcq-content" id="content">
+    <div id="mcq-home">
+      <h1 style="color:var(--accent); margin-top:0;">MCQ Practice</h1>
+      <p style="max-width:780px; color:var(--text-soft);">
+        Sixteen quizzes — <strong>6 topic-focused</strong> and <strong>10 mixed-topic</strong> — of 10-12 multiple-choice questions each.
+        Every question has four options and exactly one correct answer — matching the MCQ section announced for the final exam.
+      </p>
+      <p style="max-width:780px; color:var(--text-soft); margin-top:-4px;">
+        Pick an option, hit <em>Submit answer</em> to see if you got it right with an explanation, then move on. Your score is tallied at the end with a per-question review.
+      </p>
+      <div class="variant-grid" id="quiz-grid"></div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <span>MCQ practice · 16 quizzes · 171 questions · single-choice</span>
+  </footer>
+
+  <script src="data/mcq-data.js"></script>
+  <script src="js/mcq.js"></script>
+</body>
+</html>
