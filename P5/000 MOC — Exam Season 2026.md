@@ -4,13 +4,13 @@
 
 ## Exam Countdown
 
-| Course | Exam Date | Days Left | Target | Status |
-|--------|-----------|-----------|--------|--------|
-| [[Courses/DB — Databases/DB — Index\|Databases]] | Thu 21 May, 18:45 | 25 | Pass + 0.5 bonus | 🟡 In progress |
-| [[Courses/TM — Text Mining/TM — Index\|Text Mining]] | Tue 27 May, 08:30 | 31 | 9.0 | 🟡 In progress |
-| [[Courses/HAI — History of AI/HAI — Index\|History of AI]] | Thu 28 May, 15:30 | 32 | Pass | 🟡 In progress |
-| [[Courses/ML — Machine Learning/ML — Index\|Machine Learning]] | Tue 2 Jun, 08:30 | 37 | 35/40 | 🟡 In progress |
-| [[Courses/SP — Statistics & Probability/SP — Index\|Statistics]] | Thu 4 Jun, 08:30 | 39 | 9.25 | 🟡 In progress |
+| Course                                                           | Exam Date         | Days Left | Target                                   | Status         |
+| ---------------------------------------------------------------- | ----------------- | --------- | ---------------------------------------- | -------------- |
+| [[Courses/DB — Databases/DB — Index\|Databases]]                 | Thu 21 May, 18:45 | 25        | 9.25 + 0.5 bonus (65/75 points at least) | 🟡 In progress |
+| [[Courses/TM — Text Mining/TM — Index\|Text Mining]]             | Tue 27 May, 08:30 | 31        | 9.5                                      | 🟡 In progress |
+| [[Courses/HAI — History of AI/HAI — Index\|History of AI]]       | Thu 28 May, 15:30 | 32        | 8.0+1=9.0                                | 🟡 In progress |
+| [[Courses/ML — Machine Learning/ML — Index\|Machine Learning]]   | Tue 2 Jun, 08:30  | 37        | 35/40 => 9.0                             | 🟡 In progress |
+| [[Courses/SP — Statistics & Probability/SP — Index\|Statistics]] | Thu 4 Jun, 08:30  | 39        | 9.25                                     | 🟡 In progress |
 
 ## Today's Log
 [[Daily Logs/2026-04-26]]

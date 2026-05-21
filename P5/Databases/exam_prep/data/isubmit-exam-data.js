@@ -2038,5 +2038,1242 @@ window.__ISUBMIT_EXAMS = [
   ]
 }
 /* === ADDITIONAL MOCK EXAMS APPENDED BELOW === */
+,
+{
+  "id": "mock-8",
+  "title": "Mock Final 8 — Food Delivery Platform",
+  "shortTitle": "Food delivery",
+  "tagline": "ER · isA · weak MenuItem · ternary rating · 2PL · multi-granularity · 5 SQL tasks",
+  "durationMinutes": 165,
+  "maxPoints": 75,
+  "gradeFormula": "score / maxPoints * 10",
+  "tasks": [
+    {
+      "id": "1",
+      "title": "1 Conceptual Modelling",
+      "intro": "A food delivery company needs to manage its operations. Customers have a unique customer ID (CID), a username, a city of residence, and an age. Delivery drivers have a unique driver ID (DID), a name, a vehicle type, and an average rating. Customers and drivers are both persons: they share name, date of birth, and address (isA hierarchy). Restaurants have a unique restaurant ID (RID), a name, a cuisine type (e.g. Italian, Chinese, Mexican), and a city. Each restaurant has at most one head driver who coordinates its deliveries; a driver can be head of at most one restaurant. Drivers can work for multiple restaurants; for each restaurant a driver works at, the start date of their contract is recorded. Menu items have a number unique only within their restaurant (they disappear if the restaurant closes), plus a name, a price, and a category (starter, main, dessert). Orders have a unique order ID (OID) and an order date; each order is placed by exactly one customer from exactly one restaurant. When a customer rates a driver at a specific restaurant, the rating date, a score (1-5), and an optional comment are recorded; the same customer can rate the same driver at the same restaurant again on a later date. Customers can refer other customers: for each referral, the referral date is stored; a customer need not have a referrer.",
+      "subquestions": [
+        {
+          "id": "1a",
+          "label": "Question 1(a)",
+          "prompt": "Provide a conceptual database model in the form of an ER Diagram. Use min..max cardinality notation. Explain the three most important design choices and document your assumptions.",
+          "type": "er_diagram",
+          "points": 12,
+          "hint": "MenuItem is a weak entity (number unique only within its restaurant). The rating of a driver by a customer at a restaurant is ternary because the date and score depend on all three entities simultaneously. The referral link is a recursive relationship on Customer.",
+          "rubric": [
+            { "id": "ent_customer",   "label": "Entity Customer (CID key, username, city, age)",                                          "weight": 0.1, "match": { "type": "entity", "name": "customer", "keyAttribute": "cid" } },
+            { "id": "ent_driver",     "label": "Entity Driver (DID key, vehicle_type, rating_avg)",                                       "weight": 0.1, "match": { "type": "entity", "name": "driver", "keyAttribute": "did" } },
+            { "id": "ent_restaurant", "label": "Entity Restaurant (RID key, name, cuisine_type, city)",                                   "weight": 0.08,"match": { "type": "entity", "name": "restaurant", "keyAttribute": "rid" } },
+            { "id": "ent_menuitem",   "label": "Weak entity MenuItem (number unique within Restaurant, name, price, category)",            "weight": 0.12,"match": { "type": "entity", "name": "menuitem", "weak": true } },
+            { "id": "ent_order",      "label": "Entity Order (OID key, order_date)",                                                      "weight": 0.08,"match": { "type": "entity", "name": "order" } },
+            { "id": "isa_person",     "label": "isA hierarchy: Person → Customer, Driver (shared name, dob, address)",                    "weight": 0.12,"match": { "type": "isA", "super": "person", "subs": ["customer", "driver"] } },
+            { "id": "rel_heads",      "label": "Relationship 'heads' between Restaurant (0..1) and Driver (0..1)",                        "weight": 0.08,"match": { "type": "relationship", "name": "heads", "connects": ["restaurant", "driver"] } },
+            { "id": "rel_works_at",   "label": "Relationship 'works_at' between Driver and Restaurant (many-to-many) with attribute since_date", "weight": 0.1, "match": { "type": "relationship", "name": "works_at", "connects": ["driver", "restaurant"] } },
+            { "id": "rel_places",     "label": "Relationship 'places' between Customer (1..*) and Order (1..1), plus 'from' linking Order to Restaurant", "weight": 0.08,"match": { "type": "relationship", "name": "places", "connects": ["customer", "order"] } },
+            { "id": "ter_rates",      "label": "Ternary relationship 'rates' among Customer, Driver, Restaurant with attributes date, score, comment", "weight": 0.12,"match": { "type": "relationship", "name": "rates" } },
+            { "id": "rec_referred",   "label": "Recursive relationship 'referred_by' on Customer with attribute referral_date",            "weight": 0.1, "match": { "type": "relationship", "name": "referred_by", "connects": ["customer", "customer"] } }
+          ],
+          "modelAnswer": "Entities:\n  • Person (supertype): name, dob, address\n      ↳ Customer: CID (key), username, city, age\n      ↳ Driver: DID (key), vehicle_type, rating_avg\n  • Restaurant: RID (key), name, cuisine_type, city\n  • MenuItem (WEAK, identified by Restaurant): itemNumber (discriminator), name, price, category\n  • Order: OID (key), order_date\n\nRelationships:\n  • heads : Restaurant(0..1) — Driver(0..1)  [fold into Restaurant.headDriver FK]\n  • works_at : Driver(0..*) — Restaurant(1..*) with attribute since_date\n  • places : Customer(1..*) — Order(1..1)\n  • from : Order(1..1) — Restaurant(0..*)\n  • rates : ternary Customer × Driver × Restaurant with attributes date, score, comment\n        key = (CID, DID, RID, date) to allow re-rating on a later date\n  • referred_by : recursive on Customer (0..* refers 0..1) with attribute referral_date\n\nKey design choices:\n  – Person isA avoids repeating name/dob/address for both subtypes.\n  – MenuItem is a weak entity: its number is only unique within its restaurant; if the restaurant is removed, menu items are removed too (cascade).\n  – rates is ternary because the score and date depend simultaneously on which customer is rating which driver at which restaurant.",
+          "explanation": "The three recurring patterns in ER exams are: (1) isA for shared person attributes, (2) weak entity when an identifier is only locally unique, and (3) ternary relationship when an attribute depends on all three participants simultaneously. This scenario has all three."
+        },
+        {
+          "id": "1b",
+          "label": "Question 1(b)",
+          "prompt": "Give the associated relational schema. Indicate primary keys (underline by writing _attr_) and foreign keys (→ Relation). Comment on nullable attributes and any constraints a relational database could check.",
+          "type": "long_text",
+          "points": 8,
+          "rubric": [
+            { "id": "rel_customer",   "label": "customer(_cid_, name, dob, address, username, city, age, referredBy → customer)",            "weight": 0.1 },
+            { "id": "rel_driver",     "label": "driver(_did_, name, dob, address, vehicle_type, rating_avg)",                                 "weight": 0.08 },
+            { "id": "rel_restaurant", "label": "restaurant(_rid_, name, cuisine_type, city, headDriver → driver)",                            "weight": 0.08 },
+            { "id": "rel_menuitem",   "label": "menuItem(_rid → restaurant, itemNumber_, name, price, category) — composite PK",              "weight": 0.12 },
+            { "id": "rel_order",      "label": "order_(_oid_, order_date, cid → customer, rid → restaurant)",                                 "weight": 0.1  },
+            { "id": "rel_worksat",    "label": "worksAt(_did → driver, rid → restaurant_, since_date)",                                       "weight": 0.08 },
+            { "id": "rel_rates",      "label": "rates(_cid → customer, did → driver, rid → restaurant, date_, score, comment)",               "weight": 0.12 },
+            { "id": "nullable",       "label": "restaurant.headDriver nullable; customer.referredBy nullable; rates.comment nullable; menuItem cascade-delete with restaurant", "weight": 0.12 },
+            { "id": "constraints",    "label": "CHECK score BETWEEN 1 AND 5; UNIQUE on restaurant.headDriver; ON DELETE CASCADE for menuItem; NOT NULL on mandatory FKs", "weight": 0.1 },
+            { "id": "unexpressible",  "label": "Cardinality constraint that a driver heads at most one restaurant is enforced by UNIQUE on headDriver; re-admission frequency or referral cycles cannot be expressed in SQL", "weight": 0.1 }
+          ],
+          "modelAnswer": "Relational schema (PKs in _underscores_, FKs with →):\n\n  customer(_cid_, name, dob, address, username, city, age,\n           referredBy → customer)\n  driver(_did_, name, dob, address, vehicle_type, rating_avg)\n  restaurant(_rid_, name, cuisine_type, city,\n             headDriver → driver)\n  menuItem(_rid → restaurant, itemNumber_, name, price, category)\n  order_(_oid_, order_date,\n         cid → customer, rid → restaurant)\n  worksAt(_did → driver, rid → restaurant_, since_date)\n  rates(_cid → customer, did → driver, rid → restaurant, date_,\n        score, comment)\n\nNullable / constraint notes:\n  • customer.referredBy is NULLABLE (first-generation customers have no referrer). Add CHECK (referredBy <> cid) to forbid self-referral.\n  • restaurant.headDriver is NULLABLE (position may be temporarily vacant); add UNIQUE so one driver can head at most one restaurant.\n  • rates.comment is NULLABLE (optional text).\n  • menuItem's FK to restaurant should be ON DELETE CASCADE (weak-entity semantics).\n  • CHECK score BETWEEN 1 AND 5 for the rating.\n  • Constraints from the ER not expressible in SQL: the min-cardinality rule that every driver must work for at least one restaurant cannot be checked per-row without a deferred constraint or trigger.",
+          "explanation": "Key decisions: fold the 0..1 'heads' relationship into restaurant.headDriver (FK + UNIQUE); keep worksAt as its own table because it carries an attribute (since_date) and is many-to-many; the ternary 'rates' becomes a four-column PK table."
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "title": "2 Database Normalization",
+      "intro": "Given R(A, B, C, D, E) and the set of functional dependencies\n\n    F = { AB → C,  C → B,  C → D,  D → E,  E → C }.\n\nShow your intermediate steps in every sub-question.",
+      "subquestions": [
+        {
+          "id": "2a",
+          "label": "Question 2(a)",
+          "prompt": "Is F canonical (a minimal basis)? If not, compute the canonical set. Show each step.",
+          "type": "text_lines",
+          "points": 5,
+          "answer": { "lines": ["AB->C", "C->B", "C->D", "D->E", "E->C"], "acceptedVariants": ["AB→C","C→B","C→D","D→E","E→C"] },
+          "rubric": [
+            { "id": "split_rhs",     "label": "Splits C→BD into C→B and C→D",                                                             "weight": 0.25 },
+            { "id": "lhs_check",     "label": "Checks AB→C for extraneous attributes: A+ = {A}, B+ = {B}, neither alone gives C — keeps AB→C", "weight": 0.3  },
+            { "id": "redundancy",    "label": "Tests each FD for redundancy and confirms none can be dropped",                               "weight": 0.3  },
+            { "id": "final",         "label": "Final canonical set is exactly { AB→C, C→B, C→D, D→E, E→C }",                               "weight": 0.15 }
+          ],
+          "modelAnswer": "Step 1 — Split RHS:\n  F already has single-attribute RHS except C→BD. Split: C→B and C→D.\n  Working: { AB→C, C→B, C→D, D→E, E→C }.\n\nStep 2 — Remove extraneous LHS attributes:\n  AB→C: Is A extraneous? B+ = {B}. B alone cannot derive C. A is NOT extraneous.\n         Is B extraneous? A+ = {A}. A alone cannot derive C. B is NOT extraneous.\n  All other FDs have single-attribute LHS — nothing to reduce.\n\nStep 3 — Remove redundant FDs (test each):\n  Drop AB→C? AB+ \\ {AB→C} = {A,B}. C not reachable. KEEP.\n  Drop C→B?  C+ \\ {C→B} = {C,D,E,C} = {C,D,E}. B not reachable. KEEP.\n  Drop C→D?  C+ \\ {C→D} = {C,B}. D not reachable. KEEP.\n  Drop D→E?  D+ \\ {D→E} = {D}. E not reachable. KEEP.\n  Drop E→C?  E+ \\ {E→C} = {E}. C not reachable. KEEP.\n\nCanonical set: F* = { AB→C, C→B, C→D, D→E, E→C }.",
+          "explanation": "F was not canonical because C→BD had two attributes on the RHS. After splitting, no further reductions are possible: the AB→C LHS cannot be simplified (neither A nor B alone implies C), and no FD is derivable from the others."
+        },
+        {
+          "id": "2b",
+          "label": "Question 2(b)",
+          "prompt": "Determine all minimal (candidate) keys of R. Show attribute closures.",
+          "type": "text_lines",
+          "points": 5,
+          "answer": { "lines": ["{A,B}"], "acceptedVariants": ["AB", "{AB}", "(A,B)"] },
+          "rubric": [
+            { "id": "must_include",  "label": "Argues A appears on no RHS, so A must be in every key",                                    "weight": 0.3 },
+            { "id": "must_include_b","label": "Argues B appears on no RHS (only C→B, but B itself doesn't drive anything alone — still must show B needed to fire AB→C)", "weight": 0.2 },
+            { "id": "closure_ab",    "label": "Computes (AB)+ = ABCDE and concludes {A,B} is a superkey",                                  "weight": 0.3 },
+            { "id": "unique",        "label": "Shows {A,B} is the unique minimal key",                                                     "weight": 0.2 }
+          ],
+          "modelAnswer": "Which attributes never appear on a RHS?\n  A does not appear on any RHS — it must be in every candidate key.\n  B appears only on the RHS of C→B. However, C requires B (via AB→C) to be produced in the first place, so B is also necessary.\n\nClosure of {A,B}:\n  {A,B} → C (AB→C) → B (C→B, already present) → D (C→D) → E (D→E) → C (E→C, already)\n  (AB)+ = {A,B,C,D,E} = R. ✓\n\nIs {A,B} minimal?\n  A+ = {A}. Not a superkey.\n  B+ = {B}. Not a superkey.\n  So neither A nor B alone is a key; {A,B} is minimal.\n\nUnique minimal key: { A, B }.",
+          "explanation": "A never appears on a RHS, so it is always needed. Then AB together fire the only FD that pulls in C, from which D and E follow via the D→E→C cycle. No smaller set suffices."
+        },
+        {
+          "id": "2c",
+          "label": "Question 2(c)",
+          "prompt": "Is R in BCNF? If not, decompose it into BCNF. State which FDs (if any) are lost.",
+          "type": "multi_line",
+          "points": 5,
+          "rubric": [
+            { "id": "diagnosis",    "label": "Identifies that C→B, C→D, D→E, E→C all violate BCNF (none of C,D,E is a superkey)", "weight": 0.25 },
+            { "id": "decomp_step",  "label": "Decomposes by taking C+ = {C,B,D,E} → R1(B,C,D,E), leaving R2(A,B,C)",              "weight": 0.3  },
+            { "id": "bcnf_check",   "label": "Verifies R1 is in BCNF (C, D, E are all keys of R1) and R2 is in BCNF (AB is key)", "weight": 0.25 },
+            { "id": "no_loss",      "label": "Confirms all canonical FDs are preserved in the decomposition",                       "weight": 0.2  }
+          ],
+          "modelAnswer": "BCNF requires every non-trivial FD X→Y to have X as a superkey. The only superkey of R is {A,B}.\n\nViolations:\n  C→B  : C+ = {C,B,D,E}, C is NOT a superkey. VIOLATES.\n  C→D  : same. VIOLATES.\n  D→E  : D+ = {D,E,C,B}, D is NOT a superkey. VIOLATES.\n  E→C  : E+ = {E,C,B,D}, E is NOT a superkey. VIOLATES.\n  AB→C : AB is the only superkey. OK.\n\nDecomposition:\n  Take C+ = {C,B,D,E}.\n  R1(B,C,D,E) with FDs C→B, C→D, D→E, E→C.\n    Keys of R1: C+={C,B,D,E}=R1 ✓; D+={D,E,C,B}=R1 ✓; E+={E,C,B,D}=R1 ✓.\n    Every FD's LHS is a key of R1 → BCNF ✓.\n  R2(A,B,C) with FD AB→C.\n    Key of R2: (AB)+ in R2 = {A,B,C} = R2 ✓ → BCNF ✓.\n\nFinal BCNF schema: R1(B,C,D,E),  R2(A,B,C).\n\nFD preservation:\n  AB→C  in R2 ✓\n  C→B   in R1 ✓\n  C→D   in R1 ✓\n  D→E   in R1 ✓\n  E→C   in R1 ✓\n  All FDs preserved — no loss.",
+          "explanation": "Because the C–D–E cycle forms a set of mutual keys within R1, splitting on any one FD in that group yields a relation where all the others still have superkeys on their LHS. This is why the decomposition is unusually clean: no FD is sacrificed."
+        },
+        {
+          "id": "2d",
+          "label": "Question 2(d)",
+          "prompt": "Consider the following instance of the original (non-decomposed) relation R(A,B,C,D,E):\n\n| A  | B  | C  | D  | E  |\n|----|----|----|----|----|----|\n| a1 | b1 | c1 | d1 | e1 |\n| a2 | b1 | c1 | d1 | e1 |\n| a3 | b2 | c2 | d2 | e2 |\n| a4 | b2 | c2 | d2 | e2 |\n\n(i) Identify a concrete update anomaly.\n(ii) Identify a concrete insertion anomaly.\n(iii) Identify a concrete deletion anomaly.\n(iv) Which normal form violation causes these anomalies?",
+          "type": "multi_line",
+          "points": 5,
+          "rubric": [
+            { "id": "update_anomaly",    "label": "Update: changing d1 to d1' (for D→E or C→D) requires updating two rows (rows 1 and 2), risking inconsistency",  "weight": 0.3 },
+            { "id": "insert_anomaly",    "label": "Insert: cannot record that a new value c3 maps to b3 (via C→B) without introducing a new A value and filling all columns", "weight": 0.3 },
+            { "id": "delete_anomaly",    "label": "Delete: removing rows 3 and 4 loses the fact that c2 determines d2 (and d2 determines e2), even though that information is conceptually independent of a3/a4", "weight": 0.25 },
+            { "id": "cause",             "label": "Anomalies are caused by transitive dependencies (C→B, C→D, D→E) where non-key attributes determine other non-key attributes — a 3NF/BCNF violation", "weight": 0.15 }
+          ],
+          "modelAnswer": "(i) Update anomaly.\n  C→D holds: c1 determines d1. Rows 1 and 2 both have C=c1, D=d1. If d1 changes to d1', both rows must be updated. Updating only row 1 leaves the table inconsistent with C→D.\n\n(ii) Insertion anomaly.\n  Suppose we learn that a new combination c3→b3 (via C→B) and c3→d3 (via C→D) exists. We cannot insert this fact without also inventing an A value (and a full B, C, D, E combination), since A is the key. The functional dependency C→B cannot be recorded independently.\n\n(iii) Deletion anomaly.\n  Rows 3 and 4 are the only rows recording that c2→d2 (C→D) and d2→e2 (D→E). Deleting row 3 to remove a3's record leaves row 4; deleting both rows loses the fact that c2 maps to d2 and d2 maps to e2 entirely — even though this mapping is logically independent of the A values a3, a4.\n\n(iv) The anomalies are caused by transitive functional dependencies: A,B → C → B, D and D → E. The non-key attributes C, D, E determine each other, violating BCNF (and 3NF partially). Decomposing into R1(B,C,D,E) and R2(A,B,C) eliminates the anomalies because each fact is stored exactly once.",
+          "explanation": "Anomalies appear whenever a relation stores multiple independent facts in the same tuple. Here, the fact 'c1 determines d1' is stored twice (rows 1 and 2), leading to redundancy and the three classic anomalies."
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "title": "3 SQL",
+      "intro": "Consider the following schema (primary keys underlined, arrows indicate foreign-key references):\n\n  Customer( _cid_, name, city, age )\n  Restaurant( _rid_, name, cuisine_type )\n  Order_( _oid_, cid → Customer, rid → Restaurant, order_date )\n  MenuItem( _mid_, rid → Restaurant, item_name, category, price )\n  OrderItem( _oid → Order_, mid → MenuItem_, quantity )\n  Review( _cid → Customer, rid → Restaurant_, rating, review_text )\n\nFor questions (d) and (e): avoid GROUP BY — use existential quantification (EXISTS / NOT EXISTS).",
+      "subquestions": [
+        {
+          "id": "3a",
+          "label": "Question 3(a) — Conditions",
+          "prompt": "Find the name and age of all customers who live in Amsterdam and are younger than 30.",
+          "type": "sql",
+          "datasetId": "food_delivery",
+          "points": 4,
+          "tables": [
+            { "name": "Customer", "columns": [
+              { "name": "cid", "type": "INTEGER", "pk": true },
+              { "name": "name", "type": "VARCHAR" },
+              { "name": "city", "type": "VARCHAR" },
+              { "name": "age", "type": "INTEGER" }
+            ]}
+          ],
+          "answer": {
+            "canonical": "SELECT name, age\nFROM Customer\nWHERE city = 'Amsterdam' AND age < 30;",
+            "requiredPatterns": ["Amsterdam", "age", "30"]
+          },
+          "rubric": [
+            { "id": "city_filter", "label": "Filters city = 'Amsterdam'", "weight": 0.4 },
+            { "id": "age_filter",  "label": "Filters age < 30 (strictly less than)",  "weight": 0.4 },
+            { "id": "correct_cols","label": "Returns name and age columns",            "weight": 0.2 }
+          ],
+          "modelAnswer": "SELECT name, age\nFROM Customer\nWHERE city = 'Amsterdam' AND age < 30;",
+          "explanation": "Expected result: Alice (28), Carol (25), Frank (29). Dave lives in Amsterdam but is 35 (not < 30)."
+        },
+        {
+          "id": "3b",
+          "label": "Question 3(b) — Joins",
+          "prompt": "Find the names of all customers who have placed at least one order from an Italian restaurant.",
+          "type": "sql",
+          "datasetId": "food_delivery",
+          "points": 4,
+          "tables": [
+            { "name": "Customer", "columns": [
+              { "name": "cid", "type": "INTEGER", "pk": true },
+              { "name": "name", "type": "VARCHAR" },
+              { "name": "city", "type": "VARCHAR" },
+              { "name": "age", "type": "INTEGER" }
+            ]},
+            { "name": "Restaurant", "columns": [
+              { "name": "rid", "type": "INTEGER", "pk": true },
+              { "name": "name", "type": "VARCHAR" },
+              { "name": "cuisine_type", "type": "VARCHAR" }
+            ]},
+            { "name": "Order_", "columns": [
+              { "name": "oid", "type": "INTEGER", "pk": true },
+              { "name": "cid", "type": "INTEGER", "fk": "Customer.cid" },
+              { "name": "rid", "type": "INTEGER", "fk": "Restaurant.rid" },
+              { "name": "order_date", "type": "TEXT" }
+            ]}
+          ],
+          "answer": {
+            "canonical": "SELECT DISTINCT c.name\nFROM Customer c\nJOIN Order_ o ON c.cid = o.cid\nJOIN Restaurant r ON o.rid = r.rid\nWHERE r.cuisine_type = 'Italian';",
+            "requiredPatterns": ["Italian", "JOIN", "cuisine_type"]
+          },
+          "rubric": [
+            { "id": "join_order",      "label": "Joins Customer to Order_ on cid",              "weight": 0.3 },
+            { "id": "join_restaurant", "label": "Joins Order_ to Restaurant on rid",             "weight": 0.3 },
+            { "id": "filter_italian",  "label": "Filters cuisine_type = 'Italian'",              "weight": 0.2 },
+            { "id": "distinct",        "label": "Uses DISTINCT (or equivalent) to avoid duplicates", "weight": 0.2 }
+          ],
+          "modelAnswer": "SELECT DISTINCT c.name\nFROM Customer c\nJOIN Order_ o ON c.cid = o.cid\nJOIN Restaurant r ON o.rid = r.rid\nWHERE r.cuisine_type = 'Italian';",
+          "explanation": "Expected result: Alice, Bob, Carol, Dave, Frank. Eve only ordered from Taco Fiesta (Mexican)."
+        },
+        {
+          "id": "3c",
+          "label": "Question 3(c) — Aggregations",
+          "prompt": "For each restaurant, find the restaurant name and the number of distinct customers who have placed an order there. Show only restaurants with more than 2 distinct customers.",
+          "type": "sql",
+          "datasetId": "food_delivery",
+          "points": 4,
+          "tables": [
+            { "name": "Restaurant", "columns": [
+              { "name": "rid", "type": "INTEGER", "pk": true },
+              { "name": "name", "type": "VARCHAR" },
+              { "name": "cuisine_type", "type": "VARCHAR" }
+            ]},
+            { "name": "Order_", "columns": [
+              { "name": "oid", "type": "INTEGER", "pk": true },
+              { "name": "cid", "type": "INTEGER", "fk": "Customer.cid" },
+              { "name": "rid", "type": "INTEGER", "fk": "Restaurant.rid" },
+              { "name": "order_date", "type": "TEXT" }
+            ]}
+          ],
+          "answer": {
+            "canonical": "SELECT r.name, COUNT(DISTINCT o.cid) AS num_customers\nFROM Restaurant r\nJOIN Order_ o ON r.rid = o.rid\nGROUP BY r.rid, r.name\nHAVING COUNT(DISTINCT o.cid) > 2;",
+            "requiredPatterns": ["GROUP BY", "HAVING", "COUNT"]
+          },
+          "rubric": [
+            { "id": "group_by",     "label": "Groups by restaurant (rid or name)",                    "weight": 0.3 },
+            { "id": "count_dist",   "label": "Uses COUNT(DISTINCT cid) for distinct customer count",   "weight": 0.35},
+            { "id": "having",       "label": "Filters with HAVING > 2",                               "weight": 0.2 },
+            { "id": "correct_result","label": "Returns only La Bella (4 customers)",                  "weight": 0.15 }
+          ],
+          "modelAnswer": "SELECT r.name, COUNT(DISTINCT o.cid) AS num_customers\nFROM Restaurant r\nJOIN Order_ o ON r.rid = o.rid\nGROUP BY r.rid, r.name\nHAVING COUNT(DISTINCT o.cid) > 2;",
+          "explanation": "La Bella has 4 distinct customers (Alice, Bob, Dave, Frank). Bella Roma has 3 (Carol, Dave, Frank) — also > 2. Expected: La Bella and Bella Roma."
+        },
+        {
+          "id": "3d",
+          "label": "Question 3(d) — Non-Monotonic",
+          "prompt": "Find the names of customers who have placed at least one order but have never written a review. Do NOT use GROUP BY.",
+          "type": "sql",
+          "datasetId": "food_delivery",
+          "points": 4,
+          "tables": [
+            { "name": "Customer", "columns": [
+              { "name": "cid", "type": "INTEGER", "pk": true },
+              { "name": "name", "type": "VARCHAR" },
+              { "name": "city", "type": "VARCHAR" },
+              { "name": "age", "type": "INTEGER" }
+            ]},
+            { "name": "Order_", "columns": [
+              { "name": "oid", "type": "INTEGER", "pk": true },
+              { "name": "cid", "type": "INTEGER", "fk": "Customer.cid" },
+              { "name": "rid", "type": "INTEGER", "fk": "Restaurant.rid" },
+              { "name": "order_date", "type": "TEXT" }
+            ]},
+            { "name": "Review", "columns": [
+              { "name": "cid", "type": "INTEGER", "pk": true, "fk": "Customer.cid" },
+              { "name": "rid", "type": "INTEGER", "pk": true, "fk": "Restaurant.rid" },
+              { "name": "rating", "type": "INTEGER" },
+              { "name": "review_text", "type": "TEXT" }
+            ]}
+          ],
+          "answer": {
+            "canonical": "SELECT DISTINCT c.name\nFROM Customer c\nWHERE EXISTS (\n    SELECT 1 FROM Order_ o WHERE o.cid = c.cid\n)\nAND NOT EXISTS (\n    SELECT 1 FROM Review r WHERE r.cid = c.cid\n);",
+            "requiredPatterns": ["EXISTS", "NOT EXISTS"]
+          },
+          "rubric": [
+            { "id": "has_order",   "label": "Checks that the customer has at least one order (EXISTS on Order_)",      "weight": 0.35 },
+            { "id": "no_review",   "label": "Checks that the customer has no review (NOT EXISTS on Review)",            "weight": 0.35 },
+            { "id": "no_groupby",  "label": "Does not use GROUP BY",                                                    "weight": 0.2  },
+            { "id": "correct",     "label": "Returns Carol, Eve, Frank (have orders but no reviews)",                   "weight": 0.1  }
+          ],
+          "modelAnswer": "SELECT DISTINCT c.name\nFROM Customer c\nWHERE EXISTS (\n    SELECT 1 FROM Order_ o WHERE o.cid = c.cid\n)\nAND NOT EXISTS (\n    SELECT 1 FROM Review r WHERE r.cid = c.cid\n);",
+          "explanation": "Alice and Bob have reviews; Dave has a review. Carol, Eve, and Frank placed orders but wrote no reviews."
+        },
+        {
+          "id": "3e",
+          "label": "Question 3(e) — Advanced",
+          "prompt": "Find the names of customers who have ordered from every Italian restaurant. That is, for each such customer, there is no Italian restaurant from which they have NOT ordered. Do NOT use GROUP BY.",
+          "type": "sql",
+          "datasetId": "food_delivery",
+          "points": 4,
+          "tables": [
+            { "name": "Customer", "columns": [
+              { "name": "cid", "type": "INTEGER", "pk": true },
+              { "name": "name", "type": "VARCHAR" },
+              { "name": "city", "type": "VARCHAR" },
+              { "name": "age", "type": "INTEGER" }
+            ]},
+            { "name": "Restaurant", "columns": [
+              { "name": "rid", "type": "INTEGER", "pk": true },
+              { "name": "name", "type": "VARCHAR" },
+              { "name": "cuisine_type", "type": "VARCHAR" }
+            ]},
+            { "name": "Order_", "columns": [
+              { "name": "oid", "type": "INTEGER", "pk": true },
+              { "name": "cid", "type": "INTEGER", "fk": "Customer.cid" },
+              { "name": "rid", "type": "INTEGER", "fk": "Restaurant.rid" },
+              { "name": "order_date", "type": "TEXT" }
+            ]}
+          ],
+          "answer": {
+            "canonical": "SELECT c.name\nFROM Customer c\nWHERE NOT EXISTS (\n    SELECT 1\n    FROM Restaurant r\n    WHERE r.cuisine_type = 'Italian'\n    AND NOT EXISTS (\n        SELECT 1 FROM Order_ o\n        WHERE o.cid = c.cid AND o.rid = r.rid\n    )\n);",
+            "requiredPatterns": ["NOT EXISTS", "Italian"]
+          },
+          "rubric": [
+            { "id": "outer_neg",     "label": "Outer NOT EXISTS: no Italian restaurant ...",                                     "weight": 0.3  },
+            { "id": "inner_neg",     "label": "Inner NOT EXISTS: ... that this customer has not ordered from",                    "weight": 0.35 },
+            { "id": "filter_italian","label": "Correctly restricts the outer loop to Italian restaurants",                        "weight": 0.2  },
+            { "id": "correct",       "label": "Returns Dave and Frank (ordered from both La Bella and Bella Roma)",               "weight": 0.15 }
+          ],
+          "modelAnswer": "SELECT c.name\nFROM Customer c\nWHERE NOT EXISTS (\n    SELECT 1\n    FROM Restaurant r\n    WHERE r.cuisine_type = 'Italian'\n    AND NOT EXISTS (\n        SELECT 1 FROM Order_ o\n        WHERE o.cid = c.cid AND o.rid = r.rid\n    )\n);",
+          "explanation": "Read as: customers for whom there is no Italian restaurant they have not ordered from. Italian restaurants: La Bella (rid=1), Bella Roma (rid=4). Dave: orders 5 (La Bella) and 9 (Bella Roma). Frank: orders 7 (La Bella) and 8 (Bella Roma). Both qualify."
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "title": "4 Transactions",
+      "intro": "Two questions on transaction management.",
+      "subquestions": [
+        {
+          "id": "4a",
+          "label": "Question 4(a) — Two-Phase Locking",
+          "prompt": "Consider the following schedule (start/commit mark transaction boundaries):\n\n  T1:  start   R(X)          W(Y)          commit\n  T2:          start   R(X)        W(Y)    commit\n\n(i) Can this schedule be produced by strict two-phase locking (S2PL)? Show the complete lock/unlock sequence and verify each rule.\n(ii) Can this schedule be produced by preclaiming (conservative) two-phase locking? If not, explain what schedule would result instead.",
+          "type": "long_text",
+          "points": 5,
+          "rubric": [
+            { "id": "s2pl_def",       "label": "States S2PL rule: locks acquired as needed; ALL locks held until commit",                             "weight": 0.15 },
+            { "id": "s2pl_seq",       "label": "Shows T1 acquires SL(X), then XL(Y); T2 acquires SL(X) (compatible with T1's SL(X)); T2 blocks on XL(Y) until T1 commits", "weight": 0.3 },
+            { "id": "s2pl_conclude",  "label": "Concludes S2PL can produce this schedule (T2 completes after T1 commits and releases XL(Y))",          "weight": 0.15 },
+            { "id": "prec_def",       "label": "States preclaiming rule: ALL locks acquired atomically before start; released at commit",               "weight": 0.15 },
+            { "id": "prec_conflict",  "label": "Identifies that T1 needs XL(Y) and T2 needs XL(Y); these conflict — T2 cannot pre-acquire while T1 holds XL(Y)", "weight": 0.15 },
+            { "id": "prec_conclude",  "label": "Concludes preclaiming cannot produce the interleaved schedule; T2 runs fully after T1 instead",          "weight": 0.1  }
+          ],
+          "modelAnswer": "(i) Strict Two-Phase Locking (S2PL)\nRule: locks may be acquired at any time; all locks held until commit; no lock may be acquired after a lock is released.\n\nLock sequence:\n  T1 starts → acquires SL(X).\n  T1 reads X.\n  T2 starts → requests SL(X). SL(X) + SL(X) are compatible ✓ → T2 acquires SL(X).\n  T2 reads X.\n  T1 requests XL(Y) → no one holds a lock on Y → T1 acquires XL(Y).\n  T1 writes Y.\n  T2 requests XL(Y) → T1 holds XL(Y), CONFLICT → T2 BLOCKS.\n  T1 commits → releases SL(X) and XL(Y).\n  T2 unblocks → acquires XL(Y).\n  T2 writes Y.\n  T2 commits → releases SL(X) and XL(Y).\n\nThis matches the given schedule ordering. S2PL CAN produce it ✓.\n\n(ii) Preclaiming (Conservative) 2PL\nRule: a transaction must acquire ALL locks it will ever need before executing its first operation, atomically.\n\nT1 needs: SL(X), XL(Y).\nT2 needs: SL(X), XL(Y).\n\nBoth require XL(Y). XL(Y) and XL(Y) are incompatible. Therefore T2 cannot pre-acquire its lock set while T1 holds XL(Y).\n\nResult: T2 must wait until T1 finishes completely (pre-acquires, runs, commits, releases). The only achievable schedule is serial: T1 runs entirely, then T2 runs entirely.\n\nConclusion: preclaiming CANNOT produce the interleaved schedule shown.",
+          "explanation": "The key contrast: S2PL allows interleaving (blocks only on conflict, not before start), so it can produce any conflict-serializable interleaving. Preclaiming prevents deadlock at the cost of allowing only serial-equivalent execution — and here it enforces complete serialisation of T1 before T2."
+        },
+        {
+          "id": "4b",
+          "label": "Question 4(b) — Multi-Granularity Locking",
+          "prompt": "A food delivery database has the hierarchy: Database → Table → Record.\n\nThree transactions run concurrently on the Order_ table:\n  T1: reads ALL orders to generate a daily report.\n  T2: updates a SINGLE order record (oid = 42).\n  T3: reads all orders placed by customer cid = 7.\n\n(i) For each transaction, state the lock type (IS, IX, SIX, S, X) acquired at each level: Database, Table, Record.\n(ii) Are T1 and T2 compatible at the table level? Justify using the compatibility matrix.\n(iii) Are T2 and T3 compatible at the table level? Justify.\n(iv) Why are intention locks essential in multi-granularity locking — what problem do they solve?",
+          "type": "long_text",
+          "points": 5,
+          "rubric": [
+            { "id": "t1_locks",   "label": "T1: IS on Database, S on Table, S on each record read (or S on table covers records)",          "weight": 0.2  },
+            { "id": "t2_locks",   "label": "T2: IX on Database, IX on Table, X on record oid=42",                                           "weight": 0.2  },
+            { "id": "t3_locks",   "label": "T3: IS on Database, IS on Table, S on each record for cid=7",                                   "weight": 0.15 },
+            { "id": "t1_t2_compat","label": "T1 holds S on table; T2 wants IX on table. S and IX are INCOMPATIBLE → conflict",              "weight": 0.2  },
+            { "id": "t2_t3_compat","label": "T2 holds IX on table; T3 wants IS on table. IX and IS are COMPATIBLE → no conflict at table level (conflict only at record level on oid=42 if T3 reads it)", "weight": 0.15 },
+            { "id": "why_intention","label": "Intention locks allow a transaction to signal intent at higher levels without checking every record; without them, granting S on a table would require scanning all records for X locks", "weight": 0.1 }
+          ],
+          "modelAnswer": "(i) Lock types at each level:\n\nT1 (reads entire table — table-level S lock):\n  Database: IS  (intends to take shared locks below)\n  Table:    S   (read the whole table)\n  Record:   S on each record (or covered by the table-level S)\n\nT2 (updates one record — record-level X lock):\n  Database: IX  (intends to take an exclusive lock below)\n  Table:    IX  (intends to take an exclusive lock below)\n  Record:   X on oid=42\n\nT3 (reads a subset of records — record-level S locks):\n  Database: IS\n  Table:    IS  (intends to take shared locks on some records)\n  Record:   S on each record where cid=7\n\n(ii) T1 and T2 compatibility at table level:\n  T1 holds S on Order_. T2 requests IX on Order_.\n  From the compatibility matrix: S × IX = INCOMPATIBLE.\n  T2 must wait for T1 to release its S lock. They CANNOT run concurrently.\n\n(iii) T2 and T3 compatibility at table level:\n  T2 holds IX on Order_. T3 requests IS on Order_.\n  From the compatibility matrix: IX × IS = COMPATIBLE.\n  T2 and T3 can proceed concurrently at the table level. However, if T3 tries to read record oid=42 while T2 holds X on it, there will be a conflict at the record level.\n\n(iv) Why intention locks matter:\n  Without intention locks, to grant a table-level S lock, the DBMS would need to scan every record in the table to ensure no transaction holds an X lock on any record — O(n) work per lock request.\n  With intention locks, a transaction signals its intent (IX = 'I will take exclusive locks on some records') at the table level before doing so. The compatibility check is O(1): just inspect the table-level lock. Intention locks make multi-granularity locking efficient.",
+          "explanation": "Multi-granularity locking trades lock overhead for concurrency: coarse-grained locks (table S/X) are fast to grant but exclude other transactions entirely; fine-grained locks (record S/X) allow more concurrency but require more bookkeeping. Intention locks bridge the two levels cheaply."
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "title": "5 Database Application Programming",
+      "intro": "Two short questions on how applications interact with databases.",
+      "subquestions": [
+        {
+          "id": "5a",
+          "label": "Question 5(a)",
+          "prompt": "A junior developer writes the following Python code to look up orders:\n\n  query = \"SELECT * FROM Order_ WHERE cid = '\" + user_input + \"'\"\n  cursor.execute(query)\n\n(i) Name the vulnerability this code introduces and explain how an attacker exploits it. Give a concrete malicious value for user_input.\n(ii) How should the developer fix the code? Write the corrected snippet.",
+          "type": "long_text",
+          "points": 3,
+          "rubric": [
+            { "id": "name_vuln",     "label": "Names SQL injection",                                                                    "weight": 0.2 },
+            { "id": "explain_exploit","label": "Explains attacker can break out of the string literal and inject SQL",                  "weight": 0.25 },
+            { "id": "concrete_example","label": "Gives a concrete malicious value, e.g. 1' OR '1'='1 or 1'; DROP TABLE Order_; --",    "weight": 0.25 },
+            { "id": "fix",           "label": "Shows the fix with a parameterised / prepared statement",                               "weight": 0.3  }
+          ],
+          "modelAnswer": "(i) Vulnerability: SQL Injection.\n\nExplanation: the user_input is concatenated directly into the SQL string without sanitisation. An attacker can supply a value that breaks out of the string literal and appends arbitrary SQL.\n\nConcrete malicious value:\n  user_input = \"1' OR '1'='1\"\n  Resulting query:\n    SELECT * FROM Order_ WHERE cid = '1' OR '1'='1'\n  The condition '1'='1' is always true, so the query returns ALL orders — a full data leak.\n\n  A more destructive value:\n  user_input = \"1'; DROP TABLE Order_; --\"\n  Resulting query:\n    SELECT * FROM Order_ WHERE cid = '1'; DROP TABLE Order_; --'\n  This deletes the entire orders table.\n\n(ii) Fix — use a parameterised statement:\n\n  query = 'SELECT * FROM Order_ WHERE cid = ?'\n  cursor.execute(query, (user_input,))\n\n  Or with named parameters:\n  query = 'SELECT * FROM Order_ WHERE cid = :cid'\n  cursor.execute(query, {'cid': user_input})\n\nThe parameter value is transmitted out-of-band as a typed value, never interpreted as SQL syntax. SQL injection through this code path becomes structurally impossible.",
+          "explanation": "SQL injection is the #1 web application vulnerability (OWASP). The fix is always the same: never build SQL strings by concatenation; always use parameterised queries or ORMs that do it for you."
+        },
+        {
+          "id": "5b",
+          "label": "Question 5(b)",
+          "prompt": "(i) Name the three levels of the ANSI/SPARC three-schema architecture and describe the purpose of each level.\n(ii) What is the difference between logical data independence and physical data independence? Give one concrete example of each.",
+          "type": "long_text",
+          "points": 2,
+          "rubric": [
+            { "id": "three_levels",     "label": "Names all three levels correctly: external (view) / conceptual (logical) / internal (physical)",  "weight": 0.35 },
+            { "id": "logical_indep",    "label": "Logical independence: app code survives changes to the conceptual schema (e.g., splitting a table)", "weight": 0.35 },
+            { "id": "physical_indep",   "label": "Physical independence: conceptual schema survives changes to storage (e.g., adding an index)",       "weight": 0.3  }
+          ],
+          "modelAnswer": "(i) ANSI/SPARC three levels:\n  1. External (view) level — what individual applications see: tailored subsets, joins, renames. Different applications can have different views of the same database. ORMs and database views live here.\n  2. Conceptual (logical) level — the global, application-independent description of the database: the full relational schema, integrity constraints, FKs. This is what DBAs design.\n  3. Internal (physical) level — how data is actually stored on disk: file organisation, indexes, partitions, compression.\n\n(ii) Data independence:\n  Logical data independence: a change to the conceptual schema does not require changes to external views or application code. Example: splitting the Order_ table into Order_Header and Order_Line. Applications that query through a view or ORM mapping continue to work without modification.\n\n  Physical data independence: a change to the internal schema (storage layout) does not require changes to the conceptual schema or applications. Example: adding a B+ tree index on Order_.order_date to speed up date-range queries. No SQL query needs to be rewritten; the optimiser uses the index transparently.",
+          "explanation": "ANSI/SPARC separates concerns so that physical tuning (add an index) and logical restructuring (split a table) can each be done without cascading changes through the whole system."
+        }
+      ]
+    }
+  ]
+}
+,
+{
+  "id": "mock-9",
+  "title": "Mock Final 9 — Sports League",
+  "shortTitle": "Sports league",
+  "tagline": "ER · isA · weak HomeGround · ternary contract · 2PL · multi-granularity · 5 SQL tasks",
+  "durationMinutes": 165,
+  "maxPoints": 75,
+  "gradeFormula": "score / maxPoints * 10",
+  "tasks": [
+    {
+      "id": "1",
+      "title": "1 Conceptual Modelling",
+      "intro": "A football league management company needs to track teams, players, coaches, matches, and goals. Teams have a unique team ID (TID), a name, a home city, and a founding year. Players have a unique player ID (PID), a name, a date of birth, a nationality, and a position (goalkeeper, defender, midfielder, forward). Coaches have a unique coach ID (CID), a name, a nationality, and a preferred formation. Both players and coaches are persons: they share name, date of birth, nationality, and address (isA hierarchy). A team has multiple home grounds: each ground has a number unique only within its team, plus a stadium name and a seating capacity; a home ground ceases to exist if its team is dissolved. Each team has exactly one designated primary home ground; a home ground can be the primary of at most one team. Players can play for multiple teams across different seasons; for each (player, team, season) combination, the shirt number, salary, and whether the player is team captain are recorded. Each team has exactly one head coach per season; a coach can head multiple teams across seasons but at most one at a time per season. Matches have a unique match ID (MID), a match date, and a stadium where they are played. Each match involves exactly one home team and one away team. When a player scores a goal in a match, the minute and goal type (open play, penalty, free kick, header) are recorded; a player can score multiple goals in the same match.",
+      "subquestions": [
+        {
+          "id": "1a",
+          "label": "Question 1(a)",
+          "prompt": "Provide a conceptual database model in the form of an ER Diagram. Use min..max cardinality notation. Explain the three most important design choices and document your assumptions.",
+          "type": "er_diagram",
+          "points": 12,
+          "hint": "HomeGround is a weak entity (ground number unique only within its team). The (player, team, season) contract is a ternary relationship because salary, shirt number, and captain status depend on all three simultaneously. isA: Person → Player, Coach.",
+          "rubric": [
+            { "id": "ent_player",     "label": "Entity Player (PID key, name, dob, nationality, position)",                                 "weight": 0.1,  "match": { "type": "entity", "name": "player", "keyAttribute": "pid" } },
+            { "id": "ent_coach",      "label": "Entity Coach (CID key, name, nationality, preferred_formation)",                            "weight": 0.1,  "match": { "type": "entity", "name": "coach", "keyAttribute": "cid" } },
+            { "id": "ent_team",       "label": "Entity Team (TID key, name, city, founding_year)",                                          "weight": 0.08, "match": { "type": "entity", "name": "team", "keyAttribute": "tid" } },
+            { "id": "ent_ground",     "label": "Weak entity HomeGround (number unique within Team, stadium_name, capacity)",                 "weight": 0.12, "match": { "type": "entity", "name": "homeground", "weak": true } },
+            { "id": "ent_match",      "label": "Entity Match (MID key, match_date, stadium)",                                               "weight": 0.08, "match": { "type": "entity", "name": "match" } },
+            { "id": "isa_person",     "label": "isA hierarchy: Person → Player, Coach (shared name, dob, nationality, address)",            "weight": 0.12, "match": { "type": "isA", "super": "person", "subs": ["player", "coach"] } },
+            { "id": "rel_primary",    "label": "Relationship 'primary_ground' between Team (1..1) and HomeGround (0..1)",                   "weight": 0.08, "match": { "type": "relationship", "name": "primary_ground", "connects": ["team", "homeground"] } },
+            { "id": "ter_contract",   "label": "Ternary relationship 'plays_for' / 'contract' among Player, Team, Season with attributes shirt_number, salary, is_captain", "weight": 0.15, "match": { "type": "relationship", "name": "plays_for" } },
+            { "id": "rel_heads",      "label": "Relationship 'heads' between Coach and Team with attribute season",                         "weight": 0.1,  "match": { "type": "relationship", "name": "heads", "connects": ["coach", "team"] } },
+            { "id": "rel_hometeam",   "label": "Relationships 'home_team' and 'away_team' (or 'plays_in') between Team and Match",         "weight": 0.07, "match": { "type": "relationship", "name": "home_team", "connects": ["team", "match"] } }
+          ],
+          "modelAnswer": "Entities:\n  • Person (supertype): name, dob, nationality, address\n      ↳ Player: PID (key), position\n      ↳ Coach: CID (key), preferred_formation\n  • Team: TID (key), name, city, founding_year\n  • HomeGround (WEAK, identified by Team): groundNumber (discriminator), stadium_name, capacity\n  • Match: MID (key), match_date, stadium\n\nRelationships:\n  • has_ground : Team(1..*) — HomeGround(1..*)  [identifying relationship, double-line diamond]\n  • primary_ground : Team(1..1) — HomeGround(0..1)  [each team has exactly one primary ground]\n  • plays_for : ternary Player × Team × Season with attributes shirt_number, salary, is_captain\n        (key = PID + TID + season; a player can be captain for one team in a season)\n  • heads : Coach(0..*) — Team(1..*) with attribute season\n        (composite key: coach + team + season enforces one head coach per team per season)\n  • home_team : Match(1..1) — Team(0..*)\n  • away_team : Match(1..1) — Team(0.*)\n  • scores : Player(0..*) — Match(0..*) with attributes minute, goal_type\n        (key includes minute to allow two goals in same match by same player)\n\nKey design choices:\n  – HomeGround is a weak entity because ground numbers are locally unique within a team.\n  – plays_for is ternary because salary, shirt number, and captain status all depend on the three-way combination of player, team, and season.\n  – Two separate binary relationships (home_team, away_team) link each Match to its two teams; an alternative role notation is acceptable.",
+          "explanation": "The two most common errors: (1) modelling plays_for as three separate binary relationships — this loses the dependency of salary/shirt number on the full triple; (2) forgetting that HomeGround is weak. The match–team structure with two distinct role-based relationships is the standard approach for asymmetric binary participation."
+        },
+        {
+          "id": "1b",
+          "label": "Question 1(b)",
+          "prompt": "Give the associated relational schema. Indicate primary keys (underline by writing _attr_) and foreign keys (→ Relation). Comment on nullable attributes and constraints a relational database could check.",
+          "type": "long_text",
+          "points": 8,
+          "rubric": [
+            { "id": "rel_player",      "label": "player(_pid_, name, dob, nationality, address, position)",                                                          "weight": 0.08 },
+            { "id": "rel_coach",       "label": "coach(_cid_, name, dob, nationality, address, preferred_formation)",                                                "weight": 0.08 },
+            { "id": "rel_team",        "label": "team(_tid_, name, city, founding_year, primaryGround_tid, primaryGround_nr — composite FK to homeground)",          "weight": 0.1  },
+            { "id": "rel_homeground",  "label": "homeground(_tid → team, groundNumber_, stadium_name, capacity) — composite PK with FK",                             "weight": 0.12 },
+            { "id": "rel_match",       "label": "match(_mid_, match_date, stadium, home_tid → team, away_tid → team)",                                               "weight": 0.1  },
+            { "id": "rel_playsfor",    "label": "playsFor(_pid → player, tid → team, season_, shirt_number, salary, is_captain)",                                    "weight": 0.12 },
+            { "id": "rel_heads",       "label": "heads(_cid → coach, tid → team, season_)",                                                                          "weight": 0.08 },
+            { "id": "rel_scores",      "label": "scores(_pid → player, mid → match, minute_, goal_type)",                                                            "weight": 0.08 },
+            { "id": "nullable",        "label": "team.primaryGround is NULLABLE initially; player/coach address NULLABLE; scores.goal_type NOT NULL",                "weight": 0.12 },
+            { "id": "constraints",     "label": "CHECK home_tid <> away_tid; UNIQUE on (tid, season) in heads to enforce one head coach per team-season; ON DELETE CASCADE for homeground", "weight": 0.12 }
+          ],
+          "modelAnswer": "Relational schema:\n\n  player(_pid_, name, dob, nationality, address, position)\n  coach(_cid_, name, dob, nationality, address, preferred_formation)\n  team(_tid_, name, city, founding_year,\n       primaryGround_tid, primaryGround_nr)  -- composite FK → homeground\n  homeground(_tid → team, groundNumber_, stadium_name, capacity)\n  match(_mid_, match_date, stadium,\n        home_tid → team,\n        away_tid → team)\n  playsFor(_pid → player, tid → team, season_, shirt_number, salary, is_captain)\n  heads(_cid → coach, tid → team, season_)\n  scores(_pid → player, mid → match, minute_, goal_type)\n\nConstraints:\n  • CHECK (home_tid <> away_tid) in match.\n  • UNIQUE (tid, season) in heads: enforces at most one head coach per team per season.\n  • team.(primaryGround_tid, primaryGround_nr) is NULLABLE (team may not yet have designated a primary ground) and is a composite FK → homeground.\n  • homeground: ON DELETE CASCADE when its team is removed.\n  • is_captain is BOOLEAN (or TINYINT 0/1); CHECK UNIQUE (tid, season, is_captain=1) would enforce at most one captain per team-season but is complex to express in standard SQL.",
+          "explanation": "The tricky point is the primary ground: team references homeground (its own child entity), creating a forward-reference that is handled in SQL with DEFERRED or by inserting the team first with primaryGround NULL, then the homeground, then updating the FK."
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "title": "2 Database Normalization",
+      "intro": "Given R(A, B, C, D, E) and the set of functional dependencies\n\n    F = { AB → C,  C → B,  C → D,  D → E,  E → C }.\n\nNote: this is the same canonical set as the previous exam section — focus on the normalization tasks.\nShow your intermediate steps in every sub-question.",
+      "subquestions": [
+        {
+          "id": "2a",
+          "label": "Question 2(a)",
+          "prompt": "Is F canonical? If not, compute the canonical set.",
+          "type": "text_lines",
+          "points": 5,
+          "answer": { "lines": ["AB->C","C->B","C->D","D->E","E->C"], "acceptedVariants":["AB→C","C→B","C→D","D→E","E→C"] },
+          "rubric": [
+            { "id": "split",       "label": "Splits C→BD into C→B and C→D",                                                             "weight": 0.3  },
+            { "id": "lhs_check",   "label": "Checks AB→C: A+ = {A}, B+ = {B}, neither alone gives C — LHS is minimal",                 "weight": 0.35 },
+            { "id": "redundancy",  "label": "Confirms no FD is derivable from the others",                                              "weight": 0.2  },
+            { "id": "final",       "label": "Final canonical set is { AB→C, C→B, C→D, D→E, E→C }",                                     "weight": 0.15 }
+          ],
+          "modelAnswer": "Step 1 — Split RHS: C→BD becomes C→B and C→D.\nWorking set: { AB→C, C→B, C→D, D→E, E→C }.\n\nStep 2 — LHS simplification:\n  AB→C: Is B extraneous? A+ = {A}. Without B, no FD fires. C not reachable. B NOT extraneous.\n         Is A extraneous? B+ = {B}. Without A, no FD fires. C not reachable. A NOT extraneous.\n\nStep 3 — Redundancy:\n  Each FD tested shows its RHS is unreachable without it.\n\nCanonical: F* = { AB→C, C→B, C→D, D→E, E→C }.",
+          "explanation": "C→BD was the only non-singleton RHS. After splitting, the LHS and redundancy checks confirm no further reductions are possible."
+        },
+        {
+          "id": "2b",
+          "label": "Question 2(b)",
+          "prompt": "Find all minimal keys of R. Show closures and justify minimality.",
+          "type": "text_lines",
+          "points": 5,
+          "answer": { "lines": ["{A,B}"], "acceptedVariants": ["AB","(A,B)","{AB}"] },
+          "rubric": [
+            { "id": "must_have_a", "label": "A never appears on any RHS → must be in every key",               "weight": 0.3 },
+            { "id": "closure_ab",  "label": "(AB)+ = ABCDE (via AB→C, C→D, D→E, E→C, C→B) — superkey ✓",    "weight": 0.4 },
+            { "id": "minimal",     "label": "A alone and B alone are not superkeys → {A,B} is minimal",         "weight": 0.3 }
+          ],
+          "modelAnswer": "A does not appear on any RHS → must be in every key.\nB does not appear on any RHS → must also be in every key.\n\n(AB)+: AB→C; C→B (have); C→D; D→E; E→C (cycle, covered). (AB)+ = {A,B,C,D,E} = R ✓.\n\nA+ = {A} ≠ R. B+ = {B} ≠ R. Both proper subsets fail.\n\nUnique minimal key: {A, B}.",
+          "explanation": "With two attributes that appear on no RHS, both must be in the key. Their combined closure fires the only FD that bootstraps the C–D–E cycle."
+        },
+        {
+          "id": "2c",
+          "label": "Question 2(c)",
+          "prompt": "Decompose R into BCNF. State which FDs (if any) are lost.",
+          "type": "multi_line",
+          "points": 5,
+          "rubric": [
+            { "id": "violations",  "label": "Identifies C, D, E as non-superkeys whose FDs violate BCNF",                                "weight": 0.25 },
+            { "id": "decompose",   "label": "Takes C+ = {B,C,D,E} → R1(B,C,D,E); remaining R2(A,B,C)",                                  "weight": 0.35 },
+            { "id": "check_bcnf",  "label": "Verifies keys of R1 (C, D, E are all keys) and R2 (AB is key) — both BCNF",                "weight": 0.25 },
+            { "id": "no_loss",     "label": "Confirms all FDs preserved in the decomposition",                                           "weight": 0.15 }
+          ],
+          "modelAnswer": "Violations: C, D, E are not superkeys of R.\n\nDecompose on C→{B,D}: C+ = {C,B,D,E}.\n  R1(B,C,D,E): FDs C→B, C→D, D→E, E→C. Keys: C, D, E are all keys of R1 ✓. BCNF.\n  R2(A,B,C): FD AB→C. Key {A,B} ✓. BCNF.\n\nFD preservation: AB→C in R2 ✓; C→B, C→D in R1 ✓; D→E, E→C in R1 ✓.\nNo FDs lost.",
+          "explanation": "The cycle C↔D↔E means all three attributes are keys of R1, so no BCNF violation exists within R1."
+        },
+        {
+          "id": "2d",
+          "label": "Question 2(d)",
+          "prompt": "Consider the following table instance of R(A,B,C,D,E):\n\n| A  | B  | C  | D  | E  |\n|----|----|----|----|----|----|\n| a1 | b1 | c1 | d1 | e1 |\n| a2 | b1 | c1 | d1 | e1 |\n| a3 | b2 | c2 | d2 | e2 |\n| a3 | b2 | c2 | d2 | e2 |\n\n(i) Identify a concrete update anomaly.\n(ii) Identify a concrete insertion anomaly.\n(iii) Identify a concrete deletion anomaly.\n(iv) Why does decomposing into BCNF eliminate these anomalies?",
+          "type": "multi_line",
+          "points": 5,
+          "rubric": [
+            { "id": "update",   "label": "Update: rows 1 and 2 both store c1→d1; changing d1 requires two updates — inconsistency risk", "weight": 0.25 },
+            { "id": "insert",   "label": "Insert: cannot record a new mapping c3→b3 without inventing an A value",                     "weight": 0.25 },
+            { "id": "delete",   "label": "Delete: rows 3 and 4 are identical (A=a3 appears twice — data anomaly); deleting one loses nothing but shows redundancy; deleting both loses c2→d2", "weight": 0.25 },
+            { "id": "why_bcnf", "label": "BCNF places each FD in its own relation; each fact is stored once, eliminating redundancy and all three anomaly types", "weight": 0.25 }
+          ],
+          "modelAnswer": "(i) Update anomaly: rows 1 and 2 both record C=c1, D=d1 (due to C→D). If d1 must be changed to d1', both rows need updating. Updating only one leaves the table inconsistent with C→D.\n\n(ii) Insertion anomaly: cannot record that c3 maps to b3 (via C→B) and c3 maps to d3 (via C→D) without pairing it with some A value. But A is the key — we would be inserting a fabricated primary key tuple.\n\n(iii) Deletion anomaly: rows 3 and 4 are completely duplicate (same A=a3, which should be unique if A is the key — an integrity violation). Beyond that: if rows 3 and 4 are the only rows with c2, deleting them loses the fact that c2→d2 and d2→e2.\n\n(iv) BCNF decomposition puts each non-trivial FD into a relation where its LHS is a key. C→B and C→D are stored once in R1(B,C,D,E): the mapping c1↦d1 appears in exactly one row, not spread across multiple tuples. This eliminates redundancy and with it all three anomaly types.",
+          "explanation": "Anomalies are symptoms of redundancy. Redundancy occurs when the same fact (e.g., 'c1 maps to d1') is repeated across multiple rows. Normal forms eliminate the redundancy by ensuring each fact is stored in exactly one place."
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "title": "3 SQL",
+      "intro": "Consider the following schema:\n\n  Team  ( _tid_, name, city, founded_year )\n  Player( _pid_, name, nationality, position )\n  PlaysFor( _pid → Player, tid → Team, season_ , shirt_number )\n  Match_( _mid_, home_tid → Team, away_tid → Team, match_date, stadium )\n  Goal  ( _gid_, mid → Match_, pid → Player, minute, goal_type )\n\nFor questions (d) and (e): avoid GROUP BY — use existential quantification.",
+      "subquestions": [
+        {
+          "id": "3a",
+          "label": "Question 3(a) — Conditions",
+          "prompt": "Find the name of all players whose nationality is 'Dutch' and whose position is 'Midfielder'.",
+          "type": "sql",
+          "datasetId": "sports_league",
+          "points": 4,
+          "tables": [
+            { "name": "Player", "columns": [
+              { "name": "pid", "type": "INTEGER", "pk": true },
+              { "name": "name", "type": "VARCHAR" },
+              { "name": "nationality", "type": "VARCHAR" },
+              { "name": "position", "type": "VARCHAR" }
+            ]}
+          ],
+          "answer": {
+            "canonical": "SELECT name\nFROM Player\nWHERE nationality = 'Dutch' AND position = 'Midfielder';",
+            "requiredPatterns": ["Dutch","Midfielder"]
+          },
+          "rubric": [
+            { "id": "nationality", "label": "Filters nationality = 'Dutch'",   "weight": 0.4 },
+            { "id": "position",    "label": "Filters position = 'Midfielder'", "weight": 0.4 },
+            { "id": "select_name", "label": "Returns name column",             "weight": 0.2 }
+          ],
+          "modelAnswer": "SELECT name\nFROM Player\nWHERE nationality = 'Dutch' AND position = 'Midfielder';",
+          "explanation": "Expected: De Jong, Blind. Ziyech is a Midfielder but Moroccan, not Dutch."
+        },
+        {
+          "id": "3b",
+          "label": "Question 3(b) — Joins",
+          "prompt": "Find the names of all players who scored at least one goal in a home match for the team named 'Ajax'.",
+          "type": "sql",
+          "datasetId": "sports_league",
+          "points": 4,
+          "tables": [
+            { "name": "Team", "columns": [
+              { "name": "tid", "type": "INTEGER", "pk": true },
+              { "name": "name", "type": "VARCHAR" },
+              { "name": "city", "type": "VARCHAR" },
+              { "name": "founded_year", "type": "INTEGER" }
+            ]},
+            { "name": "Player", "columns": [
+              { "name": "pid", "type": "INTEGER", "pk": true },
+              { "name": "name", "type": "VARCHAR" },
+              { "name": "nationality", "type": "VARCHAR" },
+              { "name": "position", "type": "VARCHAR" }
+            ]},
+            { "name": "Match_", "columns": [
+              { "name": "mid", "type": "INTEGER", "pk": true },
+              { "name": "home_tid", "type": "INTEGER", "fk": "Team.tid" },
+              { "name": "away_tid", "type": "INTEGER", "fk": "Team.tid" },
+              { "name": "match_date", "type": "TEXT" },
+              { "name": "stadium", "type": "TEXT" }
+            ]},
+            { "name": "Goal", "columns": [
+              { "name": "gid", "type": "INTEGER", "pk": true },
+              { "name": "mid", "type": "INTEGER", "fk": "Match_.mid" },
+              { "name": "pid", "type": "INTEGER", "fk": "Player.pid" },
+              { "name": "minute", "type": "INTEGER" },
+              { "name": "goal_type", "type": "TEXT" }
+            ]}
+          ],
+          "answer": {
+            "canonical": "SELECT DISTINCT p.name\nFROM Player p\nJOIN Goal g ON p.pid = g.pid\nJOIN Match_ m ON g.mid = m.mid\nJOIN Team t ON m.home_tid = t.tid\nWHERE t.name = 'Ajax';",
+            "requiredPatterns": ["Ajax","home_tid","JOIN"]
+          },
+          "rubric": [
+            { "id": "join_goal",    "label": "Joins Player to Goal",                                  "weight": 0.25 },
+            { "id": "join_match",   "label": "Joins Goal to Match_",                                  "weight": 0.25 },
+            { "id": "join_team",    "label": "Joins Match_ to Team via home_tid",                     "weight": 0.25 },
+            { "id": "filter_ajax",  "label": "Filters t.name = 'Ajax' and uses DISTINCT",             "weight": 0.25 }
+          ],
+          "modelAnswer": "SELECT DISTINCT p.name\nFROM Player p\nJOIN Goal g ON p.pid = g.pid\nJOIN Match_ m ON g.mid = m.mid\nJOIN Team t ON m.home_tid = t.tid\nWHERE t.name = 'Ajax';",
+          "explanation": "Ajax home matches: mid=1,2,5. Goals: Bergwijn (gid 1,4,12,14), Blind (gid 2,15), Ziyech (gid 3,13). Expected: Bergwijn, Blind, Ziyech."
+        },
+        {
+          "id": "3c",
+          "label": "Question 3(c) — Aggregations",
+          "prompt": "For each team, find the team name and the total number of goals scored by its players in season 2024. Show only teams whose players scored more than 5 goals total.",
+          "type": "sql",
+          "datasetId": "sports_league",
+          "points": 4,
+          "tables": [
+            { "name": "Team", "columns": [
+              { "name": "tid", "type": "INTEGER", "pk": true },
+              { "name": "name", "type": "VARCHAR" },
+              { "name": "city", "type": "VARCHAR" },
+              { "name": "founded_year", "type": "INTEGER" }
+            ]},
+            { "name": "PlaysFor", "columns": [
+              { "name": "pid", "type": "INTEGER", "pk": true, "fk": "Player.pid" },
+              { "name": "tid", "type": "INTEGER", "pk": true, "fk": "Team.tid" },
+              { "name": "season", "type": "INTEGER", "pk": true },
+              { "name": "shirt_number", "type": "INTEGER" }
+            ]},
+            { "name": "Goal", "columns": [
+              { "name": "gid", "type": "INTEGER", "pk": true },
+              { "name": "mid", "type": "INTEGER", "fk": "Match_.mid" },
+              { "name": "pid", "type": "INTEGER", "fk": "Player.pid" },
+              { "name": "minute", "type": "INTEGER" },
+              { "name": "goal_type", "type": "TEXT" }
+            ]}
+          ],
+          "answer": {
+            "canonical": "SELECT t.name, COUNT(g.gid) AS goals_scored\nFROM Team t\nJOIN PlaysFor pf ON t.tid = pf.tid AND pf.season = 2024\nJOIN Goal g ON pf.pid = g.pid\nGROUP BY t.tid, t.name\nHAVING COUNT(g.gid) > 5;",
+            "requiredPatterns": ["GROUP BY","HAVING","2024"]
+          },
+          "rubric": [
+            { "id": "join_playsfor", "label": "Joins Team to PlaysFor filtering season = 2024",          "weight": 0.3 },
+            { "id": "join_goal",     "label": "Joins PlaysFor to Goal on pid",                            "weight": 0.2 },
+            { "id": "group_having",  "label": "Groups by team and filters HAVING COUNT > 5",              "weight": 0.35},
+            { "id": "correct",       "label": "Returns Ajax (8 goals by its players)",                   "weight": 0.15 }
+          ],
+          "modelAnswer": "SELECT t.name, COUNT(g.gid) AS goals_scored\nFROM Team t\nJOIN PlaysFor pf ON t.tid = pf.tid AND pf.season = 2024\nJOIN Goal g ON pf.pid = g.pid\nGROUP BY t.tid, t.name\nHAVING COUNT(g.gid) > 5;",
+          "explanation": "Ajax players: Blind(pid=3, gid 2,15), Bergwijn(pid=4, gid 1,4,12,14), Ziyech(pid=5, gid 3,13) = 8 goals total > 5. PSV: 4 goals. Feyenoord: 3 goals."
+        },
+        {
+          "id": "3d",
+          "label": "Question 3(d) — Non-Monotonic",
+          "prompt": "Find the names of players who appear in PlaysFor (played for at least one team in 2024) but have never scored a goal in any match. Do NOT use GROUP BY.",
+          "type": "sql",
+          "datasetId": "sports_league",
+          "points": 4,
+          "tables": [
+            { "name": "Player", "columns": [
+              { "name": "pid", "type": "INTEGER", "pk": true },
+              { "name": "name", "type": "VARCHAR" },
+              { "name": "nationality", "type": "VARCHAR" },
+              { "name": "position", "type": "VARCHAR" }
+            ]},
+            { "name": "PlaysFor", "columns": [
+              { "name": "pid", "type": "INTEGER", "pk": true, "fk": "Player.pid" },
+              { "name": "tid", "type": "INTEGER", "pk": true, "fk": "Team.tid" },
+              { "name": "season", "type": "INTEGER", "pk": true },
+              { "name": "shirt_number", "type": "INTEGER" }
+            ]},
+            { "name": "Goal", "columns": [
+              { "name": "gid", "type": "INTEGER", "pk": true },
+              { "name": "mid", "type": "INTEGER", "fk": "Match_.mid" },
+              { "name": "pid", "type": "INTEGER", "fk": "Player.pid" },
+              { "name": "minute", "type": "INTEGER" },
+              { "name": "goal_type", "type": "TEXT" }
+            ]}
+          ],
+          "answer": {
+            "canonical": "SELECT p.name\nFROM Player p\nWHERE EXISTS (\n    SELECT 1 FROM PlaysFor pf WHERE pf.pid = p.pid AND pf.season = 2024\n)\nAND NOT EXISTS (\n    SELECT 1 FROM Goal g WHERE g.pid = p.pid\n);",
+            "requiredPatterns": ["EXISTS","NOT EXISTS","2024"]
+          },
+          "rubric": [
+            { "id": "plays_2024",  "label": "EXISTS clause checks player is in PlaysFor for season 2024",   "weight": 0.35 },
+            { "id": "no_goal",     "label": "NOT EXISTS clause checks no goal scored",                       "weight": 0.35 },
+            { "id": "no_groupby",  "label": "Does not use GROUP BY",                                         "weight": 0.2  },
+            { "id": "correct",     "label": "Returns only Gakpo (pid=8)",                                   "weight": 0.1  }
+          ],
+          "modelAnswer": "SELECT p.name\nFROM Player p\nWHERE EXISTS (\n    SELECT 1 FROM PlaysFor pf WHERE pf.pid = p.pid AND pf.season = 2024\n)\nAND NOT EXISTS (\n    SELECT 1 FROM Goal g WHERE g.pid = p.pid\n);",
+          "explanation": "All 8 players are in PlaysFor for 2024. Players with no goals: only Gakpo (pid=8). Expected result: Gakpo."
+        },
+        {
+          "id": "3e",
+          "label": "Question 3(e) — Advanced",
+          "prompt": "Find the names of players who scored a goal in EVERY home match played by the team named 'Ajax' (i.e., there is no Ajax home match in which the player did not score). Do NOT use GROUP BY.",
+          "type": "sql",
+          "datasetId": "sports_league",
+          "points": 4,
+          "tables": [
+            { "name": "Player", "columns": [
+              { "name": "pid", "type": "INTEGER", "pk": true },
+              { "name": "name", "type": "VARCHAR" },
+              { "name": "nationality", "type": "VARCHAR" },
+              { "name": "position", "type": "VARCHAR" }
+            ]},
+            { "name": "Team", "columns": [
+              { "name": "tid", "type": "INTEGER", "pk": true },
+              { "name": "name", "type": "VARCHAR" },
+              { "name": "city", "type": "VARCHAR" },
+              { "name": "founded_year", "type": "INTEGER" }
+            ]},
+            { "name": "Match_", "columns": [
+              { "name": "mid", "type": "INTEGER", "pk": true },
+              { "name": "home_tid", "type": "INTEGER", "fk": "Team.tid" },
+              { "name": "away_tid", "type": "INTEGER", "fk": "Team.tid" },
+              { "name": "match_date", "type": "TEXT" },
+              { "name": "stadium", "type": "TEXT" }
+            ]},
+            { "name": "Goal", "columns": [
+              { "name": "gid", "type": "INTEGER", "pk": true },
+              { "name": "mid", "type": "INTEGER", "fk": "Match_.mid" },
+              { "name": "pid", "type": "INTEGER", "fk": "Player.pid" },
+              { "name": "minute", "type": "INTEGER" },
+              { "name": "goal_type", "type": "TEXT" }
+            ]}
+          ],
+          "answer": {
+            "canonical": "SELECT p.name\nFROM Player p\nWHERE NOT EXISTS (\n    SELECT 1\n    FROM Match_ m\n    JOIN Team t ON m.home_tid = t.tid\n    WHERE t.name = 'Ajax'\n    AND NOT EXISTS (\n        SELECT 1 FROM Goal g\n        WHERE g.pid = p.pid AND g.mid = m.mid\n    )\n);",
+            "requiredPatterns": ["NOT EXISTS","Ajax","home_tid"]
+          },
+          "rubric": [
+            { "id": "outer_neg",   "label": "Outer NOT EXISTS: no Ajax home match ...",                         "weight": 0.3  },
+            { "id": "inner_neg",   "label": "Inner NOT EXISTS: ... in which this player did not score",         "weight": 0.35 },
+            { "id": "ajax_filter", "label": "Filters to Ajax home matches via home_tid JOIN Team",              "weight": 0.2  },
+            { "id": "correct",     "label": "Returns only Bergwijn (scored in all three Ajax home matches)",   "weight": 0.15 }
+          ],
+          "modelAnswer": "SELECT p.name\nFROM Player p\nWHERE NOT EXISTS (\n    SELECT 1\n    FROM Match_ m\n    JOIN Team t ON m.home_tid = t.tid\n    WHERE t.name = 'Ajax'\n    AND NOT EXISTS (\n        SELECT 1 FROM Goal g\n        WHERE g.pid = p.pid AND g.mid = m.mid\n    )\n);",
+          "explanation": "Ajax home matches: mid=1,2,5. Bergwijn scored in all three (gid 1 in mid=1, gid 4 in mid=2, gid 12 and 14 in mid=5). Blind scored in mid=1 and mid=5 but not mid=2. Ziyech scored in mid=2 and mid=5 but not mid=1. Expected: Bergwijn only."
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "title": "4 Transactions",
+      "intro": "Two questions on transaction management.",
+      "subquestions": [
+        {
+          "id": "4a",
+          "label": "Question 4(a) — Two-Phase Locking",
+          "prompt": "Consider the following schedule:\n\n  T1:  start   W(A)                    R(B)   commit\n  T2:          start   R(A)   W(B)            commit\n  T3:  start   R(B)                           commit\n\n(i) Can this schedule be produced by strict two-phase locking (S2PL)? Show the lock sequence.\n(ii) Can this schedule be produced by preclaiming (conservative) two-phase locking? Motivate your answer.",
+          "type": "long_text",
+          "points": 5,
+          "rubric": [
+            { "id": "t1_xl_a",     "label": "T1 acquires XL(A); T2 must wait for SL(A) until T1 holds XL(A)",                             "weight": 0.2  },
+            { "id": "t3_sl_b",     "label": "T3 acquires SL(B) at start; T1 later acquires SL(B) — compatible",                           "weight": 0.2  },
+            { "id": "s2pl_achiev", "label": "S2PL achieves the schedule: T1 commits releasing XL(A); T2 proceeds; T2 needs XL(B) which T3 released before T2 gets there", "weight": 0.2 },
+            { "id": "prec_xl_a",   "label": "T1 pre-acquires XL(A)+SL(B); T2 pre-acquires SL(A)+XL(B); T3 pre-acquires SL(B). XL(A) and SL(A) conflict; T2 cannot start until T1 commits", "weight": 0.2 },
+            { "id": "prec_t3_sl",  "label": "T3 and T1 both want SL(B) — compatible; T3 can start concurrently with T1 under preclaiming", "weight": 0.1 },
+            { "id": "prec_result", "label": "With preclaiming, T2 still blocks on XL(A) vs SL(A), so the shown interleaving is not achievable if T2 must start while T1 is running", "weight": 0.1 }
+          ],
+          "modelAnswer": "(i) Strict 2PL (S2PL):\n  T1 starts → acquires XL(A).\n  T3 starts → acquires SL(B).\n  T1 reads/writes A.\n  T2 starts → requests SL(A) — T1 holds XL(A) → T2 BLOCKS.\n  T1 requests SL(B) — T3 holds SL(B), SL+SL compatible → T1 acquires SL(B).\n  T1 commits → releases XL(A) and SL(B).\n  T2 unblocks → acquires SL(A), reads A.\n  T2 requests XL(B) — T3 still holds SL(B)? T3 reads B early and commits.\n  If T3 commits before T2 requests XL(B): T2 acquires XL(B), writes B, commits.\n  Schedule achievable with S2PL ✓.\n\n(ii) Preclaiming 2PL:\n  T1 needs {XL(A), SL(B)}. T2 needs {SL(A), XL(B)}. T3 needs {SL(B)}.\n  T1 and T3 both want SL(B) — compatible; they can both pre-acquire.\n  T2 wants SL(A); T1 holds XL(A) — INCOMPATIBLE. T2 must wait until T1 commits and releases XL(A).\n  The interleaving shown (T2 starts and reads A before T1 commits) is NOT achievable.\n  With preclaiming: T1 and T3 pre-acquire and run concurrently; T2 waits and runs after T1 finishes.",
+          "explanation": "S2PL allows T2 to start and wait for the lock on A, producing the interleaved schedule. Preclaiming forces T2 to wait before it can even start, eliminating the overlap between T1 and T2."
+        },
+        {
+          "id": "4b",
+          "label": "Question 4(b) — Multi-Granularity Locking",
+          "prompt": "A sports database has the hierarchy: Database → Table → Record.\n\nThree transactions on the Goal table:\n  T1: reads every goal record to compute season statistics (table scan).\n  T2: inserts a new goal record for match mid=5.\n  T3: updates all goal records for player pid=4 (changes goal_type).\n\n(i) Lock types at each level for T1, T2, T3.\n(ii) Are T1 and T3 compatible at the table level?\n(iii) Are T2 and T3 compatible at the table level?\n(iv) T3 needs to both read and update records. What single table-level lock type is most appropriate and why is it more efficient than two separate locks?",
+          "type": "long_text",
+          "points": 5,
+          "rubric": [
+            { "id": "t1_s",       "label": "T1: IS on DB, S on Table (covers all records for a read)",                    "weight": 0.2  },
+            { "id": "t2_ix",      "label": "T2: IX on DB, IX on Table, X on new record",                                  "weight": 0.2  },
+            { "id": "t3_six",     "label": "T3: IX on DB, SIX on Table, X on each updated record",                        "weight": 0.2  },
+            { "id": "t1_t3_compat","label": "T1 holds S; T3 requests SIX. S × SIX = INCOMPATIBLE → conflict",            "weight": 0.2  },
+            { "id": "t2_t3_compat","label": "T2 holds IX; T3 requests SIX. IX × SIX = INCOMPATIBLE → conflict",          "weight": 0.1  },
+            { "id": "six_explain", "label": "SIX = S + IX: T3 reads the whole table (S component) and updates some records (IX component). More efficient than S+IX because one atomic grant instead of two, and the compatibility check is O(1) at the table level", "weight": 0.1 }
+          ],
+          "modelAnswer": "(i) Lock types:\n\nT1 (table scan — reads all):\n  Database: IS\n  Table:    S  (shared lock covers all records)\n  Record:   (no explicit record locks needed; table-S covers them)\n\nT2 (insert one record — exclusive on new tuple):\n  Database: IX\n  Table:    IX  (intends exclusive below)\n  Record:   X on the new goal record\n\nT3 (read all + update some — SIX at table level):\n  Database: IX\n  Table:    SIX  (S component = read all; IX component = will update some)\n  Record:   X on each record where pid=4\n\n(ii) T1 (S on Table) vs T3 (SIX on Table):\n  Compatibility matrix: S × SIX = INCOMPATIBLE.\n  T3 must wait for T1 to release its table-level S lock. They cannot run concurrently.\n\n(iii) T2 (IX on Table) vs T3 (SIX on Table):\n  Compatibility matrix: IX × SIX = INCOMPATIBLE.\n  T3 cannot hold SIX while T2 holds IX. They cannot run concurrently.\n\n(iv) SIX lock for T3:\n  T3 reads every record (to find pid=4 entries) and then updates those records. A plain S lock would block any subsequent upgrade to IX (lock upgrade can cause deadlock). A plain X lock on the whole table is overly restrictive (blocks all readers).\n  SIX = S + IX in a single atomic grant: the S component allows reading all records, and the IX component signals that exclusive record locks will be acquired on some of them. It is more efficient because (a) it is granted atomically rather than as two separate lock requests, reducing lock manager overhead, and (b) its compatibility profile (compatible with IS only) is determined in O(1) at the table level without inspecting individual record locks.",
+          "explanation": "SIX is the lock for 'I need to read the whole thing and write parts of it.' It avoids the deadlock risk of upgrading S→IX after the fact, and it is stricter than IX alone (blocking other readers) to protect the scan."
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "title": "5 Database Application Programming",
+      "intro": "Two short questions on database application design.",
+      "subquestions": [
+        {
+          "id": "5a",
+          "label": "Question 5(a)",
+          "prompt": "Explain the difference between a recoverable schedule and a cascadeless (also called avoiding cascading aborts) schedule. Which condition is stronger? Give a concrete example of a schedule that is recoverable but NOT cascadeless.",
+          "type": "long_text",
+          "points": 3,
+          "rubric": [
+            { "id": "recoverable_def",   "label": "Recoverable: Ti reads from Tj → Tj commits before Ti commits",                "weight": 0.25 },
+            { "id": "cascadeless_def",   "label": "Cascadeless: Ti reads from Tj → Tj commits before Ti reads (not just before Ti commits)", "weight": 0.25 },
+            { "id": "stronger",          "label": "Cascadeless is the stronger condition (every cascadeless schedule is recoverable, not vice versa)", "weight": 0.2  },
+            { "id": "example",           "label": "Gives a schedule where Ti reads dirty data from Tj, but Tj commits before Ti commits (recoverable but not cascadeless)", "weight": 0.3  }
+          ],
+          "modelAnswer": "Recoverable schedule:\n  A schedule is recoverable if, whenever Ti reads data written by Tj, then Tj commits before Ti commits. If Ti has read dirty data from Tj and Tj aborts, Ti must also abort — but the commit order is preserved, so the database can always recover to a consistent state.\n\nCascadeless (avoiding cascading aborts) schedule:\n  A schedule is cascadeless if, whenever Ti reads data written by Tj, then Tj commits BEFORE Ti reads. Ti never reads dirty (uncommitted) data. Therefore, aborting Tj never forces Ti to abort — no cascading rollback.\n\nWhich is stronger?\n  Cascadeless ⊊ Recoverable. Every cascadeless schedule is recoverable, but not every recoverable schedule is cascadeless.\n\nExample — recoverable but NOT cascadeless:\n  T1: W(X)               commit\n  T2:       R(X)  commit\n\n  Time → T1:W(X) then T2:R(X) then T2:commit then T1:commit.\n  T2 reads X before T1 commits (reads dirty data → NOT cascadeless).\n  But T1 commits before T2 commits (T2's commit follows T1's commit) → RECOVERABLE.\n  However if T1 had aborted before committing, T2 would also need to abort (cascading abort).",
+          "explanation": "The key distinction: recoverable says 'the writer commits before the reader commits'; cascadeless says 'the writer commits before the reader even reads'. Cascadeless is stricter because it prevents the dirty read in the first place, eliminating any possibility of cascading rollback."
+        },
+        {
+          "id": "5b",
+          "label": "Question 5(b)",
+          "prompt": "What is an Object-Relational Mapper (ORM)? At which level of the ANSI/SPARC three-schema architecture does it operate? Describe the N+1 query problem and how it is typically avoided.",
+          "type": "long_text",
+          "points": 2,
+          "rubric": [
+            { "id": "orm_def",     "label": "ORM translates between object-oriented domain model and relational tables",          "weight": 0.25 },
+            { "id": "ansi_level",  "label": "ORM operates at the external (view) level of ANSI/SPARC",                          "weight": 0.25 },
+            { "id": "n1_problem",  "label": "N+1: 1 query fetches N parent objects; then N additional queries fetch each child — O(N) round trips", "weight": 0.3 },
+            { "id": "n1_fix",      "label": "Fix: eager loading (JOIN FETCH / include), or batch loading",                     "weight": 0.2  }
+          ],
+          "modelAnswer": "ORM definition:\n  An Object-Relational Mapper (e.g. Hibernate, SQLAlchemy, Django ORM) is a library that maps relational database tables to classes in an object-oriented language. Each table row becomes an object instance; FKs become object associations. The application works with domain objects instead of SQL result sets.\n\nANSI/SPARC level:\n  ORMs operate at the External (view) level. They provide each application with its own tailored view of the conceptual relational schema, expressed as domain classes and associations rather than raw tables.\n\nN+1 query problem:\n  Suppose we load N Team objects and then access each team's list of Goals. A naïve ORM issues:\n    1 query: SELECT * FROM Team         → returns N teams\n    N queries: SELECT * FROM Goal WHERE mid IN (...)  — one per team\n  Total: N+1 queries. For large N, this is extremely slow due to round-trip latency.\n\nFix:\n  Use eager loading: instruct the ORM to JOIN the related table in the initial query.\n  Example (SQLAlchemy): session.query(Team).options(joinedload(Team.goals)).all()\n  This issues a single SQL JOIN and fetches all data in one round trip.",
+          "explanation": "The N+1 problem is one of the most common ORM pitfalls. It appears when traversing associations lazily (default in many ORMs). The fix is always to tell the ORM to load related data eagerly — either via a JOIN or a batch second query — to reduce the number of database round trips."
+        }
+      ]
+    }
+  ]
+}
+,
+{
+  "id": "mock-10",
+  "title": "Mock Final 10 — Hotel Booking",
+  "shortTitle": "Hotel booking",
+  "tagline": "ER · isA · weak RoomType · ternary service · 2PL · multi-granularity · 5 SQL tasks",
+  "durationMinutes": 165,
+  "maxPoints": 75,
+  "gradeFormula": "score / maxPoints * 10",
+  "tasks": [
+    {
+      "id": "1",
+      "title": "1 Conceptual Modelling",
+      "intro": "A hotel booking platform needs to model its data. Guests have a unique guest ID (GID), a name, a city of residence, and an age. Hotel staff members have a unique staff ID (SID), a name, a role (receptionist, concierge, manager), and a salary. Guests and staff are both persons: they share name, date of birth, and address (isA hierarchy). Hotels have a unique hotel ID (HID), a name, a city, and a star rating (1–5). Each hotel is managed by exactly one staff member; a staff member can manage at most one hotel. Room types have a number unique only within their hotel (they disappear if the hotel closes), plus a type name (Single, Double, Suite) and a price per night. Amenities (Pool, Spa, Gym, etc.) have a unique amenity code and a name. A hotel can offer multiple amenities; for each amenity a hotel offers, the year it was added is recorded. Guests make bookings: each booking has a unique booking ID, a check-in date, a check-out date, and is associated with exactly one guest and one room type. A guest can book the same room type multiple times on different dates. When a staff member provides a service to a guest at a specific hotel (e.g. concierge assistance, room service), the service date, service type, and a satisfaction score (1–5) are recorded; the same staff member can serve the same guest at the same hotel again on a later date.",
+      "subquestions": [
+        {
+          "id": "1a",
+          "label": "Question 1(a)",
+          "prompt": "Provide a conceptual database model in the form of an ER Diagram. Use min..max cardinality notation. Explain the three most important design choices and document your assumptions.",
+          "type": "er_diagram",
+          "points": 12,
+          "hint": "RoomType is a weak entity (number unique only within its hotel). The (Staff, Guest, Hotel) service event is a ternary relationship because the date, service type, and score depend on all three simultaneously. isA: Person → Guest, Staff.",
+          "rubric": [
+            { "id": "ent_guest",    "label": "Entity Guest (GID key, name, city, age)",                                        "weight": 0.1, "match": { "type": "entity", "name": "guest", "keyAttribute": "gid" } },
+            { "id": "ent_staff",    "label": "Entity Staff (SID key, name, role, salary)",                                     "weight": 0.1, "match": { "type": "entity", "name": "staff", "keyAttribute": "sid" } },
+            { "id": "ent_hotel",    "label": "Entity Hotel (HID key, name, city, stars)",                                      "weight": 0.08,"match": { "type": "entity", "name": "hotel", "keyAttribute": "hid" } },
+            { "id": "ent_roomtype", "label": "Weak entity RoomType (number unique within Hotel, type_name, price_per_night)",  "weight": 0.12,"match": { "type": "entity", "name": "roomtype", "weak": true } },
+            { "id": "ent_amenity",  "label": "Entity Amenity (code key, name)",                                                "weight": 0.07,"match": { "type": "entity", "name": "amenity" } },
+            { "id": "isa_person",   "label": "isA hierarchy: Person → Guest, Staff (shared name, dob, address)",               "weight": 0.12,"match": { "type": "isA", "super": "person", "subs": ["guest", "staff"] } },
+            { "id": "rel_manages",  "label": "Relationship 'manages' between Hotel (1..1) and Staff (0..1)",                   "weight": 0.1, "match": { "type": "relationship", "name": "manages", "connects": ["hotel", "staff"] } },
+            { "id": "rel_amenity",  "label": "Relationship 'offers' between Hotel and Amenity (many-to-many) with attribute year_added", "weight": 0.1, "match": { "type": "relationship", "name": "offers", "connects": ["hotel", "amenity"] } },
+            { "id": "rel_booking",  "label": "Relationship 'books' between Guest and RoomType with attributes bid, checkin_date, checkout_date", "weight": 0.1, "match": { "type": "relationship", "name": "books", "connects": ["guest", "roomtype"] } },
+            { "id": "ter_serves",   "label": "Ternary 'serves' among Staff, Guest, Hotel with attributes date, service_type, score", "weight": 0.11,"match": { "type": "relationship", "name": "serves" } }
+          ],
+          "modelAnswer": "Entities:\n  • Person (supertype): name, dob, address\n      ↳ Guest: GID (key), city, age\n      ↳ Staff: SID (key), role, salary\n  • Hotel: HID (key), name, city, stars\n  • RoomType (WEAK, identified by Hotel): typeNumber (discriminator), type_name, price_per_night\n  • Amenity: code (key), name\n  • Booking: bid (key), checkin_date, checkout_date  [or modelled as a relationship attribute]\n\nRelationships:\n  • manages : Hotel(1..1) — Staff(0..1)  [fold into hotel.manager FK]\n  • offers : Hotel(0..*) — Amenity(0..*) with attribute year_added\n  • books : Guest(1..*) — RoomType(0..*) with attributes bid, checkin_date, checkout_date\n        (key includes checkin_date to allow re-booking)\n  • serves : ternary Staff × Guest × Hotel with attributes date, service_type, score\n        (key = SID + GID + HID + date)\n\nKey design choices:\n  – RoomType is a weak entity: its number is only meaningful within a specific hotel; cascade-delete when hotel closes.\n  – serves is ternary: a service event's date, type, and score depend simultaneously on which staff member, which guest, and which hotel — none of the three binary decompositions captures this.\n  – The isA hierarchy on Person avoids repeating name/dob/address for both subtypes.",
+          "explanation": "The same three structural patterns recur: isA for shared person data, weak entity for locally-unique identifiers, and ternary for attributes that depend on multiple entities simultaneously."
+        },
+        {
+          "id": "1b",
+          "label": "Question 1(b)",
+          "prompt": "Give the associated relational schema. Indicate primary keys and foreign keys. Comment on nullable attributes and constraints.",
+          "type": "long_text",
+          "points": 8,
+          "rubric": [
+            { "id": "rel_guest",    "label": "guest(_gid_, name, dob, address, city, age)",                                              "weight": 0.08 },
+            { "id": "rel_staff",    "label": "staff(_sid_, name, dob, address, role, salary)",                                           "weight": 0.08 },
+            { "id": "rel_hotel",    "label": "hotel(_hid_, name, city, stars, manager → staff)",                                         "weight": 0.1  },
+            { "id": "rel_roomtype", "label": "roomType(_hid → hotel, typeNumber_, type_name, price_per_night) — composite PK",           "weight": 0.12 },
+            { "id": "rel_amenity",  "label": "amenity(_code_, name)",                                                                    "weight": 0.06 },
+            { "id": "rel_offers",   "label": "offers(_hid → hotel, code → amenity_, year_added)",                                        "weight": 0.1  },
+            { "id": "rel_booking",  "label": "booking(_bid_, gid → guest, hid, typeNumber, checkin_date, checkout_date) with composite FK (hid,typeNumber)→roomType", "weight": 0.12 },
+            { "id": "rel_serves",   "label": "serves(_sid → staff, gid → guest, hid → hotel, date_, service_type, score)",              "weight": 0.12 },
+            { "id": "nullable",     "label": "hotel.manager NULLABLE (vacancy); CHECK score BETWEEN 1 AND 5; ON DELETE CASCADE for roomType", "weight": 0.12 },
+            { "id": "unexpressible","label": "Min-cardinality (guest must have ≥1 booking) cannot be enforced per-row in standard SQL without triggers", "weight": 0.1  }
+          ],
+          "modelAnswer": "Relational schema:\n\n  guest(_gid_, name, dob, address, city, age)\n  staff(_sid_, name, dob, address, role, salary)\n  hotel(_hid_, name, city, stars, manager → staff)\n  roomType(_hid → hotel, typeNumber_, type_name, price_per_night)\n  amenity(_code_, name)\n  offers(_hid → hotel, code → amenity_, year_added)\n  booking(_bid_, gid → guest,\n          hid, typeNumber,  -- composite FK (hid, typeNumber) → roomType\n          checkin_date, checkout_date)\n  serves(_sid → staff, gid → guest, hid → hotel, date_,\n         service_type, score)\n\nConstraints:\n  • hotel.manager is NULLABLE (position may be vacant).\n  • roomType: ON DELETE CASCADE from hotel.\n  • booking: the FK (hid, typeNumber) → roomType is composite and must be declared together.\n  • serves.score: CHECK score BETWEEN 1 AND 5.\n  • UNIQUE (sid) in hotel via manager FK ensures one manager per hotel and one hotel per manager.\n  • Constraint not expressible: 'a guest must have at least one booking' requires a deferred constraint or trigger.",
+          "explanation": "The composite FK from booking to roomType (hid, typeNumber) is the main implementation challenge. In SQL, both columns must be declared as a two-column FK together, matching the composite PK of roomType."
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "title": "2 Database Normalization",
+      "intro": "Given R(A, B, C, D, E) and the set of functional dependencies\n\n    F = { A → B,  BC → D,  D → A,  D → E,  E → C }.\n\nShow your intermediate steps in every sub-question.",
+      "subquestions": [
+        {
+          "id": "2a",
+          "label": "Question 2(a)",
+          "prompt": "Is F canonical? If not, compute the canonical set.",
+          "type": "text_lines",
+          "points": 5,
+          "answer": { "lines": ["A->B","BC->D","D->A","D->E","E->C"], "acceptedVariants":["A→B","BC→D","D→A","D→E","E→C"] },
+          "rubric": [
+            { "id": "single_rhs",   "label": "All RHS already singletons — no splitting needed",                                    "weight": 0.2  },
+            { "id": "lhs_bc",       "label": "BC→D: B+ = {B}, C+ = {C} — neither alone determines D; LHS is minimal",              "weight": 0.35 },
+            { "id": "redundancy",   "label": "Each FD is tested and confirmed non-redundant",                                       "weight": 0.3  },
+            { "id": "final",        "label": "F is already canonical: { A→B, BC→D, D→A, D→E, E→C }",                              "weight": 0.15 }
+          ],
+          "modelAnswer": "Step 1 — RHS are all singletons: no splitting needed.\n\nStep 2 — LHS simplification:\n  BC→D: Is B extraneous? C+={C}. C alone cannot derive D. B NOT extraneous.\n         Is C extraneous? B+={B}. B alone cannot derive D. C NOT extraneous.\n  Other FDs have single-attribute LHS.\n\nStep 3 — Redundancy:\n  A→B: A+\\{A→B} = {A}. B unreachable. KEEP.\n  BC→D: BC+\\{BC→D} = {B,C}. D unreachable. KEEP.\n  D→A: D+\\{D→A} = {D,E,C}. A unreachable. KEEP.\n  D→E: D+\\{D→E} = {D,A,B}. E unreachable. KEEP.\n  E→C: E+\\{E→C} = {E}. C unreachable. KEEP.\n\nF is already canonical: { A→B, BC→D, D→A, D→E, E→C }.",
+          "explanation": "F required no changes. The value of this question is demonstrating all three canonicalisation steps systematically, even when the result is unchanged."
+        },
+        {
+          "id": "2b",
+          "label": "Question 2(b)",
+          "prompt": "Determine ALL minimal keys of R. Show attribute closures and justify minimality.",
+          "type": "text_lines",
+          "points": 5,
+          "answer": { "lines": ["{D}", "{B,C}", "{A,E}", "{A,C}"], "acceptedVariants": ["D,BC,AE,AC","{D},{BC},{AE},{AC}"] },
+          "rubric": [
+            { "id": "key_d",    "label": "D+: D→A→B, D→E→C, BC→D (already). D+ = all. {D} is key.",              "weight": 0.25 },
+            { "id": "key_bc",   "label": "BC+: BC→D→A,E, A→B, E→C (covered). BC+ = all. {B,C} is key.",         "weight": 0.25 },
+            { "id": "key_ae",   "label": "AE+: A→B, E→C, BC→D, D→A,E. AE+ = all. {A,E} minimal.",               "weight": 0.25 },
+            { "id": "key_ac",   "label": "AC+: A→B, BC→D, D→A,E, E→C. AC+ = all. {A,C} minimal.",               "weight": 0.25 }
+          ],
+          "modelAnswer": "D+ = {D} ∪ {A} (D→A) ∪ {E} (D→E) ∪ {B} (A→B) ∪ {C} (E→C) ∪ {D} (BC→D, already) = {A,B,C,D,E}. {D} is a key. Minimal: D alone is sufficient ✓.\n\nBC+ = {B,C} ∪ {D} (BC→D) ∪ {A,E} (D→A,E) ∪ {B} (A→B, covered) ∪ {C} (E→C, covered) = all. {B,C} is a key. B+={B}≠all, C+={C}≠all → minimal ✓.\n\nAE+: {A,E} → A→B gives B; E→C gives C; BC→D gives D; D→A,E covered. AE+=all. A+={A,B}≠all; E+={E,C}≠all → {A,E} minimal ✓.\n\nAC+: {A,C} → A→B gives B; BC→D gives D; D→A,E adds E; E→C covered. AC+=all. A+={A,B}≠all; C+={C}≠all → {A,C} minimal ✓.\n\nAll four minimal keys: {D}, {B,C}, {A,E}, {A,C}.",
+          "explanation": "This relation has four candidate keys — an unusually rich structure. Note that all five attributes appear on some RHS, so none is automatically excluded from keys; we must compute closures carefully."
+        },
+        {
+          "id": "2c",
+          "label": "Question 2(c)",
+          "prompt": "Decompose R into BCNF. State which FDs (if any) are lost and explain why.",
+          "type": "multi_line",
+          "points": 5,
+          "rubric": [
+            { "id": "violations",  "label": "Identifies A→B and E→C as violating BCNF (A and E are not superkeys)",              "weight": 0.2  },
+            { "id": "decomp1",     "label": "Decomposes on A→B: R1(A,B), R2(A,C,D,E) with correct projected FDs",                "weight": 0.25 },
+            { "id": "decomp2",     "label": "Further decomposes R2 on E→C: R2a(C,E), R2b(A,D,E) — both in BCNF",                "weight": 0.25 },
+            { "id": "lost_fd",     "label": "Identifies BC→D as lost; explains why (B,C,D are separated across R1,R2a,R2b)",     "weight": 0.3  }
+          ],
+          "modelAnswer": "BCNF check. Superkeys are {D},{BC},{AE},{AC}. Check each FD:\n  A→B  : A+ = {A,B} ≠ R. A NOT a superkey. VIOLATES.\n  BC→D : BC is a superkey ✓.\n  D→A  : D is a superkey ✓.\n  D→E  : D is a superkey ✓.\n  E→C  : E+ = {E,C} ≠ R. E NOT a superkey. VIOLATES.\n\nDecompose on A→B:\n  R1(A,B): A→B, A is key of R1 ✓. BCNF.\n  R2(A,C,D,E): projected FDs: D→A, D→E, E→C. (BC→D loses B; A→B loses B.)\n    Keys of R2: D+={D,A,E,C}=R2 → D is key. A→? in R2: A+={A} (no A→B since B∉R2, no BC→D since B∉R2). A not a key of R2. E→C violates (E+={E,C}≠R2).\n\nDecompose R2 on E→C:\n  R2a(C,E): E→C, E is key ✓. BCNF.\n  R2b(A,D,E): D→A, D→E. D is key (D+={D,A,E}=R2b) ✓. A+ and E+ don't cover R2b alone. BCNF ✓.\n\nFinal BCNF: R1(A,B), R2a(C,E), R2b(A,D,E).\n\nLost FD: BC→D.\n  B∈R1, C∈R2a, D∈R2b — the three attributes appear in three different relations. BC→D cannot be enforced in any single relation. This loss is unavoidable: every BCNF decomposition starting from this FD set splits the BC→D participants across relations because the only BCNF violation-based splits push them apart.",
+          "explanation": "The four candidate keys create an unavoidable tension in BCNF decomposition. The FD BC→D (which has a candidate-key LHS) is split across three relations by the decomposition — a classic example of BCNF sacrificing FD preservation, which 3NF synthesis avoids."
+        },
+        {
+          "id": "2d",
+          "label": "Question 2(d)",
+          "prompt": "Consider the following table instance of R(A,B,C,D,E):\n\n| A  | B  | C  | D  | E  |\n|----|----|----|----|----|----|\n| a1 | b1 | c1 | d1 | e1 |\n| a2 | b2 | c1 | d1 | e1 |\n| a3 | b1 | c2 | d2 | e2 |\n| a3 | b1 | c2 | d2 | e2 |\n\n(i) Identify a concrete update anomaly.\n(ii) Identify a concrete insertion anomaly.\n(iii) Identify a concrete deletion anomaly.\n(iv) What guarantee does 3NF synthesis provide that BCNF decomposition does NOT?",
+          "type": "multi_line",
+          "points": 5,
+          "rubric": [
+            { "id": "update",  "label": "Rows 1 and 2 both record D=d1, E=e1 (D→E holds). Changing e1 requires updating both rows — inconsistency risk",   "weight": 0.25 },
+            { "id": "insert",  "label": "Cannot record a new D=d3→A=a4 mapping (D→A) without filling all columns including B and C",                      "weight": 0.25 },
+            { "id": "delete",  "label": "Rows 3 and 4 are identical (duplicate A=a3, which violates PK). Deleting all d2 rows loses D=d2→E=e2",            "weight": 0.25 },
+            { "id": "3nf_vs_bcnf","label": "3NF synthesis guarantees FD preservation (all canonical FDs are in some relation); BCNF does not guarantee this (BC→D is lost)", "weight": 0.25 }
+          ],
+          "modelAnswer": "(i) Update anomaly: rows 1 and 2 both record D=d1, E=e1 (from D→E). If e1 must be changed to e1', both rows must be updated. Updating only one creates an inconsistency.\n\n(ii) Insertion anomaly: suppose we want to record that a new D value d3 maps to a new A value a4 (from D→A). We cannot insert just (D=d3, A=a4) — we must provide values for B, C, and E as well, potentially fabricating data.\n\n(iii) Deletion anomaly: rows 3 and 4 are identical (A=a3 appears twice, violating A as a key — the table already has a data integrity issue). More generally: if the only rows containing D=d2 are deleted, the fact that d2→e2 (D→E) and d2→a3 (D→A) is lost, even though this information is logically independent of the specific A values.\n\n(iv) 3NF synthesis vs BCNF:\n  3NF synthesis guarantees:\n    (a) Lossless join — queries over the decomposition always return the correct result.\n    (b) FD preservation — every FD in the canonical cover is enforceable within a single relation.\n  BCNF decomposition guarantees lossless join but NOT FD preservation. In this schema, BC→D is lost in BCNF (B, C, D end up in different relations). The practical consequence is that maintaining the BC→D constraint requires joining three tables — it cannot be checked efficiently.\n  For this schema, 3NF synthesis gives: R1(A,B), R2(B,C,D), R3(A,D,E) [merging D→A and D→E], R4(C,E). All FDs preserved.",
+          "explanation": "The trade-off: BCNF gives stronger normal form guarantees (every determinant is a superkey) at the cost of possibly losing FDs. 3NF accepts slightly weaker normal form conditions in exchange for always preserving every FD. When FD enforcement matters, prefer 3NF synthesis."
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "title": "3 SQL",
+      "intro": "Consider the following schema:\n\n  Guest   ( _gid_, name, city, age )\n  Hotel   ( _hid_, name, city, stars )\n  RoomType( _rtid_, hid → Hotel, type_name, price_per_night )\n  Booking ( _bid_, gid → Guest, rtid → RoomType, checkin_date, checkout_date )\n  Amenity ( _amid_, name )\n  HotelAmenity( _hid → Hotel, amid → Amenity_, year_added )\n\nFor questions (d) and (e): avoid GROUP BY — use existential quantification.",
+      "subquestions": [
+        {
+          "id": "3a",
+          "label": "Question 3(a) — Conditions",
+          "prompt": "Find the name and age of all guests who live in Paris and are older than 40.",
+          "type": "sql",
+          "datasetId": "hotel_booking",
+          "points": 4,
+          "tables": [
+            { "name": "Guest", "columns": [
+              { "name": "gid", "type": "INTEGER", "pk": true },
+              { "name": "name", "type": "VARCHAR" },
+              { "name": "city", "type": "VARCHAR" },
+              { "name": "age", "type": "INTEGER" }
+            ]}
+          ],
+          "answer": {
+            "canonical": "SELECT name, age\nFROM Guest\nWHERE city = 'Paris' AND age > 40;",
+            "requiredPatterns": ["Paris","age","40"]
+          },
+          "rubric": [
+            { "id": "city",    "label": "Filters city = 'Paris'",                  "weight": 0.4 },
+            { "id": "age",     "label": "Filters age > 40 (strictly greater than)", "weight": 0.4 },
+            { "id": "columns", "label": "Returns name and age",                    "weight": 0.2 }
+          ],
+          "modelAnswer": "SELECT name, age\nFROM Guest\nWHERE city = 'Paris' AND age > 40;",
+          "explanation": "Expected: Alice (45), Carol (52). Frank lives in Paris but is 30 (not > 40)."
+        },
+        {
+          "id": "3b",
+          "label": "Question 3(b) — Joins",
+          "prompt": "Find the names of all guests who have made at least one booking at a 5-star hotel.",
+          "type": "sql",
+          "datasetId": "hotel_booking",
+          "points": 4,
+          "tables": [
+            { "name": "Guest", "columns": [
+              { "name": "gid", "type": "INTEGER", "pk": true },
+              { "name": "name", "type": "VARCHAR" },
+              { "name": "city", "type": "VARCHAR" },
+              { "name": "age", "type": "INTEGER" }
+            ]},
+            { "name": "Hotel", "columns": [
+              { "name": "hid", "type": "INTEGER", "pk": true },
+              { "name": "name", "type": "VARCHAR" },
+              { "name": "city", "type": "VARCHAR" },
+              { "name": "stars", "type": "INTEGER" }
+            ]},
+            { "name": "RoomType", "columns": [
+              { "name": "rtid", "type": "INTEGER", "pk": true },
+              { "name": "hid", "type": "INTEGER", "fk": "Hotel.hid" },
+              { "name": "type_name", "type": "VARCHAR" },
+              { "name": "price_per_night", "type": "REAL" }
+            ]},
+            { "name": "Booking", "columns": [
+              { "name": "bid", "type": "INTEGER", "pk": true },
+              { "name": "gid", "type": "INTEGER", "fk": "Guest.gid" },
+              { "name": "rtid", "type": "INTEGER", "fk": "RoomType.rtid" },
+              { "name": "checkin_date", "type": "TEXT" },
+              { "name": "checkout_date", "type": "TEXT" }
+            ]}
+          ],
+          "answer": {
+            "canonical": "SELECT DISTINCT g.name\nFROM Guest g\nJOIN Booking b ON g.gid = b.gid\nJOIN RoomType rt ON b.rtid = rt.rtid\nJOIN Hotel h ON rt.hid = h.hid\nWHERE h.stars = 5;",
+            "requiredPatterns": ["5","stars","JOIN"]
+          },
+          "rubric": [
+            { "id": "join_booking",  "label": "Joins Guest to Booking",                           "weight": 0.25 },
+            { "id": "join_roomtype", "label": "Joins Booking to RoomType",                        "weight": 0.25 },
+            { "id": "join_hotel",    "label": "Joins RoomType to Hotel",                          "weight": 0.25 },
+            { "id": "filter_stars",  "label": "Filters stars = 5 and uses DISTINCT",             "weight": 0.25 }
+          ],
+          "modelAnswer": "SELECT DISTINCT g.name\nFROM Guest g\nJOIN Booking b ON g.gid = b.gid\nJOIN RoomType rt ON b.rtid = rt.rtid\nJOIN Hotel h ON rt.hid = h.hid\nWHERE h.stars = 5;",
+          "explanation": "5-star hotels: Grand Hyatt (hid=1) and Ritz Paris (hid=4). Alice booked both; Bob booked Grand Hyatt and Ritz Paris; Carol booked Ritz Paris (twice); Frank booked Grand Hyatt. Expected: Alice, Bob, Carol, Frank."
+        },
+        {
+          "id": "3c",
+          "label": "Question 3(c) — Aggregations",
+          "prompt": "For each hotel, find the hotel name and the number of distinct guests who have made a booking there. Show only hotels with more than 2 distinct guests.",
+          "type": "sql",
+          "datasetId": "hotel_booking",
+          "points": 4,
+          "tables": [
+            { "name": "Hotel", "columns": [
+              { "name": "hid", "type": "INTEGER", "pk": true },
+              { "name": "name", "type": "VARCHAR" },
+              { "name": "city", "type": "VARCHAR" },
+              { "name": "stars", "type": "INTEGER" }
+            ]},
+            { "name": "RoomType", "columns": [
+              { "name": "rtid", "type": "INTEGER", "pk": true },
+              { "name": "hid", "type": "INTEGER", "fk": "Hotel.hid" },
+              { "name": "type_name", "type": "VARCHAR" },
+              { "name": "price_per_night", "type": "REAL" }
+            ]},
+            { "name": "Booking", "columns": [
+              { "name": "bid", "type": "INTEGER", "pk": true },
+              { "name": "gid", "type": "INTEGER", "fk": "Guest.gid" },
+              { "name": "rtid", "type": "INTEGER", "fk": "RoomType.rtid" },
+              { "name": "checkin_date", "type": "TEXT" },
+              { "name": "checkout_date", "type": "TEXT" }
+            ]}
+          ],
+          "answer": {
+            "canonical": "SELECT h.name, COUNT(DISTINCT b.gid) AS num_guests\nFROM Hotel h\nJOIN RoomType rt ON h.hid = rt.hid\nJOIN Booking b ON rt.rtid = b.rtid\nGROUP BY h.hid, h.name\nHAVING COUNT(DISTINCT b.gid) > 2;",
+            "requiredPatterns": ["GROUP BY","HAVING","COUNT"]
+          },
+          "rubric": [
+            { "id": "join_rt",     "label": "Joins Hotel → RoomType → Booking",                         "weight": 0.3  },
+            { "id": "count_dist",  "label": "COUNT(DISTINCT gid) for distinct guests",                  "weight": 0.35 },
+            { "id": "having",      "label": "HAVING > 2",                                               "weight": 0.2  },
+            { "id": "correct",     "label": "Returns Grand Hyatt (3: Alice,Bob,Frank) and Ritz Paris (3: Alice,Carol,Bob)", "weight": 0.15 }
+          ],
+          "modelAnswer": "SELECT h.name, COUNT(DISTINCT b.gid) AS num_guests\nFROM Hotel h\nJOIN RoomType rt ON h.hid = rt.hid\nJOIN Booking b ON rt.rtid = b.rtid\nGROUP BY h.hid, h.name\nHAVING COUNT(DISTINCT b.gid) > 2;",
+          "explanation": "Grand Hyatt: Alice(bid1), Bob(bid3), Frank(bid9) = 3. Ritz Paris: Alice(bid2), Carol(bid4,bid8), Bob(bid10) = 3. Both > 2."
+        },
+        {
+          "id": "3d",
+          "label": "Question 3(d) — Non-Monotonic",
+          "prompt": "Find the names of guests who have made at least one booking but have never stayed at a hotel in Paris. Do NOT use GROUP BY.",
+          "type": "sql",
+          "datasetId": "hotel_booking",
+          "points": 4,
+          "tables": [
+            { "name": "Guest", "columns": [
+              { "name": "gid", "type": "INTEGER", "pk": true },
+              { "name": "name", "type": "VARCHAR" },
+              { "name": "city", "type": "VARCHAR" },
+              { "name": "age", "type": "INTEGER" }
+            ]},
+            { "name": "Hotel", "columns": [
+              { "name": "hid", "type": "INTEGER", "pk": true },
+              { "name": "name", "type": "VARCHAR" },
+              { "name": "city", "type": "VARCHAR" },
+              { "name": "stars", "type": "INTEGER" }
+            ]},
+            { "name": "RoomType", "columns": [
+              { "name": "rtid", "type": "INTEGER", "pk": true },
+              { "name": "hid", "type": "INTEGER", "fk": "Hotel.hid" },
+              { "name": "type_name", "type": "VARCHAR" },
+              { "name": "price_per_night", "type": "REAL" }
+            ]},
+            { "name": "Booking", "columns": [
+              { "name": "bid", "type": "INTEGER", "pk": true },
+              { "name": "gid", "type": "INTEGER", "fk": "Guest.gid" },
+              { "name": "rtid", "type": "INTEGER", "fk": "RoomType.rtid" },
+              { "name": "checkin_date", "type": "TEXT" },
+              { "name": "checkout_date", "type": "TEXT" }
+            ]}
+          ],
+          "answer": {
+            "canonical": "SELECT DISTINCT g.name\nFROM Guest g\nWHERE EXISTS (\n    SELECT 1 FROM Booking b WHERE b.gid = g.gid\n)\nAND NOT EXISTS (\n    SELECT 1\n    FROM Booking b2\n    JOIN RoomType rt ON b2.rtid = rt.rtid\n    JOIN Hotel h ON rt.hid = h.hid\n    WHERE b2.gid = g.gid AND h.city = 'Paris'\n);",
+            "requiredPatterns": ["EXISTS","NOT EXISTS","Paris"]
+          },
+          "rubric": [
+            { "id": "has_booking",   "label": "EXISTS: guest has at least one booking",                                   "weight": 0.3  },
+            { "id": "no_paris",      "label": "NOT EXISTS: no booking at a Paris hotel (via RoomType→Hotel JOIN)",        "weight": 0.4  },
+            { "id": "no_groupby",    "label": "Does not use GROUP BY",                                                    "weight": 0.2  },
+            { "id": "correct",       "label": "Returns Dave and Eve",                                                     "weight": 0.1  }
+          ],
+          "modelAnswer": "SELECT DISTINCT g.name\nFROM Guest g\nWHERE EXISTS (\n    SELECT 1 FROM Booking b WHERE b.gid = g.gid\n)\nAND NOT EXISTS (\n    SELECT 1\n    FROM Booking b2\n    JOIN RoomType rt ON b2.rtid = rt.rtid\n    JOIN Hotel h ON rt.hid = h.hid\n    WHERE b2.gid = g.gid AND h.city = 'Paris'\n);",
+          "explanation": "Paris hotels: Hotel Royal (hid=3) and Ritz Paris (hid=4). Dave stayed at Ibis Budget (Amsterdam) only. Eve stayed at Marriott (London) only. Alice, Bob, Carol, Frank all have Paris bookings. Expected: Dave, Eve."
+        },
+        {
+          "id": "3e",
+          "label": "Question 3(e) — Advanced",
+          "prompt": "Find the names of guests who have stayed at every 5-star hotel (i.e., there is no 5-star hotel at which the guest has NOT made a booking). Do NOT use GROUP BY.",
+          "type": "sql",
+          "datasetId": "hotel_booking",
+          "points": 4,
+          "tables": [
+            { "name": "Guest", "columns": [
+              { "name": "gid", "type": "INTEGER", "pk": true },
+              { "name": "name", "type": "VARCHAR" },
+              { "name": "city", "type": "VARCHAR" },
+              { "name": "age", "type": "INTEGER" }
+            ]},
+            { "name": "Hotel", "columns": [
+              { "name": "hid", "type": "INTEGER", "pk": true },
+              { "name": "name", "type": "VARCHAR" },
+              { "name": "city", "type": "VARCHAR" },
+              { "name": "stars", "type": "INTEGER" }
+            ]},
+            { "name": "RoomType", "columns": [
+              { "name": "rtid", "type": "INTEGER", "pk": true },
+              { "name": "hid", "type": "INTEGER", "fk": "Hotel.hid" },
+              { "name": "type_name", "type": "VARCHAR" },
+              { "name": "price_per_night", "type": "REAL" }
+            ]},
+            { "name": "Booking", "columns": [
+              { "name": "bid", "type": "INTEGER", "pk": true },
+              { "name": "gid", "type": "INTEGER", "fk": "Guest.gid" },
+              { "name": "rtid", "type": "INTEGER", "fk": "RoomType.rtid" },
+              { "name": "checkin_date", "type": "TEXT" },
+              { "name": "checkout_date", "type": "TEXT" }
+            ]}
+          ],
+          "answer": {
+            "canonical": "SELECT g.name\nFROM Guest g\nWHERE NOT EXISTS (\n    SELECT 1\n    FROM Hotel h\n    WHERE h.stars = 5\n    AND NOT EXISTS (\n        SELECT 1\n        FROM Booking b\n        JOIN RoomType rt ON b.rtid = rt.rtid\n        WHERE b.gid = g.gid AND rt.hid = h.hid\n    )\n);",
+            "requiredPatterns": ["NOT EXISTS","stars","5"]
+          },
+          "rubric": [
+            { "id": "outer_neg",    "label": "Outer NOT EXISTS: no 5-star hotel ...",                              "weight": 0.3  },
+            { "id": "inner_neg",    "label": "Inner NOT EXISTS: ... at which this guest has NOT booked",           "weight": 0.35 },
+            { "id": "stars_filter", "label": "Filters h.stars = 5 in the outer loop",                             "weight": 0.2  },
+            { "id": "correct",      "label": "Returns Alice and Bob (booked both Grand Hyatt and Ritz Paris)",    "weight": 0.15 }
+          ],
+          "modelAnswer": "SELECT g.name\nFROM Guest g\nWHERE NOT EXISTS (\n    SELECT 1\n    FROM Hotel h\n    WHERE h.stars = 5\n    AND NOT EXISTS (\n        SELECT 1\n        FROM Booking b\n        JOIN RoomType rt ON b.rtid = rt.rtid\n        WHERE b.gid = g.gid AND rt.hid = h.hid\n    )\n);",
+          "explanation": "5-star hotels: Grand Hyatt (hid=1) and Ritz Paris (hid=4). Alice: bid1→GH, bid2→Ritz ✓. Bob: bid3→GH, bid10→Ritz ✓. Carol: bid4,8→Ritz only ✗. Frank: bid9→GH only ✗. Expected: Alice, Bob."
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "title": "4 Transactions",
+      "intro": "Two questions on transaction management.",
+      "subquestions": [
+        {
+          "id": "4a",
+          "label": "Question 4(a) — Two-Phase Locking",
+          "prompt": "Consider the following schedule:\n\n  T1:  start   R(X)   W(Y)                  commit\n  T2:                  start   W(X)   R(Y)  commit\n\n(i) Can this schedule be produced by strict two-phase locking? Show the lock sequence.\n(ii) Can this schedule be produced by preclaiming two-phase locking? If not, what schedule results?",
+          "type": "long_text",
+          "points": 5,
+          "rubric": [
+            { "id": "s2pl_t1",    "label": "T1: SL(X) then XL(Y); T2 starts after T1's W(Y); T2 gets XL(X) and SL(Y) after T1 commits", "weight": 0.3  },
+            { "id": "s2pl_yes",   "label": "S2PL can produce this schedule (no lock conflict in the given ordering)",                      "weight": 0.2  },
+            { "id": "prec_needs", "label": "T1 needs {SL(X), XL(Y)}; T2 needs {XL(X), SL(Y)}",                                           "weight": 0.2  },
+            { "id": "prec_xl_y",  "label": "XL(Y) and SL(Y) conflict → T2 cannot pre-acquire while T1 holds XL(Y) → T2 waits until T1 commits", "weight": 0.2 },
+            { "id": "prec_no",    "label": "Preclaiming cannot produce the interleaved schedule; T2 runs entirely after T1",              "weight": 0.1  }
+          ],
+          "modelAnswer": "(i) Strict 2PL:\n  T1 starts → SL(X). T1 reads X.\n  T1 requests XL(Y) — no conflict → T1 acquires XL(Y). T1 writes Y.\n  T2 starts → requests XL(X). T1 holds SL(X); SL(X) + XL(X) INCOMPATIBLE → T2 BLOCKS.\n  T1 commits → releases SL(X) and XL(Y).\n  T2 unblocks → acquires XL(X). T2 writes X.\n  T2 requests SL(Y) — no conflict → T2 acquires SL(Y). T2 reads Y. T2 commits.\n  Schedule achieved ✓ (T2 blocked until T1 committed, then ran — matches the ordering shown).\n\n(ii) Preclaiming 2PL:\n  T1 needs {SL(X), XL(Y)}. T2 needs {XL(X), SL(Y)}.\n  SL(X) + XL(X): INCOMPATIBLE. T2 cannot pre-acquire while T1 holds SL(X).\n  XL(Y) + SL(Y): INCOMPATIBLE. T2 also cannot pre-acquire SL(Y) while T1 holds XL(Y).\n  T2 must wait until T1 commits and releases all locks before pre-acquiring.\n  Result: T1 runs completely; then T2 runs completely. No interleaving. The schedule shown (T2 starting before T1 commits) is NOT achievable.",
+          "explanation": "Strict 2PL allows T2 to 'start' (arrive) and block mid-stream while T1 runs; preclaiming requires T2 to acquire everything before it starts, which is impossible while T1 holds conflicting locks."
+        },
+        {
+          "id": "4b",
+          "label": "Question 4(b) — Multi-Granularity Locking",
+          "prompt": "A hotel database has the hierarchy: Database → Table → Record.\n\nThree concurrent transactions on the Booking table:\n  T1: reads ALL bookings to generate a monthly revenue report.\n  T2: updates a single booking record (bid = 7, changes checkout_date).\n  T3: reads and updates ALL bookings for hotel hid = 1.\n\n(i) Lock types at each level for T1, T2, T3.\n(ii) Are T1 and T2 compatible at the table level?\n(iii) Are T1 and T3 compatible at the table level?\n(iv) What is the SIX lock and why is it ideal for T3?",
+          "type": "long_text",
+          "points": 5,
+          "rubric": [
+            { "id": "t1_s",       "label": "T1: IS on DB, S on Table",                                                         "weight": 0.2  },
+            { "id": "t2_ix",      "label": "T2: IX on DB, IX on Table, X on bid=7",                                            "weight": 0.2  },
+            { "id": "t3_six",     "label": "T3: IX on DB, SIX on Table, X on each updated record",                             "weight": 0.2  },
+            { "id": "t1_t2",      "label": "T1(S) vs T2(IX): S×IX = INCOMPATIBLE",                                             "weight": 0.15 },
+            { "id": "t1_t3",      "label": "T1(S) vs T3(SIX): S×SIX = INCOMPATIBLE",                                          "weight": 0.15 },
+            { "id": "six_def",    "label": "SIX = S + IX: read the whole table (S) + intent to update some records (IX); ideal for T3's read-all-update-some pattern", "weight": 0.1 }
+          ],
+          "modelAnswer": "(i) Lock types:\n\nT1 (full table scan — read only):\n  Database: IS\n  Table: S  (shared; covers all records)\n  Record: (covered by table-level S)\n\nT2 (update one record):\n  Database: IX\n  Table: IX  (intends exclusive below)\n  Record: X on bid=7\n\nT3 (read all records for hid=1, then update them):\n  Database: IX\n  Table: SIX  (S component = scan all; IX component = will update some)\n  Record: X on each record where the room type belongs to hid=1\n\n(ii) T1 (S on Table) vs T2 (IX on Table):\n  S × IX = INCOMPATIBLE. T2 must wait for T1 to release S.\n\n(iii) T1 (S on Table) vs T3 (SIX on Table):\n  S × SIX = INCOMPATIBLE. T3 must wait for T1 to release S.\n  (Both want to read the whole table, but T3 also intends to write — S is not enough for T3.)\n\n(iv) The SIX lock:\n  SIX = Shared + Intention Exclusive. It signals: 'I need to read the entire granule (S) AND I plan to take exclusive locks on some sub-items (IX).'\n  For T3, which reads all bookings (to find those with hid=1) and then updates those records:\n  - A plain S lock would prevent any upgrades to exclusive without risk of deadlock.\n  - A plain X lock on the table would block all readers unnecessarily.\n  - SIX is the exact fit: it allows T3 to scan (S component) and place X locks on specific records (IX component) — one atomic table-level lock instead of an S + later upgrade, avoiding deadlock.",
+          "explanation": "The S×SIX incompatibility means T3 cannot run concurrently with any reader that holds a table-level S. This is by design: T3 modifies records that T1 might be reading simultaneously, which would break consistency."
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "title": "5 Database Application Programming",
+      "intro": "Two short questions on database application design.",
+      "subquestions": [
+        {
+          "id": "5a",
+          "label": "Question 5(a)",
+          "prompt": "Explain the difference between static SQL and dynamic SQL. What security advantage do prepared statements (parameterised queries) offer over dynamic SQL assembled by string concatenation? Name the specific vulnerability that string concatenation enables.",
+          "type": "long_text",
+          "points": 3,
+          "rubric": [
+            { "id": "static",    "label": "Static SQL: query structure fixed at compile time; no runtime string assembly",                    "weight": 0.2  },
+            { "id": "dynamic",   "label": "Dynamic SQL: query string assembled at runtime, possibly with user values concatenated in",       "weight": 0.2  },
+            { "id": "prep_sec",  "label": "Prepared statements send query and parameters separately; parameter values are never interpreted as SQL syntax → SQL injection impossible", "weight": 0.35 },
+            { "id": "vuln",      "label": "Names SQL injection as the vulnerability",                                                        "weight": 0.25 }
+          ],
+          "modelAnswer": "Static SQL:\n  The query text is fixed at development time (e.g. embedded in code, compiled). The DBMS parses and plans it once; only parameter values change at runtime.\n  Example: a stored procedure whose WHERE clause is fixed.\n\nDynamic SQL:\n  The query string is assembled at runtime, often by concatenating variables (including user-supplied values) into a SQL string.\n  Example:\n    sql = 'SELECT * FROM Booking WHERE gid = ' + request.get('gid')\n  This is flexible but dangerous.\n\nSecurity advantage of prepared statements:\n  A prepared statement (parameterised query) separates the query template from its parameter values. The template is sent to the DBMS first; it is parsed, compiled, and cached. Parameter values are transmitted in a subsequent step as typed data — they are bound to placeholders, never concatenated into the SQL text.\n  Because a parameter value is never parsed as SQL syntax, it cannot change the query structure. An attacker supplying '1 OR 1=1' as a parameter gets it treated literally as a string, not as SQL operators.\n\nVulnerability enabled by string concatenation:\n  SQL injection — the attacker injects SQL syntax through unvalidated input to alter query logic, bypass authentication, extract data, or destroy tables.",
+          "explanation": "The one-sentence rule: if user input ever touches the SQL string before it reaches the parser, SQL injection is possible. Prepared statements structurally prevent this by keeping data out of the query grammar."
+        },
+        {
+          "id": "5b",
+          "label": "Question 5(b)",
+          "prompt": "Name the three levels of the ANSI/SPARC three-schema architecture. Explain what logical data independence means and give one concrete example in the context of this hotel booking database.",
+          "type": "long_text",
+          "points": 2,
+          "rubric": [
+            { "id": "three_levels",  "label": "Names all three levels: external / conceptual / internal",                                                 "weight": 0.35 },
+            { "id": "logical_def",   "label": "Logical independence: conceptual schema can change without requiring changes to external views or app code", "weight": 0.35 },
+            { "id": "example",       "label": "Concrete example in hotel context (e.g. splitting Booking, renaming a column, adding a column)",           "weight": 0.3  }
+          ],
+          "modelAnswer": "ANSI/SPARC three levels:\n  1. External (view) level: what each application sees — tailored subsets, joins, renames. Views and ORM mappings live here.\n  2. Conceptual (logical) level: the global relational schema — all tables, columns, FKs, constraints.\n  3. Internal (physical) level: how data is stored — file organisation, indexes, partitions.\n\nLogical data independence:\n  A change to the conceptual schema does not require changes to external views or application code. Applications are shielded from schema evolution.\n\nConcrete hotel example:\n  Suppose the DBA decides to split the Booking table into BookingHeader (bid, gid, checkin_date, checkout_date) and BookingDetail (bid, rtid, price_paid) for performance reasons. An application that queries through a view:\n    CREATE VIEW Booking_v AS\n    SELECT bh.bid, bh.gid, bd.rtid, bh.checkin_date, bh.checkout_date\n    FROM BookingHeader bh JOIN BookingDetail bd ON bh.bid = bd.bid;\n  The application continues using SELECT * FROM Booking_v — it does not need to know the underlying tables changed. This is logical data independence at work.",
+          "explanation": "Logical data independence is the harder of the two independence properties (the other being physical). It is what makes views and ORMs valuable: they provide a stable interface to application code even as the relational schema evolves."
+        }
+      ]
+    }
+  ]
+}
 ];
 window.__ISUBMIT_EXAM = window.__ISUBMIT_EXAMS[0];

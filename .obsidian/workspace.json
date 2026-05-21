@@ -34,7 +34,7 @@
             }
           },
           {
-            "id": "90e011228b5d76d5",
+            "id": "755e08a74232ed8d",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -45,26 +45,6 @@
               },
               "icon": "lucide-file",
               "title": "000 MOC — Exam Season 2026"
-            }
-          },
-          {
-            "id": "755e08a74232ed8d",
-            "type": "leaf",
-            "state": {
-              "type": "empty",
-              "state": {},
-              "icon": "lucide-file",
-              "title": "New tab"
-            }
-          },
-          {
-            "id": "1e7ced64d8389648",
-            "type": "leaf",
-            "state": {
-              "type": "empty",
-              "state": {},
-              "icon": "lucide-file",
-              "title": "New tab"
             }
           },
           {
@@ -80,7 +60,7 @@
             }
           }
         ],
-        "currentTab": 3
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -242,28 +222,40 @@
       "obsidian-excalidraw-plugin:New drawing": false
     }
   },
-  "active": "755e08a74232ed8d",
+  "active": "77837552dc6fb3a9",
   "lastOpenFiles": [
+    "P5/Databases/EXAM_TIPS_AND_TRICKS.md",
+    "P5/Databases/past_exams/2019-01-01-example.pdf",
+    "P5/Databases/past_exams/2019-01-01-example-solutions.pdf",
+    "P5/Databases/past_exams/2016-05-24-final.pdf",
+    "P5/Databases/past_exams/2016-05-24-final-solutions.pdf",
+    "P5/Databases/past_exams/2015-03-24-final.pdf",
+    "P5/Databases/past_exams/2013-03-26-final-solutions.pdf",
+    "P5/Databases/past_exams/2013-03-26-final.pdf",
+    "P5/Databases/past_exams/ExerciseExam (1).pdf",
     "P5/000 MOC — Exam Season 2026.md",
     "P5/Databases/FINAL_EXAM_REVIEW.md",
-    "P5/Databases/past_exams/ExerciseExamSolutions (1).pdf",
-    "P5/Databases/past_exams/ExerciseExam (1).pdf",
+    "P5/Databases/Practice_Exam_Solutions.md",
+    "P5/Databases/Practice_Exam_3.md",
+    "P5/Databases/Practice_Exam_2.md",
+    "P5/Databases/Practice_Exam_2.md.tmp.38407.8c29bfd7338e",
+    "P5/Databases/Practice_Exam_1.md",
+    "P5/Databases/past_exams/ExercisesModellingSolution (1).pdf",
+    "P5/Courses/DB — Databases/DB — Index.md",
+    "P5/CLAUDE_CODE_MASTER_PROMPT.md",
+    "GPUs.md",
+    "Screenshot 2026-05-19 at 11.33.39 AM.png",
+    "Screenshot 2026-05-19 at 11.33.22 AM.png",
+    "Screenshot 2026-05-19 at 11.33.00 AM.png",
+    "Screenshot 2026-05-19 at 11.32.53 AM.png",
     "P5/HoAI/HAI_topics.md",
     "Robotics.md",
-    "Untitled 3.base",
-    "P5/Databases/exam_prep/js/mcq.js",
-    "P5/Databases/exam_prep/mcq.html",
-    "P5/Databases/exam_prep/data/mcq-data.js",
     "P5/Databases/exam_prep/README.md",
     "Robotics Last Meeting Notes.md",
     "Screenshot 2026-03-17 at 11.41.07 AM.png",
     "Showcase of ME.md",
     "Study Plan - P5.md",
     "synthetic_data_dos_and_donts.md",
-    "Untitled.base",
-    "Untitled 1.base",
-    "Untitled 2.base",
-    "AI.base",
     "Challenge.md",
     "Feedback orq-skills.md",
     "initial_research.md",
@@ -273,22 +265,11 @@
     "P5/Text Mining/_changes_iteration_3.md",
     "P5/Text Mining/_audit_iteration_3.md",
     "P5/Text Mining/_changes_iteration_2.md",
-    "P5/Text Mining/_audit_iteration_2.md",
-    "P5/Text Mining/_changes_iteration_1.md",
-    "P5/Text Mining/_audit_iteration_1.md",
-    "P5/ML10.0/_changes_iteration_3.md",
-    "P5/ML10.0/_audit_iteration_3.md",
-    "P5/ML10.0/_changes_iteration_2.md",
-    "P5/ML10.0/_audit_iteration_2.md",
     "P5/Text Mining/Quizzes/Screenshot 2026-05-01 at 12.07.57 AM.png",
     "P5/Text Mining/Quizzes/Screenshot 2026-05-01 at 12.08.28 AM.png",
     "P5/Text Mining/Quizzes/Screenshot 2026-05-01 at 12.21.30 AM.png",
     "P5/Text Mining/Quizzes/Screenshot 2026-05-01 at 12.28.14 AM.png",
     "P5/Text Mining/Quizzes/Screenshot 2026-05-01 at 12.35.50 AM.png",
-    "P5/Text Mining/Quizzes/Screenshot 2026-05-01 at 12.35.55 AM.png",
-    "Screenshot 2026-02-12 at 2.09.20 PM.png",
-    "Screenshot 2026-02-12 at 2.08.07 PM.png",
-    "DAL/ExamPrep AI/Start Decision Options Flow-2026-01-16-171718.png",
     "Untitled.canvas",
     "Untitled 1.canvas"
   ]
