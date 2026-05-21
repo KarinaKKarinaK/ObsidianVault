@@ -5,17 +5,408 @@
 ---
 
 ## TABLE OF CONTENTS
-1. [SQL — Division Queries (NOT EXISTS magic)](#sql)
-2. [Normalisation — 3NF step by step](#3nf)
-3. [Normalisation — BCNF step by step](#bcnf)
-4. [ER Diagrams — Shapes, Cardinalities, Tips](#er)
-5. [Relational Schema — How to write it out](#schema)
-6. [Transactions — 2PL, Strict 2PL, Rollbacks](#transactions)
-7. [Assumption Sections — What to write to get points](#assumptions)
+1. [SQL — The Big Picture](#sql-overview)
+2. [SQL — EXISTS / NOT EXISTS patterns](#sql-exists)
+3. [SQL — GROUP BY and HAVING](#sql-groupby)
+4. [SQL — Aggregates, JOINs, IN/NOT IN, ALL](#sql-other)
+5. [SQL — Division Queries (NOT EXISTS magic)](#sql)
+6. [Normalisation — 3NF step by step](#3nf)
+7. [Normalisation — BCNF step by step](#bcnf)
+8. [ER Diagrams — Shapes, Cardinalities, Tips](#er)
+9. [Relational Schema — How to write it out](#schema)
+10. [Transactions — 2PL, Strict 2PL, Rollbacks](#transactions)
+11. [Assumption Sections — What to write to get points](#assumptions)
 
 ---
 
-## 1. SQL — Division Queries {#sql}
+## 1. SQL — The Big Picture {#sql-overview}
+
+### First question to ask yourself when you see any SQL question:
+
+> **"What am I returning? What's the condition? Does it involve ALL/EVERY, or just SOME/AT LEAST ONE?"**
+
+Use this decision tree every time:
+
+```
+Does the question involve "all", "every", "each", "only"?
+    YES → double NOT EXISTS (or double NOT IN)  [see section 5]
+    NO  → keep reading...
+
+Does the question involve counting, averages, or "at least N"?
+    YES → GROUP BY + HAVING  [see section 3]
+    NO  → keep reading...
+
+Does the question ask if something EXISTS or does NOT EXIST?
+    YES → EXISTS / NOT EXISTS  [see section 2]
+    NO  → simple JOIN + WHERE filter
+```
+
+### The golden rule from the exam solutions:
+> **"You will only obtain maximal points if your answers avoid use of GROUP BY in favour of existential quantification."**
+
+This means: when in doubt between GROUP BY and NOT EXISTS → **use NOT EXISTS**. It's cleaner, they prefer it, and it's what gets full marks.
+
+---
+
+### When to go SIMPLE (don't overthink it):
+
+If the question is just filtering rows — a plain `WHERE` clause is enough:
+
+```sql
+-- "Find employees earning more than 10000"
+SELECT employeeName FROM Works WHERE salary > 10000
+
+-- "Find employees NOT working for FBC"
+SELECT employeeName FROM Works WHERE companyName <> 'First Bank Corporation'
+```
+
+No subqueries, no GROUP BY. If you can write it with a simple WHERE → do that.
+
+---
+
+## 2. SQL — EXISTS and NOT EXISTS Patterns {#sql-exists}
+
+### The mental model:
+
+- **EXISTS** = "there IS at least one row matching this"
+- **NOT EXISTS** = "there is NO row matching this"
+
+They always come with a correlated subquery — the subquery references something from the outer query (that's the whole point).
+
+---
+
+### Pattern 1: "Find X that HAVE at least one Y" → EXISTS
+
+```sql
+-- "Find people who have at least one friend"
+SELECT name
+FROM Person P
+WHERE EXISTS (
+    SELECT *
+    FROM Friend F
+    WHERE P.id = F.id1 OR P.id = F.id2
+)
+```
+
+Reading it: *"Give me people where there EXISTS a friend row that mentions them."*
+
+Alternative with IN (same result, pick whichever feels cleaner):
+```sql
+SELECT name FROM Person P
+WHERE P.id IN (SELECT id1 FROM Friend)
+   OR P.id IN (SELECT id2 FROM Friend)
+```
+
+---
+
+### Pattern 2: "Find X that have NO Y" → NOT EXISTS
+
+```sql
+-- "Find people with no friends"
+SELECT name
+FROM Person P
+WHERE NOT EXISTS (
+    SELECT *
+    FROM Friend F
+    WHERE P.id = F.id1 OR P.id = F.id2
+)
+```
+
+Reading it: *"Give me people where there does NOT EXIST any friend row mentioning them."*
+
+Alternative with NOT IN:
+```sql
+SELECT name FROM Person P
+WHERE P.id NOT IN (SELECT id1 FROM Friend)
+  AND P.id NOT IN (SELECT id2 FROM Friend)
+```
+
+Note the **AND** — to have NO friends, you must not appear on EITHER side. (If you use OR here, you break it.)
+
+---
+
+### Pattern 3: "Find the cheapest / minimum" → NOT EXISTS (no GROUP BY!)
+
+```sql
+-- "Find names of the cheapest suppliers of part 42"
+SELECT S.name
+FROM Suppliers S JOIN Catalog C ON S.sid = C.sid
+WHERE C.pid = 42
+  AND NOT EXISTS (
+      SELECT *
+      FROM Catalog C1
+      WHERE C1.pid = 42 AND C1.price < C.price
+  )
+```
+
+Reading it: *"Give me suppliers of part 42 where there does NOT EXIST a cheaper offer for that same part."*
+
+This is the exam-preferred way to find minimums/maximums. Don't reach for `MIN()` + `GROUP BY` — use NOT EXISTS.
+
+---
+
+### Pattern 4: "Find X that do NOT have the minimum" → EXISTS
+
+```sql
+-- "Find (pid, sid) of suppliers NOT offering at the lowest price"
+SELECT C.sid, C.pid
+FROM Catalog C
+WHERE EXISTS (
+    SELECT *
+    FROM Catalog C1
+    WHERE C1.pid = C.pid AND C1.price < C.price
+)
+```
+
+Reading it: *"Give me catalog rows where there EXISTS a cheaper offer for the same part."* = this supplier isn't the cheapest.
+
+---
+
+### Pattern 5: "Find X that appear only ONCE" → NOT EXISTS with self-reference
+
+```sql
+-- "Find parts supplied by only one supplier"
+SELECT C.pid
+FROM Catalog C
+WHERE NOT EXISTS (
+    SELECT *
+    FROM Catalog C1
+    WHERE C1.pid = C.pid AND C1.sid <> C.sid
+)
+```
+
+Reading it: *"Give me parts where there does NOT EXIST another catalog row with the same part but a different supplier."*
+
+---
+
+### EXISTS vs IN — when to use which:
+
+| Situation | Use |
+|---|---|
+| Subquery result is a simple list of values | `IN` / `NOT IN` |
+| Subquery needs to reference the outer query (correlated) | `EXISTS` / `NOT EXISTS` |
+| Finding min/max without GROUP BY | `NOT EXISTS` |
+| Division queries ("all", "every") | Double `NOT EXISTS` |
+| Performance on large tables | `EXISTS` (stops at first match) |
+
+---
+
+## 3. SQL — GROUP BY and HAVING {#sql-groupby}
+
+### When to use GROUP BY:
+
+> "Per X, find the Y" or "find all X that have AT LEAST N of Y"
+
+The pattern is: you're collapsing multiple rows into one per group, then doing something with that group.
+
+---
+
+### The structure (always in this order):
+
+```sql
+SELECT [grouping columns], [aggregate]
+FROM [tables]
+WHERE [row-level filter — applied BEFORE grouping]
+GROUP BY [grouping columns]
+HAVING [group-level filter — applied AFTER grouping]
+ORDER BY [optional]
+```
+
+**Key rule:** Anything in SELECT that is NOT an aggregate function MUST be in GROUP BY.
+
+---
+
+### WHERE vs HAVING — the difference:
+
+| | WHERE | HAVING |
+|---|---|---|
+| When applied | Before grouping | After grouping |
+| Can reference | Individual row values | Aggregate results (COUNT, AVG, etc.) |
+| Example | `WHERE salary > 1000` | `HAVING COUNT(*) >= 2` |
+
+**Simple rule:** If your filter involves `COUNT()`, `AVG()`, `SUM()` etc. → it goes in HAVING. Everything else → WHERE.
+
+---
+
+### Pattern: "Find X that have at least N of Y" → GROUP BY + HAVING COUNT
+
+```sql
+-- "Find people who know at least 2 people"
+SELECT P.name
+FROM Person P, Knows K
+WHERE P.id = K.id1
+GROUP BY P.id, P.name
+HAVING COUNT(*) >= 2
+```
+
+Note: Group by `P.id` AND `P.name` — because name is in SELECT but not an aggregate, it must be in GROUP BY too.
+
+---
+
+### Pattern: "Per X, show the average/sum/count of Y"
+
+```sql
+-- "Per artist, show the average insurance value of their paintings"
+SELECT P.artist, AVG(L.insurance)
+FROM Paintings P, Loans L
+WHERE P.colID = L.colID
+GROUP BY P.artist
+ORDER BY P.artist
+```
+
+The WHERE joins the tables (row-level), GROUP BY collapses by artist, AVG operates on each group.
+
+---
+
+### When NOT to use GROUP BY:
+
+- When the question uses "all", "every", "each" → use NOT EXISTS instead
+- When you're looking for a minimum/maximum → use NOT EXISTS instead
+- When you just need to check existence → use EXISTS instead
+- When you're doing a simple filter → use WHERE instead
+
+The solutions are explicit: **prefer NOT EXISTS over GROUP BY** when both could work.
+
+---
+
+### DISTINCT — when to add it:
+
+Add `SELECT DISTINCT` when your JOIN could produce duplicate rows for the same entity:
+
+```sql
+-- Multiple loans of the same painting → painting appears multiple times
+-- DISTINCT collapses them back to one row per painting
+SELECT DISTINCT E.place
+FROM Paintings P, Loans L, Exhibitions E
+WHERE P.colID = L.colID AND L.exID = E.exID AND P.artist = 'Breitner'
+```
+
+**When NOT to use DISTINCT:** When you actually want duplicates (e.g. counting things). And never use DISTINCT to "fix" a broken query — if you need it to remove logically wrong duplicates, your query structure might be wrong.
+
+---
+
+## 4. SQL — Aggregates, JOINs, IN / NOT IN, ALL {#sql-other}
+
+### Aggregate functions cheatsheet:
+
+| Function | What it does | Example use |
+|---|---|---|
+| `COUNT(*)` | Count rows in group | "how many employees per dept" |
+| `COUNT(DISTINCT x)` | Count unique values | "how many distinct cities" |
+| `SUM(x)` | Total of a column | "total salary per dept" |
+| `AVG(x)` | Average | "average insurance per artist" |
+| `MIN(x)` / `MAX(x)` | Smallest / largest value | (prefer NOT EXISTS on exams) |
+
+---
+
+### JOINs — keep it simple:
+
+For this exam, **implicit join syntax** (comma-separated tables + WHERE) is fine and often cleaner:
+
+```sql
+-- Implicit join (fine for exams):
+SELECT E.name FROM Employee E, Works W
+WHERE E.id = W.id AND W.company = 'FBC'
+
+-- Explicit JOIN (same result, also fine):
+SELECT E.name FROM Employee E
+JOIN Works W ON E.id = W.id
+WHERE W.company = 'FBC'
+```
+
+When you join multiple tables: list them all in FROM, then connect them in WHERE with join conditions first, then filter conditions.
+
+```sql
+-- Three-table join: always write join conditions first, filters after
+SELECT DISTINCT E.place
+FROM Paintings P, Loans L, Exhibitions E
+WHERE P.colID = L.colID      -- join condition
+  AND L.exID = E.exID        -- join condition
+  AND P.artist = 'Breitner'  -- filter
+```
+
+---
+
+### Self-join — when a table joins with itself:
+
+Use when you need to compare rows within the same table (e.g. "paintings shown twice", "employees earning more than another employee"):
+
+```sql
+-- "Find parts with at least two different suppliers" (no GROUP BY version)
+SELECT C1.pid
+FROM Catalog C1, Catalog C2
+WHERE C1.pid = C2.pid AND C1.sid <> C2.sid
+```
+
+Give the same table two aliases (C1, C2) and compare rows against each other.
+
+---
+
+### IN / NOT IN:
+
+Use when you have a simple subquery producing a list to filter against:
+
+```sql
+-- "Find paintings never on loan"
+SELECT colID FROM Paintings
+WHERE colID NOT IN (SELECT colID FROM Loans)
+```
+
+This is simpler than NOT EXISTS here because the subquery is just a list with no correlation to the outer query.
+
+**Watch out with NOT IN and NULLs:** If the subquery can return NULLs, `NOT IN` breaks silently (returns no rows). In that case use `NOT EXISTS` instead — it handles NULLs correctly.
+
+---
+
+### ALL quantifier:
+
+Use when: "Find X where value > ALL values from some set"
+
+```sql
+-- "Find employees earning more than EVERY employee at SBC"
+SELECT employeeName
+FROM Works
+WHERE salary > ALL (
+    SELECT salary FROM Works WHERE companyName = 'SBC'
+)
+```
+
+Reading it: *"Salary must be greater than the maximum salary at SBC."* (It's equivalent to `> MAX(...)` but uses ALL.)
+
+---
+
+### The "only in cities of SBC" problem — double NOT IN:
+
+This comes up as a tricky case. The naive approach fails:
+
+```sql
+-- WRONG: this finds companies with ANY location in SBC cities
+-- (a company in Amsterdam+Utrecht would pass if SBC is in Amsterdam)
+SELECT companyName FROM Company
+WHERE city IN (SELECT city FROM Company WHERE companyName = 'SBC')
+```
+
+The correct approach (double NOT IN = same idea as double NOT EXISTS):
+
+```sql
+-- CORRECT: companies whose locations are a SUBSET of SBC's locations
+SELECT companyName FROM Company
+WHERE companyName NOT IN (
+    SELECT companyName FROM Company
+    WHERE city NOT IN (
+        SELECT city FROM Company WHERE companyName = 'SBC'
+    )
+)
+```
+
+Inside out:
+1. Innermost: SBC's cities
+2. Middle: companies that have at least ONE location NOT in SBC's cities → the "bad" companies
+3. Outer: companies NOT in that bad list → companies only in SBC cities
+
+---
+
+## 5. SQL — Division Queries {#sql}
 
 ### The trigger: when do you use this?
 
