@@ -472,3 +472,12 @@ MARBEL allows specifying the order in which rules are selected using the `order=
 ### Analogy for Understanding MARBEL Decision Logic
 
 Think of a MARBEL agent's Decision Module like a **prioritized to-do list** for a very obedient assistant. The assistant reads the list from top to bottom (linear traversal). For each item (action rule), they first check if the prerequisite (the Prolog query) is true based on their current knowledge (the database). As soon as they find the _first_ task they are capable of doing, they execute that task and immediately stop reviewing the list for that cycle (exit the module). If the agent had set its rule order using `linearrandom`, it might find the first applicable rule, but then randomly pick one way to execute it if multiple options exist.
+---
+
+## Related Notes
+- [[Artificial Intelligence/AI Agents/AI Agents - Core Components]] — practical AI agent architecture
+- [[Artificial Intelligence/AI Agents/Building AI Agents]] — building and deploying agents
+- [[Modeling Human Behavior/Agent-Based Modeling (ABM)]] — agent-based modeling of human populations
+- [[Modeling Human Behavior/Modeling Human Behavior Overview]] — modeling agents in social systems
+- [[Robotics/03 - Embodied AI]] — embodied agents acting in the physical world
+- [[ML/Lecture 12 — Reinforcement Learning]] — RL as the learning paradigm for autonomous agents

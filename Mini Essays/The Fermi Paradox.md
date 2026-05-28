@@ -39,3 +39,9 @@ The sheer scale of the universe makes interaction unlikely. The Milky Way alone 
 ### **5. We Might Be Early**
 
 Some argue that humanity could be among the first intelligent civilizations to emerge. The universe is around 13.8 billion years old, and many stars formed long before the Sun. However, conditions suitable for complex life might have only recently become widespread. If that’s the case, then other civilizations may simply not have appeared yet.
+---
+
+## Related Notes
+- [[Mini Essays/Mini Essays - Table Of Contents]] — all mini essays
+- [[Mini Essays/Transhumanism]] — if we survive, could we become the advanced civilizations others can't find?
+- [[Mini Essays/Metacognition]] — thinking about thinking; human cognitive limits

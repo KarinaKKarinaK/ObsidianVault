@@ -127,3 +127,10 @@ AI Model → Database → Dashboard
 - Read replicas
     
 - Caching (Redis)
+---
+
+## Related Notes
+- [[Knowledge & Data/K&D Notes]] — knowledge representation and data models
+- [[DAL/ExamPrep AI/Database Schema]] — database schema design
+- [[Technical Skills/Notes/06 - System Design]] — databases in system design
+- [[Technical Skills/Notes/04 - Backend APIs]] — APIs that interface with databases

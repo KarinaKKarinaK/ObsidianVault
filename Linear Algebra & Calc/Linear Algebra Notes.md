@@ -28,3 +28,11 @@ When you see a **matrix A**, you should connect:
         
 
 Almost every exam question is: **take the matrix, row-reduce it, and then apply the right theorem.**
+---
+
+## Related Notes
+- [[ML/Lecture 1 — Linear Models & Optimization]] — linear models built on linear algebra
+- [[ML/Lecture 4 — Neural Networks & Backpropagation]] — matrix operations in neural nets
+- [[ML/Lecture 0 — What is ML]] — ML uses linear algebra throughout
+- [[Stats/Stats Review]] — probability and statistics as the other math pillar of ML
+- [[Quantitative Trading/Topic Notes/1 - Probability – Core Concepts]] — probability for quant trading

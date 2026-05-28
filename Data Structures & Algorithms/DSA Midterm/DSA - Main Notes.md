@@ -406,3 +406,10 @@ Invariant: `A[1..i-1]` is sorted at start of iteration i.
     
 
 ---
+
+---
+
+## Related Notes
+- [[Data Structures & Algorithms/DSA Final/Exhaustive Final DSA Notes]] — final exam comprehensive notes
+- [[Data Structures & Algorithms/Main Review Resources]] — review resources
+- [[Technical Skills/Notes/10 - Algorithms]] — applied algorithms reference

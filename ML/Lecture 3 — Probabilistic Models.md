@@ -413,3 +413,11 @@ Maximizing the posterior $p(M)p(X \mid M)$ is the same as minimizing $-\log p(M)
 | **MDL**                        | $\min [L(\text{model}) + L(\text{data} \mid \text{model})]$    |
 
 
+
+---
+
+## Related Notes
+- [[Stats/Stats Review]] — statistics and probability foundations
+- [[ML/Lecture 2 — Model Evaluation (Experiments + Metrics + Basic Stats)]] — evaluation using statistical methods
+- [[Quantitative Trading/Topic Notes/3 - Conditional Probability and Bayes]] — Bayes' theorem in probabilistic models
+- [[ML/Lecture 4 — Neural Networks & Backpropagation]] — neural nets as an alternative to explicit probability models

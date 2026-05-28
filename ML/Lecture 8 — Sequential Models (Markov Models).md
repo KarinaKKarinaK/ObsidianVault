@@ -164,3 +164,10 @@ This is ==**autoregressive**== generation: each new token depends on all previou
 | **Walk-forward validation** | Respect temporal ordering in train/test splits |
 | **Sequence classification** | Bayes classifier with per-class n-gram models |
 | **Autoregressive sampling** | Generate token-by-token from conditional distributions |
+
+---
+
+## Related Notes
+- [[ML/Lecture 9 — Sequential Models (Deep Learning on Sequences)]] — deep learning approach to sequences
+- [[ML/Lecture 12 — Reinforcement Learning]] — MDPs extend Markov chains; core RL formalism
+- [[ML/Lecture 13 — Transformers]] — transformers replaced RNNs for sequences

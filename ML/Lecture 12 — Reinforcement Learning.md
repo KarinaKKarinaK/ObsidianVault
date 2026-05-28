@@ -214,3 +214,14 @@ The result: superhuman Go performance in 2016. Later versions (AlphaZero) droppe
 | **Bellman equation** | $Q^*(s,a) = R(s,a) + \gamma \sum_{s'} T \max_{a'} Q^*(s',a')$ |
 | **Q-learning update** | $Q(s,a) \leftarrow Q(s,a) + \alpha[r + \gamma \max_{a'} Q(s',a') - Q(s,a)]$ |
 | **DQN** | Neural net approximates Q; experience replay + target network |
+
+---
+
+## Related Notes
+- [[Robotics/08 - Key Subfields & Concepts]] — RL for robots: PPO, SAC, sim-to-real, Isaac Gym
+- [[Robotics/07 - Key Bottlenecks]] — data scarcity and the challenge of RL in the real world
+- [[Robotics Last Meeting Notes]] — RL reward functions, Eureka, D2C, OMNI research
+- [[Robotics]] — Prompt2Policy: LLMs writing RL reward functions
+- [[ML/Lecture 0 — What is ML]] — supervised learning contrast to RL
+- [[ML/Lecture 8 — Sequential Models (Markov Models)]] — Markov chains as precursor to MDPs
+- [[Artificial Intelligence/AI Agents/AI Agents - Core Components]] — RL agents in real-world systems

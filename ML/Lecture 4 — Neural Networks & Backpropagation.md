@@ -296,3 +296,13 @@ This lets us fit a linear model in a **huge (even infinite) feature space** with
 | **SVM objective** | Hinge loss + $\lambda\|\mathbf{w}\|^2$ regularization |
 | **Hard vs soft margin** | Hard: no violations; Soft: slack $\xi_i$ with trade-off $C$ |
 | **Kernel trick** | Replace dot products with $k(x_i, x_j)$ to get nonlinear boundaries |
+
+---
+
+## Related Notes
+- [[ML/Lecture 5 — Deep Learning 1 (Autodiff & CNNs)]] — CNNs and autodiff building on neural net foundations
+- [[ML/Lecture 6 — Deep Learning 2 (Generative Models)]] — generative models using deep networks
+- [[ML/Lecture 13 — Transformers]] — transformers as the dominant neural architecture today
+- [[Linear Algebra & Calc/Linear Algebra Notes]] — matrix math underlying neural networks
+- [[ML/Lecture 3 — Probabilistic Models]] — probabilistic perspective on neural net outputs
+- [[Technical Skills/Notes/09 - Machine Learning]] — applied ML using these foundations

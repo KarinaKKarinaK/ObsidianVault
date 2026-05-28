@@ -50,6 +50,7 @@
 - [[HTML Study Tools/TM — Study Tool.html|TM Study Tool]] — flashcards + quiz + literature
 - [[Text Mining/TM_practice_exams.html|TM Practice Exams]] — 25 timed exam-style quizzes (250-Q bank, disjoint)
 - [[HTML Study Tools/TM — Practice Exams.html|TM Practice Exams (older copy)]]
+- [[Text Mining/Final Exam Practice/TM_Final_Exams_Interactive.html|TM Final Exam Practice]] — 7 exams × 35 Qs · scored · per-question feedback
 
 ### History of AI (HAI)
 - [[HoAI/HAI_flashcard_tool.html|HAI Flashcard Tool]] — A/B/C flashcards + essay prompts

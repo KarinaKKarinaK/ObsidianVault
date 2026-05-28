@@ -125,3 +125,15 @@ Agentic RAG forms a central pillar of the **context layer**, allowing **AI agent
 
 ## Key Takeaways - Agent Components
 ![[Google_ Startup technical guide AI agents.jpeg]]
+
+---
+
+## Related Notes
+- [[Artificial Intelligence/AI Agents/Building AI Agents]] — practical frameworks and protocols for building agents
+- [[Artificial Intelligence/AI Agents/Further Topics on AI Agents]] — extended agent topics
+- [[Multi Agent Systems/Overview Notes]] — formal multi-agent theory, agent architectures (BDI, MARBEL)
+- [[Technical Skills/Notes/Subtopics/LLMs]] — LLMs as the brain of AI agents
+- [[Robotics/03 - Embodied AI]] — agents with physical bodies; embodied perception-action loops
+- [[Knowledge & Data/K&D Notes]] — knowledge representation and retrieval (RAG foundations)
+- [[ML/Lecture 12 — Reinforcement Learning]] — RL as an alternative learning paradigm for agents
+- [[Modeling Human Behavior/Shaping AI Agent Behavior]] — behavioral modeling for agents

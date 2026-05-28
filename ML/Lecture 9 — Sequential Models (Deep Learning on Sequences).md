@@ -189,3 +189,10 @@ The ==**cell state $\mathbf{c}_t$**== provides a direct gradient highway through
 | **LSTM** | Forget/input/output gates; cell state as gradient highway |
 | **s2s / s2l / l2s** | Sequence-to-sequence / sequence-to-label / label-to-sequence configs |
 | **Global pooling** | Average or max across positions to get a single vector |
+
+---
+
+## Related Notes
+- [[ML/Lecture 8 — Sequential Models (Markov Models)]] — Markov model foundations
+- [[ML/Lecture 13 — Transformers]] — transformers superseded RNNs/LSTMs for sequences
+- [[ML/Lecture 4 — Neural Networks & Backpropagation]] — neural net foundations

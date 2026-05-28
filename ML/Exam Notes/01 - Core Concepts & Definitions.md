@@ -180,3 +180,11 @@ See also: [[02 - Models & Algorithms]], [[05 - Evaluation & Methodology]]
   - If no action taken → unlikely to cause harm
 - Attributes like address/birthplace correlate with sensitive attributes (ethnicity)
 - Separate predictions from actions
+
+---
+
+## Related Notes
+- [[ML/Lecture 0 — What is ML]] — conceptual introduction to ML
+- [[ML/Lecture 1 — Linear Models & Optimization]] — linear models and optimization
+- [[ML/Exam Notes/02 - Models & Algorithms]] — models in depth
+- [[ML/Exam Notes/03 - Loss Functions & Optimization]] — optimization in depth

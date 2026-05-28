@@ -910,3 +910,13 @@ Macro phenomena generated from micro interaction.
     
 7. Non-linearity is fundamental in social systems.
     
+
+---
+
+## Related Notes
+- [[Modeling Human Behavior/Agent-Based Modeling (ABM)]] — detailed ABM methodology
+- [[Modeling Human Behavior/Shaping AI Agent Behavior]] — applying behavior models to AI agents
+- [[Multi Agent Systems/Overview Notes]] — formal multi-agent systems theory
+- [[Artificial Intelligence/AI Agents/AI Agents - Core Components]] — AI agent architecture
+- [[Psychology/Psychology Book Summary/T5.1 - Learning]] — psychological learning theory underpinning behavioral models
+- [[Psychology/Psychology Book Summary/T7.2 - Decision-making]] — human decision-making processes

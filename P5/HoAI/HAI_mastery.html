@@ -263,9 +263,50 @@
     .topwrap { gap: 8px; }
     .brand { font-size: 15px; }
     .countdown { font-size: 11px; }
-    main { padding: 16px 12px 80px; }
-    .grid.cols-2 { grid-template-columns: 1fr; }
+    main { padding: 16px 12px 100px; }
+    .grid.cols-2, .grid.cols-3 { grid-template-columns: 1fr; }
     .kv { grid-template-columns: 90px 1fr; }
+    .conn-grid { grid-template-columns: 1fr; }
+    .cheat-grid { grid-template-columns: 1fr 1fr; }
+    .stat-grid { grid-template-columns: repeat(2, 1fr); }
+    .practice-card { padding: 16px; }
+    .practice-prompt { font-size: 14px; padding: 14px; }
+    textarea.draft { min-height: 180px; }
+    .filter-bar { padding: 10px; gap: 6px; }
+    .filter-bar select, .filter-bar input { font-size: 16px; } /* prevent iOS zoom */
+    .search input { font-size: 16px; } /* prevent iOS zoom */
+    h1 { font-size: 20px; }
+    h2 { font-size: 16px; }
+    .topic-head { padding: 12px 14px; }
+    .topic-body { padding: 0 14px 14px; }
+    .actions { flex-wrap: wrap; }
+    nav.tabs button { padding: 10px 10px; font-size: 13px; }
+    table { font-size: 12px; }
+    th, td { padding: 6px 8px; }
+  }
+
+  /* Bottom nav for mobile (thumb-friendly tab switching) */
+  @media (max-width: 640px) {
+    header.top nav.tabs { display: none; }
+    #mobileNav {
+      display: flex;
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+      background: rgba(22,25,34,.97); border-top: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+      padding: 0; overflow-x: auto; scrollbar-width: none;
+    }
+    #mobileNav::-webkit-scrollbar { display: none; }
+    #mobileNav button {
+      flex: 0 0 auto; background: transparent; border: none;
+      color: var(--muted); padding: 10px 14px; font-size: 11px;
+      cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px;
+      border-top: 2px solid transparent; white-space: nowrap; transition: color .15s;
+    }
+    #mobileNav button.active { color: var(--accent); border-top-color: var(--accent); }
+    #mobileNav button .nav-icon { font-size: 18px; }
+  }
+  @media (min-width: 641px) {
+    #mobileNav { display: none; }
   }
 </style>
 </head>
@@ -289,6 +330,17 @@
     <button data-view="templates">Answer Templates</button>
   </nav>
 </header>
+
+<nav id="mobileNav">
+  <button data-view="overview" class="active"><span class="nav-icon">🏠</span>Overview</button>
+  <button data-view="topics"><span class="nav-icon">📚</span>Topics</button>
+  <button data-view="questions"><span class="nav-icon">❓</span>Questions</button>
+  <button data-view="connections"><span class="nav-icon">🔗</span>Links</button>
+  <button data-view="people"><span class="nav-icon">👤</span>People</button>
+  <button data-view="cheat"><span class="nav-icon">📋</span>Cheat</button>
+  <button data-view="practice"><span class="nav-icon">✍️</span>Practice</button>
+  <button data-view="templates"><span class="nav-icon">📝</span>Templates</button>
+</nav>
 
 <main>
   <section class="view active" id="view-overview"></section>
@@ -1362,14 +1414,19 @@ function matchSearch(...fields) {
 }
 
 /* ======================= TAB NAV ======================= */
+function switchView(view) {
+  state.view = view;
+  document.querySelectorAll('#tabs button, #mobileNav button').forEach(b => b.classList.toggle('active', b.dataset.view === view));
+  document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.id === 'view-' + view));
+  window.scrollTo(0,0);
+  render();
+}
+
 document.getElementById('tabs').addEventListener('click', e => {
-  if (e.target.tagName === 'BUTTON') {
-    state.view = e.target.dataset.view;
-    document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('active', b.dataset.view === state.view));
-    document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.id === 'view-' + state.view));
-    window.scrollTo(0,0);
-    render();
-  }
+  if (e.target.closest('button')) switchView(e.target.closest('button').dataset.view);
+});
+document.getElementById('mobileNav').addEventListener('click', e => {
+  if (e.target.closest('button')) switchView(e.target.closest('button').dataset.view);
 });
 
 document.getElementById('globalSearch').addEventListener('input', e => {

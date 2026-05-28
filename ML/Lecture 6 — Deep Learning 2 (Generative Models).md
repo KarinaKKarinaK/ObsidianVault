@@ -267,3 +267,11 @@ Autoencoders can be viewed as a ==nonlinear generalization of PCA==. With linear
 | **CycleGAN** | Cycle consistency loss; unpaired domain translation |
 | **StyleGAN** | Style vector per layer + per-layer noise; controllable generation |
 | **Slerp** | Spherical interpolation in latent space; stays on high-density shell |
+
+---
+
+## Related Notes
+- [[ML/Lecture 5 — Deep Learning 1 (Autodiff & CNNs)]] — deep learning foundations
+- [[ML/Lecture 4 — Neural Networks & Backpropagation]] — neural net fundamentals
+- [[Robotics/08 - Key Subfields & Concepts]] — Diffusion Policy uses diffusion generative models for robot actions
+- [[Technical Skills/Notes/Subtopics/LLMs]] — LLMs are a form of generative model

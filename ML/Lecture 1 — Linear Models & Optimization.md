@@ -434,3 +434,11 @@ The model is pushed to output values near $+1$ for positive examples and near $-
 This gives a **smooth** loss surface → gradient descent has no problem finding a solution.
 
 Caveat: even if data is linearly separable, the least-squares optimum **may not perfectly separate the classes**. The smooth loss doesn't "know" that all we care about is the sign of the output — it also penalizes positive examples that are classified correctly but with output far from exactly $+1$. This can pull the boundary away from a perfect separation.
+
+---
+
+## Related Notes
+- [[ML/Lecture 0 — What is ML]] — big-picture ML context
+- [[ML/Lecture 3 — Probabilistic Models]] — probabilistic extensions of linear models
+- [[Linear Algebra & Calc/Linear Algebra Notes]] — linear algebra is the math of linear models
+- [[ML/Lecture 4 — Neural Networks & Backpropagation]] — neural nets generalize linear models

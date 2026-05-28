@@ -9,3 +9,11 @@
 - **Agent2Agent (A2A) protocol =>** open standard designed to enable communication and collaboration between AI agents
 
 **Cool tool to explore: Google's ADL (Agent Development Kit)**
+---
+
+## Related Notes
+- [[Artificial Intelligence/AI Agents/AI Agents - Core Components]] — core agent architecture: memory, tools, orchestration
+- [[Artificial Intelligence/AI Agents/Ensuring Reliable & Responsible AI Agents]] — reliability and safety
+- [[Multi Agent Systems/Overview Notes]] — formal theory behind multi-agent systems
+- [[Technical Skills/Notes/Subtopics/LLMs]] — LLM capabilities underpinning agents
+- [[Robotics/03 - Embodied AI]] — physical embodiment as the extreme form of an acting agent

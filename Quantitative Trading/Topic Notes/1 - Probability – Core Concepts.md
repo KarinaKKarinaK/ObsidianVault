@@ -472,3 +472,11 @@ If you want, I can now:
 
 Just tell me:  
 **“Give me the drills”** or **“Start the mock interview”**
+---
+
+## Related Notes
+- [[Quantitative Trading/Topic Notes/2 - EV]] — expected value using probability
+- [[Quantitative Trading/Topic Notes/3 - Conditional Probability and Bayes]] — Bayes' theorem
+- [[Quantitative Trading/Topic Notes/4 - Combinatronics & Permutations]] — counting methods
+- [[Stats/Stats Review]] — formal statistics foundations
+- [[ML/Lecture 3 — Probabilistic Models]] — probabilistic ML

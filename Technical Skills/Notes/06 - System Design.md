@@ -152,3 +152,10 @@ Modern systems thrive on **asynchronous communication** and **service isolati
 - https://roadmap.sh/system-design - FAVORITE, mind-map style
 - https://github.com/donnemartin/system-design-primer 
 - Nice "how to learn system design" overview: https://medium.com/@himanshusingour7/how-i-learned-system-design-d7444d454367
+---
+
+## Related Notes
+- [[Technical Skills/Notes/04 - Backend APIs]] — APIs are the interface layer in system design
+- [[Technical Skills/Notes/05 - Databases]] — databases are a core system design component
+- [[Technical Skills/Notes/07 - DevOps]] — deploying and operating the systems you design
+- [[Technical Skills/Notes/01 - Foundations]] — CS foundations underpinning system design decisions

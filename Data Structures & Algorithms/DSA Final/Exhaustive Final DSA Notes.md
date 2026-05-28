@@ -289,3 +289,10 @@ Desk checking is a technique of stepping through an algorithm (pseudocode or act
 
 - **A* Implementation:** Errors often involve wrongly computing the $f$ score (must be $g+h$) or initializing distance values incorrectly (e.g., initializing to 0 instead of `float('inf')` to prevent finding new, longer paths).
 - **General Coding:** Be careful using global variables, as test environments (like pytest) call functions multiple times in the same run-time, necessitating appropriate initialization.
+---
+
+## Related Notes
+- [[Data Structures & Algorithms/DSA Midterm/DSA - Main Notes]] — midterm content
+- [[Data Structures & Algorithms/Main Review Resources]] — external review resources
+- [[Technical Skills/Notes/10 - Algorithms]] — algorithms for software engineering interviews
+- [[Linear Algebra & Calc/Linear Algebra Notes]] — mathematical reasoning for algorithm analysis

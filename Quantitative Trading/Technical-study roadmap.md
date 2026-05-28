@@ -511,3 +511,13 @@ If you want, I can now also create:
 • A **full set of practice problems**,  
 • A **market-making game cheat sheet**,  
 • Or **Obsidian note templates** you can paste directly into your vault.
+---
+
+## Related Notes
+- [[Quantitative Trading/Topic Notes/1 - Probability – Core Concepts]] — probability fundamentals
+- [[Quantitative Trading/Topic Notes/2 - EV]] — expected value
+- [[Quantitative Trading/Topic Notes/3 - Conditional Probability and Bayes]] — Bayesian reasoning
+- [[Quantitative Trading/Curated Notes/Market Making]] — market making mechanics
+- [[Stats/Stats Review]] — statistical foundations for quant finance
+- [[Linear Algebra & Calc/Linear Algebra Notes]] — linear algebra used in quantitative methods
+- [[ML/Lecture 3 — Probabilistic Models]] — probabilistic models applicable to finance

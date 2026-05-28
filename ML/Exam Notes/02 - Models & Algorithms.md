@@ -207,3 +207,12 @@ Both are ways to train a **generator network** that maps random input to realist
 | PCA | No | No | Yes |
 | VAE | No | No | No |
 | GAN | No | No | No |
+
+---
+
+## Related Notes
+- [[ML/Exam Notes/01 - Core Concepts & Definitions]] — core definitions
+- [[ML/Lecture 4 — Neural Networks & Backpropagation]] — neural network models
+- [[ML/Lecture 7 — Decision Trees & Ensembles]] — tree-based models
+- [[ML/Lecture 13 — Transformers]] — transformer models
+- [[Robotics/08 - Key Subfields & Concepts]] — VLA models as applied ML models

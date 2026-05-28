@@ -16,6 +16,9 @@
 9. [Relational Schema — How to write it out](#schema)
 10. [Transactions — 2PL, Strict 2PL, Rollbacks](#transactions)
 11. [Assumption Sections — What to write to get points](#assumptions)
+12. [Anomalies — Insertion, Deletion, Update](#anomalies)
+13. [Multi-Granularity Locking](#mgl)
+14. [Database Application Programming](#app)
 
 ---
 
@@ -916,4 +919,258 @@ This is FREE POINTS. Here's exactly what to write:
 
 ---
 
+## 12. Anomalies — What They Are and How to Spot Them {#anomalies}
+
+### The core idea:
+
+Anomalies are the **bad things that happen when your table is not normalised**. They're the reason we do 3NF and BCNF in the first place. On the exam you might be asked to identify them in a given (bad) relation, or to explain why normalisation fixes them.
+
+There are three types:
+
+---
+
+### Update anomaly
+
+> You have to change the same fact in multiple rows — and if you miss one, your data becomes inconsistent.
+
+**Example:** Table `Works(employeeName, companyName, companyCity)`
+
+| employeeName | companyName | companyCity |
+|---|---|---|
+| Alice | FBC | Amsterdam |
+| Bob | FBC | Amsterdam |
+| Carol | FBC | Amsterdam |
+
+If FBC moves to Utrecht, you have to update 3 rows. Miss one → inconsistency.
+
+**Why it happens:** `companyName → companyCity` but `companyName` is not the key. The city fact is repeated once per employee.
+
+**Fix:** Split into `Works(employeeName, companyName)` and `Company(companyName, companyCity)`.
+
+---
+
+### Insertion anomaly
+
+> You can't record a fact without also having unrelated information to fill in.
+
+**Example:** Same table `Works(employeeName, companyName, companyCity)`
+
+You want to record that a new company "NewCorp" is based in Rotterdam — but you can't insert it without having an employee to go with it (because `employeeName` is part of the key).
+
+**Why it happens:** You're trying to store two independent facts (employee works at company; company is in city) in one table.
+
+**Fix:** Same split as above — separate table for company info.
+
+---
+
+### Deletion anomaly
+
+> Deleting one fact accidentally destroys another unrelated fact.
+
+**Example:** Same table. If Carol is the only employee at NewCorp and she leaves → you delete her row → and now you've lost the fact that NewCorp exists in Rotterdam.
+
+**Why it happens:** Two independent facts are tied together in one row.
+
+**Fix:** Separate tables so deleting an employee doesn't destroy company information.
+
+---
+
+### How to identify anomalies on the exam:
+
+1. Look for a non-trivial FD where the LHS is **not** a superkey (= BCNF violation)
+2. That FD is the source of all three anomalies
+3. The repeated value on the RHS → **update anomaly**
+4. Can't insert RHS fact without LHS → **insertion anomaly**
+5. Deleting the only row with LHS value → **deletion anomaly**
+
+**Quick phrase to write on exam:**
+> "This relation has an update anomaly because [companyCity] depends on [companyName] which is not a key — the same city is repeated for every employee of that company. It also has an insertion anomaly because a new company cannot be added without an employee, and a deletion anomaly because deleting the last employee of a company destroys the company's location data."
+
+---
+
+## 13. Multi-Granularity Locking {#mgl}
+
+### The idea:
+
+Instead of locking at just one level (e.g. always the whole table, or always individual rows), multi-granularity locking lets transactions lock at different levels of a hierarchy:
+
+```
+Database
+  └── Table
+        └── Page
+              └── Row (tuple)
+```
+
+A lock at a higher level implicitly covers everything below it. But to allow other transactions to lock at lower levels, you need **intention locks** to signal your intentions upward.
+
+---
+
+### The five lock types:
+
+| Lock | Name | Meaning |
+|---|---|---|
+| **S** | Shared | I want to READ this node (and everything below) |
+| **X** | Exclusive | I want to WRITE this node (and everything below) |
+| **IS** | Intention Shared | I intend to place S locks on some children |
+| **IX** | Intention eXclusive | I intend to place X locks on some children |
+| **SIX** | Shared + Intention eXclusive | I'm reading the whole thing (S) AND will write some children (IX) |
+
+---
+
+### The protocol — two rules:
+
+1. **Top-down to acquire:** Before locking a node, you must hold the appropriate intention lock on its parent.
+2. **Bottom-up to release:** Release locks from the bottom up (leaves first, then parents).
+
+**Example:** To write a single row:
+- Lock Database with IS or IX
+- Lock Table with IX
+- Lock Row with X
+
+---
+
+### Compatibility matrix (can two transactions hold these simultaneously?):
+
+|  | IS | IX | S | SIX | X |
+|---|---|---|---|---|---|
+| **IS** | ✅ | ✅ | ✅ | ✅ | ❌ |
+| **IX** | ✅ | ✅ | ❌ | ❌ | ❌ |
+| **S** | ✅ | ❌ | ✅ | ❌ | ❌ |
+| **SIX** | ✅ | ❌ | ❌ | ❌ | ❌ |
+| **X** | ❌ | ❌ | ❌ | ❌ | ❌ |
+
+**Key things to memorise:**
+- IS and IX are compatible with each other (two transactions can both "intend" things at lower levels — conflicts only happen when they actually try to lock the same row)
+- S and IX are NOT compatible (you can't read the whole table while someone intends to write part of it)
+- SIX and anything except IS is incompatible
+- X is compatible with nothing
+
+---
+
+### The exam trick question:
+
+> "Can T1 hold IX and T2 hold IS on the same table at the same time?"
+
+**Answer: YES** — they are compatible at the table level. The actual conflict (if any) only appears when they try to lock the same row at a lower level. The intention locks just warn each other that something's happening below.
+
+---
+
+### When to use which lock in practice:
+
+| What you want to do | Locks to acquire on the table |
+|---|---|
+| Read a few rows | IS on table, then S on rows |
+| Write a few rows | IX on table, then X on rows |
+| Read the entire table | S on table (no need for row locks) |
+| Read entire table + write a few rows | SIX on table, then X on the specific rows |
+| Write the entire table | X on table |
+
+---
+
+## 14. Database Application Programming {#app}
+
+### The core exam topics here:
+
+This section tests whether you understand what happens when application code talks to a database — the problems that arise, and the tools used to solve them.
+
+---
+
+### Impedance mismatch
+
+> The data model in your programming language and the data model in your database don't match. Bridging that gap is the "impedance mismatch" problem.
+
+**Concrete examples of the mismatch:**
+- Databases have NULL; most languages don't (or handle it differently)
+- Databases work with sets/tables; languages work with objects, lists, loops
+- Database types (VARCHAR, DECIMAL) don't map 1:1 to language types (String, float)
+- A database query returns a set of rows; a language expects individual objects
+
+**On the exam:** If asked to define impedance mismatch, hit these two points:
+1. Difference in data model (tables vs objects)
+2. Specific examples: NULLs, types, set-at-a-time vs record-at-a-time
+
+---
+
+### String-based query construction — why it's bad
+
+Building SQL by concatenating strings:
+
+```java
+String query = "SELECT * FROM Users WHERE name = '" + userName + "'";
+```
+
+**Advantage:** Flexible — you can build any query shape dynamically.
+
+**Disadvantage — SQL injection:** If `userName` is `' OR '1'='1` → the query becomes:
+```sql
+SELECT * FROM Users WHERE name = '' OR '1'='1'
+```
+→ returns all users. Attacker can read, delete, or modify anything.
+
+**Fix: prepared statements** — parameters are sent separately, never interpolated into the query string:
+
+```java
+PreparedStatement ps = conn.prepareStatement("SELECT * FROM Users WHERE name = ?");
+ps.setString(1, userName);
+```
+
+The `?` is a placeholder. The database treats the parameter as a value, never as SQL code.
+
+---
+
+### Prepared statements — why they're also faster
+
+Beyond security, prepared statements are parsed and compiled once, then reused with different parameters. This avoids re-parsing the query every time → performance win for repeated queries.
+
+---
+
+### JDBC performance features (know these three):
+
+1. **Prepared statements** — compile once, execute many times, also prevents SQL injection
+2. **Connection pooling** — reuse database connections instead of opening a new one per query (connections are expensive to create)
+3. **Stored procedures** — move logic into the database itself, reducing round-trips between app and DB; the DB compiles and optimises them
+
+---
+
+### ORMs (Object-Relational Mappers)
+
+Tools like **Hibernate** (Java) or **Entity Framework** (.NET) that automatically map between database tables and programming language objects.
+
+**What they solve:** Impedance mismatch — you work with objects in your code, the ORM handles the SQL.
+
+**In the ANSI-SPARC architecture:**
+- **Physical level** — how data is stored on disk (indexes, pages)
+- **Logical/Conceptual level** — the relational schema (tables, FDs)
+- **External/View level** — what individual applications see
+
+ORMs sit at the **external/conceptual level** — they provide the application with its own view of the data, and can hide database schema changes from the application (as long as you update the ORM mapping after the schema change).
+
+---
+
+### LINQ (Language-Integrated Query)
+
+An extension in C# / Visual Basic that lets you write queries directly in the programming language — no SQL strings, no impedance mismatch.
+
+**Key advantage:** Static type checking — the compiler catches query errors before runtime. Normal SQL-as-strings only fails at runtime.
+
+**Key advantage:** No impedance mismatch — queries work on any collection (database, list, array) using the same syntax.
+
+---
+
+### Quick exam phrase bank:
+
+- *"String-based query construction is flexible but vulnerable to SQL injection — the fix is to use prepared statements where parameters are passed separately."*
+- *"Impedance mismatch arises because databases model data as relations with NULL, while programming languages model data as typed objects without a native NULL."*
+- *"ORMs provide the external level of the ANSI-SPARC architecture — they allow the application schema to evolve independently of the underlying database schema."*
+- *"Connection pooling avoids the overhead of creating a new database connection per query — connections are kept open and reused."*
+
+---
+
 *Good luck — you've got this.*
+
+---
+
+## Related Notes
+- [[Technical Skills/Notes/05 - Databases]] — databases in engineering context
+- [[Knowledge & Data/K&D Notes]] — knowledge and data representation
+- [[DAL/ExamPrep AI/Database Schema]] — database schema design

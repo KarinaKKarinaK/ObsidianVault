@@ -52,3 +52,13 @@ Looking into the Rqs: - feedback from LLMs hahahh
 - RQ2 is the most mechanically interesting, but ReEvo already exists, so you will need to articulate the delta cleanly (the Synthesizer's failure tags guiding mutation is the actual new bit).
 - RQ3 is the most practically valuable and easiest to scope, but it is an empirical study, not a method paper, so the framing matters more.
 
+---
+
+## Related Notes
+- [[Robotics/00 - Robotics MOC]] — full robotics knowledge base
+- [[Robotics/02 - Recent Breakthroughs 2023–2025]] — Eureka, RT-2, π0, and other key 2023–2025 papers
+- [[Robotics/08 - Key Subfields & Concepts]] — RL for robots, sim-to-real, IsaacLab, VLAs
+- [[Robotics/07 - Key Bottlenecks]] — compute constraints, sim-to-real gap
+- [[Robotics Last Meeting Notes]] — D2C, COvolve, OMNI, ACCEL research
+- [[ML/Lecture 12 — Reinforcement Learning]] — RL theory underlying reward functions and policy training
+

@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "P5/Databases/FINAL_EXAM_REVIEW.md",
+                "file": "P5/HoAI/HAI_9_playbook.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "FINAL_EXAM_REVIEW"
+              "title": "HAI_9_playbook"
             }
           },
           {
@@ -37,14 +37,10 @@
             "id": "755e08a74232ed8d",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "P5/Databases/EXAM_TIPS_AND_TRICKS.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "EXAM_TIPS_AND_TRICKS"
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "Graph view"
             }
           },
           {
@@ -59,8 +55,7 @@
               "title": "ExerciseExam (1)"
             }
           }
-        ],
-        "currentTab": 2
+        ]
       }
     ],
     "direction": "vertical"
@@ -222,54 +217,54 @@
       "obsidian-excalidraw-plugin:New drawing": false
     }
   },
-  "active": "755e08a74232ed8d",
+  "active": "fa34fd5ebcf875ad",
   "lastOpenFiles": [
-    "P5/Databases/FINAL_EXAM_REVIEW.md",
+    "P5/HoAI/my_practice/all_outlines.md",
+    "P5/HoAI/my_practice",
+    "P5/HoAI/HAI_exam_feedback.md",
+    "P5/HoAI/HAI_9_playbook.md",
+    "P5/HoAI/computer-a-history-of-the-information-machine-4nbsped-1032203471-9781032203478_compress.pdf",
+    "P5/HoAI/Past_Exams/Exam XB_0113 2025 II (1).pdf",
+    "P5/HoAI/Past_Exams/Exam XB_0113 2025 I (1).pdf",
+    "P5/Text Mining/Cram Card.md",
     "P5/000 MOC — Exam Season 2026.md",
-    "P5/Databases/EXAM_TIPS_AND_TRICKS.md",
-    "P5/Databases/past_exams/2019-01-01-example.pdf",
-    "P5/Databases/past_exams/2019-01-01-example-solutions.pdf",
-    "P5/Databases/past_exams/2016-05-24-final.pdf",
-    "P5/Databases/past_exams/2016-05-24-final-solutions.pdf",
-    "P5/Databases/past_exams/2015-03-24-final.pdf",
-    "P5/Databases/past_exams/2013-03-26-final-solutions.pdf",
-    "P5/Databases/past_exams/2013-03-26-final.pdf",
-    "P5/Databases/past_exams/ExerciseExam (1).pdf",
-    "P5/Databases/Practice_Exam_Solutions.md",
-    "P5/Databases/Practice_Exam_3.md",
-    "P5/Databases/Practice_Exam_2.md",
-    "P5/Databases/Practice_Exam_2.md.tmp.38407.8c29bfd7338e",
-    "P5/Databases/Practice_Exam_1.md",
-    "P5/Databases/past_exams/ExercisesModellingSolution (1).pdf",
-    "P5/Courses/DB — Databases/DB — Index.md",
-    "P5/CLAUDE_CODE_MASTER_PROMPT.md",
-    "GPUs.md",
+    "P5/Text Mining/Final Exam Practice/Exam 14 - Mixed Topics VII.md",
+    "P5/Text Mining/Final Exam Practice/Exam 13 - Mixed Topics VI.md",
+    "P5/Text Mining/Final Exam Practice/Exam 12 - Mixed Topics V.md",
+    "P5/Text Mining/Final Exam Practice/Exam 11 - Mixed Topics IV.md",
+    "P5/Text Mining/Final Exam Practice/Exam 10 - Mixed Topics III.md",
+    "P5/Text Mining/Final Exam Practice/Exam 9 - Mixed Topics II.md",
+    "P5/Text Mining/Final Exam Practice/Exam 8 - Mixed Topics I.md",
+    "P5/Text Mining/Final Exam Practice/TM_Final_Exams_Interactive.html",
+    "P5/Text Mining/Lectures/tm-ba-lecture-6-topic-modelling.pdf",
+    "P5/Text Mining/Final Exam Practice/_audit_report.md",
+    "P5/Text Mining/Final Exam Practice/Exam 7 - Topic Modelling, Text Classification & Advanced Transformers.md",
+    "P5/Text Mining/Final Exam Practice/Exam 6 - Named Entity Recognition & Classification.md",
+    "P5/Text Mining/Final Exam Practice/Exam 5 - Sentiment & Subjectivity Analysis.md",
+    "P5/Text Mining/Final Exam Practice/Exam 4 - Word Embeddings, Neural Models & Transformers.md",
+    "P5/Text Mining/Final Exam Practice/Exam 3 - Machine Learning for NLP (Evaluation & Representation).md",
+    "P5/Text Mining/Final Exam Practice/Exam 2 - Linguistics (Morphology, Syntax, Semantics, Pragmatics).md",
+    "P5/Text Mining/Final Exam Practice/Exam 1 - NLP Foundations & Preprocessing.md",
+    "P5/Text Mining/Final Exam Practice",
+    "P5/Text Mining/Lectures/tm-ba-lecture-5a-nerc.pdf",
+    "P5/Text Mining/Lectures/tm-ba-lecture-4-sentiment.pdf",
+    "P5/Text Mining/Lectures/tm-ba-lecture-3-machine-learning-nlp-part2.pdf",
+    "P5/Text Mining/Lectures/Screenshot 2026-05-23 at 5.27.24 PM.png",
+    "Showcase of ME.md",
+    "Robotics Last Meeting Notes.md",
+    "Robotics.md",
+    "Research Notes.md",
+    "Research.md",
+    "Feedback orq-skills.md",
     "Screenshot 2026-05-19 at 11.33.39 AM.png",
     "Screenshot 2026-05-19 at 11.33.22 AM.png",
     "Screenshot 2026-05-19 at 11.33.00 AM.png",
     "Screenshot 2026-05-19 at 11.32.53 AM.png",
-    "P5/HoAI/HAI_topics.md",
-    "Robotics.md",
-    "P5/Databases/exam_prep/README.md",
-    "Robotics Last Meeting Notes.md",
     "Screenshot 2026-03-17 at 11.41.07 AM.png",
-    "Showcase of ME.md",
-    "Study Plan - P5.md",
-    "synthetic_data_dos_and_donts.md",
-    "Challenge.md",
-    "Feedback orq-skills.md",
-    "initial_research.md",
-    "Research.md",
-    "Research Notes.md",
-    "P5/HoAI/HAI_9_playbook.md",
-    "P5/Text Mining/_changes_iteration_3.md",
-    "P5/Text Mining/_audit_iteration_3.md",
-    "P5/Text Mining/_changes_iteration_2.md",
     "P5/Text Mining/Quizzes/Screenshot 2026-05-01 at 12.07.57 AM.png",
     "P5/Text Mining/Quizzes/Screenshot 2026-05-01 at 12.08.28 AM.png",
     "P5/Text Mining/Quizzes/Screenshot 2026-05-01 at 12.21.30 AM.png",
     "P5/Text Mining/Quizzes/Screenshot 2026-05-01 at 12.28.14 AM.png",
-    "P5/Text Mining/Quizzes/Screenshot 2026-05-01 at 12.35.50 AM.png",
     "Untitled.canvas",
     "Untitled 1.canvas"
   ]

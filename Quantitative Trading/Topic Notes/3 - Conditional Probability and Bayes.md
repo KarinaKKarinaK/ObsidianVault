@@ -30,3 +30,11 @@ A::
 
 Q:: When should you use Bayes in trading?  
 A::
+
+---
+
+## Related Notes
+- [[Quantitative Trading/Topic Notes/1 - Probability – Core Concepts]] — probability fundamentals
+- [[Quantitative Trading/Topic Notes/2 - EV]] — expected value
+- [[Stats/Stats Review]] — statistics foundations
+- [[ML/Lecture 3 — Probabilistic Models]] — Bayesian inference in ML

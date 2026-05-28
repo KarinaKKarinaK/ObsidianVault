@@ -317,3 +317,9 @@ Ask tomorrow:
 - How do we detect regression?
     
 - How is red teaming automated?
+---
+
+## Related Notes
+- [[Artificial Intelligence/AI Agents/AI Agents - Core Components]] — core AI agent architecture
+- [[Artificial Intelligence/AI Agents/Building AI Agents]] — agent development frameworks
+- [[Technical Skills/Notes/Subtopics/LLMs]] — LLMs at the core of AI products

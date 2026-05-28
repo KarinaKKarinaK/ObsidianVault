@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Text Mining — Final Exam Practice</title>
+<style>
+  :root {
+    --navy: #0d1b2a;
+    --navy2: #1b2e45;
+    --teal: #1e7f8e;
+    --teal-light: #27a7b8;
+    --teal-dim: #154f5c;
+    --gold: #e8c45a;
+    --white: #f0f4f8;
+    --text: #cdd6e0;
+    --text-dim: #8ca0b4;
+    --green: #3ecf8e;
+    --red: #f05f6a;
+    --red-dim: #7a1c25;
+    --green-dim: #0e4f2e;
+    --card: #162232;
+    --border: #243650;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--navy);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  header {
+    background: var(--navy2);
+    border-bottom: 2px solid var(--teal);
+    padding: 18px 24px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
+
+  header h1 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: 0;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+
+  .tab {
+    flex-shrink: 0;
+    padding: 8px 14px;
+    border-radius: 6px 6px 0 0;
+    border: 1px solid var(--border);
+    border-bottom: none;
+    background: var(--navy);
+    color: var(--text-dim);
+    cursor: pointer;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    transition: background 0.15s, color 0.15s;
+    white-space: nowrap;
+  }
+  .tab:hover { background: var(--navy2); color: var(--text); }
+  .tab.active {
+    background: var(--teal);
+    color: #fff;
+    border-color: var(--teal);
+  }
+  .tab .badge {
+    display: inline-block;
+    margin-left: 6px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 10px;
+    padding: 1px 7px;
+    font-size: 0.7rem;
+  }
+  .tab.scored .badge { background: var(--gold); color: var(--navy); }
+
+  main { max-width: 860px; margin: 0 auto; padding: 28px 18px 60px; }
+
+  .exam-panel { display: none; }
+  .exam-panel.active { display: block; }
+
+  .exam-header {
+    margin-bottom: 28px;
+  }
+  .exam-header h2 {
+    font-size: 1.4rem;
+    color: var(--white);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .exam-header p { color: var(--text-dim); font-size: 0.9rem; }
+
+  .score-banner {
+    display: none;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--teal);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 28px;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .score-banner.visible { display: flex; }
+  .score-num {
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .score-label { font-size: 0.85rem; color: var(--text-dim); margin-top: 2px; }
+  .score-pct {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--teal-light);
+  }
+  .retake-btn {
+    margin-left: auto;
+    background: var(--teal);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 22px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.03em;
+    transition: background 0.15s;
+  }
+  .retake-btn:hover { background: var(--teal-light); }
+
+  .question-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 22px;
+    margin-bottom: 16px;
+    transition: border-color 0.2s;
+  }
+  .question-card.correct { border-left: 4px solid var(--green); }
+  .question-card.wrong { border-left: 4px solid var(--red); }
+  .question-card.unanswered { border-left: 4px solid var(--gold); }
+
+  .q-num {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--teal-light);
+    margin-bottom: 8px;
+  }
+  .q-text {
+    font-size: 0.98rem;
+    color: var(--white);
+    font-weight: 500;
+    margin-bottom: 14px;
+    line-height: 1.5;
+  }
+
+  .options { display: flex; flex-direction: column; gap: 8px; }
+
+  .option-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 7px;
+    border: 1px solid var(--border);
+    background: var(--navy2);
+    cursor: pointer;
+    transition: background 0.12s, border-color 0.12s;
+    font-size: 0.92rem;
+    line-height: 1.5;
+  }
+  .option-label:hover { background: var(--navy); border-color: var(--teal-dim); }
+  .option-label input[type="radio"] { flex-shrink: 0; margin-top: 3px; accent-color: var(--teal-light); }
+
+  /* After submission styling */
+  .option-label.is-correct {
+    background: var(--green-dim);
+    border-color: var(--green);
+    color: var(--green);
+    font-weight: 600;
+  }
+  .option-label.is-wrong-pick {
+    background: var(--red-dim);
+    border-color: var(--red);
+    color: var(--red);
+  }
+  .option-label.dimmed { opacity: 0.45; }
+
+  .result-icon {
+    display: none;
+    margin-top: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+  .result-icon.correct { color: var(--green); display: block; }
+  .result-icon.wrong { color: var(--red); display: block; }
+  .result-icon.unanswered { color: var(--gold); display: block; }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 32px;
+  }
+  .submit-btn {
+    background: var(--teal);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 32px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.03em;
+    transition: background 0.15s;
+  }
+  .submit-btn:hover { background: var(--teal-light); }
+  .submit-btn:disabled { background: var(--border); color: var(--text-dim); cursor: default; }
+
+  .warning-msg {
+    color: var(--gold);
+    font-size: 0.88rem;
+    font-weight: 600;
+    display: none;
+  }
+  .warning-msg.visible { display: block; }
+
+  @media (max-width: 600px) {
+    header h1 { font-size: 0.95rem; }
+    .tab { padding: 7px 10px; font-size: 0.7rem; }
+    main { padding: 18px 12px 50px; }
+    .score-num { font-size: 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Text Mining — Final Exam Practice</h1>
+  <div class="tabs" id="tabBar"></div>
+</header>
+
+<main id="mainContent"></main>
+
+<script>
+const EXAMS = [
+  {
+    title: "NLP Foundations & Preprocessing",
+    short: "NLP Foundations",
+    questions: [
+      { q: "Which of the following best defines the task of text mining?", options: ["Ranking documents by relevance to a query","Converting unstructured text into structured information or knowledge","Translating text between natural languages","Compressing text files for storage"], correct: 1 },
+      { q: "In the NLP pipeline, which layer comes immediately after tokenisation?", options: ["Pragmatic analysis","Semantic analysis","Lexical analysis","Coreference resolution"], correct: 2 },
+      { q: "Error propagation in NLP pipelines means:", options: ["Grammar errors in source text slow down processing","A mistake in one module can degrade the output of all subsequent modules","Models trained on one domain fail on another","Annotators propagate disagreements to the gold standard"], correct: 1 },
+      { q: "Which of the following is NOT a tokenisation challenge?", options: ["Hyphens in compound words like \"state-of-the-art\"","Currency symbols like \"$523.45\"","Whether to lemmatise words","Abbreviations like \"Dr.\" that resemble sentence endings"], correct: 2 },
+      { q: "The sentence \"I saw her duck\" is an example of:", options: ["Variation — two spellings of the same word","Coreference — \"her\" refers to a person mentioned before","Syntactic/lexical ambiguity — \"duck\" can be verb or noun","Metonymy — \"duck\" refers to a restaurant"], correct: 2 },
+      { q: "Which NLP toolkit is described in the course as faster and more suitable for industrial use?", options: ["NLTK","HuggingFace Datasets","spaCy","scikit-learn"], correct: 2 },
+      { q: "The phrase \"Bol.com\" poses a problem primarily for which NLP task?", options: ["Named entity classification","Sentence splitting","Topic modelling","Coreference resolution"], correct: 1 },
+      { q: "In traditional NLP pipelines, why is passing only the single best output between modules problematic?", options: ["It violates copyright on linguistic data","It prevents modules from considering uncertainty from previous steps","It requires all modules to use the same programming language","It forces all modules to use rule-based approaches"], correct: 1 },
+      { q: "Which of the following correctly characterises ambiguity as opposed to variation?", options: ["Ambiguity = multiple forms for one meaning; variation = one form with multiple meanings","Ambiguity = one form with multiple possible interpretations; variation = multiple forms for the same meaning","Ambiguity only occurs in spoken language; variation only in written language","Ambiguity is solved by tokenisation; variation by lemmatisation"], correct: 1 },
+      { q: "According to Zipf's Law, as a word's rank increases:", options: ["Its frequency increases proportionally","Its frequency stays constant across all ranks","Its frequency decreases roughly proportionally","Its frequency becomes unpredictable"], correct: 2 },
+      { q: "Which of the following is a defining property of the Bag-of-Words representation?", options: ["It captures word order and syntactic dependencies","It uses dense 300-dimensional vectors","It represents documents by word counts, ignoring word order","It requires a pre-trained language model"], correct: 2 },
+      { q: "Sentence splitting is particularly challenging when encountering:", options: ["Function words like \"the\" and \"of\"","Named entities of type PERSON","Decimal numbers like \"3.14\" that contain periods","Words with more than five syllables"], correct: 2 },
+      { q: "The number of tokens in \"the Jelly Bean and Ice Cream Sandwich operating systems\" is:", options: ["7","8","9","10"], correct: 2 },
+      { q: "Which of the following describes a use case where high recall is prioritised over precision?", options: ["Spam deletion from an inbox (spam is auto-deleted permanently)","Tsunami alert system (must not miss any real tsunami)","Search engine result ranking","Autocorrect suggestions in a word processor"], correct: 1 },
+      { q: "The NLP pipeline layer concerned with identifying who said what to whom is:", options: ["Morphological analysis","Lexical analysis","Syntactic analysis","Pragmatic analysis"], correct: 3 },
+      { q: "Which encoding issue can cause problems during tokenisation?", options: ["Using lemmatisation before POS tagging","Non-UTF-8 characters that split incorrectly across byte boundaries","Words appearing more than 100 times","Stop words overlapping with open-class words"], correct: 1 },
+      { q: "In a medical NLP pipeline, section detection and document-format conversion are needed before linguistic analysis because:", options: ["They replace all later NLP modules","They calculate precision and recall automatically","They convert PDF/HTML structure into usable text so linguistic modules receive correct content","They create gold labels automatically"], correct: 2 },
+      { q: "Which of the following is an example of metonymy?", options: ["\"Time is money\" (mapping time onto financial concepts)","\"The Kremlin announced new sanctions\" (using building to refer to government)","\"cold person\" being negative while \"cold soda\" is positive","\"IBM\" and \"Big Blue\" referring to the same company"], correct: 1 },
+      { q: "The acronym \"NLP\" in the course stands for:", options: ["Natural Linguistic Processing","Neural Language Programming","Natural Language Processing","Normalised Lexical Parsing"], correct: 2 },
+      { q: "Which statement about NLTK is most consistent with the course materials?", options: ["NLTK is the fastest toolkit for industrial NLP deployment","NLTK is primarily a deep learning framework","NLTK is well-documented and often used for teaching NLP","NLTK focuses exclusively on named entity recognition"], correct: 2 },
+      { q: "The phrase \"Save data up in the cloud\" is described in the lectures as an example of:", options: ["Metonymy","Metaphor","Hyponymy","Variation"], correct: 1 },
+      { q: "Which layer of the NLP pipeline is responsible for tasks such as coreference resolution and discourse structure?", options: ["Lexical analysis","Syntactic analysis","Morphological analysis","Semantic and pragmatic analysis"], correct: 3 },
+      { q: "Which preprocessing step converts \"running\" → \"run\" using dictionary and POS information?", options: ["Stemming","Stop-word removal","Lemmatisation","Chunking"], correct: 2 },
+      { q: "A POS tagger assigns \"NN\" to \"bank\" when the intended meaning is \"riverbank\" but \"NN\" is also correct for \"financial bank\". This is an example of:", options: ["Variation","Error propagation","Ambiguity (one form, multiple senses both of the same POS)","Domain shift"], correct: 2 },
+      { q: "The statement \"the chicken produced an egg\" and \"the egg produced a chicken\" demonstrate:", options: ["That Bag-of-Words is sufficient for all classification tasks","That word order matters for meaning and BoW loses it","That n-grams cannot capture sequential information","That named entities must be detected before sentiment"], correct: 1 },
+      { q: "Which characteristic is shared by all NLP pipelines regardless of task?", options: ["They all use transformers","They all perform some form of tokenisation or text segmentation as an early step","They all require gold-annotated training data","They all process one sentence at a time"], correct: 1 },
+      { q: "\"The three pizzas still need to pay\" is an example of:", options: ["Metaphor","Polysemy","Metonymy (pizzas stand for the people who ordered them)","Structural ambiguity"], correct: 2 },
+      { q: "Which distinction is drawn in Lecture 1 between NLP and text mining?", options: ["NLP is always unsupervised; text mining is always supervised","NLP builds language-processing modules; text mining uses them to extract structured knowledge","NLP deals with speech; text mining deals with written text only","NLP produces summaries; text mining produces translations"], correct: 1 },
+      { q: "Which of the following is a key challenge for sentence splitting when dealing with abbreviations?", options: ["Abbreviations always end sentences","Abbreviations like \"Dr.\" end with a period that may or may not signal a sentence boundary","Abbreviations are never followed by proper nouns","Abbreviations must always be expanded before sentence splitting"], correct: 1 },
+      { q: "In a traditional NLP pipeline, which module is typically placed LAST?", options: ["Tokenisation","POS tagging","Sentiment or pragmatic analysis","Sentence splitting"], correct: 2 },
+      { q: "According to the course, data sparseness is primarily a problem because:", options: ["Large corpora are expensive to store","Rare words or expressions may not appear in training data, making it hard to generalise","POS taggers fail on common words","Sentence splitters cannot handle long documents"], correct: 1 },
+      { q: "Which of the following illustrates the concept of variation in the context of named entity recognition?", options: ["\"Apple\" can mean either a company or a fruit","\"US\", \"United States\", \"America\", and \"The States\" all refer to the same country","\"Bank\" can be a financial institution or a river bank","\"may\" can be a modal verb, a name, or a month"], correct: 1 },
+      { q: "Which module in an NLP pipeline is most directly responsible for identifying that \"he\" in sentence 2 refers to \"Lincoln\" introduced in sentence 1?", options: ["POS tagger","Named entity recogniser","Coreference resolver","Sentence splitter"], correct: 2 },
+      { q: "The phrase \"state-of-the-art\" is problematic for tokenisers because:", options: ["It contains illegal characters","Different tokenisers make different decisions about whether to split on hyphens","It is always treated as four separate tokens","It cannot be lemmatised"], correct: 1 },
+      { q: "Which of the following best describes what distinguishes computational linguistics from text mining?", options: ["Computational linguistics is applied to industry; text mining is theoretical","Computational linguistics studies algorithms and models of language; text mining applies NLP tools to extract structured information","Computational linguistics uses neural networks; text mining uses rules","They are synonyms — no distinction is made in the course"], correct: 1 }
+    ]
+  },
+  {
+    title: "Linguistics: Morphology, Syntax, Semantics & Pragmatics",
+    short: "Linguistics",
+    questions: [
+      { q: "Morphology studies:", options: ["How words combine into sentences","How words are formed from smaller meaningful units","How sentences are interpreted in context","How co-occurrence patterns reveal word meaning"], correct: 1 },
+      { q: "The word \"unhappiness\" consists of how many morphemes?", options: ["1","2","3 (un- + happy + -ness)","4"], correct: 2 },
+      { q: "Which morphological process produces a new word class from an existing word (e.g., \"happy\" → \"happiness\")?", options: ["Inflection","Compounding","Derivation","Cliticisation"], correct: 2 },
+      { q: "Which of the following is an inflectional form (changing grammatical category rather than core meaning)?", options: ["\"happy\" → \"unhappy\" (prefix adding negation)","\"walk\" → \"walked\" (past tense)","\"teach\" → \"teacher\" (new noun from verb)","\"rain\" → \"raincoat\" (compounding)"], correct: 1 },
+      { q: "Constituent parsing produces:", options: ["Flat binary head-dependent relations between words","A list of named entity types for each token","A hierarchical phrase structure tree showing NP, VP, and PP constituents","A matrix of word co-occurrence probabilities"], correct: 2 },
+      { q: "Dependency parsing produces:", options: ["A tree of nested phrase constituents","Flat labelled binary relations between a head word and its dependents","A list of synonyms for each token","A topic distribution over the document"], correct: 1 },
+      { q: "Which is the most accurate definition of a synset in WordNet?", options: ["A set of all words containing a given morpheme","A set of synonymous words or expressions sharing a common meaning","A sentence template for a specific verb frame","A co-occurrence count matrix for one word"], correct: 1 },
+      { q: "According to the lectures, WordNet 3.0 contains approximately how many noun synsets?", options: ["8,324","11,490","117,792","14,041,749"], correct: 2 },
+      { q: "The relation \"Is-a\" (tulip is a flower) is called:", options: ["Meronymy","Antonymy","Hyponymy","Synonymy"], correct: 2 },
+      { q: "The relation \"Part-of\" (wheel is part of a car) is called:", options: ["Hyponymy","Meronymy","Holonymy","Antonymy"], correct: 1 },
+      { q: "In the sentence \"Krelis quickly waved at the cow with a hat\", the bracketing [at [the cow]NP]PP indicates:", options: ["\"at\" is the head of the NP containing \"the cow\"","A prepositional phrase containing a nested noun phrase","\"the cow\" is a metonymic reference to a person","A dependency arc from \"waved\" to \"cow\""], correct: 1 },
+      { q: "Semantic roles identify:", options: ["The POS of each word in the sentence","The topic of the entire document","The thematic relationships participants bear to the event described by the predicate","Whether a word is a stopword"], correct: 2 },
+      { q: "Which of the following is the semantic role of \"the hammer\" in \"She broke the window with the hammer\"?", options: ["Agent","Patient","Instrument","Goal"], correct: 2 },
+      { q: "The sentence \"Old women and men can be annoying\" is ambiguous because:", options: ["\"old\" is not a real English adjective","The sentence cannot be parsed","\"Old\" can scope over \"women\" only, or over both \"women and men\"","\"annoying\" is both adjective and verb"], correct: 2 },
+      { q: "WordNet has been reported to contain approximately how many different senses for the verb \"break\"?", options: ["14","33","45","59"], correct: 3 },
+      { q: "Pragmatics deals with:", options: ["The internal structure of words (prefixes, suffixes)","The hierarchical organisation of sentence constituents","How context, speaker intent, and situational factors shape interpretation","The frequency distribution of words in a corpus"], correct: 2 },
+      { q: "Which linguistic level is involved when we interpret \"Can you pass the salt?\" as a request rather than a yes/no question?", options: ["Morphology","Syntax","Semantics","Pragmatics"], correct: 3 },
+      { q: "The course states that language has approximately how many words for \"person\" in English vocabulary according to WordNet?", options: ["500","2,037","4,000","5,000"], correct: 3 },
+      { q: "Open-class parts of speech (nouns, verbs, adjectives, adverbs) differ from closed-class (pronouns, prepositions) in that:", options: ["Open-class words never change form","Open-class categories accept new vocabulary more readily","Open-class words are always stopwords","Open-class categories have smaller inventories"], correct: 1 },
+      { q: "Which of the following illustrates a PP-attachment ambiguity?", options: ["\"bank\" meaning financial institution vs. river bank","\"He saw the man with the telescope\" — \"with the telescope\" can attach to \"saw\" or \"man\"","\"the\" appearing in almost every document","\"walk\" vs. \"walked\" differing in tense"], correct: 1 },
+      { q: "Chunking (shallow parsing) is described in the course as:", options: ["Building full parse trees with all recursive structure","Computing all possible parses and selecting the most probable","Identifying flat, non-overlapping phrase chunks cheaply and robustly","Replacing words with their lemmas using morphological rules"], correct: 2 },
+      { q: "According to the course, the enormous number of possible meaning combinations in a single sentence (approximately 14 quadrillion) arises because:", options: ["Each word has only one sense but sentence length grows exponentially","The number of possible sense combinations explodes with word polysemy multiplied across all words","Transformers consider all possible attention head combinations","LDA assigns a topic distribution to every token"], correct: 1 },
+      { q: "Which lexical relation holds between \"buy\" and \"purchase\"?", options: ["Antonymy","Meronymy","Hyponymy","Synonymy (near-synonymy)"], correct: 3 },
+      { q: "A morphologically rich language (e.g., Finnish) creates which specific challenge for NLP systems?", options: ["Shorter average document length","Fewer named entities","Many different surface forms per lemma, causing data sparseness","Simpler dependency structures"], correct: 2 },
+      { q: "In the example \"may may still rule in May\", the difficulty for NLP is primarily:", options: ["That the sentence has no verb","That the same surface form \"may\" can be a modal verb, a proper name, or a month","That \"rule\" is an out-of-vocabulary term","That the sentence is syntactically well-formed"], correct: 1 },
+      { q: "The concept of coreference in linguistics refers to:", options: ["Two words that have opposite meanings","A word being derived from another word in the same sentence","Multiple expressions in a text referring to the same real-world entity","Words that share the same morphological root"], correct: 2 },
+      { q: "Choosing the most frequent POS tag as a baseline for each word gives approximately what accuracy on English?", options: ["65%","78%","~90%","100%"], correct: 2 },
+      { q: "Which pairing correctly describes the terms \"token\" and \"type\"?", options: ["Token = unique word form; type = word occurrence in running text","Token = word occurrence in running text; type = unique word form","Token = sentence; type = paragraph","Token = lemma; type = inflected form"], correct: 1 },
+      { q: "The semantic role \"Patient\" refers to:", options: ["The entity that initiates or causes the action","The entity that undergoes or is affected by the action","The end point or destination of an action","The instrument used to perform an action"], correct: 1 },
+      { q: "Which statement about WordNet is accurate per the course materials?", options: ["WordNet only covers verbs and adjectives, not nouns","WordNet has exactly 100 synsets for every major POS","WordNet organises English vocabulary into synonym sets linked by lexical-semantic relations","WordNet was discontinued and replaced by word2vec"], correct: 2 },
+      { q: "The term \"polysemy\" refers to:", options: ["A word having no meaning","Two different words having the same spelling","One word form having multiple related meanings","Multiple words sharing the same pronunciation"], correct: 2 },
+      { q: "Which module is described in the course as providing NPs, VPs, and PPs efficiently but without full recursive syntactic structure?", options: ["Dependency parser","Chunker (shallow parser)","Lemmatiser","Coreference resolver"], correct: 1 },
+      { q: "\"Holonymy\" is the relation in which:", options: ["A word is a more specific subtype of another word","A word is a part of a larger whole","A word IS the larger whole of which another word is a part","Two words share the same meaning"], correct: 2 },
+      { q: "Which of the following is an example of derivational morphology (creating a new word with different POS)?", options: ["\"dog\" → \"dogs\" (plural)","\"run\" → \"ran\" (past tense)","\"quick\" → \"quickly\" (adverb from adjective)","\"go\" → \"going\" (present participle)"], correct: 2 },
+      { q: "According to the lectures, semantic role labelling has value for text mining because:", options: ["It replaces tokenisation for all downstream tasks","It allows systems to identify who did what to whom, supporting information extraction and QA","It computes word embeddings from syntactic structures","It produces POS tags faster than rule-based taggers"], correct: 1 }
+    ]
+  },
+  {
+    title: "Machine Learning for NLP: Evaluation & Representation",
+    short: "ML Evaluation",
+    questions: [
+      { q: "Given TP=50, FP=10, FN=20, compute Precision (to 2 decimals).", options: ["0.71","0.83","0.67","0.50"], correct: 1 },
+      { q: "Given TP=50, FP=10, FN=20, compute Recall (to 2 decimals).", options: ["0.63","0.83","0.71","0.50"], correct: 2 },
+      { q: "Given Precision=0.83 and Recall=0.71, compute F1 (to 2 decimals).", options: ["0.77","0.72","0.80","0.65"], correct: 0 },
+      { q: "A system is evaluated on 100 emails: 20 spam, 80 ham. It classifies 10 as spam (5 correctly). What is the accuracy?", options: ["0.75","0.80","0.25","0.50"], correct: 1 },
+      { q: "Using the same scenario (100 emails, 20 spam, 10 classified as spam of which 5 correct), what is the F1 for the spam class?", options: ["0.50","0.40","0.33","0.25"], correct: 2 },
+      { q: "In 10-fold cross-validation, the data is:", options: ["Randomly split once into 10% train and 90% test","Split into 10 equal parts; each part used as test set in turn while the others form the training set","Repeated 10 times with the same split but different random initialisations","Used entirely for training, with a separate 10% held out for all tests"], correct: 1 },
+      { q: "The development (validation) set is used for:", options: ["Final performance reporting","Building the initial training corpus","Tuning hyperparameters and making modelling decisions without touching the test set","Computing inter-annotator agreement"], correct: 2 },
+      { q: "Why is accuracy an unreliable metric on imbalanced datasets (e.g., 99% negative, 1% positive)?", options: ["Accuracy can only be computed when classes are balanced","A classifier predicting only the majority class scores very high while missing all positives","Accuracy and F1 are identical on imbalanced data","Precision becomes undefined on imbalanced data"], correct: 1 },
+      { q: "Macro averaging (across 3 classes with per-class F1 of 0.90, 0.70, 0.50) gives a macro F1 of:", options: ["0.70","0.75","0.80","0.60"], correct: 0 },
+      { q: "Micro averaging differs from macro averaging in that:", options: ["Micro averaging gives equal weight to all classes","Micro averaging pools TPs, FPs, and FNs across classes before computing the metric, weighting frequent classes more","Micro averaging is only used for binary classification","Micro averaging always gives lower scores than macro"], correct: 1 },
+      { q: "For a NERC system that labels 30 entities, where 24 match the gold (which has 30 entities), the strict F1 is:", options: ["0.80","0.75","0.73","0.65"], correct: 0 },
+      { q: "Which representation results in a vector whose length equals the vocabulary size, with most values being zero?", options: ["Dense word embedding (word2vec)","One-hot Bag-of-Words","Mean sentence embedding","Contextual BERT embedding"], correct: 1 },
+      { q: "In a Conditional Random Field (CRF) for sequence labelling, which property makes it superior to independently classifying each token?", options: ["CRFs use much larger training datasets","CRFs model dependencies between adjacent output labels, penalising illegal sequences","CRFs use attention mechanisms","CRFs can only be trained on gold-annotated data"], correct: 1 },
+      { q: "Which evaluation approach is recommended when you want to assess generalisation to unseen domains?", options: ["In-domain 10-fold cross-validation","Leave-one-document-out cross-validation","Train on one domain, test on a different domain (cross-domain evaluation)","Using the training set as the test set"], correct: 2 },
+      { q: "The large performance drop in NERC when tested on out-of-domain data (e.g., trained on Reuters, tested on Wikinews) is primarily caused by:", options: ["The test set being too small to draw meaningful conclusions","Differences in vocabulary, entity naming conventions, and entity type distributions between domains","The IOB label set being incompatible between news corpora","Cross-validation not being applied correctly"], correct: 1 },
+      { q: "The strategy of first maximising recall and then improving precision addresses which two problems respectively?", options: ["Ambiguity first, then variation","Overfitting first, then underfitting","Variation and data sparseness first (recall); then ambiguity and feature selection (precision)","Tokenisation first, then lemmatisation"], correct: 2 },
+      { q: "IOB labels B-ORG, I-ORG, B-PER, I-PER, O are used for:", options: ["Document-level topic assignment","Sentence-level sentiment polarity","Token-level sequence labelling for named entities","Word-level TF-IDF weighting"], correct: 2 },
+      { q: "Which scenario most clearly calls for a classifier with high precision on the positive class?", options: ["Tsunami alert: must catch all real events","Cancer screening: missing any cancer is catastrophic","Auto-deleting emails classified as spam: false positives block legitimate mail","Fraud detection: every suspicious transaction must be flagged"], correct: 2 },
+      { q: "A feature set for NLP classification typically consists of:", options: ["Gold labels from the test set","Pixel values of rendered document images","Representations derived from text such as word n-grams, POS tags, and linguistic features","Raw PDFs with metadata"], correct: 2 },
+      { q: "In the example sequence \"American Airlines\", a correct CoNLL IOB representation would be:", options: ["American=O, Airlines=O","American=B-ORG, Airlines=I-ORG","American=B-PER, Airlines=I-PER","American=B-LOC, Airlines=I-LOC"], correct: 1 },
+      { q: "An IOB sequence \"O I-PER I-PER\" is illegal because:", options: ["Two I-PER in a row is never allowed","An I-PER cannot begin a span without a preceding B-PER","\"O\" must always follow another \"O\"","PER entities must always contain at least three tokens"], correct: 1 },
+      { q: "Overfitting in a machine learning model is characterised by:", options: ["Low training accuracy and low test accuracy","High training accuracy and high test accuracy","High training accuracy but poor generalisation to unseen test data","Equal training and test accuracy"], correct: 2 },
+      { q: "Which metric adjusts observed agreement between annotators for the level of agreement expected by chance?", options: ["Accuracy","F1 score","Cohen's Kappa","Perplexity"], correct: 2 },
+      { q: "A Cohen's Kappa of 0.65 is typically interpreted as:", options: ["Poor agreement","Slight agreement","Moderate agreement","Substantial agreement"], correct: 3 },
+      { q: "Gold data is distinguished from Bronze data primarily by:", options: ["Gold data being used only for testing, Bronze only for training","Gold data being manually annotated by humans; Bronze being automatically labelled","Gold data being larger than Bronze data","Gold data being monolingual; Bronze being multilingual"], correct: 1 },
+      { q: "In a train/dev/test experimental setup, which set should NEVER be used during model development to tune hyperparameters?", options: ["Training set","Development set","Test set","Validation set (which is the same as the dev set)"], correct: 2 },
+      { q: "Naive Bayes applied to text assumes:", options: ["Word order determines the class probability","All words are conditionally independent given the class label","The most frequent word determines the class","Features must be continuous-valued"], correct: 1 },
+      { q: "Which classifier type is described in the lecture as most commonly used for sentiment classification according to Ravi & Ravi (2015)?", options: ["Logistic Regression","Decision Tree","Naive Bayes","Support Vector Machine"], correct: 3 },
+      { q: "The key advantage of logistic regression over Naive Bayes for text is that:", options: ["Logistic regression requires no labelled data","Logistic regression never overfits","Logistic regression is discriminative and handles correlated features without assuming independence","Logistic regression uses embedding features by default"], correct: 2 },
+      { q: "When a NERC system trained on news articles is applied to clinical notes, the expected outcome is:", options: ["Performance identical to news domain","Slight improvement due to domain transfer","Significant performance drop due to vocabulary, entity types, and conventions differing","The model refuses to process clinical text"], correct: 2 },
+      { q: "Which representation preserves some local word order information that pure unigram BoW loses?", options: ["TF-IDF unigrams","Bigrams and trigrams","Document-level embeddings","One-hot character vectors"], correct: 1 },
+      { q: "The purpose of a confusion matrix (contingency table) is to:", options: ["Show the training loss curve over epochs","Display how predicted labels align with gold labels across all classes","Measure word co-occurrence in a corpus","Compute the TF-IDF weight of each feature"], correct: 1 },
+      { q: "In a 3-class problem with per-class precision 0.42, 0.52, 0.86, the macro precision is:", options: ["0.52","0.60","0.73","0.86"], correct: 1 },
+      { q: "In the same 3-class problem, if total TP=268 and total FP=99, the micro precision is approximately:", options: ["0.60","0.68","0.73","0.80"], correct: 2 },
+      { q: "Which of the following best describes what features are in an NLP classification system?", options: ["The class labels assigned by the model","The raw bytes of the input file","Measurable properties derived from text (word counts, POS tags, syntactic patterns) used as input to the classifier","The hidden layers of a neural network"], correct: 2 }
+    ]
+  },
+  {
+    title: "Word Embeddings, Neural Models & Transformers",
+    short: "Embeddings & Transformers",
+    questions: [
+      { q: "Firth's (1957) distributional hypothesis, the basis for word embeddings, states:", options: ["Words with the same spelling have the same meaning","A word's meaning can be determined by the company it keeps (its contexts)","All words share a universal semantic core","Word meaning is fully determined by morphological structure"], correct: 1 },
+      { q: "Context vectors represent a word's meaning by:", options: ["Its position in a dictionary","Its one-hot index in the vocabulary","Co-occurrence counts with other words in a window","The POS tag most frequently assigned to it"], correct: 2 },
+      { q: "Given word vectors cat=[0.1,0.4,0.3,0.9] and dog=[0.1,0.3,0.4,0.8], their semantic similarity would be assessed as:", options: ["Very dissimilar (opposite vectors)","Identical (same vector)","High (vectors are close in the embedding space)","Not computable without knowing vocabulary size"], correct: 2 },
+      { q: "Word2Vec training creates \"positive pairs\" consisting of:", options: ["A word and a random word from another document","A word and a word that appears near it in the same context","A word and its antonym","A word and its lemma"], correct: 1 },
+      { q: "In Word2Vec, the hidden layer typically has how many nodes?", options: ["Exactly 100","300","768","Vocabulary size"], correct: 1 },
+      { q: "The analogy task \"king − man + woman = ?\" in word embeddings is solved by:", options: ["Looking up the answer in WordNet","Performing arithmetic on embedding vectors and finding the closest result","Running a sentiment classifier","Applying a CRF over the token sequence"], correct: 1 },
+      { q: "A key limitation of static word embeddings (word2vec, GloVe) is that:", options: ["They cannot be used as input to any classifier","They require more than 1 billion training examples","They assign one fixed vector per word type regardless of context, failing to distinguish senses","They only work for English"], correct: 2 },
+      { q: "Bag-of-embeddings creates a document representation by:", options: ["Using the last token's embedding as the document embedding","Averaging all token embeddings in the document into a single vector","Concatenating all token embeddings","Multiplying token embeddings element-wise"], correct: 1 },
+      { q: "For the document \"Vaccines are safe\", with word vectors [0.23,0.45,0.21,0.78], [0.12,0.34,0.11,0.32], [0.01,0.41,0.05,0.91], the averaged embedding's first dimension is:", options: ["0.36","0.12","0.12","0.23"], correct: 2 },
+      { q: "A CNN applied to text typically uses a sliding context window to:", options: ["Tokenise the raw text","Extract local n-gram features at multiple scales","Compute attention between all token pairs","Perform sentence splitting"], correct: 1 },
+      { q: "In an LSTM encoder-decoder for machine translation, what does the encoder produce?", options: ["The translated output tokens one by one","A fixed-size representation summarising the source sentence","BIO labels for named entities in the source","Topic probabilities for the document"], correct: 1 },
+      { q: "The self-attention mechanism in Transformers (Vaswani et al. 2017) allows:", options: ["Only the previous token to influence the current token's representation","Each token to attend to all other tokens simultaneously","Convolutional filters to scan the input","Recurrent hidden states to be updated step by step"], correct: 1 },
+      { q: "In scaled dot-product attention, dividing the dot product scores by √d_k prevents:", options: ["Negative scores from appearing","Large dot products from pushing softmax into saturation, causing vanishing gradients","The model from attending to padding tokens","Positional encoding from dominating"], correct: 1 },
+      { q: "Why do Transformer models require positional encodings?", options: ["To embed word meanings more accurately","Because self-attention is order-invariant and needs explicit position information injected","To handle out-of-vocabulary words","To perform faster inference"], correct: 1 },
+      { q: "BERT's masked language modelling objective masks approximately what fraction of tokens?", options: ["5%","15%","30%","50%"], correct: 1 },
+      { q: "Which of the following is a BERT-style (encoder) model rather than a GPT-style (decoder) model?", options: ["GPT-3","OPT","RoBERTa","LLaMA"], correct: 2 },
+      { q: "BERT-base has which of the following specifications?", options: ["300 dimensions, 6 layers, 6 attention heads","768 dimensions, 12 layers, 12 attention heads","1024 dimensions, 24 layers, 16 attention heads","512 dimensions, 8 layers, 8 attention heads"], correct: 1 },
+      { q: "The [CLS] token in BERT is used for:", options: ["Marking the beginning of each named entity","Separating two sentences in the NSP task and as the sentence-level classification representation","Replacing masked tokens during pretraining","Encoding positional information"], correct: 1 },
+      { q: "GPT-style models differ from BERT-style models in that GPT uses:", options: ["Bidirectional self-attention seeing all tokens","Masked self-attention attending only to left context (autoregressive, decoder-only)","A cross-attention mechanism between encoder and decoder","Character-level tokenisation exclusively"], correct: 1 },
+      { q: "Transfer learning in NLP involves:", options: ["Translating training data from one language to another","Pre-training on massive unlabelled data then fine-tuning on a small labelled task dataset","Transferring labelled data from one annotator to another","Using the same model architecture for all tasks without any task-specific training"], correct: 1 },
+      { q: "Fine-tuning for token classification (e.g., NERC) with BERT works by:", options: ["Using the [CLS] token output for the entire document","Using each token's final hidden state to predict an IOB label","Running a separate classifier on the mean of all hidden states","Only fine-tuning the first two layers of BERT"], correct: 1 },
+      { q: "WordPiece tokenisation (used by BERT) handles rare or unseen words by:", options: ["Replacing them with a single [UNK] token","Decomposing them into known subword units (e.g., \"playing\" → \"play\", \"##ing\")","Looking them up in a gazetteer","Assigning them the embedding of the most similar known word"], correct: 1 },
+      { q: "ELMo differs from word2vec because:", options: ["ELMo uses convolutional networks; word2vec uses recurrent networks","ELMo produces context-sensitive embeddings via a bidirectional LSTM; word2vec produces static vectors","ELMo was trained on images; word2vec on text","ELMo uses byte-pair encoding; word2vec uses characters"], correct: 1 },
+      { q: "The approximate parameter count of GPT-3 is:", options: ["110 million","1.5 billion","11 billion","175 billion"], correct: 3 },
+      { q: "Which HuggingFace pipeline task string is used to run a NERC classifier in the course?", options: ["\"text-generation\"","\"summarization\"","\"ner\" or \"token-classification\"","\"audio-classification\""], correct: 2 },
+      { q: "When the HuggingFace NER pipeline outputs sub-tokens for a word like \"Ilia\", the \"##\" prefix indicates:", options: ["The token is the beginning of a new entity","The token is a continuation subword that should be merged with the preceding piece","The token was masked during pretraining","The token has a negative sentiment score"], correct: 1 },
+      { q: "The course notes state that within-task and in-domain pretraining (ITPT) before fine-tuning:", options: ["Has no effect on downstream performance","Hurts performance by overfitting to domain-specific patterns","Boosts downstream performance compared to fine-tuning from generic pretraining alone","Can only be applied to sentiment classification"], correct: 2 },
+      { q: "\"Catastrophic forgetting\" in the context of fine-tuning refers to:", options: ["A neural network forgetting the input text during inference","The model's pretrained weights being overwritten by large gradient updates during fine-tuning","The training data being accidentally deleted","The model forgetting classes seen early in a multi-task curriculum"], correct: 1 },
+      { q: "Byte-Pair Encoding (BPE), used by GPT-2 and later models, builds a vocabulary by:", options: ["Splitting all words into individual characters only","Iteratively merging the most frequent adjacent byte pairs into new subword units","Using the WordNet synset ID for each word","Assigning each document a unique token"], correct: 1 },
+      { q: "Which statement about model size progression is correct per the course?", options: ["BERT-Large → GPT-2 → T5 → GPT-3 in increasing parameter count","GPT-3 → BERT-Large → T5 → GPT-4 in increasing parameter count","T5 → ELMo → BERT-Large → GPT-2 in increasing parameter count","All listed models have approximately the same parameter count"], correct: 0 },
+      { q: "GloVe trains word embeddings from:", options: ["Local context-window prediction (predicting neighbours)","Sentence-pair classification tasks","Global word-word co-occurrence statistics","BIO-tagged sequence data"], correct: 2 },
+      { q: "The XLM-RoBERTa model is notable in the course because:", options: ["It only works for English named entity recognition","It is a cross-lingual model that can be applied to Dutch and other languages via the same pipeline","It uses character-level tokenisation only","It is a decoder-only model like GPT"], correct: 1 },
+      { q: "Which of the following is one of the pretraining datasets used by large language models mentioned in the course?", options: ["CoNLL 2003 (Reuters NER annotations)","Common Crawl","SemEval 2014 task 4 (restaurant reviews)","VADER lexicon"], correct: 1 },
+      { q: "What is the key advantage of BERT-large over BERT-base for downstream NLP tasks?", options: ["BERT-large uses a different training objective (NSP only, no MLM)","BERT-large has more layers (24) and attention heads (16), giving richer representations at the cost of more compute","BERT-large uses byte-pair encoding while BERT-base uses WordPiece","BERT-large is decoder-only and better suited for text generation"], correct: 1 },
+      { q: "According to the lecture notes, the Billion Word Benchmark and Book Corpus are used as:", options: ["Named entity annotation datasets","Evaluation benchmarks for sentiment classification","Pretraining corpora for large language models","Topic taxonomies for news classification"], correct: 2 }
+    ]
+  },
+  {
+    title: "Sentiment & Subjectivity Analysis",
+    short: "Sentiment Analysis",
+    questions: [
+      { q: "Subjectivity in NLP is broader than simple positive/negative polarity. Which of the following best captures this broader view?", options: ["Only adjectives carry subjective meaning","Subjectivity includes opinions, emotions, stance, attribution, agenda setting, and social relations","Subjectivity is limited to product reviews","Subjectivity only applies to Twitter data"], correct: 1 },
+      { q: "What distinguishes explicit from implicit sentiment?", options: ["Explicit sentiment uses neural models; implicit uses rules","Explicit sentiment is document-level; implicit is sentence-level","Explicit sentiment uses direct opinion words; implicit is inferred from events or context without polarity words","Explicit sentiment is in English; implicit is in other languages"], correct: 2 },
+      { q: "A Source-Introducing Predicate (SIP) such as \"claims\" or \"denies\" is important for sentiment analysis because:", options: ["It identifies the target of the opinion","It indicates that the following content is attributed to a specific holder, not the author","It marks the beginning of a named entity span","It converts a negative sentence into a positive one"], correct: 1 },
+      { q: "In the opinion structure Holder → SIP → Sentiment → Target, what is the \"Target\"?", options: ["The emotion category of the sentiment","The person expressing the opinion","The entity, product, or topic being evaluated","The speech-act verb connecting holder to sentiment"], correct: 2 },
+      { q: "According to the lecture, hedonometer.org tracks happiness using:", options: ["Survey responses from 1,000 participants per day","Sentiment-scored Twitter data correlated with real-world events","Star ratings from product review sites","Physiological measurements of facial expressions"], correct: 1 },
+      { q: "Which of the following is a cognitive SIP verb?", options: ["\"announce\"","\"promise\"","\"hate\"","\"confirm\""], correct: 2 },
+      { q: "Valence intensifiers in sentiment analysis refer to:", options: ["Words that negate the polarity of an opinion","Words that strengthen or weaken the intensity of an opinion expression","Named entities that appear in opinion sentences","Modal verbs signalling uncertainty"], correct: 1 },
+      { q: "The context-dependence of sentiment is illustrated by \"cold person\" vs. \"cold soda\". This primarily means:", options: ["Sentiment lexicons are always wrong","Negation always reverses polarity","The same adjective can be positive or negative depending on the noun it modifies","Implicit sentiment cannot be detected"], correct: 2 },
+      { q: "Double propagation for sentiment analysis works by:", options: ["Training two separate classifiers on positive and negative examples","Starting with seed sentiment words, using syntactic patterns to find aspects, then new sentiments, iterating","Pre-training a model and then fine-tuning on review data","Running two separate LDA models and merging the topics"], correct: 1 },
+      { q: "Aspect-Based Sentiment Analysis (ABSA) as used in SemEval 2014 Task 4 requires:", options: ["Only document-level polarity classification","Identifying both aspect spans (BIO token classification) and their associated sentiment polarity","Classifying documents into IPTC topic categories","Running coreference resolution before sentiment classification"], correct: 1 },
+      { q: "Which of the following tools was specifically designed for social media sentiment and handles emoticons and informal writing?", options: ["WordNet Affect","LIWC","MPQA / OpinionFinder","VADER"], correct: 3 },
+      { q: "The NRC Emotion Lexicon (Mohammad & Turney) associates words with:", options: ["Two polarity classes (positive/negative) only","Eight Plutchik emotions and two polarity classes (positive/negative)","Ekman's six basic emotions and a neutrality class","Intensity scores on a continuous scale from −5 to +5"], correct: 1 },
+      { q: "Agenda setting is described in the lectures as a form of subjectivity because:", options: ["It always uses explicit polarity words","Choosing what facts to include or omit can express stance without direct opinion words","It is identical to metaphor use","It only applies to political texts"], correct: 1 },
+      { q: "The phrase \"The new iPhone dies after 2 hours\" expresses:", options: ["Explicit positive sentiment about the iPhone","No sentiment — it is a neutral factual statement","Implicit negative sentiment through the event described","Positive sentiment about battery technology"], correct: 2 },
+      { q: "In the Ravi & Ravi (2015) sentiment analysis pipeline, which step comes FIRST?", options: ["Aspect extraction","Subjectivity classification","Sentiment classification","Opinion spam detection"], correct: 1 },
+      { q: "Document-level hotel sentiment annotation had a Cohen's Kappa of approximately:", options: ["0.42","0.55","0.65","0.87"], correct: 3 },
+      { q: "Which HuggingFace model is mentioned in the course for Dutch sentiment analysis?", options: ["bert-large-cased-finetuned-conll03-english","distilbert-base-uncased-finetuned-sst-2-english","wietsedv/bert-base-dutch-cased-finetuned-sentiment","xlm-roberta-large-finetuned-conll103-english"], correct: 2 },
+      { q: "Plutchik's Wheel of Emotions (1980) extends Ekman's basic emotions by:", options: ["Reducing the number of basic emotions to four","Modelling emotion intensity levels and combinations of basic emotions","Replacing emotions with opinion targets","Only classifying emotions as positive or negative"], correct: 1 },
+      { q: "The survey paper most associated in the course with the overview of sentiment analysis methods from 2015 is:", options: ["Feldman 2013","Pang & Lee 2007","Ravi & Ravi 2015","Tsytsarau & Palpanas 2012"], correct: 2 },
+      { q: "According to the course, in-domain sentiment analysis accuracy for hotel reviews can reach up to:", options: ["65%","78%","92%","99%"], correct: 2 },
+      { q: "Which of the following would be classified as a speech-act SIP verb?", options: ["\"think\"","\"feel\"","\"believe\"","\"deny\""], correct: 3 },
+      { q: "The SNAP review datasets and Yelp dataset are mentioned in the course as:", options: ["Named entity linking benchmarks","Pretraining corpora for BERT","Datasets for sentiment analysis","Topic modelling evaluation resources"], correct: 2 },
+      { q: "Which of the following is a feature type specifically useful for detecting holders and targets in sentiment analysis?", options: ["Character n-grams","Document length","Syntactic dependency relations (e.g., subject and object of SIP verbs)","TF-IDF of the entire vocabulary"], correct: 2 },
+      { q: "According to Hilte et al. (2023), which pattern was observed in hateful content posting?", options: ["Both males and females increase hate posting with age equally","Males decrease hate posting with age; females remain stable","Males increase hate posting with age (from ~0.2 to ~0.75); females remain stable (~0.5)","Age has no effect on hateful content for either gender"], correct: 2 },
+      { q: "The code pipeline(\"sentiment-analysis\", model=\"distilbert-base-uncased-finetuned-sst-2-english\") returns:", options: ["A list of topics with probabilities","A BIO-labelled sequence of tokens","A label (POSITIVE/NEGATIVE) and a confidence score","A word embedding for each token"], correct: 2 },
+      { q: "TF*IDF-weighted term position (e.g., terms in the title or first/last sentences) is used in sentiment analysis as a feature because:", options: ["Title and opening terms are more reliable indicators of overall document sentiment","POS tags are only reliable in the first sentence","Lemmatisation only works on title terms","Stop words appear only in titles"], correct: 0 },
+      { q: "Which of the following is an example of an opinion lexicon/tool for English mentioned in the course?", options: ["CoNLL 2003 dataset","Reuters-21578","Bing Liu's opinion lexicon","JRC-Acquis"], correct: 2 },
+      { q: "Figurative language (metaphors, irony, metonymy) poses a challenge for sentiment analysis because:", options: ["It is too infrequent to matter in practice","Literal lexicon-based approaches assign incorrect polarity to figurative expressions","It only appears in scientific texts","It is perfectly handled by Naive Bayes"], correct: 1 },
+      { q: "The five classification problems for opinion extraction include: subjective text, opinion expression, holder, target, and:", options: ["Document length","Topic category","Polarity (positive / negative)","Coreference chain"], correct: 2 },
+      { q: "Which resource uses A-Labels such as EMOTION, MOOD, TRAIT, COGNITIVE STATE, and PHYSICAL STATE?", options: ["VADER","NRC Emotion Lexicon","WordNet Affect","LIWC"], correct: 2 },
+      { q: "The Brexit 2016 dataset example in the course shows that females were approximately how much more in favour (FOR) than males?", options: ["Identical percentages","Females 68% FOR; males 55% FOR","Females 55% FOR; males 68% FOR","Both approximately 70% neutral"], correct: 1 },
+      { q: "In the aspect-based analysis from SemEval, which of the following was a top restaurant aspect?", options: ["battery life","keyboard","food","windows"], correct: 2 },
+      { q: "Which statement about SVM for sentiment classification is consistent with the course?", options: ["SVMs were rarely used before 2010","SVMs are decoder-only models","SVMs appeared in 55 articles in the Ravi & Ravi (2015) survey and yielded 72-92% in-domain accuracy","SVMs cannot handle BoW features"], correct: 2 },
+      { q: "The concept of \"opinion spam\" in the Ravi & Ravi pipeline refers to:", options: ["Opinions containing more than 100 words","Opinions posted in multiple languages","Fake or deceptive reviews designed to mislead consumers","Opinions classified by the wrong holder"], correct: 2 },
+      { q: "Which code snippet correctly loads a Dutch sentiment analysis model in HuggingFace according to the course?", options: ["pipeline(\"ner\", model=\"bert-large-cased-finetuned-conll03-english\")","pipeline(\"sentiment-analysis\", model=\"wietsedv/bert-base-dutch-cased-finetuned-sentiment\")","pipeline(\"text-generation\", model=\"gpt2\")","pipeline(\"summarization\", model=\"facebook/bart-large-cnn\")"], correct: 1 }
+    ]
+  },
+  {
+    title: "Named Entity Recognition & Classification",
+    short: "NER & NEC",
+    questions: [
+      { q: "Named Entity Recognition and Classification (NERC) involves:", options: ["Only assigning entity types, not finding spans","Finding named entity spans AND classifying their type","Clustering documents by topic","Disambiguating word senses in a lexicon"], correct: 1 },
+      { q: "Which of the following is an example of name variation in NER (same entity, different expressions)?", options: ["\"Apple\" referring to either the tech company or the fruit","\"Washington\" as city, state, person, or government","\"IBM\", \"International Business Machines\", and \"Big Blue\" all referring to the same company","\"May\" being a month, a name, or a modal verb"], correct: 2 },
+      { q: "Metonymy in NER creates type ambiguity because:", options: ["Different people have the same name","The same name can be used to refer to entities of different types (e.g., \"Washington\" as city, government, or person)","Entity spans often cross sentence boundaries","Abbreviations like \"IBM\" are ambiguous between multiple companies"], correct: 1 },
+      { q: "Which of the following entity types would be LEAST typical in the classic CoNLL 2003 NERC task?", options: ["PERSON","ORGANISATION","LOCATION","CHEMICAL"], correct: 3 },
+      { q: "Fine-grained entity typing (e.g., FIGER's 112 types) makes NERC harder because:", options: ["It reduces the number of entity mentions","It eliminates the need for BIO tagging","It introduces many more categories, increasing ambiguity and annotation difficulty","It only applies to biomedical text"], correct: 2 },
+      { q: "The word shape feature \"Xx\" represents a word where:", options: ["All characters are uppercase","All characters are lowercase","The word starts with an uppercase letter followed by lowercase letters","The word contains a digit"], correct: 2 },
+      { q: "Which type of lookup feature (gazetteer) would help identify \"Paris\" as a city name?", options: ["A list of common English verb forms","A list of geographic entity names","A list of negative sentiment words","A list of topic taxonomy terms"], correct: 1 },
+      { q: "The entity linking (NEL) task differs from named entity recognition in that:", options: ["NEL identifies entity spans while NER links them to a knowledge base","NER identifies entity spans; NEL links/disambiguates the entity to a specific entry in a reference database (Wikipedia, DBpedia)","NEL classifies entity types; NER links them to a knowledge base","NEL uses BIO labels; NER uses topic labels"], correct: 1 },
+      { q: "NIL entities in entity linking refer to:", options: ["Entities of type \"null\" (no type assigned)","Entities whose mention spans are predicted as \"O\" (outside any entity)","Entities that do not exist in the reference knowledge base","Entities whose type cannot be determined from context"], correct: 2 },
+      { q: "The Alistair McAlpine \"trial by twitter\" case in the course illustrates:", options: ["The importance of evaluating NER on balanced datasets","How entity disambiguation errors can have real-world consequences (wrong person identified)","Why CRFs outperform neural models for NER","The difference between BIO and IO tagging schemes"], correct: 1 },
+      { q: "The entity linking method AIDA/AGDISTIS differs from DBpedia Spotlight because:", options: ["AIDA uses word-level text similarity; Spotlight uses graph coherence","AIDA uses graph-based coherence across all candidate entities simultaneously; Spotlight uses word-level similarity","DBpedia Spotlight only works for German","AIDA does not use any knowledge base"], correct: 1 },
+      { q: "Coreference resolution is important for text mining and information extraction because:", options: ["Most references to an entity in a document are not the full proper name (they are pronouns or common NPs)","It is a prerequisite for sentence splitting","It assigns IOB labels to all tokens","It computes TF-IDF weights for entity mentions"], correct: 0 },
+      { q: "A BiLSTM encoder processes text in:", options: ["Only the left-to-right direction","Only the right-to-left direction","Both left-to-right and right-to-left, with results concatenated","Parallel processing of all tokens simultaneously (like self-attention)"], correct: 2 },
+      { q: "In the Lample et al. (2016) NER architecture, character embeddings are used primarily to:", options: ["Replace word embeddings entirely","Capture morphological and word-shape properties that may be missing from word-level embeddings","Compute attention weights between tokens","Perform sentence-level classification"], correct: 1 },
+      { q: "The best published NERC F1 on CoNLL 2003 English from feature-engineered systems (Agerri & Rigau 2016 with dictionary) was approximately:", options: ["85.0","88.5","91.36","95.0"], correct: 2 },
+      { q: "Contextual embeddings from BERT solve which specific problem that static word2vec embeddings cannot?", options: ["Processing documents longer than 512 tokens","Representing different senses of a polysemous word differently depending on context","Handling multiple languages in one model","Computing TF-IDF weights for rare terms"], correct: 1 },
+      { q: "Document-level features for NERC include:", options: ["The character shape pattern of the current token","Whether the word appears in a gazetteer","Multiple occurrences of a name elsewhere in the document (for anaphora/coreference)","The POS tag of the immediately preceding token"], correct: 2 },
+      { q: "Which of the following is a key factor that affects NERC system performance according to the course?", options: ["The file format of the source document (PDF vs. HTML)","The font size of the document","The genre and domain of the text","The programming language used to implement the system"], correct: 2 },
+      { q: "\"Boundary errors\" in NER evaluation occur when:", options: ["The system predicts the wrong entity type","The system misses an entity completely","The system predicts the correct entity type but with an incorrect span boundary","The system predicts an entity where there is none in the gold standard"], correct: 2 },
+      { q: "Under strict span evaluation (CoNLL), a predicted span \"Bank of America\" when the gold span is \"Bank of America Corp\" counts as:", options: ["A true positive (partial match)","A false negative only","A false positive and a false negative","A true negative"], correct: 2 },
+      { q: "Character-level vectors in the context of NERC are useful because they:", options: ["Contain pre-defined entity type information","Capture morpho-syntactic patterns and word-shape properties such as capitalisation","Provide sentence-level topic distributions","Replace the CRF layer entirely"], correct: 1 },
+      { q: "According to the course, cross-domain NERC performance (e.g., trained on news, tested on biomedical) can drop by up to:", options: ["5 F1 points","10 F1 points","20 F1 points","No drop occurs"], correct: 2 },
+      { q: "Which code snippet runs a cross-lingual NER model for Dutch in HuggingFace per the course?", options: ["pipeline(\"ner\") with default model","pipeline(\"ner\", model=\"xlm-roberta-large-finetuned-conll103-english\")","pipeline(\"sentiment-analysis\", model=\"distilbert\")","pipeline(\"text-generation\", model=\"gpt2\")"], correct: 1 },
+      { q: "The short word shape of \"American\" is:", options: ["\"Xxxxxxxxx\"","\"Ax\"","\"Xx\"","\"XXXXXXXXX\""], correct: 2 },
+      { q: "Entity extent (span boundary) ambiguity is best illustrated by:", options: ["Whether \"IBM\" refers to a company or an acronym for something else","Whether \"United States of America Library of Congress\" is one entity, nested entities, or multiple","Whether \"May\" is a month or a modal verb","Whether \"Washington\" refers to the city or the person"], correct: 1 },
+      { q: "Which of the following entity tasks involves tracking all expressions (pronouns, abbreviations, proper nouns) that refer to the same entity across a document?", options: ["Named entity recognition (NER)","Named entity classification (NEC)","Named entity linking (NEL)","Coreference resolution"], correct: 3 },
+      { q: "The dataset used in the course for NERC evaluation for English is:", options: ["SemEval 2014 Task 4","Reuters-21578","CoNLL 2003","JRC-Acquis"], correct: 2 },
+      { q: "Affix features (n-gram prefixes and suffixes) are useful for NERC primarily because:", options: ["They reveal sentiment polarity of entity names","They capture morphological cues such as person-name endings and organisation suffixes","They replace gazetteer lookups entirely","They compute TF-IDF scores for entity tokens"], correct: 1 },
+      { q: "The FIGER entity type system uses how many fine-grained types according to the course?", options: ["4","17","60","112"], correct: 3 },
+      { q: "In entity linking, \"name variation\" refers to:", options: ["The same entity referred to by multiple different surface forms","Different entities sharing the same name","Entity types changing over time","Boundary disagreements between annotators"], correct: 0 },
+      { q: "Relative time expressions (\"last Tuesday\", \"three weeks ago\") present which specific challenge for named entity systems?", options: ["They have extremely long spans","They require knowledge of the document date to resolve","They are always classified as PERSON entities","They cannot be represented in IOB format"], correct: 1 },
+      { q: "\"A spurious entity\" error in NER evaluation means:", options: ["The system predicts the correct entity span but wrong type","The system misses a gold entity entirely","The system predicts an entity span for which no gold entity exists","The system predicts the wrong span boundaries"], correct: 2 },
+      { q: "Which of the following correctly describes the NED/NEL process for \"Obama\" in a sentence?", options: ["Determine the BIO tag (B-PER or I-PER) for the token","Find the entity span → list candidate KB entries → rank by context similarity → select the most likely entry","Compute the TF-IDF weight of \"Obama\" in the document","Assign \"Obama\" to a topic category using LDA"], correct: 1 },
+      { q: "For a system using pre-trained BERT for NER, how does BERT's pretraining help with entity detection?", options: ["BERT was pretrained on CoNLL 2003 directly","BERT's contextual representations encode surrounding context, helping disambiguate entities like \"Apple\" (org vs. fruit)","BERT assigns BIO tags during pretraining","BERT's attention heads are tuned to gazetteer entries"], correct: 1 },
+      { q: "Word-level features for NERC include case, punctuation, digit patterns, character patterns, morphology, POS, and function word status. Which combination is MOST likely used to detect a proper noun?", options: ["Lowercase + high word frequency + no punctuation","Initial capital letter + low corpus frequency + presence in a name gazetteer","All digits + surrounded by punctuation","Only context from previous two tokens"], correct: 1 }
+    ]
+  },
+  {
+    title: "Topic Modelling, Text Classification & Advanced Transformers",
+    short: "Topic Modelling",
+    questions: [
+      { q: "According to the course, topics are NOT the same as genres. Which statement correctly distinguishes them?", options: ["Topics are file formats; genres are document styles","Genres are communicative forms (tweets, news, books); topics are what the content is about (politics, sport, health)","Genres are supervised categories; topics are always unsupervised","Topics are BIO sequences; genres are document classes"], correct: 1 },
+      { q: "The IPTC Media Topics taxonomy contains approximately:", options: ["100 terms at 2 levels","600 terms at 3 levels","1,200 terms at 4 levels","5,000 terms at 6 levels"], correct: 2 },
+      { q: "The Reuters-21578 dataset reflects financial news bias because:", options: ["It covers only sport and entertainment","Its most frequent categories are earn, acq, money-fx, grain, and crude","All documents have exactly one topic label","It uses IPTC codes for all 17 top-level topics"], correct: 1 },
+      { q: "Latent Semantic Analysis (LSA) reduces the document-word matrix using:", options: ["Dirichlet-distributed priors over topics","Gibbs sampling","Singular Value Decomposition (SVD)","Gradient descent on a softmax classifier"], correct: 2 },
+      { q: "In LDA, the number of topics K must be:", options: ["Automatically inferred from the data without any prior setting","Set to the number of documents in the corpus","Set to the vocabulary size","Specified in advance by the researcher"], correct: 3 },
+      { q: "LDA is described as a \"generative\" model because:", options: ["It generates new documents for data augmentation","It provides a probabilistic story for how documents are generated from latent topics and topic-word distributions","It uses gradient-based generation like GPT","It generates BIO labels for entity detection"], correct: 1 },
+      { q: "In LDA's document-topic matrix, each row represents:", options: ["A word's probability distribution over topics","A document's probability distribution over K topics","A topic's probability distribution over vocabulary words","A cluster label for each document"], correct: 1 },
+      { q: "In LDA's topic-word matrix, each row represents:", options: ["A document's probability distribution over topics","A word's co-occurrence count with other words","A topic's probability distribution over vocabulary words","A TF-IDF weight for each word"], correct: 2 },
+      { q: "A key limitation of LDA is that words are treated as independent of each other (bag-of-words). This causes problems such as:", options: ["LDA cannot be run more than once","Topics being computed deterministically","\"Queen's gambit\" and \"queen's throne\" sharing the word \"queen\" without distinguishing semantic drift across documents","LDA requiring GPU computation"], correct: 2 },
+      { q: "The Correlated Topic Model (CTM) was developed to address which LDA limitation?", options: ["Fixed number of topics K","Random initialisation","Topics being modelled as independent of each other (CTM models co-variance between topics)","Bag-of-words assumption"], correct: 2 },
+      { q: "The decision tree for selecting a topic model (Vayanski & Kumar 2020) recommends Latent Dirichlet Allocation when:", options: ["Documents are very short (< 50 words) and complex topic relationships are needed","Documents are long (≥ 50 words) and complex topic relationships are NOT the primary interest","Only temporal patterns are needed","Author information is available"], correct: 1 },
+      { q: "Perplexity as a topic model evaluation metric measures:", options: ["How well annotators agree on topic labels","The proportion of words correctly classified into topics","How well the model predicts held-out documents (lower = better fit)","The number of unique words in each topic"], correct: 2 },
+      { q: "Pointwise Mutual Information (PMI) as a topic coherence measure evaluates:", options: ["Whether word co-occurrence in a topic is higher than expected by chance","The recall of topics against a ground truth taxonomy","The document-level accuracy of topic assignment","The inter-annotator agreement on topic labels"], correct: 0 },
+      { q: "Topic diversity in cluster evaluation means:", options: ["That the model produces many topics","The proportion of words that are unique to a topic and do not appear in other topics","The number of documents per cluster","The F1 score of topic classification against IPTC labels"], correct: 1 },
+      { q: "Supervised text classification has which advantage over unsupervised topic modelling?", options: ["It can detect topics never seen before","It requires no labelled data","It gives the developer control over the predefined topic set and typically achieves high performance","It always produces stable, deterministic results"], correct: 2 },
+      { q: "A disadvantage of supervised topic classification is that:", options: ["Topics are always too fine-grained","It cannot use TF-IDF features","It is biased toward the training distribution and cannot detect genuinely new topics without retraining","It never achieves more than 70% accuracy"], correct: 2 },
+      { q: "EuroVoc is described in the course as:", options: ["A sentiment lexicon for European languages","A European thesaurus of topics used to label JRC-Acquis multilingual legislative texts","A BERT model fine-tuned on EU parliamentary debates","A named entity gazetteer for European countries"], correct: 1 },
+      { q: "One-against-all (one-vs-rest) classification is the typical approach for multi-label topic classification because:", options: ["It trains a single classifier that outputs one topic per document","It trains one binary classifier per label, allowing any subset of labels to be predicted","It uses the LDA topic distribution as soft multi-label output","It requires that documents have exactly two topics"], correct: 1 },
+      { q: "BERTopic (Grootendorst 2020) combines pretrained transformer representations with:", options: ["Supervised fine-tuning on IPTC labels","Clustering of sentence embeddings followed by TF/ClusterFrequency keyword extraction","Gibbs sampling from a Dirichlet prior","BIO-sequence labelling for topic spans"], correct: 1 },
+      { q: "According to Sun et al. (2020), which BERT fine-tuning strategy typically gives the best text classification performance?", options: ["Fine-tuning only the top layer","Fine-tuning with a very high learning rate (>1e-3)","Further pretraining on in-domain/task data (ITPT) then fine-tuning on the target task (BERT-CDPT-FiT)","Freezing all BERT layers and only training a linear classifier"], correct: 2 },
+      { q: "The Sun et al. (2020) study on BERT fine-tuning for text classification found that for BERT layers:", options: ["Lower layers are most useful for text classification","The last (top) layer or last 4 layers are most useful for classification, as they encode semantic information","All 12 layers are equally useful","Only layers 1-3 should be used for topic classification"], correct: 1 },
+      { q: "Which text classification dataset in the course has 14 topic classes and approximately 560,000 training examples?", options: ["IMDb","TREC","AG's News","DBPedia"], correct: 3 },
+      { q: "The Newsbrief system at the European Joint Research Centre is notable for:", options: ["Providing real-time topic-classified news articles updated every 10 minutes","Being the primary training corpus for BERT","Classifying named entities across 22 languages","Automatically generating Wikipedia summaries"], correct: 0 },
+      { q: "Which factor does Churchill & Singh (2021) list as important when choosing a topic model?", options: ["The asymptotic complexity of the inference algorithm","The programming language used for implementation","Document length (phrases, sentences, paragraphs, pages)","The number of annotators who labelled the data"], correct: 2 },
+      { q: "Dynamic topic modelling is appropriate when:", options: ["Documents are all very short","Topics are assumed to be stable over time","Author information is available and corpus is small","Topics change continuously over time and temporal patterns are of interest"], correct: 3 },
+      { q: "Short-text topic models address which specific challenge of standard LDA?", options: ["Fixed K","Random initialisation","Insufficient co-occurrence information in very short texts (each message has few words to vote on topic)","The bag-of-words assumption"], correct: 2 },
+      { q: "The National Science Agenda (NWO Wetenschapsagenda) example in the course illustrates:", options: ["Supervised classification of 1,200 IPTC categories","Hierarchical clustering of 11K public research questions with term extraction and word clouds","Fine-tuning BERT on scientific abstracts","NERC applied to Dutch academic texts"], correct: 1 },
+      { q: "An LDA model with K=5 on a document containing 100 words produces:", options: ["One topic label for the entire document","100 individual topic labels (one per word)","A distribution over 5 topics for the document AND a distribution over vocabulary words for each topic","5 BIO-labelled spans in the document"], correct: 2 },
+      { q: "Why does increasing K (number of topics) in LDA not always improve results?", options: ["More topics always means lower perplexity, which is always better","After an optimal K, topics become fragmented, redundant, and harder to interpret","LDA can only handle up to 20 topics efficiently","More topics cause the Dirichlet prior to become undefined"], correct: 1 },
+      { q: "The Hierarchical LDA variant addresses which limitation of standard LDA?", options: ["Random initialisation instability","The bag-of-words assumption","The need to specify K in advance (it uses a directed graph of topics to infer a hierarchy)","The inability to handle short texts"], correct: 2 },
+      { q: "According to the course, LSI (Latent Semantic Indexing) is a matrix-factorisation approach that:", options: ["Uses Dirichlet priors and Gibbs sampling","Applies SVD to group words with similar distributional patterns (e.g., chess piece vocabulary)","Generates text via a decoder","Performs BIO tagging for topic-relevant terms"], correct: 1 },
+      { q: "In the context of topic classification, \"topic granularity\" refers to:", options: ["The resolution of the input text (sentence vs. document)","The level of specificity of the topic categories, which should match the application's needs","The number of annotators who labelled the data","The hyperparameter alpha in LDA"], correct: 1 },
+      { q: "Which of the following is the correct call in the course for running a default HuggingFace NER pipeline (which defaults to BERT-large fine-tuned on CoNLL 2003)?", options: ["pipeline(\"ner\", model=\"distilbert-base-uncased\")","pipeline(\"sentiment-analysis\")","pipeline(\"ner\")","pipeline(\"token-classification\", model=\"gpt2\")"], correct: 2 },
+      { q: "A key insight from the course about multi-task fine-tuning of transformers (Sun et al. 2020) is that:", options: ["Multi-task fine-tuning always dramatically outperforms single-task fine-tuning","Multi-task fine-tuning is mutually exclusive with within-task pretraining","Multi-task fine-tuning helps only marginally over single-task fine-tuning in many settings","Multi-task fine-tuning eliminates the need for labelled data"], correct: 2 },
+      { q: "Which statement most accurately summarises the BERTopic workflow?", options: ["Tokenise text → train LDA → assign topics by word probability → evaluate with kappa","Encode text with a sentence transformer → cluster representations → extract distinctive keywords per cluster → label topics","Fine-tune BERT on IPTC labels → predict a single topic per document → evaluate with accuracy","Apply SVD to document-word matrix → extract latent factors → assign documents to largest factor"], correct: 1 }
+    ]
+  },
+  {
+    title: "Mixed Topics I",
+    short: "Mixed I",
+    questions: [
+      { q: "Which of the following best describes Zipf's Law applied to a corpus?", options: ["Every word appears equally often across all documents","The product of a word's rank and its frequency is approximately constant","Word frequency grows linearly with vocabulary size","Rare words account for less than 5% of total tokens"], correct: 1 },
+      { q: "In morphology, \"cliticisation\" refers to:", options: ["Adding a derivational affix to change a word's POS","Combining two free morphemes to form a compound noun","Attaching a weakly stressed element to an adjacent word (e.g., \"I'm\", \"don't\")","Inflecting a verb for tense or agreement"], correct: 2 },
+      { q: "Given TP=80, FP=20, FN=40, what is the F1 score (to 2 decimals)?", options: ["0.73","0.80","0.67","0.61"], correct: 0 },
+      { q: "Which statement about PPMI (Positive PMI) correctly describes how it improves over raw PMI?", options: ["PPMI weights rare word pairs more heavily","PPMI replaces all negative PMI values with zero, removing noise from low co-occurrence pairs","PPMI normalises context vectors to unit length","PPMI uses document frequency instead of context window counts"], correct: 1 },
+      { q: "In the opinion quadruple (Holder, SIP, Sentiment, Target), what is the role of the SIP?", options: ["It specifies the intensity of the sentiment (mild vs. strong)","It introduces and attributes the opinion expression to its holder","It names the entity being evaluated","It marks the polarity reversal caused by negation"], correct: 1 },
+      { q: "Which of the following is the correct IOB label sequence for \"New York City\" as a single LOCATION entity?", options: ["B-LOC, B-LOC, B-LOC","B-LOC, I-LOC, I-LOC","I-LOC, I-LOC, I-LOC","O, B-LOC, I-LOC"], correct: 1 },
+      { q: "In LDA, the hyperparameter alpha controls:", options: ["The number of topics K","The sparsity of the topic-word distribution","The sparsity of the document-topic distribution (low alpha → documents concentrated on few topics)","The learning rate of Gibbs sampling"], correct: 2 },
+      { q: "BERT uses WordPiece tokenisation. What happens to the word \"tokenisation\" if it is split into [\"token\", \"##isation\"]?", options: ["Only \"token\" gets an embedding; \"##isation\" is discarded","Both subwords get separate embeddings; the final token representation can be the first subword's output","The word is replaced by [UNK]","Only the subword with the highest TF-IDF weight is kept"], correct: 1 },
+      { q: "Which statement about the Naive Bayes classifier's conditional independence assumption is TRUE?", options: ["It holds exactly in real-world text data","It assumes that each feature is independent of all others given the class label","It requires continuous-valued features","It is only used when the dataset has more than 10,000 examples"], correct: 1 },
+      { q: "The semantic relation between \"tulip\" and \"plant\" is:", options: ["Meronymy (tulip is part of a plant)","Antonymy (tulip is the opposite of plant)","Hyponymy (tulip is a kind of plant)","Holonymy (plant is a part of tulip)"], correct: 2 },
+      { q: "Which of the following is NOT a challenge specific to sentiment analysis?", options: ["Context-dependent polarity (e.g., \"cold\" positive for beer, negative for service)","Figurative language (irony, sarcasm, metaphor)","Recovering the sentence parse tree","Negation scope (e.g., \"not bad\" being positive)"], correct: 2 },
+      { q: "The \"author-topic model\" is an LDA variant that:", options: ["Infers topic distributions from sentence length statistics","Models authors as probability distributions over topics, connecting authorship to content","Assigns a single topic to each author uniformly","Replaces word tokens with author IDs"], correct: 1 },
+      { q: "In a BiLSTM+CRF model for NER (Lample et al. 2016), what is the role of the CRF layer?", options: ["It computes character-level embeddings from raw text","It applies dropout regularisation during training","It models dependencies between consecutive output labels, enforcing valid BIO transitions","It produces the sentence-level classification using the [CLS] token"], correct: 2 },
+      { q: "What does it mean for a topic model to have high \"topic diversity\"?", options: ["The model assigns every document to a different topic","The top keywords of each topic are largely distinct from those of other topics","The model produces more topics than documents","Alpha is set to a high value, producing diffuse topic distributions"], correct: 1 },
+      { q: "TF-IDF upweights terms that are:", options: ["Frequent everywhere in the corpus (low IDF) but rare in a document","Frequent in a document but rare across the corpus (high IDF)","Stop words appearing in every document","OOV terms not seen in training"], correct: 1 },
+      { q: "Which evaluation measure is specifically designed to correct for chance agreement between annotators?", options: ["Micro F1","Accuracy","Cohen's Kappa","Perplexity"], correct: 2 },
+      { q: "The \"Goal\" semantic role is best illustrated by:", options: ["\"John\" in \"John broke the window\" (initiator)","\"the window\" in \"John broke the window\" (affected entity)","\"London\" in \"She sent the package to London\" (endpoint/destination)","\"the hammer\" in \"He hit the nail with the hammer\" (means)"], correct: 2 },
+      { q: "In word2vec skip-gram training, \"negative sampling\" means:", options: ["Removing negative-sentiment words from the training corpus","Randomly sampling non-context words as negative examples to contrast against true context pairs","Applying a negative TF-IDF weight to stop words","Discarding training examples where the target word is negated"], correct: 1 },
+      { q: "Chunking is best described as:", options: ["Full recursive constituency parsing producing a complete parse tree","Dependency parsing assigning head-dependent relations","Flat, non-overlapping segmentation of text into basic phrase types (NP, VP, PP)","Sentence splitting based on punctuation heuristics"], correct: 2 },
+      { q: "Cross-entropy fine-tuning of BERT for sequence classification adds which component on top of the transformer stack?", options: ["A CRF layer over all token outputs","A softmax classification head on the [CLS] token representation","A separate LSTM encoder for the input sequence","A bag-of-embeddings pooling layer"], correct: 1 },
+      { q: "\"Spurious\" and \"missing\" are two error types in NER evaluation. Which pairing is correct?", options: ["Spurious = wrong type; missing = wrong boundary","Spurious = system predicts entity not in gold; missing = gold entity not predicted by system","Spurious = boundary error; missing = type error","Spurious = entity in training but not test; missing = entity in test but not training"], correct: 1 },
+      { q: "Which property makes SVMs effective for high-dimensional text classification?", options: ["They require fewer training examples than Naive Bayes","They model joint probabilities of features and labels","They find a maximum-margin hyperplane, generalising well even in sparse high-dimensional spaces","They automatically select the most relevant n-gram features"], correct: 2 },
+      { q: "Which statement about GloVe compared to word2vec is accurate?", options: ["GloVe uses a local context window exclusively; word2vec uses global co-occurrence statistics","GloVe trains on global word-word co-occurrence matrices; word2vec trains on local context predictions","GloVe produces context-sensitive embeddings; word2vec produces static embeddings","GloVe requires fine-tuning on a downstream task; word2vec does not"], correct: 1 },
+      { q: "The \"plate notation\" in LDA represents:", options: ["The data flow in a neural network's forward pass","A graphical model showing repeated variables (plates) for documents and words, and latent topic variables","The confusion matrix of topic assignments","The BIO label sequence for topic-relevant spans"], correct: 1 },
+      { q: "Which NLP task is most directly harmed by poor sentence splitting?", options: ["Word-level POS tagging","Any downstream task that relies on sentence boundaries (e.g., parsing, relation extraction)","Character n-gram computation","TF-IDF weighting of individual words"], correct: 1 },
+      { q: "\"Holonymy\" is the inverse of meronymy. Which example illustrates holonymy?", options: ["\"finger\" → \"hand\" (finger is a part of hand) — holonymy for \"hand\"","\"tulip\" → \"flower\" (tulip is a type of flower)","\"hot\" → \"cold\" (antonyms)","\"buy\" → \"purchase\" (near-synonyms)"], correct: 0 },
+      { q: "According to VADER's design, what characteristic makes it suitable for social media?", options: ["It was trained on biomedical text corpora","It handles emoji, slang, ALL CAPS intensification, and punctuation-based sentiment cues","It uses a large bidirectional LSTM","It performs aspect-level sentiment classification by default"], correct: 1 },
+      { q: "In multi-label text classification with one-vs-rest, how many binary classifiers are trained for a taxonomy with 100 labels?", options: ["1","10","50","100"], correct: 3 },
+      { q: "The IMDb dataset is used in text classification research for:", options: ["Named entity linking across movie titles","Topic classification of Wikipedia articles","Binary sentiment classification of movie reviews","Multi-label classification of news into IPTC categories"], correct: 2 },
+      { q: "When a NERC system is trained on newswire text and evaluated on social media tweets, what performance effect is typically observed and why?", options: ["Performance improves because social media contains simpler entities","Performance drops significantly due to different capitalisation conventions, informal writing, and novel entity types","Performance is unchanged because BERT handles all domains equally","Performance improves because tweets are shorter and easier to parse"], correct: 1 },
+      { q: "Which of the following is an example of derivational morphology creating a new POS?", options: ["\"dogs\" (noun → noun plural)","\"walked\" (verb → verb past tense)","\"digitise\" (noun \"digit\" → verb)","\"running\" (verb → verb present participle)"], correct: 2 },
+      { q: "In the Transformer architecture, \"multi-head attention\" with H heads means:", options: ["The model runs H separate forward passes and averages their outputs","The model applies H independent attention functions in parallel, concatenating their outputs","Only H tokens in the sequence attend to each other","H separate vocabulary embeddings are learned"], correct: 1 },
+      { q: "Which of the following best describes \"silver data\" in NLP annotation?", options: ["Data annotated by two independent expert annotators with high agreement","Automatically labelled data (e.g., by a classifier or heuristic) without human verification","Data annotated by crowdworkers with inter-annotator agreement measured by kappa","A held-out test set used only once for final evaluation"], correct: 1 },
+      { q: "The LDA hyperparameter beta (β) controls:", options: ["The document-topic distribution sparsity","The topic-word distribution sparsity (lower beta → each topic uses fewer words)","The number of Gibbs sampling iterations","The learning rate for the topic model"], correct: 1 },
+      { q: "Why is the \"conditional random field\" (CRF) preferred over a simple maximum entropy classifier for NER sequence labelling?", options: ["CRFs require less labelled data","CRFs model the joint probability of the entire label sequence, enabling global constraints","CRFs automatically extract features from raw text","CRFs run faster than maximum entropy classifiers at inference time"], correct: 1 }
+    ]
+  },
+  {
+    title: "Mixed Topics II",
+    short: "Mixed II",
+    questions: [
+      { q: "Which of the following is the correct formula for TF-IDF weight of term t in document d?", options: ["TF(t,d) × log(N / df(t))","TF(t,d) + log(N × df(t))","log(TF(t,d)) / df(t)","TF(t,d) / (TF(t,d) + df(t))"], correct: 0 },
+      { q: "A language model that assigns probability to a word based solely on the previous word is called a:", options: ["Unigram model","Bigram model","Skip-gram model","CRF model"], correct: 1 },
+      { q: "In BERT's pretraining, the Next Sentence Prediction (NSP) task trains the model to:", options: ["Predict the next token autoregressively given all previous tokens","Predict whether sentence B actually follows sentence A in the original text","Identify named entities in the second sentence","Generate a paraphrase of the input sentence"], correct: 1 },
+      { q: "PP-attachment ambiguity in syntax arises because:", options: ["Prepositional phrases can only attach to noun phrases","A prepositional phrase can plausibly modify either the verb phrase or the noun phrase it follows","Prepositions are never assigned POS tags","Prepositional phrases always create coreference chains"], correct: 1 },
+      { q: "Which of the following is NOT one of Ekman's six basic emotions?", options: ["Fear","Disgust","Contempt","Anticipation"], correct: 3 },
+      { q: "In NER, the word shape feature \"xXx\" represents:", options: ["All lowercase letters","Initial uppercase followed by all lowercase","Mixed case with lowercase, uppercase, and lowercase letters (camelCase style)","All uppercase letters"], correct: 2 },
+      { q: "In the BERTopic pipeline, what is the role of UMAP?", options: ["To train a topic-word distribution using Dirichlet priors","To reduce the dimensionality of sentence embeddings before clustering","To compute TF-IDF weights over the full corpus","To assign BIO labels to topic-relevant tokens"], correct: 1 },
+      { q: "Macro-averaged F1 across three classes with per-class F1 of 0.60, 0.75, and 0.90 is:", options: ["0.72","0.75","0.80","0.68"], correct: 1 },
+      { q: "Which of the following is a key difference between homonymy and polysemy?", options: ["Homonymy involves multiple spellings; polysemy involves multiple pronunciations","Polysemy involves historically related, connected senses; homonymy involves historically unrelated meanings sharing the same form","Homonymy only applies to verbs; polysemy only to nouns","Polysemy is a syntactic phenomenon; homonymy is a pragmatic phenomenon"], correct: 1 },
+      { q: "ABSA (Aspect-Based Sentiment Analysis) requires the system to identify which TWO things?", options: ["Document polarity and author identity","Aspect terms/categories and their associated sentiment polarity","Sentence-level subjectivity and document-level topic","Named entities and their coreference chains"], correct: 1 },
+      { q: "In the CoNLL 2003 strict evaluation, a predicted entity span is counted as a true positive only if:", options: ["The entity type is correct, regardless of span boundaries","The span boundaries are correct, regardless of entity type","Both the span boundaries AND the entity type exactly match the gold standard","At least one token of the span overlaps with the gold entity"], correct: 2 },
+      { q: "The word2vec CBOW (Continuous Bag of Words) model predicts:", options: ["The surrounding context words given a target word","A target word given its surrounding context words","The document topic given a bag of word embeddings","The named entity type given the word's character n-grams"], correct: 1 },
+      { q: "Which property of transformers allows them to handle long-range dependencies better than LSTMs?", options: ["Transformer embeddings have higher dimensionality than LSTM hidden states","Self-attention directly connects any two tokens in a sequence regardless of their distance","Transformers process tokens character by character","Transformers use recurrent connections that propagate information across the entire sequence"], correct: 1 },
+      { q: "\"Agenda setting\" as a form of subjectivity refers to:", options: ["Using emotionally charged vocabulary to express opinions","The strategic selection of which facts to report, implicitly framing interpretation without explicit polarity words","Assigning sentiment scores to news headlines","Using metonymy to refer to political institutions"], correct: 1 },
+      { q: "Which of the following statements about lemmatisation vs. stemming is correct?", options: ["Stemming always produces valid dictionary forms; lemmatisation does not","Lemmatisation uses dictionary lookup and morphological analysis to produce the base form; stemming uses heuristic rules and may produce non-words","Stemming requires a POS tagger; lemmatisation does not","Both produce identical output for all English words"], correct: 1 },
+      { q: "In entity linking, what challenge do \"name ambiguity\" cases pose?", options: ["The same name refers to different entities (e.g., \"Paris\" as city, person, or film), requiring context to disambiguate","Different names for the same entity (e.g., \"JFK\" and \"John F. Kennedy\")","Names that cross sentence boundaries","Names that are misspelled in the source text"], correct: 0 },
+      { q: "A Cohen's Kappa of 0.20 indicates:", options: ["Almost perfect agreement","Substantial agreement","Moderate agreement","Slight agreement (barely above chance)"], correct: 3 },
+      { q: "Which of the following is the primary output of the LDA inference process for a new document?", options: ["A ranked list of the most likely words in the document","A probability distribution over K topics for that document","A BIO-labelled sequence of topic spans","The perplexity of the document relative to the corpus"], correct: 1 },
+      { q: "In the scaled dot-product attention formula Attention(Q, K, V) = softmax(QK^T / √d_k)V, what do Q, K, and V represent?", options: ["Query, Keyword, and Value matrices derived from the input","Query, Key, and Value matrices, all linear projections of the input","Quality, Knowledge, and Vocabulary lookup tables","Quantisation, Kernel, and Vector parameters of the CNN"], correct: 1 },
+      { q: "The LIWC (Linguistic Inquiry and Word Count) tool is used for:", options: ["Named entity recognition in clinical text","Psycholinguistic text analysis, measuring categories like positive/negative emotion and social processes","Training word2vec embeddings on large corpora","Computing inter-annotator agreement for annotation tasks"], correct: 1 },
+      { q: "Which of the following is a morphological feature useful for identifying person names in NERC?", options: ["The word appearing in a stop-word list","The word ending in suffixes like \"-son\", \"-sen\", \"-ski\", or \"-berg\"","The word having a TF-IDF score below the corpus average","The word appearing fewer than 5 times in training"], correct: 1 },
+      { q: "The \"agent\" semantic role refers to:", options: ["The entity that undergoes the action","The entity that volitionally initiates or causes the action","The endpoint or destination of the action","The instrument used to perform the action"], correct: 1 },
+      { q: "Which approach does DBpedia Spotlight use to link entity mentions to a knowledge base?", options: ["Graph-based coherence ranking across all candidate entities","Word-level surface string matching and statistical similarity to DBpedia resource descriptions","BiLSTM-based disambiguation with character embeddings","Dirichlet allocation to assign entities to topic clusters"], correct: 1 },
+      { q: "In n-gram language models, the \"data sparseness\" problem means that:", options: ["The vocabulary is too small to represent all possible sentences","Many n-grams seen at test time were never observed in training, leading to zero probabilities","N-gram models require GPU computation for large N","Stop words dominate all n-gram counts"], correct: 1 },
+      { q: "ELMo (Embeddings from Language Models) addresses the limitation of static embeddings by:", options: ["Using a larger vocabulary than word2vec","Training a separate embedding for each document","Computing word representations from the internal states of a deep bidirectional LSTM, which are context-dependent","Fine-tuning on a supervised NER dataset before producing embeddings"], correct: 2 },
+      { q: "Which of the following best describes what \"implicit sentiment\" means?", options: ["Sentiment expressed with direct evaluative adjectives such as \"excellent\" or \"terrible\"","Sentiment conveyed through factual descriptions of events or attributes without explicit opinion words","Sentiment found only in the first sentence of a review","Sentiment that can be detected only by rule-based systems"], correct: 1 },
+      { q: "The SemEval 2014 Task 4 dataset focused on which two domains?", options: ["Hotel reviews and Twitter posts","Laptop reviews and restaurant reviews","Movie reviews and news articles","Medical reports and legal documents"], correct: 1 },
+      { q: "In text classification, \"one-hot encoding\" of a vocabulary of size V produces:", options: ["A dense V-dimensional vector with all non-zero values","A V-dimensional sparse binary vector with exactly one 1 at the word's index","A 300-dimensional dense embedding for each token","A probability distribution over all V words"], correct: 1 },
+      { q: "The \"dynamic topic model\" variant of LDA is designed for corpora where:", options: ["Documents are very short (e.g., tweets)","Topics evolve over time across different time slices of the corpus","Author metadata is available for every document","Multiple languages are present in the same corpus"], correct: 1 },
+      { q: "Which argument correctly explains why the Transformer architecture replaced LSTMs for most NLP tasks?", options: ["Transformers use less memory than LSTMs during inference","Transformers can be fully parallelised during training (no sequential dependency) and capture long-range context directly","Transformers produce discrete token predictions; LSTMs produce continuous representations","Transformers require smaller training sets than LSTMs"], correct: 1 },
+      { q: "In pragmatics, a \"conversational implicature\" occurs when:", options: ["The literal meaning of a sentence is identical to its intended meaning","A speaker conveys more than what is literally said, relying on shared context and Gricean maxims","A pronoun refers to an entity mentioned earlier in the discourse","A sentence has multiple valid parse trees"], correct: 1 },
+      { q: "The precision of a NERC system that predicts 50 entities, of which 35 match the gold standard, is:", options: ["0.70","0.35","0.65","0.80"], correct: 0 },
+      { q: "Which of the following correctly describes why \"catastrophic forgetting\" is a risk during fine-tuning?", options: ["The model loses access to its tokenisation vocabulary","Large gradient updates overwrite the general knowledge encoded in pretrained weights","The loss function becomes undefined for unseen labels","The attention heads deactivate when fine-tuning data is too small"], correct: 1 },
+      { q: "Which of the following is NOT a standard feature type used in classic (pre-neural) NERC feature engineering?", options: ["POS tag of the current token","Gazetteer membership (is the word in a list of known person names?)","The document's TF-IDF category label","Character n-gram prefixes and suffixes of the current token"], correct: 2 },
+      { q: "The hyperparameter K in LDA and the number of clusters in BERTopic both serve which analogous function?", options: ["Controlling the sparsity of the topic-word distribution","Determining how many distinct topics the model will discover","Setting the learning rate for the inference algorithm","Defining the context window size for word co-occurrence"], correct: 1 }
+    ]
+  },
+  {
+    title: "Mixed Topics III",
+    short: "Mixed III",
+    questions: [
+      { q: "Which of the following tokenisation decisions is considered CORRECT for the string \"I'll\" in most English NLP systems?", options: ["Keep \"I'll\" as a single token","Split into \"I\" and \"'ll\" to separate the clitic","Expand to \"I will\" as two tokens","Remove it as a stop word"], correct: 1 },
+      { q: "In WordNet, the relationship between \"vehicle\" and \"car\" (car is a kind of vehicle) is formally called:", options: ["Meronymy","Holonymy","Hyponymy (car is a hyponym of vehicle)","Synonymy"], correct: 2 },
+      { q: "A classifier trained on a dataset with 95% negative examples and 5% positive examples achieves 96% accuracy by always predicting \"negative\". Its F1 for the positive class is:", options: ["0.96","0.50","0.00","0.05"], correct: 2 },
+      { q: "In word2vec, what is the purpose of the hidden layer weight matrix W (input → hidden)?", options: ["It serves as the final word embedding matrix after training","It computes the attention scores between word pairs","It stores the vocabulary's TF-IDF weights","It encodes positional information for each token"], correct: 0 },
+      { q: "Which of the following is an example of the \"Location\" semantic role?", options: ["\"Maria\" in \"Maria baked a cake\"","\"the cake\" in \"Maria baked the cake\"","\"the oven\" in \"Maria baked the cake in the oven\"","\"for her daughter\" expressing the beneficiary"], correct: 2 },
+      { q: "Gricean maxims in pragmatics include Quantity, Quality, Relation, and Manner. The maxim of \"Quality\" states that speakers should:", options: ["Provide as much information as needed, but no more","Be relevant to the current purpose of the exchange","Not say what they believe to be false","Avoid ambiguity and be orderly"], correct: 2 },
+      { q: "The NRC Emotion Lexicon maps words to eight Plutchik emotions. Which four are NOT in Ekman's six basic emotions?", options: ["Joy, sadness, anger, disgust","Trust, anticipation, surprise, joy","Trust, anticipation, disgust, fear","Trust, anticipation, surprise, disgust"], correct: 3 },
+      { q: "In the BERT fine-tuning pipeline for NER, what happens to subword tokens that are NOT the first subword of a word (e.g., \"##ing\" in \"running\")?", options: ["They are assigned the same label as the first subword","They are assigned a special [PAD] label","Their output is discarded and only the first subword's representation is used for labelling","They receive a separate IOB label from the first subword"], correct: 2 },
+      { q: "Which of the following is a characteristic of \"bronze\" training data for NLP?", options: ["Annotated by multiple expert annotators with adjudication","Automatically generated by a rule-based or model-based system without human review","Sampled from a balanced, domain-representative corpus","Used exclusively for test-set evaluation"], correct: 1 },
+      { q: "In the context of text classification, the \"Reuters-21578\" dataset is notable for:", options: ["Being perfectly balanced across all topic categories","Having a multi-label structure and heavy skew toward financial and commodity topics","Containing only opinion-bearing documents","Being the standard benchmark for emotion classification"], correct: 1 },
+      { q: "What distinguishes \"polarity classification\" from \"subjectivity classification\" in sentiment analysis?", options: ["Polarity classifies documents as subjective or objective; subjectivity classifies them as positive or negative","Subjectivity classification determines whether text expresses an opinion; polarity classification determines whether that opinion is positive or negative","They are identical tasks with different names","Polarity classification requires aspect extraction; subjectivity does not"], correct: 1 },
+      { q: "The \"entity mention\" in NER refers to:", options: ["The canonical form of an entity in a knowledge base","A specific surface-form string in text that refers to a named entity","The IOB tag assigned to the entity's head token","The coreference chain identifier for the entity"], correct: 1 },
+      { q: "In which scenario would macro-averaged F1 give a misleadingly optimistic view of system performance?", options: ["When the dataset has equal class distribution","When a rare class has very low F1 but frequent classes perform well (macro treats all classes equally)","When the dataset has only two classes","When the system achieves perfect precision on all classes"], correct: 1 },
+      { q: "BERT-large differs from BERT-base in which two key ways?", options: ["BERT-large uses BPE tokenisation; BERT-base uses WordPiece","BERT-large has 24 transformer layers and 1024 hidden dimensions vs. BERT-base's 12 layers and 768 dimensions","BERT-large was pre-trained on more languages","BERT-large uses a decoder-only architecture; BERT-base uses encoder-only"], correct: 1 },
+      { q: "In LDA, alpha (α) and beta (β) are Dirichlet hyperparameters. Which of the following correctly describes their effect?", options: ["High α → documents are focused on fewer topics; high β → topics are focused on fewer words","Low α → documents are focused on fewer topics; low β → topics are focused on fewer words","α controls the number of topics K; β controls the vocabulary size","α and β only affect the initialisation of Gibbs sampling, not the final result"], correct: 1 },
+      { q: "An NLP system processes tweets and achieves high precision but low recall on PERSON entities. What is the most likely explanation?", options: ["The system predicts too many entities, many of which are wrong","The system misses many true PERSON entities but rarely makes false predictions","The system confuses PERSON and ORGANISATION labels","The system's recall is high but precision is low"], correct: 1 },
+      { q: "Which of the following correctly describes what \"transfer learning\" achieves in the context of BERT for NLP?", options: ["Translating English training data into other languages for cross-lingual evaluation","Reusing weights learned from large-scale unsupervised pretraining to bootstrap performance on small labelled datasets","Transferring labels from one annotation scheme to another","Moving a trained model from one hardware platform to another"], correct: 1 },
+      { q: "In constituency parsing, what is a \"non-terminal\" node in a parse tree?", options: ["A leaf node corresponding to a specific word token","A phrasal category label (NP, VP, PP, S) grouping one or more words or phrases","A dependency relation arc between two words","A POS tag assigned to a single token"], correct: 1 },
+      { q: "Which of the following best explains why \"implicit sentiment\" is harder to detect than explicit sentiment?", options: ["Implicit sentiment only appears in long documents","Implicit sentiment requires world knowledge and event understanding, not just lexical polarity matching","Implicit sentiment is always ironic","Implicit sentiment cannot be annotated by humans"], correct: 1 },
+      { q: "The Hierarchical LDA (hLDA) model learns:", options: ["Topic distributions that change over time","A tree-structured hierarchy of topics where general topics are parents of more specific topics","Topic distributions conditioned on author identity","A fixed number of topics K using a Dirichlet prior"], correct: 1 },
+      { q: "According to the course, the performance of a BERT-based NER system on CoNLL 2003 English is approximately:", options: ["85 F1","88 F1","91 F1","93+ F1"], correct: 3 },
+      { q: "Which of the following is a key insight from Ravi & Ravi (2015) about sentiment analysis research?", options: ["Rule-based methods outperform machine learning for all sentiment tasks","SVMs were the most widely applied ML classifier, appearing in the majority of surveyed articles","Deep learning replaced all traditional methods by 2010","Aspect-based methods were never used before 2015"], correct: 1 },
+      { q: "An IOB label sequence B-PER B-ORG is valid (not illegal). What does it indicate?", options: ["A two-token entity spanning both tokens","Two adjacent but separate named entities, each beginning a new span","An error in annotation — two B- tags can never appear consecutively","A PERSON entity followed by an O (outside) token"], correct: 1 },
+      { q: "In the context of language modelling, perplexity measures:", options: ["The average number of topics assigned to each document","How uncertain a model is when predicting the next word (lower = better model fit)","The Kappa agreement between two language models on the same data","The ratio of vocabulary coverage to corpus size"], correct: 1 },
+      { q: "Which statement about the distributional hypothesis and PMI is correct?", options: ["PMI measures how much more often two words co-occur than would be expected if they were independent","PMI assigns higher weights to stop words because they appear everywhere","PMI is equivalent to TF-IDF when corpus size is held constant","PMI only works with character n-grams, not word-level co-occurrences"], correct: 0 },
+      { q: "The \"Instrument\" semantic role is illustrated by which example?", options: ["\"The chef\" in \"The chef prepared dinner\" (initiator)","\"dinner\" in \"The chef prepared dinner\" (affected entity)","\"a sharp knife\" in \"The chef cut the fish with a sharp knife\"","\"for the guests\" in \"The chef prepared dinner for the guests\""], correct: 2 },
+      { q: "Which property makes BPE (Byte-Pair Encoding) tokenisation robust to out-of-vocabulary words?", options: ["BPE uses a character-level fallback for any unknown word","BPE merges frequent character pairs iteratively, so any word can be decomposed into known subword units","BPE replaces OOV words with their nearest embedding neighbour","BPE uses a special [UNK] token for words not in the vocabulary"], correct: 1 },
+      { q: "In the SemEval 2014 Task 4 pipeline for ABSA, aspect polarity classification comes:", options: ["Before aspect term extraction","After aspect term extraction (first identify aspects, then classify their sentiment)","Simultaneously with aspect extraction in a joint model only","After document-level subjectivity classification and before aspect extraction"], correct: 1 },
+      { q: "Which of the following statements is FALSE about dependency parsing?", options: ["Dependency parses are directed graphs with words as nodes and grammatical relations as arc labels","Every word (except the root) has exactly one head","Dependency parses always form a tree structure with nested phrase brackets","Dependency parses can capture long-distance grammatical relations like subject-verb agreement"], correct: 2 },
+      { q: "The Bing Liu opinion lexicon contains:", options: ["A list of named entity types and their associated sentiment","Thousands of positive and negative opinion words compiled for sentiment analysis","Psycholinguistic categories like social processes and cognitive processes","A mapping from words to Plutchik emotion categories"], correct: 1 },
+      { q: "In cross-validation, stratified k-fold ensures:", options: ["Each fold contains the same number of tokens, not documents","Each fold preserves approximately the same class distribution as the full dataset","Different annotators create different folds","The test fold is always the same across all k iterations"], correct: 1 },
+      { q: "What is the role of positional encoding in the Transformer model?", options: ["To encode the semantic similarity between tokens at different positions","To inject information about each token's absolute or relative position, since self-attention is permutation-invariant","To mask padding tokens so the model does not attend to them","To encode the sub-word type (first piece vs. continuation piece)"], correct: 1 },
+      { q: "Which of the following named entity types would require an organisation gazetteer but NOT a person-name gazetteer?", options: ["\"Barack Obama\" (PERSON)","\"Greenpeace\" (ORGANISATION)","\"Amsterdam\" (LOCATION)","\"Monday\" (TIME)"], correct: 1 },
+      { q: "A text mining pipeline that extracts who said what about whom from news articles relies most heavily on which combination of NLP modules?", options: ["Tokenisation and TF-IDF only","NER, coreference resolution, and semantic role labelling","Topic modelling and BIO tagging only","Sentence splitting and word embeddings only"], correct: 1 },
+      { q: "Which of the following is the correct description of a \"false negative\" in NER evaluation?", options: ["The system predicts an entity span that does not exist in the gold standard","The system correctly identifies the entity span but assigns the wrong type","A gold entity span that the system fails to predict","The system predicts the correct span boundaries but an incorrect entity type"], correct: 2 }
+    ]
+  },
+  {
+    title: "Mixed Topics IV",
+    short: "Mixed IV",
+    questions: [
+      { q: "In the NLP pipeline, which layer directly follows morphological analysis?", options: ["Pragmatic analysis","Lexical analysis (POS tagging)","Coreference resolution","Sentence splitting"], correct: 1 },
+      { q: "The compound word \"sunflower\" is formed via:", options: ["Inflection","Cliticisation","Derivation (adding an affix)","Compounding (two free morphemes combined)"], correct: 3 },
+      { q: "In 10-fold cross-validation on a dataset of 1,000 examples, how many training examples are used in each fold?", options: ["100","500","900","1,000"], correct: 2 },
+      { q: "The \"skip-gram\" model in word2vec predicts:", options: ["A target word given its context words","Context words surrounding a given target word","The next sentence given the current sentence","The document topic given all word embeddings"], correct: 1 },
+      { q: "In aspect-based sentiment analysis, an \"aspect category\" differs from an \"aspect term\" in that:", options: ["Aspect categories are surface strings found in the text; aspect terms are abstract categories","Aspect categories are abstract attributes (e.g., FOOD#QUALITY); aspect terms are specific text spans (e.g., \"pasta\")","Aspect terms are used in SemEval 2014; aspect categories only in SemEval 2016","Aspect categories are always positive; aspect terms can be positive or negative"], correct: 1 },
+      { q: "Which of the following best characterises the \"IOB2\" (also called \"BIO\") tagging scheme?", options: ["Every entity token is tagged B-TYPE regardless of position","The first token of every entity span is tagged B-TYPE; subsequent tokens of the same entity are I-TYPE; non-entity tokens are O","The last token of an entity is tagged E-TYPE; all others are I-TYPE","Entity tokens are tagged with their type only (no positional B/I distinction)"], correct: 1 },
+      { q: "The Correlated Topic Model (CTM) uses which distribution instead of the Dirichlet prior in LDA?", options: ["Gaussian distribution","Logistic Normal distribution (to capture topic correlations)","Multinomial distribution","Bernoulli distribution"], correct: 1 },
+      { q: "In the Transformer's self-attention, the \"Value\" matrix V is used to:", options: ["Compute the similarity scores between query and key vectors","Produce the weighted sum of content representations to form the output","Store the absolute positions of tokens","Mask future tokens in autoregressive decoding"], correct: 1 },
+      { q: "Which of the following is a correct statement about the \"Bing Liu opinion lexicon\"?", options: ["It is a psycholinguistic resource covering 80+ categories including social processes","It contains several thousand positive and negative English opinion words used as a seed lexicon for sentiment","It maps words to eight Plutchik emotion categories","It was specifically designed for Dutch sentiment analysis"], correct: 1 },
+      { q: "What is the key limitation of the fixed context vector in the LSTM encoder-decoder (seq2seq) architecture without attention?", options: ["LSTMs cannot process sequences longer than 10 tokens","The entire input sequence must be compressed into a single fixed-size vector, which becomes a bottleneck for long inputs","The decoder cannot generate tokens at the same length as the input","LSTM hidden states cannot be used for cross-lingual tasks"], correct: 1 },
+      { q: "In NER, which error type occurs when the system identifies \"European Commission\" but the gold standard is \"the European Commission\" (with \"the\")?", options: ["Spurious entity (false positive)","Missing entity (false negative)","Type error (wrong entity type)","Boundary error (wrong span)"], correct: 3 },
+      { q: "Which of the following is a \"cognitive\" SIP (Source-Introducing Predicate) verb?", options: ["\"announce\"","\"claim\"","\"believe\"","\"confirm\""], correct: 2 },
+      { q: "In the LDA generative story, which step is performed FIRST when generating a document?", options: ["Sample words from a topic-word distribution","Choose a document-length from a Poisson distribution","Sample a topic distribution for the document from a Dirichlet prior","Assign BIO labels to topic-relevant tokens"], correct: 2 },
+      { q: "What is \"topic coherence\" as measured by PMI?", options: ["The proportion of documents that can be assigned to a single dominant topic","How consistently the top keywords of a topic co-occur in the corpus, indicating a meaningful theme","The inter-annotator agreement on topic labels","The perplexity of held-out documents given the topic model"], correct: 1 },
+      { q: "Which of the following is NOT a valid application described in the course for NER and entity linking?", options: ["Populating a knowledge graph from news articles","Answering factoid questions using named entity disambiguation","Generating word embeddings from character n-grams","Identifying companies and locations in financial reports"], correct: 2 },
+      { q: "In the context of feature engineering for NLP classification, n-grams capture:", options: ["The global co-occurrence statistics of words in a corpus","Local sequential patterns by treating sequences of n consecutive tokens as features","The morphological decomposition of each word","The dependency structure of sentences"], correct: 1 },
+      { q: "According to the course, what was the approximate Cohen's Kappa for the document-level hotel sentiment annotation task?", options: ["0.42","0.65","0.75","0.87"], correct: 3 },
+      { q: "Which of the following best distinguishes NER from named entity linking (NEL)?", options: ["NER produces BIO labels; NEL produces document-level topic labels","NER finds and classifies entity spans in text; NEL disambiguates those spans to specific entries in a knowledge base","NER is supervised; NEL is always unsupervised","NER only identifies people and locations; NEL handles all entity types"], correct: 1 },
+      { q: "The model that uses a directed graph over words instead of specifying K topics in advance is:", options: ["Correlated Topic Model","Dynamic Topic Model","Hierarchical LDA","Author-Topic Model"], correct: 2 },
+      { q: "In subword tokenisation with WordPiece, \"##\" prefix indicates:", options: ["The token is a named entity","The token is a continuation piece that should be merged with the preceding subword","The token was masked during BERT pretraining","The token has negative sentiment"], correct: 1 },
+      { q: "Micro-averaged precision for a system with TP=150, FP=50, across all classes is:", options: ["0.60","0.75","0.80","0.50"], correct: 1 },
+      { q: "The \"open-class\" vs. \"closed-class\" distinction in POS tagging matters for NLP because:", options: ["Closed-class words never appear in training data","Open-class words (nouns, verbs, adjectives) carry more content and can include new words; closed-class words (prepositions, pronouns) have a fixed small inventory","Open-class words are always stop words","Closed-class words require lemmatisation; open-class words do not"], correct: 1 },
+      { q: "Which of the following statements about BERT's attention mechanism is correct?", options: ["BERT uses causal (left-to-right) attention like GPT","BERT uses bidirectional self-attention, where every token can attend to every other token simultaneously","BERT uses cross-attention between encoder and decoder stacks","BERT uses attention only in layers 7-12, not in lower layers"], correct: 1 },
+      { q: "In the course, \"double propagation\" for lexicon building:", options: ["Trains two classifiers simultaneously on positive and negative data","Starts from seed opinion words, uses syntactic patterns to extract aspects and new opinions iteratively","Applies two rounds of fine-tuning: first on unlabelled, then on labelled data","Combines two separate word2vec embeddings using vector arithmetic"], correct: 1 },
+      { q: "Which of the following describes what WordNet Affect provides beyond standard WordNet?", options: ["Named entity types for all nouns","Emotion labels (A-Labels: EMOTION, MOOD, TRAIT, COGNITIVE STATE) for affective words","Dependency arc labels for verb frames","Topic categories aligned to IPTC taxonomy"], correct: 1 },
+      { q: "What does the term \"type\" refer to in the context of tokens and types in corpus linguistics?", options: ["The syntactic category (POS) assigned to a word token","The unique word form (distinct orthographic item) in a vocabulary","The entity type (PERSON, ORG, LOC) of a named entity","The document category label in a classification task"], correct: 1 },
+      { q: "Which of the following preprocessing steps can MOST damage downstream task performance if done incorrectly?", options: ["Converting all text to lowercase (which can destroy entity-case information critical for NER)","Removing leading and trailing whitespace from documents","Sorting the vocabulary alphabetically","Computing document frequencies after tokenisation"], correct: 0 },
+      { q: "In named entity linking (NEL), the set of candidate entities for a mention is typically generated by:", options: ["Running LDA and selecting the top topic for the mention","Querying the knowledge base for entries whose labels or aliases match or resemble the mention string","Applying a CRF to identify the most likely IOB label sequence","Computing cosine similarity between the mention's TF-IDF vector and all KB entries"], correct: 1 },
+      { q: "The MPQA (Multi-Perspective Question Answering) corpus is described in the course as:", options: ["A topic-modelling benchmark with IPTC category labels","An annotated opinion corpus marking subjective expressions, sources, and attitudes in news","A named entity linking benchmark mapping mentions to Wikipedia","A multilingual parallel corpus for machine translation"], correct: 1 },
+      { q: "Which of the following is FALSE about the GPT family of models?", options: ["GPT models use a decoder-only (autoregressive) Transformer architecture","GPT-2 uses byte-pair encoding (BPE) tokenisation","GPT-3 has approximately 175 billion parameters","GPT models are bidirectional and can attend to future tokens during generation"], correct: 3 },
+      { q: "The \"hedonometer\" project tracks happiness over time by:", options: ["Conducting daily mood surveys with 10,000 participants","Assigning valence scores to words and computing a weighted average over sampled Twitter data","Applying LDA to identify happy vs. sad topics in news corpora","Fine-tuning BERT on happiness-labelled social media posts"], correct: 1 },
+      { q: "In the context of text classification, \"domain adaptation\" refers to:", options: ["Translating training data into the target language","Adapting a model trained on one domain (e.g., news) to perform well on another (e.g., biomedical)","Increasing the number of labelled examples by data augmentation","Using a larger transformer model for a different classification task"], correct: 1 },
+      { q: "The JRC-Acquis corpus is described in the course as:", options: ["A monolingual news corpus for topic classification in English","A multilingual parallel corpus of EU legislative documents labelled with EuroVoc topics","A biomedical NER benchmark in Dutch","A Twitter sentiment dataset in multiple European languages"], correct: 1 },
+      { q: "Which of the following best describes \"affix features\" used in NER?", options: ["The presence of a word in a city or person-name gazetteer","The POS tag assigned to the token by a tagger","Character-level prefixes (e.g., first 2-4 chars) and suffixes (last 2-4 chars) of each token","The cosine similarity between the token's embedding and known entity embeddings"], correct: 2 },
+      { q: "The \"attention mechanism\" in sequence-to-sequence models was introduced primarily to solve which problem?", options: ["The inability of LSTMs to process batches of different-length sequences","The bottleneck of compressing all source information into a single fixed vector before decoding","The high computational cost of training recurrent models","The lack of contextual representations in static word embeddings"], correct: 1 }
+    ]
+  },
+  {
+    title: "Mixed Topics V",
+    short: "Mixed V",
+    questions: [
+      { q: "Which of the following is the most accurate definition of a \"morpheme\"?", options: ["A syllable unit in phonology","The smallest meaning-bearing unit of language","A phrase structure constituent","A POS category assigned by a tagger"], correct: 1 },
+      { q: "The sentence \"Flying planes can be dangerous\" is ambiguous because:", options: ["\"flying\" can be a gerund (the activity) or a participial adjective (modifying planes), giving two different subjects","\"planes\" can be noun or verb","\"dangerous\" is a homonym with two unrelated meanings","\"can\" is ambiguous between a modal and a noun"], correct: 0 },
+      { q: "Given Precision=0.70 and Recall=0.84, the F1 score is approximately:", options: ["0.74","0.77","0.80","0.72"], correct: 1 },
+      { q: "What is PPMI (Positive PMI) designed to correct for in distributional semantic models?", options: ["Underweighting of frequent stop words","Negative PMI values caused by rare word pairs, which add noise","Over-representation of content words in context vectors","Missing values caused by OOV terms"], correct: 1 },
+      { q: "Which of the following statements about the VADER sentiment tool is FALSE?", options: ["VADER was specifically designed for social media text","VADER handles ALL CAPS as an intensifier","VADER requires fine-tuning on domain-specific data to work","VADER handles emoticons and common social media slang"], correct: 2 },
+      { q: "The \"short word shape\" feature in NERC represents a word by collapsing:", options: ["All characters to lowercase","All consecutive identical character types into one representative character (e.g., \"London\" → \"Xx\")","Only the first and last character of the word","The character n-gram count per position"], correct: 1 },
+      { q: "In the LDA plate notation, the outer plate (over documents) and inner plate (over words) represent:", options: ["The vocabulary size V and the number of topics K","The repeated generation of documents (D documents) and words per document (N words)","The Dirichlet hyperparameters α and β","The training and test sets respectively"], correct: 1 },
+      { q: "Which of the following is the correct description of what the [SEP] token does in BERT?", options: ["It marks the position of masked tokens during pretraining","It separates two input segments (e.g., sentence A and sentence B) in the NSP pretraining task","It encodes positional information for the sequence","It indicates the beginning of a new paragraph in long documents"], correct: 1 },
+      { q: "Which of the following correctly describes what \"precision\" measures in NER evaluation?", options: ["Of all gold entities, how many did the system correctly predict?","Of all entities the system predicted, how many are actually correct?","The average span length of correctly predicted entities","The proportion of tokens that were labelled correctly"], correct: 1 },
+      { q: "The \"one-hot\" vector representation assigns to each document:", options: ["A dense continuous vector from a pre-trained language model","A binary vector where each position indicates the presence or absence of a vocabulary term","The average of all token embeddings in the document","A probability distribution over topic labels"], correct: 1 },
+      { q: "Aspect-Based Sentiment Analysis (ABSA) differs from document-level sentiment analysis in that ABSA:", options: ["Classifies entire documents as positive, negative, or neutral","Extracts and classifies sentiment at the level of specific aspects or entities mentioned in text","Uses only unsupervised methods without any labelled training data","Only applies to product reviews with explicit star ratings"], correct: 1 },
+      { q: "Which of the following entity types is specific to the biomedical NER domain and NOT found in CoNLL 2003?", options: ["PERSON","ORGANISATION","CHEMICAL","LOCATION"], correct: 2 },
+      { q: "Micro-averaged recall for a system where per-class TP counts are [40, 30, 20] and FN counts are [10, 20, 30] is:", options: ["0.60","0.67","0.70","0.75"], correct: 1 },
+      { q: "The \"encoder-only\" transformer architecture (like BERT) is best suited for which types of tasks?", options: ["Text generation, autocompletion, and story writing","Machine translation requiring parallel input-output sequences","Classification, token labelling, and sentence pair tasks","Dialogue management and response generation"], correct: 2 },
+      { q: "Which of the following is an application of entity linking mentioned in the course?", options: ["Detecting syntactic parse errors in raw text","Linking person mentions in news to their Wikipedia entries for knowledge base population","Assigning BIO labels to all tokens in a sentence","Computing TF-IDF weights for named entity tokens"], correct: 1 },
+      { q: "The \"Ravi & Ravi (2015)\" survey categorises sentiment classification methods under which broad headings?", options: ["Supervised, unsupervised, and deep learning methods","Rule-based, statistical, and neural methods exclusively","Lexicon-based, SVM, and BERT-based methods only","Document-level, sentence-level, and aspect-level only"], correct: 0 },
+      { q: "In a dependency parse, the \"root\" of the sentence is:", options: ["Always the first word of the sentence","Always the main verb (or functional equivalent) of the main clause","The word with the most dependents","The subject noun phrase of the sentence"], correct: 1 },
+      { q: "The \"author-topic model\" is most appropriate for which research question?", options: ["How topics in a corpus change over decades","Which topics are associated with which authors or groups of authors","How many topics a document should be assigned given its length","Whether two documents discuss the same topic"], correct: 1 },
+      { q: "What is the effect of using a very small learning rate when fine-tuning BERT (as discussed in Sun et al. 2020)?", options: ["It speeds up convergence but risks overfitting","It prevents catastrophic forgetting of pretrained knowledge by making smaller parameter updates","It forces the model to only update the top classification layer","It has no practical effect on fine-tuning outcomes"], correct: 1 },
+      { q: "In the SemEval 2014 Task 4 restaurant domain, which aspect category was most frequently annotated?", options: ["AMBIENCE#GENERAL","SERVICE#GENERAL","FOOD#QUALITY","RESTAURANT#PRICES"], correct: 2 },
+      { q: "The NLP concept of \"data sparseness\" in the context of n-gram models means:", options: ["Most documents in the corpus are very short","The majority of possible n-gram combinations are never observed in training data","Named entities are underrepresented in training corpora","The vocabulary grows faster than the number of labelled examples"], correct: 1 },
+      { q: "In named entity recognition, which feature type provides evidence about the broader document context (not just the current token)?", options: ["Character n-gram suffixes of the current word","The POS tag immediately to the right","Document-level frequency counts: has this name appeared before in the same document?","The word's cosine similarity to its nearest embedding neighbour"], correct: 2 },
+      { q: "Which statement about GPT (Generative Pre-trained Transformer) is correct?", options: ["GPT uses bidirectional self-attention like BERT","GPT is an encoder-decoder model trained with cross-attention","GPT uses autoregressive (left-to-right) masked attention and is a decoder-only model","GPT-2 was trained on the BookCorpus only"], correct: 2 },
+      { q: "Semantic role labelling helps text mining applications because it:", options: ["Assigns topic categories to documents","Identifies who did what to whom — the agent, action, patient, and other roles in events","Measures the sentiment polarity of event descriptions","Clusters documents by topical similarity using LDA"], correct: 1 },
+      { q: "Which of the following is the definition of \"recall\" in binary classification?", options: ["TP / (TP + FP)","TP / (TP + FN)","TN / (TN + FP)","TP / (TP + TN)"], correct: 1 },
+      { q: "The \"ITPT\" fine-tuning strategy from Sun et al. (2020) stands for:", options: ["In-Task Pre-Training (continued pretraining on within-task unlabelled data before fine-tuning)","Iterative Training with Perplexity Thresholding","Input-Target Pair Training on parallel sentence data","Intermediate Task Pre-Training on NLI data"], correct: 0 },
+      { q: "The compound noun \"blackboard\" illustrates compounding where the meaning:", options: ["Is a straightforward combination of component meanings (a board that is black)","Has lexicalised to a meaning not directly compositional from its parts (a specific type of teaching surface)","Can only be determined from syntactic context","Is identical to the adjective \"black\" applied to \"board\""], correct: 1 },
+      { q: "In the BERTopic workflow, what does the c-TF-IDF step accomplish?", options: ["It trains a Dirichlet-based topic-word distribution","It extracts representative keywords for each cluster by computing TF-IDF within each cluster vs. the rest","It fine-tunes the sentence transformer on cluster labels","It assigns probability scores to each document's topic membership"], correct: 1 },
+      { q: "Which of the following is a disadvantage of using stop-word removal in sentiment analysis?", options: ["Stop words are always negative sentiment words","Stop words like \"not\", \"no\", and \"never\" are crucial negation markers for sentiment and may be incorrectly removed","Stop-word lists are too large to store efficiently","Stop words cause TF-IDF weights to become negative"], correct: 1 },
+      { q: "Which heuristic is used in most sentence splitters to distinguish abbreviation periods from sentence-final periods?", options: ["Check whether the next word is a proper noun (capitalised)","Use a list of known abbreviations and check if the period follows one","Apply a full parse tree to determine if a sentence is complete","Count syllables in the preceding word to determine if it is an abbreviation"], correct: 1 },
+      { q: "The \"Patient\" semantic role in \"The surgeon removed the tumour\" is:", options: ["\"The surgeon\" (initiator)","\"removed\" (the event)","\"the tumour\" (entity undergoing the action)","No patient role is present in this sentence"], correct: 2 },
+      { q: "In inter-annotator agreement, a Kappa of 0.80 is typically interpreted as:", options: ["Moderate agreement","Substantial agreement","Almost perfect agreement","Fair agreement"], correct: 2 },
+      { q: "Which of the following correctly explains why LDA produces different results on different runs with the same data and K?", options: ["LDA uses different hyperparameters each run","Gibbs sampling is a stochastic inference algorithm sensitive to random initialisation","LDA applies different stop-word lists each time","The vocabulary is randomly permuted before each run"], correct: 1 },
+      { q: "Named entity linking systems must handle \"NIL\" entities. Which situation creates a NIL entity?", options: ["The NER system predicts a wrong entity type","The entity mention exists in the text but has no matching entry in the reference knowledge base","The entity span crosses a sentence boundary","Two different mentions in the same document refer to the same entity"], correct: 1 },
+      { q: "According to the course, which word has approximately 59 senses listed in WordNet?", options: ["\"run\"","\"go\"","\"break\"","\"make\""], correct: 2 }
+    ]
+  },
+  {
+    title: "Mixed Topics VI",
+    short: "Mixed VI",
+    questions: [
+      { q: "In the NLP pipeline, which task is responsible for assigning grammatical roles like subject, object, and modifier to words?", options: ["Tokenisation","Morphological analysis","Syntactic analysis (parsing)","Lexical analysis (POS tagging)"], correct: 2 },
+      { q: "The word \"teacher\" is formed from \"teach\" by:", options: ["Inflection (grammatical variation)","Compounding (combining two stems)","Derivation (adding -er suffix to create a new noun from a verb)","Cliticisation (attaching a clitic)"], correct: 2 },
+      { q: "A system labels 100 tokens in a test set. Gold has 40 positive tokens; system predicts 50 as positive, of which 30 are correct. What is the F1 for the positive class?", options: ["0.63","0.67","0.70","0.60"], correct: 1 },
+      { q: "Firth's distributional hypothesis motivates word embeddings because it claims:", options: ["Words are defined by their morphological structure","A word's meaning is captured by the contexts in which it appears","Words that look similar (orthographically) have similar meaning","Word meaning is universal across all languages"], correct: 1 },
+      { q: "Which of the following is NOT a stage in the Ravi & Ravi (2015) sentiment analysis pipeline?", options: ["Opinion spam detection","Subjectivity classification","Aspect extraction","Named entity linking"], correct: 3 },
+      { q: "The entity extent problem in NER refers to:", options: ["Entities that span multiple sentences","Uncertainty about the exact token boundaries of an entity mention","Entities that have no entry in the knowledge base","Entities whose type cannot be determined from context"], correct: 1 },
+      { q: "Which of the following is FALSE about LDA?", options: ["LDA assigns each word in a document to a latent topic","LDA produces a document-topic matrix and a topic-word matrix","LDA automatically selects the optimal number of topics K","LDA uses Dirichlet priors over topic and word distributions"], correct: 2 },
+      { q: "The XLM-RoBERTa model is particularly useful for:", options: ["Generating long text sequences in English only","Cross-lingual token classification tasks (e.g., Dutch NER using a model trained on multiple languages)","Computing TF-IDF representations for large document corpora","Training sentence classifiers on small English datasets only"], correct: 1 },
+      { q: "In sentiment analysis, \"negation scope\" refers to:", options: ["The distance between the negation word and the sentence boundary","The span of text whose polarity is inverted by a negation expression","The list of negation words in a sentiment lexicon","The number of negated sentences in a document"], correct: 1 },
+      { q: "Which of the following is TRUE about the CoNLL 2003 NER shared task evaluation?", options: ["Partial span matches (overlapping spans) count as true positives","Only the entity type must match; span boundaries need not be exact","Both span boundaries and entity type must exactly match for a true positive","F1 is computed per token, not per entity span"], correct: 2 },
+      { q: "In the context of the Transformer, \"layer normalisation\" is applied to:", options: ["The positional encoding vectors before they are added to token embeddings","The output of each sub-layer (attention and feed-forward) before passing to the next layer","The final output embeddings only","The K and V matrices before computing attention scores"], correct: 1 },
+      { q: "In the opinion structure framework, \"cognitive SIP verbs\" include words like \"think\" and \"believe\" because:", options: ["They directly express positive or negative polarity","They introduce mental states — the holder's internal beliefs or thoughts — as the attributed opinion","They are always negated in sentiment-bearing sentences","They function as aspect category markers in ABSA"], correct: 1 },
+      { q: "Which of the following is the correct computation of micro-averaged F1 from TP=200, FP=50, FN=80?", options: ["0.75","0.73","0.80","0.68"], correct: 1 },
+      { q: "The \"short-text topic model\" variant of LDA addresses the problem that:", options: ["LDA is too slow for long documents","Standard LDA co-occurrence statistics are unreliable for very short texts (tweets, sentences)","LDA cannot handle numeric data in documents","LDA produces too many topics for small corpora"], correct: 1 },
+      { q: "Which of the following resources is used specifically for training Dutch NLP models mentioned in the course?", options: ["CoNLL 2003 English data with English BERT","wietsedv/bert-base-dutch-cased-finetuned-sentiment","xlm-roberta-large for English only","VADER lexicon adapted for Dutch"], correct: 1 },
+      { q: "In word embeddings, the cosine similarity between two vectors is preferred over Euclidean distance because:", options: ["Cosine similarity is always faster to compute","Cosine similarity measures the angle between vectors (direction of meaning) rather than their absolute magnitude","Cosine similarity can be negative while Euclidean distance cannot","Euclidean distance requires normalisation while cosine does not"], correct: 1 },
+      { q: "Which of the following is a \"named entity variation\" challenge specific to NERC?", options: ["Deciding whether \"bank\" is a financial institution or a river bank","The same entity referred to as \"The United States\", \"U.S.\", \"America\", and \"the US\" requiring all to be recognised","Identifying that \"running\" is a verb or noun","Resolving the PP-attachment of \"in the city\""], correct: 1 },
+      { q: "The \"patient\" role in semantic role labelling identifies:", options: ["The entity that initiates or causes the event","The entity that is affected by or undergoes the event","The location where the event takes place","The instrument used to carry out the event"], correct: 1 },
+      { q: "In supervised text classification, \"one-vs-rest\" (OvR) binary decomposition means:", options: ["One annotator checks all labels; the rest are automatic","One binary classifier per label, trained to distinguish each label from all other labels","One neural network layer per class label","Each document is assigned to exactly one class, not multiple"], correct: 1 },
+      { q: "The \"dynamic topic model\" captures which phenomenon that standard LDA cannot?", options: ["Correlations between co-occurring topics in the same document","Topic distributions that evolve over time (e.g., how news topics change across decades)","Topic distributions conditioned on document length","Fine-grained type hierarchies within each topic"], correct: 1 },
+      { q: "In the context of NER feature engineering, \"gazetteer\" features are:", options: ["Character n-gram frequency patterns derived from training data","Lookup features indicating whether a token appears in a pre-compiled list of known names or entities","Document-level TF-IDF weights assigned to named entity tokens","POS tags derived from a morphological analyser"], correct: 1 },
+      { q: "Which of the following correctly describes what \"implicature\" means in pragmatics?", options: ["A direct, literal statement of fact","A meaning that is conveyed but not explicitly stated, inferred from context and communicative conventions","A morphological process creating new words from existing ones","A syntactic structure where multiple readings are possible"], correct: 1 },
+      { q: "The BiLSTM in the Lample et al. (2016) NER model processes:", options: ["Character embeddings only, producing a character-level representation per sentence","Word-level input (word embeddings + optionally character-level features) and produces context-sensitive token representations","Document-level embeddings for sequence classification","Only entity boundary detection without type classification"], correct: 1 },
+      { q: "According to the course, which hyperparameter search strategy for LDA K is commonly used in practice?", options: ["Setting K = square root of the number of documents","Trying different values of K and evaluating coherence and perplexity to find a good K","Setting K = vocabulary size divided by 100","Fixing K = 50 for all corpora regardless of size"], correct: 1 },
+      { q: "Which of the following is NOT an advantage of BERTopic over LDA?", options: ["BERTopic leverages pretrained semantic representations","BERTopic does not require specifying K in advance","BERTopic produces fully interpretable probabilistic topic-word distributions like LDA","BERTopic can capture semantically coherent topics even with sparse co-occurrence data"], correct: 2 },
+      { q: "What is \"metonymy\" in linguistics?", options: ["A figure of speech mapping an abstract concept onto a concrete one","Using a word to stand for something related (e.g., the container for the contents)","A word having multiple unrelated historical meanings","Marking the speech act of a quoted source with a SIP verb"], correct: 1 },
+      { q: "In the context of the Transformer self-attention, what is the role of the \"Query\" matrix?", options: ["It stores the content to be retrieved","It defines what the current token is \"looking for\" in other tokens","It computes the final output of the attention layer","It masks future tokens during autoregressive decoding"], correct: 1 },
+      { q: "The FIGER type system provides 112 fine-grained entity types organised into:", options: ["A flat list with no hierarchy","A two-level hierarchy where types have both a coarse and a fine-grained category","A tree with 10 levels of specificity","A graph where each type can have multiple parents"], correct: 1 },
+      { q: "Which of the following is an example of a \"speech act\" SIP verb in sentiment analysis?", options: ["\"think\"","\"know\"","\"assert\"","\"fear\""], correct: 2 },
+      { q: "According to the course, the performance drop from CoNLL 2003 (newswire) to Wikinews (cross-domain NER) is primarily caused by:", options: ["Wikinews having longer sentences on average","Different capitalisation conventions, entity types, and vocabulary distributions","Wikinews using a different IOB label scheme","The CoNLL 2003 model being too large to apply to Wikinews"], correct: 1 },
+      { q: "What is the role of the feed-forward sub-layer in each Transformer block?", options: ["It computes attention weights between all token pairs","It applies a position-wise non-linear transformation to each token representation independently","It performs cross-attention between encoder and decoder representations","It encodes the absolute position of each token in the sequence"], correct: 1 },
+      { q: "In the context of the course, \"gold data\" is defined as:", options: ["Data automatically labelled by a trained model","Training data from any large publicly available corpus","Manually annotated data by humans, considered the ground truth for evaluation","Data that achieves Cohen's Kappa > 0.80"], correct: 2 },
+      { q: "The Plutchik emotion wheel organises emotions by:", options: ["Mapping each emotion to a specific brain region","Arranging eight basic emotions in a wheel with opposite emotions across from each other, and intensity levels on the radial axis","Clustering emotions into three groups: positive, negative, and neutral","Ranking emotions by their frequency in social media text"], correct: 1 },
+      { q: "Which of the following correctly describes the difference between \"type\" error and \"boundary\" error in NER?", options: ["Type error: wrong span; boundary error: wrong entity type","Type error: wrong entity type with correct span; boundary error: wrong span boundaries","Type error: false positive; boundary error: false negative","They are synonyms describing the same error category"], correct: 1 },
+      { q: "In the course, document-level accuracy for hotel sentiment (positive/negative) was reported at approximately:", options: ["72%","80%","92%","99%"], correct: 2 }
+    ]
+  },
+  {
+    title: "Mixed Topics VII",
+    short: "Mixed VII",
+    questions: [
+      { q: "The NLP concept of \"variation\" is illustrated by which example?", options: ["\"May\" functioning as modal verb, proper name, or month","\"IBM\", \"Big Blue\", and \"International Business Machines\" all referring to the same company","\"Bank\" meaning financial institution vs. river bank","\"Duck\" being a noun or a verb"], correct: 1 },
+      { q: "Which of the following morphological processes produces \"unhappily\" from \"happy\"?", options: ["Inflection only (past tense)","Compounding then inflection","Two derivational steps (happy → unhappy → unhappily) combined with inflection","Two derivational steps: un- + happy → unhappy, then + -ly → unhappily"], correct: 3 },
+      { q: "A dataset has 3 classes with counts 200, 150, and 50. A classifier always predicts the majority class. Its accuracy is:", options: ["0.33","0.45","0.50","0.67"], correct: 2 },
+      { q: "In the scaled dot-product attention formula, what is the purpose of dividing by √d_k before softmax?", options: ["To make the attention weights sum to exactly 1","To prevent large dot products from pushing softmax into saturation, causing vanishing gradients","To normalise the Query and Key matrices independently","To apply dropout during training"], correct: 1 },
+      { q: "In the course, the most accurate description of \"implicit sentiment\" is:", options: ["Sentiment expressed using negation (e.g., \"not bad\")","Sentiment conveyed through described events or situations without explicit opinion words","Sentiment from non-native speakers with grammar errors","Sentiment found only in figurative language"], correct: 1 },
+      { q: "In BIO tagging, which sequence is ILLEGAL for the entity \"John Smith\" (a PERSON)?", options: ["B-PER I-PER","O B-PER I-PER","I-PER I-PER","B-PER I-PER O"], correct: 2 },
+      { q: "Which of the following correctly distinguishes the LDA alpha hyperparameter's effect?", options: ["High alpha → each document is concentrated on a few topics; low alpha → documents spread over many topics","Low alpha → each document is concentrated on fewer topics; high alpha → documents spread over many topics","Alpha controls topic-word sparsity; beta controls document-topic sparsity","Alpha and beta both control the number of topics K"], correct: 1 },
+      { q: "When computing TF-IDF, a word that appears in every single document gets which IDF value?", options: ["1.0 (maximum weight)","log(N/N) = 0 (minimum weight — the word is uninformative)","The average IDF across the vocabulary","An undefined value (division by zero)"], correct: 1 },
+      { q: "The key advantage of \"macro-averaged\" evaluation over \"micro-averaged\" is:", options: ["Macro averaging weights common classes more, giving a better overall picture","Macro averaging gives equal weight to every class, preventing dominant classes from masking poor performance on rare classes","Macro averaging is always higher than micro averaging","Macro averaging is only valid for binary classification"], correct: 1 },
+      { q: "Which of the following is the correct definition of \"holonymy\"?", options: ["A word being a more general category of another word","A word being a part of another word or entity","A word being the whole of which another word is a part","Two words being synonymous"], correct: 2 },
+      { q: "Which of the following word-shape patterns correctly represents the string \"COVID-19\"?", options: ["Xx","XX-xx","XXXXX-dd","xXxXx"], correct: 2 },
+      { q: "The \"Newsbrief\" system at the JRC is described as updating topic-classified news:", options: ["Once per day","Every 10 minutes","Every hour","Once per week"], correct: 1 },
+      { q: "In the context of text mining, \"information extraction\" differs from \"information retrieval\" in that:", options: ["Information retrieval finds structured facts; information extraction ranks documents by relevance","Information extraction finds and structures specific facts (entities, relations, events) from text; retrieval ranks documents by relevance","Information retrieval uses NLP; information extraction uses only keyword matching","They are synonymous terms for the same task"], correct: 1 },
+      { q: "The SemEval 2014 Task 4 for ABSA was applied to which specific domains?", options: ["Hotels and airlines","Books and electronics","Laptops and restaurants","Movies and music"], correct: 2 },
+      { q: "In the Lample et al. (2016) BiLSTM-CRF NER model, what is the purpose of character-level CNN/LSTM embeddings?", options: ["To replace word-level embeddings entirely","To capture morphological information and word-shape patterns useful for entity detection","To compute attention weights between token pairs","To perform topic classification before NER"], correct: 1 },
+      { q: "A sentence with a Cohen's Kappa of 0.40 for annotation would be considered:", options: ["Almost perfect agreement","Substantial agreement","Moderate agreement","Poor agreement"], correct: 2 },
+      { q: "The \"Pointwise Mutual Information\" (PMI) between two words w1 and w2 is defined as:", options: ["log[P(w1, w2) / (P(w1) × P(w2))]","P(w1) + P(w2) - P(w1, w2)","P(w1 | w2) / P(w2 | w1)","log[P(w1) × P(w2)]"], correct: 0 },
+      { q: "In the context of BERT pretraining, approximately what percentage of input tokens are replaced by [MASK]?", options: ["5%","15%","25%","50%"], correct: 1 },
+      { q: "Which of the following is the most appropriate model for classifying a large corpus of scientific abstracts into 10 predefined research areas?", options: ["Unsupervised LDA with K=10 (no labels needed)","Supervised text classification fine-tuning a pretrained BERT on labelled examples","Dynamic topic model (for temporal evolution)","BERTopic clustering (no predefined categories)"], correct: 1 },
+      { q: "The \"AIDA/AGDISTIS\" entity linking system is distinguished by its use of:", options: ["Surface string matching and word-level similarity to DBpedia entries","Graph-based coherence that jointly disambiguates all entity mentions in a document","Fine-tuned BERT representations for each entity candidate","A manually curated gazetteer of entity-KB mappings"], correct: 1 },
+      { q: "In a three-class classification problem (A, B, C), a system achieves per-class F1 of 0.80, 0.40, and 0.90. The macro F1 is:", options: ["0.70","0.80","0.60","0.75"], correct: 0 },
+      { q: "Which of the following correctly describes the difference between LSA (LSI) and LDA?", options: ["LSA uses probabilistic Dirichlet priors; LDA uses matrix factorisation","LSA uses SVD on a word-document matrix producing latent dimensions; LDA uses a generative probabilistic model with interpretable topics","LSA requires specifying K topics; LDA infers K automatically","They are functionally equivalent with different names"], correct: 1 },
+      { q: "In named entity recognition, the word \"van\" in \"Marijn van der Berg\" illustrates:", options: ["A gazetteer failure (Dutch particles not in lists)","A tokenisation challenge (particle boundaries)","The problem of lowercase words within proper-name entities, requiring context to classify correctly","An example of the MISC entity type"], correct: 2 },
+      { q: "Which of the following models uses a \"bottleneck\" that limits its ability to handle long input sequences?", options: ["Transformer with self-attention","BERT (encoder-only)","LSTM encoder-decoder without attention","BiLSTM-CRF for sequence labelling"], correct: 2 },
+      { q: "According to the course, the main purpose of the development (dev) set in an ML experiment is:", options: ["To compute the final published result for comparison with other systems","To provide additional training data when the training set is small","To tune hyperparameters and model design decisions without contaminating the test set","To compute inter-annotator agreement before annotation begins"], correct: 2 },
+      { q: "Which of the following is a correct statement about \"polysemy\" vs. \"homonymy\"?", options: ["Polysemy involves different etymological origins; homonymy involves related meanings of the same root","Polysemy involves multiple related meanings of the same word form; homonymy involves unrelated meanings that happen to share the same form","They are interchangeable terms in modern linguistics","Polysemy only applies to verbs; homonymy only to nouns"], correct: 1 },
+      { q: "In the context of the course, the MPQA corpus is best described as:", options: ["A benchmark for topic classification of news articles","An annotated corpus of private-state expressions (opinions, beliefs, sentiments) in news text","A dataset for named entity linking to Wikipedia","A parallel multilingual corpus for machine translation evaluation"], correct: 1 },
+      { q: "In an LDA model with K=10, how many distributions does the model learn?", options: ["10 document-topic distributions only","10 topic-word distributions and one document-topic distribution per document","10 topic-word distributions and one topic-word distribution shared across all documents","Exactly 20 distributions (10 document-topic + 10 topic-word)"], correct: 1 },
+      { q: "What makes the \"Correlated Topic Model\" different from standard LDA?", options: ["CTM allows the number of topics K to grow with the corpus","CTM uses a logistic-normal distribution instead of the Dirichlet prior, allowing topics to be correlated","CTM requires author metadata to learn topic distributions","CTM applies SVD instead of Gibbs sampling for inference"], correct: 1 },
+      { q: "A \"false positive\" in NER evaluation means:", options: ["A gold entity that the system failed to predict","An entity the system predicted correctly in both span and type","An entity the system predicted but which does not exist in the gold standard","An entity the system predicted with the correct span but wrong type"], correct: 2 },
+      { q: "The concept of \"error propagation\" in NLP pipelines is most severe when:", options: ["All modules use the same underlying algorithm","All modules are trained on the same dataset","An early module with low accuracy feeds its noisy output to multiple downstream modules","The final module is evaluated on a different domain than training"], correct: 2 },
+      { q: "Which of the following describes the ELMo approach to generating word representations?", options: ["Training a single LSTM in the left-to-right direction on a language modelling objective","Training a deep bidirectional LSTM on a language model objective and using internal layer representations weighted by downstream task","Fine-tuning BERT on word similarity benchmarks","Computing static co-occurrence vectors from a large corpus"], correct: 1 },
+      { q: "The \"AgNews\" dataset, mentioned in the course, contains:", options: ["14 topic classes with ~560,000 examples","4 topic classes (world, sports, business, technology) with ~120,000 training examples","Binary sentiment labels for news headlines","Multi-label topic annotations following IPTC taxonomy"], correct: 1 },
+      { q: "In named entity extent decisions, \"nested entities\" create a challenge because:", options: ["Standard IOB/BIO tagging cannot represent entities that contain other entities","Nested entities always have conflicting entity types","Nested entities require three-word context windows","Standard CRF models cannot process tokens that appear in multiple entities simultaneously"], correct: 0 },
+      { q: "Which of the following claims about XLM-RoBERTa is supported by the course?", options: ["It was trained on English text only and generalised to other languages via transfer","It is a monolingual Dutch BERT model","It is a massively multilingual model trained on 100 languages that can be applied to Dutch NER via HuggingFace","It requires language-specific fine-tuning before any cross-lingual application"], correct: 2 }
+    ]
+  }
+];
+
+const LETTERS = ['A', 'B', 'C', 'D'];
+
+function buildUI() {
+  const tabBar = document.getElementById('tabBar');
+  const main = document.getElementById('mainContent');
+
+  EXAMS.forEach((exam, ei) => {
+    // Tab
+    const tab = document.createElement('button');
+    tab.className = 'tab' + (ei === 0 ? ' active' : '');
+    tab.dataset.exam = ei;
+    tab.innerHTML = `<span>Exam ${ei+1}</span><span class="badge" id="badge-${ei}">—</span>`;
+    tab.title = exam.title;
+    tab.addEventListener('click', () => switchExam(ei));
+    tabBar.appendChild(tab);
+
+    // Panel
+    const panel = document.createElement('div');
+    panel.className = 'exam-panel' + (ei === 0 ? ' active' : '');
+    panel.id = `panel-${ei}`;
+
+    panel.innerHTML = `
+      <div class="exam-header">
+        <h2>Exam ${ei+1} — ${exam.title}</h2>
+        <p>${exam.questions.length} questions &nbsp;·&nbsp; Select one answer per question, then submit.</p>
+      </div>
+      <div class="score-banner" id="score-${ei}">
+        <div>
+          <div class="score-num" id="score-num-${ei}">—</div>
+          <div class="score-label">Questions correct</div>
+        </div>
+        <div class="score-pct" id="score-pct-${ei}"></div>
+        <button class="retake-btn" onclick="retake(${ei})">↺ Retake</button>
+      </div>
+      <div id="questions-${ei}"></div>
+      <div class="actions">
+        <button class="submit-btn" id="submit-${ei}" onclick="submitExam(${ei})">Submit Exam</button>
+        <span class="warning-msg" id="warn-${ei}">Please answer all questions before submitting.</span>
+      </div>
+    `;
+    main.appendChild(panel);
+
+    // Build questions
+    const qContainer = panel.querySelector(`#questions-${ei}`);
+    exam.questions.forEach((q, qi) => {
+      const card = document.createElement('div');
+      card.className = 'question-card';
+      card.id = `card-${ei}-${qi}`;
+
+      let optHtml = '';
+      q.options.forEach((opt, oi) => {
+        optHtml += `
+          <label class="option-label" id="lbl-${ei}-${qi}-${oi}">
+            <input type="radio" name="q-${ei}-${qi}" value="${oi}" id="r-${ei}-${qi}-${oi}">
+            <span><strong>${LETTERS[oi]})</strong> ${escapeHtml(opt)}</span>
+          </label>`;
+      });
+
+      card.innerHTML = `
+        <div class="q-num">Question ${qi+1} of ${exam.questions.length}</div>
+        <div class="q-text">${escapeHtml(q.q)}</div>
+        <div class="options">${optHtml}</div>
+        <div class="result-icon" id="result-${ei}-${qi}"></div>
+      `;
+      qContainer.appendChild(card);
+    });
+  });
+}
+
+function escapeHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function switchExam(ei) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.exam-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab')[ei].classList.add('active');
+  document.getElementById(`panel-${ei}`).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function submitExam(ei) {
+  const exam = EXAMS[ei];
+  const n = exam.questions.length;
+
+  // Check all answered
+  let allAnswered = true;
+  for (let qi = 0; qi < n; qi++) {
+    const picked = document.querySelector(`input[name="q-${ei}-${qi}"]:checked`);
+    if (!picked) { allAnswered = false; break; }
+  }
+
+  const warn = document.getElementById(`warn-${ei}`);
+  if (!allAnswered) {
+    warn.classList.add('visible');
+    // Scroll to first unanswered
+    for (let qi = 0; qi < n; qi++) {
+      const picked = document.querySelector(`input[name="q-${ei}-${qi}"]:checked`);
+      if (!picked) {
+        document.getElementById(`card-${ei}-${qi}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
+        break;
+      }
+    }
+    return;
+  }
+  warn.classList.remove('visible');
+
+  let score = 0;
+
+  for (let qi = 0; qi < n; qi++) {
+    const picked = parseInt(document.querySelector(`input[name="q-${ei}-${qi}"]:checked`).value);
+    const correct = exam.questions[qi].correct;
+    const card = document.getElementById(`card-${ei}-${qi}`);
+    const resultDiv = document.getElementById(`result-${ei}-${qi}`);
+
+    // Disable inputs
+    for (let oi = 0; oi < 4; oi++) {
+      const radio = document.getElementById(`r-${ei}-${qi}-${oi}`);
+      if (radio) radio.disabled = true;
+    }
+
+    if (picked === correct) {
+      score++;
+      card.classList.add('correct');
+      resultDiv.className = 'result-icon correct';
+      resultDiv.textContent = '✓ Correct!';
+      // Highlight correct
+      document.getElementById(`lbl-${ei}-${qi}-${correct}`).classList.add('is-correct');
+    } else {
+      card.classList.add('wrong');
+      resultDiv.className = 'result-icon wrong';
+      resultDiv.textContent = `✗ Incorrect — correct answer: ${LETTERS[correct]}) ${escapeHtml(exam.questions[qi].options[correct])}`;
+      // Highlight wrong pick in red
+      document.getElementById(`lbl-${ei}-${qi}-${picked}`).classList.add('is-wrong-pick');
+      // Highlight correct in green
+      document.getElementById(`lbl-${ei}-${qi}-${correct}`).classList.add('is-correct');
+      // Dim others
+      for (let oi = 0; oi < 4; oi++) {
+        if (oi !== picked && oi !== correct) {
+          document.getElementById(`lbl-${ei}-${qi}-${oi}`).classList.add('dimmed');
+        }
+      }
+    }
+  }
+
+  // Show score banner
+  const pct = Math.round(score / n * 100);
+  document.getElementById(`score-num-${ei}`).textContent = `${score} / ${n}`;
+  document.getElementById(`score-pct-${ei}`).textContent = `${pct}%`;
+  const banner = document.getElementById(`score-${ei}`);
+  banner.classList.add('visible');
+  banner.style.borderLeftColor = pct >= 70 ? 'var(--green)' : pct >= 50 ? 'var(--gold)' : 'var(--red)';
+
+  // Update tab badge
+  const tab = document.querySelectorAll('.tab')[ei];
+  tab.classList.add('scored');
+  tab.querySelector('.badge').textContent = `${pct}%`;
+
+  // Hide submit button
+  document.getElementById(`submit-${ei}`).style.display = 'none';
+
+  // Scroll to score banner
+  banner.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function retake(ei) {
+  const exam = EXAMS[ei];
+  const n = exam.questions.length;
+
+  for (let qi = 0; qi < n; qi++) {
+    const card = document.getElementById(`card-${ei}-${qi}`);
+    card.className = 'question-card';
+    const resultDiv = document.getElementById(`result-${ei}-${qi}`);
+    resultDiv.className = 'result-icon';
+    resultDiv.textContent = '';
+
+    for (let oi = 0; oi < 4; oi++) {
+      const radio = document.getElementById(`r-${ei}-${qi}-${oi}`);
+      if (radio) { radio.disabled = false; radio.checked = false; }
+      const lbl = document.getElementById(`lbl-${ei}-${qi}-${oi}`);
+      if (lbl) lbl.className = 'option-label';
+    }
+  }
+
+  document.getElementById(`score-${ei}`).classList.remove('visible');
+  const submitBtn = document.getElementById(`submit-${ei}`);
+  submitBtn.style.display = '';
+  document.getElementById(`warn-${ei}`).classList.remove('visible');
+
+  const tab = document.querySelectorAll('.tab')[ei];
+  tab.classList.remove('scored');
+  tab.querySelector('.badge').textContent = '—';
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+buildUI();
+</script>
+</body>
+</html>

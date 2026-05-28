@@ -169,3 +169,14 @@
 **`r`** — training reward (what the policy optimizes).
 **`S`** — held-out task score (what you actually care about). the oracle.
 **reward hacking** — policy gets high `r` without doing the intended task. the gap `r − S` is the hack signal.
+
+---
+
+## Related Notes
+- [[Robotics/00 - Robotics MOC]] — full robotics knowledge base
+- [[Robotics/08 - Key Subfields & Concepts]] — RL for robots, sim-to-real, IsaacLab, VLAs, policy concepts
+- [[Robotics/02 - Recent Breakthroughs 2023–2025]] — Eureka paper context; π0, RT-2
+- [[Robotics/07 - Key Bottlenecks]] — data scarcity, manipulation difficulty, compute
+- [[Robotics]] — Prompt2Policy project notes (sister file)
+- [[ML/Lecture 12 — Reinforcement Learning]] — MDP formalism, reward functions, PPO, Q-learning
+- [[Artificial Intelligence/AI Agents/AI Agents - Core Components]] — LLM-as-judge, agent orchestration patterns

@@ -243,3 +243,13 @@ The model predicts the next token at every position — the standard language mo
 | **BERT** | Bidirectional; MLM pre-training; [CLS] for classification; fine-tuning |
 | **Causal attention** | Mask future positions ($-\infty$); enables left-to-right generation |
 | **GPT** | Causal transformer; autoregressive next-token prediction |
+
+---
+
+## Related Notes
+- [[Robotics/08 - Key Subfields & Concepts]] — VLA models (Vision-Language-Action): transformers applied to robot control
+- [[Robotics/02 - Recent Breakthroughs 2023–2025]] — RT-2, π0, Gemini Robotics: transformer-based robot models
+- [[Technical Skills/Notes/Subtopics/LLMs]] — LLMs are transformer-based; GPT, BERT, Claude architecture
+- [[ML/Lecture 9 — Sequential Models (Deep Learning on Sequences)]] — RNNs that transformers replaced
+- [[ML/Lecture 4 — Neural Networks & Backpropagation]] — neural network fundamentals transformers build on
+- [[Artificial Intelligence/AI Agents/AI Agents - Core Components]] — LLM-based agents use transformer models

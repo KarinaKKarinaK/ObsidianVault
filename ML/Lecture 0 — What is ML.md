@@ -291,3 +291,13 @@ It depends on context:
 - Interpretability remains hard: we often don't know what a model is actually looking at.
 
 ---
+
+---
+
+## Related Notes
+- [[ML/Lecture 1 — Linear Models & Optimization]] — first concrete ML models
+- [[Technical Skills/Notes/09 - Machine Learning]] — applied ML for software engineering context
+- [[Linear Algebra & Calc/Linear Algebra Notes]] — mathematical foundations for ML
+- [[Stats/Stats Review]] — statistics foundations for ML (probability, distributions)
+- [[Artificial Intelligence/Index - Artificial Intelligence]] — AI broader context
+- [[Robotics/08 - Key Subfields & Concepts]] — ML applied to robotics

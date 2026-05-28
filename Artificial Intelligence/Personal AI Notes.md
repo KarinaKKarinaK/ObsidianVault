@@ -32,3 +32,10 @@
     - **Efficiency:** Uses less power per bit transferred.
     - **Density:** Smaller footprint, allowing more compact, powerful chips.
 - Without HBM, even the best GPUs (e.g., NVIDIA H100, B200) would **stall** waiting on memory.
+---
+
+## Related Notes
+- [[Artificial Intelligence/AI Agents/AI Agents - Core Components]] — AI agent architecture and components
+- [[Artificial Intelligence/Prompt Engineering]] — prompt engineering techniques
+- [[Technical Skills/Notes/Subtopics/LLMs]] — LLM capabilities and internals
+- [[Robotics/03 - Embodied AI]] — AI in physical form

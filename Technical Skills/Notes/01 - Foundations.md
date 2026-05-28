@@ -58,3 +58,10 @@ Immutability is ==the state of being unchangeable, referring to data or objects
 Functional Programming (FP) and Object-Oriented Programming (OOP) are distinct paradigms where ==FP uses pure functions and immutable data, while OOP encapsulates state within objects to manage complexity==. FP is ideal for data transformation and fixed operations, whereas OOP excels in modeling real-world entities with complex interactions.
 
 ![[Pasted image 20251226212759.png]]
+---
+
+## Related Notes
+- [[Technical Skills/Notes/02 - JS and TS]] — JS/TS foundations
+- [[Technical Skills/Notes/10 - Algorithms]] — algorithms as a core CS foundation
+- [[Data Structures & Algorithms/DSA Midterm/DSA - Main Notes]] — detailed data structures and algorithms
+- [[Linear Algebra & Calc/Linear Algebra Notes]] — math foundations for CS

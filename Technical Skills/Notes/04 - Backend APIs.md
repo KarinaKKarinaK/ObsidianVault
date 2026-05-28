@@ -234,3 +234,11 @@ Trade-off:  **Speed vs data "freshness"**
 **Rate limiting = protection**  
 **Caching = speed**
 
+
+---
+
+## Related Notes
+- [[Technical Skills/Notes/06 - System Design]] — APIs within the broader system architecture
+- [[Technical Skills/Notes/05 - Databases]] — databases behind the API layer
+- [[Technical Skills/Notes/02 - JS and TS]] — JS/TS for implementing backend APIs
+- [[Technical Skills/Notes/03 - React & Next]] — Next.js API routes as a full-stack pattern

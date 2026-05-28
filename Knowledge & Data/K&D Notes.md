@@ -324,3 +324,11 @@ Ontology population involves filling the ontology with instances. Data sources (
 #### Turtle Format
 
 #### Caveat Notes (from Quiz)
+---
+
+## Related Notes
+- [[Knowledge & Data/Ontology Basics]] — ontologies as a form of structured knowledge
+- [[Knowledge & Data/K&D Cheatsheet]] — quick reference for K&D concepts
+- [[Artificial Intelligence/AI Agents/AI Agents - Core Components]] — RAG and knowledge bases in AI agents
+- [[Technical Skills/Notes/05 - Databases]] — database systems for storing knowledge
+- [[Multi Agent Systems/Overview Notes]] — knowledge bases in multi-agent systems (Prolog KB)
