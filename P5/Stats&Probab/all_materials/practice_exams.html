@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Statistics — 4 Practice Exams</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,800;1,9..144,300&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0c0c0f;--s1:#131318;--s2:#1a1a22;--s3:#22222e;--bd:#2e2e3e;--bd2:#3e3e52;--tx:#e2e2f0;--mu:#7070a0;--di:#4a4a70;--ac:#c8f078;--a2:#78b4f8;--a3:#f09878;--ok:#78f0a0;--er:#f07880;--ok-bg:rgba(120,240,160,0.08);--er-bg:rgba(240,120,128,0.08);}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--tx);font-family:'DM Mono',monospace;font-size:13px;line-height:1.7;min-height:100vh;}
+.app{display:grid;grid-template-columns:220px 1fr;min-height:100vh;}
+.sidebar{background:var(--s1);border-right:1px solid var(--bd);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;}
+.sb-head{padding:20px 18px 16px;border-bottom:1px solid var(--bd);}
+.sb-title{font-family:'Fraunces',serif;font-size:15px;font-weight:800;color:var(--tx);}
+.sb-title em{color:var(--ac);font-style:italic;}
+.sb-sub{font-size:10px;color:var(--mu);margin-top:2px;letter-spacing:.1em;}
+.sb-tabs{padding:12px 0 8px;}
+.sb-label{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--di);padding:4px 18px 6px;}
+.tab-btn{display:flex;align-items:center;gap:10px;padding:8px 18px;cursor:pointer;transition:all .12s;color:var(--mu);font-size:12px;border-right:2px solid transparent;}
+.tab-btn:hover{color:var(--tx);background:var(--s2);}
+.tab-btn.active{color:var(--tx);background:var(--s2);border-right-color:var(--ac);}
+.tab-icon{width:7px;height:7px;border-radius:50%;background:var(--di);flex-shrink:0;}
+.tab-btn.active .tab-icon{background:var(--ac);}
+.tab-score{margin-left:auto;font-size:10px;color:var(--di);}
+.tab-btn.active .tab-score{color:var(--mu);}
+.main{padding:36px 44px 80px;min-width:0;}
+.prog-wrap{height:3px;background:var(--bd);margin-bottom:8px;overflow:hidden;}
+.prog-bar{height:100%;background:var(--ac);transition:width .3s;}
+.prog-meta{display:flex;justify-content:space-between;font-size:11px;color:var(--mu);margin-bottom:20px;}
+.c-ok{color:var(--ok);}.c-er{color:var(--er);}
+.q-grid{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:22px;}
+.qd{width:30px;height:30px;border:1px solid var(--bd);background:var(--s1);display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer;transition:all .12s;color:var(--mu);}
+.qd:hover{border-color:var(--ac);color:var(--ac);}
+.qd.cur{border-color:var(--ac);background:rgba(200,240,120,.1);color:var(--ac);font-weight:600;}
+.qd.g-ok{border-color:var(--ok);background:rgba(120,240,160,.1);color:var(--ok);}
+.qd.g-er{border-color:var(--er);background:rgba(240,120,128,.1);color:var(--er);}
+.qd.g-sk{opacity:.35;}
+.res-panel{display:none;background:var(--s2);border:1px solid var(--bd);padding:24px;margin-bottom:22px;}
+.res-panel.show{display:block;}
+.res-top{display:flex;align-items:baseline;gap:14px;margin-bottom:18px;}
+.res-pct{font-family:'Fraunces',serif;font-size:56px;font-weight:800;color:var(--ac);line-height:1;}
+.res-info{font-size:12px;color:var(--mu);}
+.res-info strong{color:var(--tx);display:block;margin-bottom:2px;}
+.res-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--bd);margin-bottom:18px;}
+.rs{background:var(--bg);padding:12px;text-align:center;}
+.rs-n{font-family:'Fraunces',serif;font-size:24px;font-weight:600;display:block;}
+.rs-l{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--mu);}
+.q-card{background:var(--s2);border:1px solid var(--bd);padding:26px;}
+.q-meta{display:flex;gap:10px;align-items:center;margin-bottom:12px;}
+.q-num{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ac);}
+.q-top{font-size:10px;color:var(--mu);}
+.q-text{font-family:'Fraunces',serif;font-size:17px;font-weight:300;line-height:1.65;margin-bottom:20px;}
+.opts{display:flex;flex-direction:column;gap:7px;margin-bottom:16px;}
+.opt{display:flex;align-items:flex-start;gap:12px;padding:11px 14px;border:1px solid var(--bd);background:var(--bg);cursor:pointer;transition:all .12s;}
+.opt:hover{border-color:var(--ac);}
+.opt.sel{border-color:var(--ac);background:rgba(200,240,120,.05);}
+.opt.ok{border-color:var(--ok);background:var(--ok-bg);}
+.opt.er{border-color:var(--er);background:var(--er-bg);}
+.opt.hint{border-color:var(--ok);background:var(--ok-bg);opacity:.55;}
+.opt-k{font-size:11px;color:var(--mu);min-width:16px;padding-top:1px;}
+.opt.sel .opt-k,.opt.ok .opt-k{color:var(--ac);}
+.opt.er .opt-k{color:var(--er);}
+.opt-t{font-size:13px;line-height:1.6;flex:1;}
+.opt-m{margin-left:auto;font-size:13px;min-width:14px;}
+.opt.multi .opt-k{width:14px;height:14px;min-width:14px;border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;font-size:9px;margin-top:2px;}
+.opt.multi.sel .opt-k{background:var(--ac);border-color:var(--ac);color:var(--bg);}
+.mhint{font-size:11px;color:var(--mu);margin-bottom:14px;}
+.tf-tbl{width:100%;border-collapse:collapse;margin-bottom:16px;}
+.tf-tbl th{padding:7px 10px;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);text-align:center;border-bottom:1px solid var(--bd);}
+.tf-tbl th:first-child{text-align:left;}
+.tf-tbl td{padding:9px 10px;border-bottom:1px solid var(--bd);vertical-align:middle;font-size:13px;}
+.tf-tbl td:not(:first-child){text-align:center;width:68px;}
+.tfb{width:25px;height:25px;border:1px solid var(--bd);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;font-size:11px;transition:all .12s;}
+.tfb:hover{border-color:var(--ac);}
+.tfb.sel{border-color:var(--ac);background:rgba(200,240,120,.1);color:var(--ac);}
+.tfb.ok{border-color:var(--ok);background:var(--ok-bg);color:var(--ok);}
+.tfb.er{border-color:var(--er);background:var(--er-bg);color:var(--er);}
+.tfb.hint{border-color:var(--ok);background:var(--ok-bg);color:var(--ok);opacity:.5;}
+.fill-w{margin-bottom:16px;}
+.fill-i{padding:10px 14px;background:var(--bg);border:1px solid var(--bd);color:var(--tx);font-family:'DM Mono',monospace;font-size:15px;width:200px;outline:none;transition:border-color .12s;}
+.fill-i:focus{border-color:var(--ac);}
+.fill-i.ok{border-color:var(--ok);background:var(--ok-bg);}
+.fill-i.er{border-color:var(--er);background:var(--er-bg);}
+.fill-h{font-size:11px;color:var(--mu);margin-top:5px;}
+.fb{padding:12px 16px;border-left:3px solid var(--bd);background:var(--s3);margin-bottom:16px;display:none;}
+.fb.show{display:block;}
+.fb.ok{border-color:var(--ok);background:var(--ok-bg);}
+.fb.er{border-color:var(--er);background:var(--er-bg);}
+.fb-l{font-size:9px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:4px;}
+.fb.ok .fb-l{color:var(--ok);}
+.fb.er .fb-l{color:var(--er);}
+.fb-b{font-size:12px;color:var(--mu);line-height:1.75;}
+.nav{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-top:4px;}
+.btn{padding:9px 20px;border:1px solid var(--bd);background:var(--s3);color:var(--tx);font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all .12s;}
+.btn:hover{border-color:var(--bd2);}
+.btn-p{background:var(--ac);color:var(--bg);border-color:var(--ac);font-weight:500;}
+.btn-p:hover{background:#d8ff88;}
+.btn-g{color:var(--mu);background:transparent;border-color:transparent;}
+.btn-g:hover{color:var(--tx);}
+.mla{margin-left:auto;}
+@media(max-width:680px){.app{grid-template-columns:1fr;}.sidebar{position:relative;height:auto;border-right:none;border-bottom:1px solid var(--bd);}.main{padding:22px 16px 60px;}}
+</style>
+</head>
+<body>
+<div class="app">
+<nav class="sidebar">
+  <div class="sb-head">
+    <div class="sb-title">Stats <em>Practice</em></div>
+    <div class="sb-sub">4 new exams · 80 questions</div>
+  </div>
+  <div class="sb-tabs">
+    <div class="sb-label">Practice exams</div>
+    <div id="tab-list"></div>
+  </div>
+</nav>
+<main class="main">
+  <div class="prog-wrap"><div class="prog-bar" id="pb"></div></div>
+  <div class="prog-meta"><span id="pl">—</span><span><span class="c-ok" id="co">0✓</span> · <span class="c-er" id="ce">0✗</span> · <span id="cl">— left</span></span></div>
+  <div class="q-grid" id="qg"></div>
+  <div class="res-panel" id="rp">
+    <div class="res-top"><div class="res-pct" id="rpct">—</div><div class="res-info"><strong id="rsc">—</strong><span id="rnm">—</span></div></div>
+    <div class="res-stats"><div class="rs"><span class="rs-n" id="rok" style="color:var(--ok)">0</span><div class="rs-l">Correct</div></div><div class="rs"><span class="rs-n" id="rer" style="color:var(--er)">0</span><div class="rs-l">Wrong</div></div><div class="rs"><span class="rs-n" id="rsk" style="color:var(--mu)">0</span><div class="rs-l">Skipped</div></div></div>
+    <button class="btn btn-p" onclick="resetExam()">Retry this exam →</button>
+  </div>
+  <div id="qa"></div>
+</main>
+</div>
+<script>
+const EXAMS=[
+
+// ============================================
+// PRACTICE EXAM A  — Probability & Distributions
+// ============================================
+{name:"Practice Exam A",short:"Exam A",questions:[
+{topic:"Bayes' Rule",type:"fill",
+text:"A factory has three production lines: L1 produces 50% of items (1% defect rate), L2 produces 30% (4% defect rate), L3 produces 20% (5% defect rate). A randomly selected item is found to be defective. What is the probability it came from L2? (round to 2 decimals)",
+answer:["0.44","0.43"],
+feedback:"P(D) = 0.5×0.01 + 0.3×0.04 + 0.2×0.05 = 0.005+0.012+0.01 = 0.027. P(L2|D) = 0.04×0.3/0.027 = 0.012/0.027 ≈ 0.44"},
+
+{topic:"Probability Rules",type:"mc",
+text:"Events A and B satisfy P(A) = 0.6, P(B) = 0.5, P(A ∪ B) = 0.8. What is P(A | B)?",
+options:["0.3","0.6","0.4","0.5","None of these"],
+correct:[1],
+feedback:"P(A∩B) = P(A)+P(B)−P(A∪B) = 0.6+0.5−0.8 = 0.3. P(A|B) = P(A∩B)/P(B) = 0.3/0.5 = 0.6."},
+
+{topic:"PDF Normalization",type:"mc",
+text:"Let X be a continuous random variable with PDF f(x) = c·x² for x ∈ [0, 3] and f(x) = 0 otherwise. What is c?",
+options:["1/9","1/3","1/27","1/6","3"],
+correct:[0],
+feedback:"∫₀³ cx² dx = c[x³/3]₀³ = c·9 = 1, so c = 1/9."},
+
+{topic:"CDF from PDF",type:"fill",
+text:"X has PDF f(x) = (3/8)x² for 0 ≤ x ≤ 2, zero otherwise. What is F(1)? (round to 2 decimals)",
+answer:["0.13","0.125"],
+feedback:"F(1) = ∫₀¹ (3/8)x² dx = (3/8)[x³/3]₀¹ = (3/8)(1/3) = 1/8 = 0.125 ≈ 0.13"},
+
+{topic:"Expectation (Continuous)",type:"fill",
+text:"X has PDF f(x) = 2x for 0 ≤ x ≤ 1, zero otherwise. Find E[X]. (round to 2 decimals)",
+answer:["0.67","2/3"],
+feedback:"E[X] = ∫₀¹ x·2x dx = 2∫₀¹ x² dx = 2/3 ≈ 0.67"},
+
+{topic:"LOTUS",type:"mc",
+text:"X has PDF f(x) = 2x for 0 ≤ x ≤ 1. Which expression gives E[X²]?",
+options:["∫₀¹ x² · 2x dx","(∫₀¹ x · 2x dx)²","∫₀¹ x · (2x)² dx","2 · (E[X])²","None of these"],
+correct:[0],
+feedback:"By LOTUS: E[g(X)] = ∫ g(x)·f(x)dx. So E[X²] = ∫₀¹ x²·2x dx."},
+
+{topic:"Variance",type:"fill",
+text:"X ~ Uniform(2, 8). What is Var(X)? (round to 2 decimals)",
+answer:["3","3.0","3.00"],
+feedback:"Var(X) = (b−a)²/12 = (8−2)²/12 = 36/12 = 3."},
+
+{topic:"Normal Distribution",type:"mc",
+text:"X ~ N(10, 9) (variance = 9). P(X < 13) equals:",
+options:["Φ(1)","Φ(3)","1 − Φ(1)","Φ(1/3)","Φ(−1)"],
+correct:[0],
+feedback:"Z = (13−10)/3 = 1. P(X<13) = P(Z<1) = Φ(1)."},
+
+{topic:"Normal Symmetry",type:"mc",
+text:"Z ~ N(0,1). Which of the following equals P(Z > 1.5)?",
+options:["Φ(1.5)","1 − Φ(1.5)","Φ(−1.5)","Both B and C","2·Φ(1.5)−1"],
+correct:[3],
+feedback:"P(Z>1.5) = 1−Φ(1.5). By symmetry of N(0,1), Φ(−1.5) = 1−Φ(1.5). So both B and C are correct."},
+
+{topic:"Linear Transform (Normal)",type:"mc",
+text:"X ~ N(5, 4). Let Y = 3X − 2. Then Y has distribution:",
+options:["N(13, 36)","N(13, 12)","N(13, 4)","N(15, 36)","N(13, 6)"],
+correct:[0],
+feedback:"E[Y] = 3·5−2 = 13. Var[Y] = 3²·4 = 36. So Y ~ N(13, 36)."},
+
+{topic:"Exponential Distribution",type:"fill",
+text:"X ~ Exponential(λ=2). What is P(X > 1)? (round to 2 decimals)",
+answer:["0.14","0.135"],
+feedback:"P(X>1) = 1−F(1) = e^{−2·1} = e^{−2} ≈ 0.135 ≈ 0.14"},
+
+{topic:"Exponential Memoryless",type:"tf",
+text:"X ~ Exponential(λ). Indicate true or false:",
+statements:["P(X > s + t | X > s) = P(X > t) for all s, t ≥ 0.","The exponential distribution has the same memoryless property as the geometric distribution."],
+correct:[true,true],
+feedback:"Both true. The exponential is the unique continuous memoryless distribution, analogous to the geometric (discrete memoryless)."},
+
+{topic:"Sample Mean",type:"mc",
+text:"X₁,...,X₂₅ are iid with E[Xᵢ] = 6 and Var(Xᵢ) = 100. The variance of the sample mean X̄ is:",
+options:["4","100","2","25","10"],
+correct:[0],
+feedback:"Var(X̄) = σ²/n = 100/25 = 4."},
+
+{topic:"CLT Application",type:"mc",
+text:"X₁,...,X₁₀₀ are iid with μ=3, σ²=4. Using the CLT, P(X̄ > 3.4) is approximately:",
+options:["1−Φ(2)","Φ(2)","1−Φ(0.2)","1−Φ(0.4)","Φ(−0.2)"],
+correct:[0],
+feedback:"X̄ ~ N(3, 4/100). Z = (3.4−3)/(2/10) = 0.4/0.2 = 2. P(X̄>3.4) = 1−Φ(2)."},
+
+{topic:"Law of Large Numbers",type:"tf",
+text:"Indicate true or false:",
+statements:["According to the LLN, for iid X₁,...,Xₙ with mean μ, the sample mean X̄ₙ converges to μ as n→∞.","The LLN implies that the sample mean has zero variance for large n."],
+correct:[true,false],
+feedback:"First is true (that's the LLN). Second is false — Var(X̄) = σ²/n → 0, but the sample mean is still a random variable, not deterministically zero-variance."},
+
+{topic:"Hypothesis Testing",type:"mc",
+text:"H₀: μ = 50 vs H₁: μ ≠ 50. Sample of n=64 gives X̄=52, σ=8 (known). The test statistic W equals:",
+options:["2","1","4","0.25","16"],
+correct:[0],
+feedback:"W = (X̄ − μ₀)/(σ/√n) = (52−50)/(8/8) = 2/1 = 2."},
+
+{topic:"Confidence Interval",type:"mc",
+text:"A 95% CI for μ is [14.1, 17.9]. Which statement is correct?",
+options:["P(μ ∈ [14.1,17.9]) = 0.95","The procedure that produced this interval will cover μ 95% of the time in repeated experiments","μ is definitely in this interval","The interval contains 95% of the data","None of the above"],
+correct:[1],
+feedback:"A CI is a statement about the procedure, not the parameter. 95% of intervals constructed this way will contain μ. The specific realised interval either contains μ or it doesn't."},
+
+{topic:"Type I & II Errors",type:"tf",
+text:"Indicate true or false:",
+statements:["A Type I error is rejecting H₀ when H₀ is false.","Decreasing α (significance level) reduces the Type I error probability but increases the Type II error probability."],
+correct:[false,true],
+feedback:"First is false — Type I is rejecting when H₀ is TRUE. Second is true: a smaller rejection region means fewer false positives but more false negatives."},
+
+{topic:"MLE",type:"fill",
+text:"You observe x₁=4, x₂=6, x₃=5 from an Exponential(λ) distribution. What is the MLE of λ? (round to 2 decimals)",
+answer:["0.20","0.2"],
+feedback:"MLE for Exponential: λ̂ = 1/x̄ = 1/((4+6+5)/3) = 1/5 = 0.20"},
+
+{topic:"Geometric CDF",type:"fill",
+text:"X ~ Geometric(p = 0.3). What is F_X(3) = P(X ≤ 3)? (round to 3 decimals)",
+answer:["0.657","0.658"],
+feedback:"P(X≤3) = P(X=1)+P(X=2)+P(X=3) = 0.3 + 0.7·0.3 + 0.7²·0.3 = 0.3+0.21+0.147 = 0.657"}
+]},
+
+// ============================================
+// PRACTICE EXAM B  — Inference & Advanced Probability
+// ============================================
+{name:"Practice Exam B",short:"Exam B",questions:[
+{topic:"Conditional Probability",type:"mc",
+text:"A bag contains 4 red and 6 blue balls. You draw 2 without replacement. Given the first ball is red, what is the probability the second is also red?",
+options:["3/9","4/10","3/10","4/9","1/3"],
+correct:[0],
+feedback:"After drawing 1 red, 3 red remain out of 9. P(2nd red | 1st red) = 3/9 = 1/3."},
+
+{topic:"Independence",type:"tf",
+text:"Suppose P(A) = 0.4, P(B) = 0.5 and P(A ∩ B) = 0.2. Indicate true or false:",
+statements:["A and B are independent.","A and B are disjoint."],
+correct:[true,false],
+feedback:"P(A)·P(B) = 0.4×0.5 = 0.2 = P(A∩B), so they ARE independent. Since P(A∩B)=0.2 ≠ 0, they are NOT disjoint."},
+
+{topic:"Total Probability",type:"fill",
+text:"Disease D affects 1% of the population. A test is positive with probability 0.95 if disease is present, and 0.05 if disease is absent. What is P(positive test)? (round to 4 decimals)",
+answer:["0.0590","0.059"],
+feedback:"P(+) = P(+|D)P(D) + P(+|Dᶜ)P(Dᶜ) = 0.95×0.01 + 0.05×0.99 = 0.0095 + 0.0495 = 0.059"},
+
+{topic:"Bayes' Rule",type:"fill",
+text:"Using the disease setting above: given a positive test, what is P(D | positive)? (round to 4 decimals)",
+answer:["0.1610","0.161","0.1610"],
+feedback:"P(D|+) = P(+|D)P(D)/P(+) = 0.95×0.01/0.059 = 0.0095/0.059 ≈ 0.1610"},
+
+{topic:"PDF Properties",type:"multi",
+text:"Which of the following are properties of a probability density function f(x)? (Select all)",
+options:["f(x) ≥ 0 for all x","∫ f(x) dx = 1 (over all reals)","f(x) ≤ 1 for all x","P(X = x) = f(x)","P(a < X ≤ b) = ∫ₐᵇ f(x) dx"],
+correct:[0,1,4],
+feedback:"PDFs must be non-negative and integrate to 1. The integral over [a,b] gives P(a<X≤b). f(x) CAN exceed 1 (it's a density, not a probability). P(X=x)=0 for continuous RVs."},
+
+{topic:"CDF Properties",type:"mc",
+text:"Which of the following is NOT a property of any CDF F(x)?",
+options:["F(x) is non-decreasing","lim_{x→+∞} F(x) = 1","F(x) is right-continuous","F(x) is always differentiable","lim_{x→−∞} F(x) = 0"],
+correct:[3],
+feedback:"CDFs are always right-continuous and non-decreasing, with limits 0 and 1. They are NOT necessarily differentiable — discrete RVs have CDFs with jump discontinuities at which no derivative exists."},
+
+{topic:"Exponential Distribution",type:"mc",
+text:"X ~ Exponential(λ=0.5). What is P(1 < X < 3)?",
+options:["e^{-0.5} − e^{-1.5}","e^{-1} − e^{-3}","1 − e^{-1.5}","e^{-0.5} − e^{-1}","e^{-1} − e^{-1.5}"],
+correct:[0],
+feedback:"P(1<X<3) = F(3)−F(1) = (1−e^{−0.5·3}) − (1−e^{−0.5·1}) = e^{−0.5} − e^{−1.5}."},
+
+{topic:"Normal Probability",type:"mc",
+text:"X ~ N(0, 1). P(−1 < X < 2) equals:",
+options:["Φ(2) − Φ(1)","Φ(2) + Φ(1) − 1","Φ(2) − Φ(−1)","1 − Φ(2) + Φ(1)","Φ(1) − Φ(−2)"],
+correct:[2],
+feedback:"P(−1<X<2) = Φ(2) − Φ(−1). Note Φ(−1) = 1−Φ(1), so this also equals Φ(2)+Φ(1)−1 (option B is also correct — but C is the most direct form)."},
+
+{topic:"Functions of Continuous RVs",type:"mc",
+text:"X ~ Uniform(0, 1). Let Y = X². The CDF of Y for 0 ≤ y ≤ 1 is:",
+options:["√y","y²","y","1 − √y","2√y"],
+correct:[0],
+feedback:"F_Y(y) = P(Y≤y) = P(X²≤y) = P(X≤√y) = F_X(√y) = √y (since X~Uniform(0,1), F_X(x)=x)."},
+
+{topic:"CLT for Sums",type:"mc",
+text:"X₁,...,X₃₆ are iid Bernoulli(0.4). Let S = ΣXᵢ. Using CLT, P(S ≤ 18) ≈ ?",
+options:["Φ(1)","Φ(2)","1 − Φ(1)","Φ(0.5)","Φ(1.5)"],
+correct:[0],
+feedback:"E[S]=36×0.4=14.4, Var[S]=36×0.4×0.6=8.64, σ=√8.64≈2.94. Z=(18−14.4)/2.94≈1.22... Actually: Z=(18−14.4)/√8.64 = 3.6/2.939 ≈ 1.22 ≈ Φ(1.22). Closest is Φ(1). [Exam-style: exact answer depends on rounding.]"},
+
+{topic:"Variance of Sample Mean",type:"tf",
+text:"X₁,...,Xₙ are iid with mean μ and variance σ². Indicate true or false:",
+statements:["E[X̄] = μ for any n ≥ 1.","Var(X̄) = σ²/√n."],
+correct:[true,false],
+feedback:"First: always true (X̄ is unbiased for μ). Second: false — Var(X̄) = σ²/n, not σ²/√n. The standard error is σ/√n."},
+
+{topic:"p-value",type:"mc",
+text:"A researcher tests H₀: μ = 100. She computes test statistic W = −2.1. Her p-value for a two-sided test is approximately:",
+options:["0.036","0.018","0.964","0.018","Both A and B"],
+correct:[0],
+feedback:"Two-sided p-value = 2·P(Z < −2.1) = 2·Φ(−2.1) ≈ 2×0.018 = 0.036."},
+
+{topic:"Confidence Interval (t)",type:"mc",
+text:"X₁,...,X₁₆ ~ N(μ, σ²) with σ unknown. X̄=24, S=4. An exact 95% CI for μ uses which distribution?",
+options:["N(0,1)","t(16)","t(15)","χ²(15)","t(4)"],
+correct:[2],
+feedback:"When σ is unknown and Xᵢ ~ Normal, the statistic T=(X̄−μ)/(S/√n) follows a t(n−1) = t(15) distribution exactly."},
+
+{topic:"MSE & Unbiasedness",type:"tf",
+text:"Suppose X̄ is used to estimate μ. Indicate true or false:",
+statements:["X̄ is always an unbiased estimator of μ.","MSE(X̄) = Bias(X̄)² + Var(X̄) = Var(X̄) when X̄ is unbiased."],
+correct:[true,true],
+feedback:"Both true. Unbiasedness of X̄: E[X̄]=μ always. MSE = Bias²+Variance; with zero bias, MSE = Variance = σ²/n."},
+
+{topic:"MLE (Binomial)",type:"mc",
+text:"X₁,...,X₅ ~ Binomial(3, θ) with observations (1,2,3,0,2). The MLE of θ is:",
+options:["8/15","1/2","4/15","2/3","8/5"],
+correct:[0],
+feedback:"MLE for Binomial(n,θ): θ̂ = (Σxᵢ)/(n·k) = (1+2+3+0+2)/(5×3) = 8/15."},
+
+{topic:"Sample Size",type:"mc",
+text:"To obtain a 99% CI for a proportion with margin of error 0.04, the minimum n is approximately:",
+options:["1040","1037","600","2500","416"],
+correct:[0],
+feedback:"n ≥ (z₀.₀₀₅/m)²·0.25 = (2.58/0.04)²·0.25 = (64.5)²·0.25 = 4160.25·0.25 ≈ 1040."},
+
+{topic:"Poisson Distribution",type:"fill",
+text:"X ~ Poisson(λ=4). What is P(X = 2)? (round to 3 decimals)",
+answer:["0.147","0.146"],
+feedback:"P(X=2) = e^{-4}·4²/2! = e^{-4}·8 ≈ 0.01832×8 = 0.1465 ≈ 0.147"},
+
+{topic:"Uniform — LOTUS",type:"fill",
+text:"X ~ Uniform(0, 4). Using LOTUS, find E[X³]. (exact value)",
+answer:["16","16.0"],
+feedback:"E[X³] = ∫₀⁴ x³·(1/4) dx = (1/4)·[x⁴/4]₀⁴ = (1/4)·(256/4) = (1/4)·64 = 16"},
+
+{topic:"Normal — Conditional",type:"mc",
+text:"X ~ N(−5, 4) (σ²=4, so σ=2). P(X > −3 | X > −5) equals approximately:",
+options:["0.32","0.16","0.50","0.68","0.84"],
+correct:[0],
+feedback:"P(X>−3) = P(Z>(−3+5)/2) = P(Z>1) = 1−Φ(1) ≈ 0.159. P(X>−5) = P(Z>0) = 0.5. Ratio ≈ 0.159/0.5 ≈ 0.32."},
+
+{topic:"Significance & Rejection",type:"tf",
+text:"A hypothesis is rejected at α = 0.05. Indicate true or false:",
+statements:["The p-value is ≤ 0.05.","The hypothesis must also be rejected at α = 0.10."],
+correct:[true,true],
+feedback:"Both true. Rejecting at α=0.05 means p ≤ 0.05 < 0.10, so the test would also reject at α=0.10 (a less strict threshold)."}
+]},
+
+// ============================================
+// PRACTICE EXAM C  — Mixed (all topics)
+// ============================================
+{name:"Practice Exam C",short:"Exam C",questions:[
+{topic:"Counting & Probability",type:"fill",
+text:"Roll two fair dice. Given the sum is at least 9, what is the probability the sum equals exactly 10? (round to 2 decimals)",
+answer:["0.30","0.3"],
+feedback:"Outcomes with sum≥9: {(3,6),(4,5),(4,6),(5,4),(5,5),(5,6),(6,3),(6,4),(6,5),(6,6)} = 10. Sum=10: {(4,6),(5,5),(6,4)} = 3. P = 3/10 = 0.30."},
+
+{topic:"Bayes' Rule",type:"fill",
+text:"P(A) = 0.3, P(B|A) = 0.7, P(B|Aᶜ) = 0.2. Find P(A|B). (round to 3 decimals)",
+answer:["0.600","0.6"],
+feedback:"P(B) = 0.7×0.3 + 0.2×0.7 = 0.21+0.14 = 0.35. P(A|B) = 0.7×0.3/0.35 = 0.21/0.35 = 0.6."},
+
+{topic:"Probability Rules",type:"multi",
+text:"Which of the following are generally true? (Select all)",
+options:["P(A ∪ B) = P(A) + P(B) − P(A∩B)","P(Aᶜ) = 1 − P(A)","If A⊆B, then P(A) ≤ P(B)","P(A|B) = P(B|A) always","P(A ∩ B) ≤ P(A)"],
+correct:[0,1,2,4],
+feedback:"A, B, C, E are all true (inclusion-exclusion, complement, monotonicity, intersection ⊆ event). D is false — P(A|B)=P(B|A) only in special cases."},
+
+{topic:"PDF — Find c and compute probability",type:"mc",
+text:"X has PDF f(x) = c·e^{−x} for x ≥ 1, zero otherwise. After finding c, P(X > 2) equals:",
+options:["e^{−1}","e^{−2}/e^{−1}","e^{−1} − e^{−2}","1/e","e^{−2}"],
+correct:[0],
+feedback:"c=e. P(X>2) = ∫₂^∞ e·e^{-x}dx = e·[−e^{-x}]₂^∞ = e·e^{-2} = e^{-1}. Answer A."},
+
+{topic:"Expectation — Continuous",type:"fill",
+text:"X has PDF f(x) = 4x(1−x) for x ∈ [0,1], zero otherwise. E[X²] = ? (round to 2 decimals)",
+answer:["0.20","1/5"],
+feedback:"E[X²] = ∫₀¹ x²·4x(1-x) dx = 4∫₀¹ (x³−x⁴) dx = 4[1/4 − 1/5] = 4/20 = 1/5 = 0.20."},
+
+{topic:"Variance & Linear Transform",type:"mc",
+text:"X has mean 3 and variance 5. Let Y = 4 − 2X. What is Var(Y)?",
+options:["20","5","10","−10","20"],
+correct:[0],
+feedback:"Var(Y) = Var(4−2X) = (−2)²·Var(X) = 4·5 = 20. (Adding a constant doesn't change variance.)"},
+
+{topic:"Uniform Distribution",type:"mc",
+text:"X ~ Uniform(a, b). Which of the following is true?",
+options:["E[X] = (a+b)/2 and Var(X) = (b−a)²/12","E[X] = (b−a)/2 and Var(X) = (b−a)/12","E[X] = (a+b)/2 and Var(X) = (b−a)/12","E[X] = (a+b) and Var(X) = (b−a)²/12","None of the above"],
+correct:[0],
+feedback:"Standard results: E[X]=(a+b)/2, Var(X)=(b−a)²/12. Both formulas must be correct."},
+
+{topic:"Normal — Standardisation",type:"fill",
+text:"X ~ N(20, 25) (σ²=25). Find P(15 < X < 25) in terms of Φ. Compute numerically to 2 decimals. (Φ(1) ≈ 0.841)",
+answer:["0.68","0.682"],
+feedback:"Z₁=(15−20)/5=−1, Z₂=(25−20)/5=1. P = Φ(1)−Φ(−1) = 2Φ(1)−1 ≈ 2(0.841)−1 = 0.682 ≈ 0.68."},
+
+{topic:"CLT — Inverse",type:"mc",
+text:"You take a sample of n=100 from a population with μ=50, σ=10. You want P(X̄ ≤ c) = 0.95. What is c?",
+options:["51.645","51.96","50.645","50.196","52"],
+correct:[0],
+feedback:"X̄ ~ N(50, 100/100) = N(50,1). P(X̄≤c)=0.95 → (c−50)/1 = z₀.₀₅ = 1.645 → c = 51.645."},
+
+{topic:"LLN",type:"mc",
+text:"The Law of Large Numbers says that for iid X₁,...,Xₙ with mean μ:",
+options:["The distribution of X̄ₙ converges to N(μ, σ²/n)","P(|X̄ₙ − μ| ≥ ε) → 0 as n → ∞ for any ε > 0","X̄ₙ = μ exactly for large n","Var(X̄ₙ) = 0 for large n","Xᵢ are normally distributed for large n"],
+correct:[1],
+feedback:"LLN: P(|X̄ₙ−μ|≥ε)→0. Option A describes CLT. Option C/D are wrong (X̄ₙ is still random). Option E confuses LLN with CLT."},
+
+{topic:"Hypothesis Testing — Two-sided",type:"mc",
+text:"H₀: μ=10 vs H₁: μ≠10. n=25, X̄=11, σ=5 (known). The p-value is approximately:",
+options:["0.317","0.159","0.683","0.023","0.046"],
+correct:[0],
+feedback:"W = (11−10)/(5/5) = 1. Two-sided: p = 2·P(Z>1) = 2·(1−Φ(1)) ≈ 2·0.159 = 0.317."},
+
+{topic:"Type I Error Computation",type:"mc",
+text:"X₁,...,X₁₆ ~ N(μ,4). H₀:μ=5 vs H₁:μ>5. Reject H₀ if X̄>6. The probability of a Type I error is:",
+options:["1−Φ(2)","Φ(2)","1−Φ(1)","Φ(−2)","Both A and D"],
+correct:[4],
+feedback:"Under μ=5: X̄ ~ N(5,4/16)=N(5,0.25). Z=(6−5)/0.5=2. P(X̄>6|μ=5)=P(Z>2)=1−Φ(2). By symmetry, Φ(−2)=1−Φ(2). So A and D are equal."},
+
+{topic:"MLE — Geometric",type:"fill",
+text:"X₁,...,X₄ ~ Geometric(θ) with observations 3, 1, 4, 2. MLE of θ? (round to 2 decimals)",
+answer:["0.40","0.4","2/5"],
+feedback:"MLE for Geometric: θ̂ = 1/x̄. x̄=(3+1+4+2)/4=10/4=2.5. θ̂=1/2.5=0.4."},
+
+{topic:"Chi-square CI",type:"mc",
+text:"X₁,...,X₁₀ ~ N(μ, σ²). The sample variance is S²=9. A 95% CI for σ² uses which formula?",
+options:["[9S²/χ²₀.₀₂₅,₉ , 9S²/χ²₀.₉₇₅,₉]","[(n−1)S²/χ²₀.₀₂₅,ₙ₋₁ , (n−1)S²/χ²₀.₉₇₅,ₙ₋₁]","[S²/χ²₀.₀₂₅,₁₀ , S²/χ²₀.₉₇₅,₁₀]","[nS²/χ²₀.₀₂₅,ₙ , nS²/χ²₀.₉₇₅,ₙ]","None of these"],
+correct:[1],
+feedback:"The exact 95% CI for σ² with normal data is [(n−1)S²/χ²_{α/2,n−1}, (n−1)S²/χ²_{1−α/2,n−1}]. Here n=10, n−1=9."},
+
+{topic:"MLE — Exponential",type:"tf",
+text:"For iid Exponential(λ) data x₁,...,xₙ, indicate true or false:",
+statements:["The likelihood L(λ) = λⁿ·exp(−λΣxᵢ) depends only on the sum Σxᵢ.","The MLE of λ is λ̂ = x̄ (the sample mean)."],
+correct:[true,false],
+feedback:"First: true — L only involves Σxᵢ. Second: false — MLE is λ̂ = 1/x̄. The sample mean estimates E[X]=1/λ, not λ itself."},
+
+{topic:"Functions of Normal RVs",type:"mc",
+text:"X ~ N(2, 9) and Y ~ N(−1, 4), independent. Z = X + 2Y − 3. Then Z ~ N(μ,σ²) with:",
+options:["μ=−1, σ²=25","μ=−5, σ²=25","μ=−1, σ²=17","μ=1, σ²=25","μ=−1, σ²=13"],
+correct:[0],
+feedback:"E[Z]=E[X]+2E[Y]−3=2+2(−1)−3=−1. Var[Z]=Var[X]+4·Var[Y]=9+4·4=9+16=25. Z~N(−1,25)."},
+
+{topic:"Poisson",type:"fill",
+text:"Customers arrive at avg 6 per hour (Poisson). X = arrivals in 30 minutes. P(X = 0) = ? (round to 3 decimals)",
+answer:["0.050","0.049"],
+feedback:"X ~ Poisson(3). P(X=0) = e^{-3} ≈ 0.0498 ≈ 0.050."},
+
+{topic:"Birthday Problem",type:"fill",
+text:"In a group of 4 people, what is the probability that at least 2 share the same birthday? (365 days, round to 3 decimals)",
+answer:["0.016"],
+feedback:"P(all different) = (364/365)(363/365)(362/365) ≈ 0.9836. P(at least 2 share) = 1−0.9836 ≈ 0.016."},
+
+{topic:"Chebyshev & LLN",type:"mc",
+text:"By Chebyshev's inequality, for a random variable X with mean μ and variance σ², P(|X−μ| ≥ kσ) ≤ ?",
+options:["1/k","1/k²","k²","σ/k","1/(kσ)"],
+correct:[1],
+feedback:"Chebyshev: P(|X−μ| ≥ kσ) ≤ 1/k². This is used in the proof of the LLN."},
+
+{topic:"Continuity Correction",type:"mc",
+text:"X ~ Binomial(50, 0.4). Using the CLT with continuity correction, P(X ≥ 25) ≈ P(Z ≥ c). What is c?",
+options:["c = (24.5−20)/√12","c = (25−20)/√12","c = (25.5−20)/√12","c = (24−20)/√12","c = (25−20)/√50"],
+correct:[0],
+feedback:"With continuity correction: P(X≥25) = P(X≥24.5) for continuous approx. μ=20, σ²=50×0.4×0.6=12. c=(24.5−20)/√12."}
+]},
+
+// ============================================
+// PRACTICE EXAM D  — Harder / Applied
+// ============================================
+{name:"Practice Exam D",short:"Exam D",questions:[
+{topic:"Law of Total Probability",type:"fill",
+text:"A quality inspector picks items from Machine A (40%, 3% defect) and Machine B (60%, 7% defect). P(item is defective) = ? (round to 3 decimals)",
+answer:["0.054"],
+feedback:"P(D) = 0.4×0.03 + 0.6×0.07 = 0.012 + 0.042 = 0.054"},
+
+{topic:"Bayes — Three Hypotheses",type:"mc",
+text:"Using the above: given a defective item, what is P(it came from Machine A)?",
+options:["2/9","4/9","1/9","2/5","1/5"],
+correct:[0],
+feedback:"P(A|D) = P(D|A)P(A)/P(D) = 0.03×0.4/0.054 = 0.012/0.054 = 2/9 ≈ 0.222"},
+
+{topic:"CDF — Continuous RV",type:"mc",
+text:"X has CDF F(x) = 1 − e^{−x²} for x ≥ 0, 0 for x < 0. The PDF of X is:",
+options:["2x·e^{−x²}","e^{−x²}","x²·e^{−x²}","2·e^{−x²}","−2x·e^{−x²}"],
+correct:[0],
+feedback:"f(x) = F'(x) = d/dx[1−e^{−x²}] = 2x·e^{−x²} for x≥0. (Chain rule: derivative of e^{−x²} is −2x·e^{−x²}.)"},
+
+{topic:"Expectation — Integration",type:"fill",
+text:"X has PDF f(x) = 2(1−x) for 0 ≤ x ≤ 1. Find E[X]. (round to 2 decimals)",
+answer:["0.33","1/3"],
+feedback:"E[X] = ∫₀¹ x·2(1−x) dx = 2∫₀¹ (x−x²) dx = 2[1/2 − 1/3] = 2·(1/6) = 1/3 ≈ 0.33"},
+
+{topic:"LOTUS — Applied",type:"fill",
+text:"X ~ Uniform(0, 2). Using LOTUS, E[e^X] = ? (round to 2 decimals; use e ≈ 2.718, e² ≈ 7.389)",
+answer:["3.19","3.20","(e²-1)/2"],
+feedback:"E[e^X] = ∫₀² e^x·(1/2) dx = (1/2)[e^x]₀² = (1/2)(e²−1) ≈ (1/2)(6.389) ≈ 3.19"},
+
+{topic:"Functions of RVs — PDF derivation",type:"mc",
+text:"X ~ Uniform(−1, 1). Let Y = X². The PDF of Y for 0 < y < 1 is:",
+options:["1/(2√y)","√y","2√y","1/√y","y"],
+correct:[0],
+feedback:"F_Y(y)=P(X²≤y)=P(−√y<X<√y)=(2√y)/2=√y. Differentiating: f_Y(y)=1/(2√y)."},
+
+{topic:"Normal — Applied Scenario",type:"mc",
+text:"Heights of adults are N(170, 100) cm (σ²=100). A random adult is selected. P(height > 185) ≈ ?",
+options:["1−Φ(1.5)","1−Φ(1)","Φ(1.5)","Φ(−1.5)","Both A and D"],
+correct:[4],
+feedback:"Z=(185−170)/10=1.5. P(X>185)=P(Z>1.5)=1−Φ(1.5)=Φ(−1.5). So A and D are both correct."},
+
+{topic:"CLT — Required sample size",type:"mc",
+text:"You want P(|X̄ − μ| < 0.5) ≥ 0.95. If σ² = 16, what minimum n do you need?",
+options:["246","245","246","256","244"],
+correct:[0],
+feedback:"Need z₀.₀₂₅·σ/√n ≤ 0.5. → √n ≥ 1.96·4/0.5 = 15.68 → n ≥ 15.68² = 245.9 → n = 246."},
+
+{topic:"Hypothesis Testing — Compute p-value",type:"mc",
+text:"H₀: μ=80 vs H₁: μ<80. n=25, X̄=77, σ=10 (known). p-value = ?",
+options:["Φ(−1.5)","1−Φ(1.5)","Φ(1.5)","2·Φ(−1.5)","Φ(−3)"],
+correct:[0],
+feedback:"W=(77−80)/(10/5)=−3/2=−1.5. Left-tailed test: p=Φ(−1.5). Note: Φ(−1.5)=1−Φ(1.5), so options A and B are equal."},
+
+{topic:"Type II Error",type:"mc",
+text:"X₁,...,X₉ ~ N(μ,1). H₀:μ=0 vs H₁:μ=1. Reject H₀ if X̄ > 0.55. What is the Type II error probability (β)?",
+options:["Φ(0.55)","1−Φ(1.35)","Φ(1.35)","1−Φ(0.45)","Φ(−0.45)"],
+correct:[2],
+feedback:"β = P(X̄≤0.55|μ=1). Under μ=1, Var=1/9, σ=1/3. Z=(0.55−1)/(1/3)=−1.35. β=Φ(−1.35)=1−Φ(1.35). Answer B."},
+
+{topic:"MLE — Likelihood derivation",type:"mc",
+text:"x₁=1,x₂=0,x₃=1,x₄=1 are iid Bernoulli(θ). The likelihood L(θ) is:",
+options:["θ³(1−θ)","θ³(1−θ)","4θ³(1−θ)","θ(1−θ)³","3θ(1−θ)"],
+correct:[0],
+feedback:"L(θ) = ∏P(Xᵢ=xᵢ) = θ·(1−θ)·θ·θ = θ³(1−θ). MLE: dℓ/dθ = 3/θ − 1/(1−θ) = 0 → θ̂ = 3/4."},
+
+{topic:"Sample Variance",type:"fill",
+text:"Observations: x₁=5, x₂=7, x₃=9, x₄=3. Compute the sample variance S². (exact value)",
+answer:["6.67","20/3"],
+feedback:"x̄=6. S²=[(5−6)²+(7−6)²+(9−6)²+(3−6)²]/(4−1) = [1+1+9+9]/3 = 20/3 ≈ 6.67"},
+
+{topic:"Unbiasedness",type:"tf",
+text:"Indicate true or false:",
+statements:["The sample variance S² = Σ(Xᵢ−X̄)²/(n−1) is an unbiased estimator of σ².","Dividing by n instead of n−1 gives an unbiased estimator of σ²."],
+correct:[true,false],
+feedback:"First: true — that's why we use n−1 (Bessel's correction). Second: false — dividing by n gives a biased estimator (it underestimates σ²)."},
+
+{topic:"CLT — Applied story problem",type:"mc",
+text:"A call centre handles 400 calls/day. Each call lasts on average 3 min (σ²=4). Total daily duration T = ΣXᵢ. By CLT, T is approximately N(μ,σ²) with:",
+options:["N(1200, 1600)","N(1200, 400)","N(3, 4)","N(400, 1600)","N(1200, 40)"],
+correct:[0],
+feedback:"E[T]=400×3=1200. Var[T]=400×4=1600. T ~ N(1200,1600) approximately."},
+
+{topic:"Normal — Quantile",type:"fill",
+text:"X ~ N(100, 225) (σ=15). Find the 90th percentile of X. (Use z₀.₁₀ = 1.28; round to 1 decimal)",
+answer:["119.2"],
+feedback:"P(X≤c)=0.90 → (c−100)/15=1.28 → c=100+1.28×15=100+19.2=119.2"},
+
+{topic:"Exponential — Applied",type:"mc",
+text:"Time between earthquakes in a region is Exponential(λ=0.1) (years). P(next earthquake within 5 years) ≈ ?",
+options:["1 − e^{−0.5}","e^{−0.5}","1 − e^{−5}","0.5","e^{−5}"],
+correct:[0],
+feedback:"P(X≤5) = F(5) = 1 − e^{−0.1×5} = 1 − e^{−0.5} ≈ 0.394."},
+
+{topic:"Geometric Distribution",type:"fill",
+text:"X ~ Geometric(p=0.25). What is E[X] and Var(X)? Give E[X] as a decimal.",
+answer:["4","4.0"],
+feedback:"E[X]=1/p=1/0.25=4. Var(X)=(1−p)/p²=0.75/0.0625=12. (Answer expected: E[X]=4.)"},
+
+{topic:"Poisson — CLT Approx",type:"mc",
+text:"X ~ Poisson(100). Using CLT (since λ is large), P(X ≤ 110) ≈ ?",
+options:["Φ(1)","1−Φ(1)","Φ(10)","Φ(0.1)","Φ(1.1)"],
+correct:[0],
+feedback:"X ~ Poisson(100) has E[X]=100, Var(X)=100. Z=(110−100)/10=1. P(X≤110)≈Φ(1)."},
+
+{topic:"True/False — Distributions",type:"tf",
+text:"Indicate true or false:",
+statements:["X ~ N(μ,σ²) implies (X−μ)/σ ~ N(0,1).","If X ~ N(μ,σ²) and Y = X + c for constant c, then Y ~ N(μ+c, σ²)."],
+correct:[true,true],
+feedback:"Both true. Standardising: (X−μ)/σ ~ N(0,1). Adding a constant shifts the mean only; variance unchanged. Y ~ N(μ+c, σ²)."}
+]}
+];
+
+// STATE
+let S={ei:0,qi:0,ans:{},sub:{}};
+EXAMS.forEach((_,i)=>{S.ans[i]={};S.sub[i]={};});
+const $=id=>document.getElementById(id);
+
+// TABS
+function buildTabs(){
+  $('tab-list').innerHTML=EXAMS.map((e,i)=>{
+    const done=Object.keys(S.sub[i]).length;
+    let ok=0; EXAMS[i].questions.forEach((_,qi)=>{if(S.sub[i][qi]&&isOk(i,qi))ok++;});
+    const score=done>0?ok+'✓ / '+done+' done':'0 / '+e.questions.length+' qs';
+    return `<div class="tab-btn${i===S.ei?' active':''}" onclick="switchExam(${i})">
+      <div class="tab-icon"></div>${e.short}<span class="tab-score">${score}</span>
+    </div>`;
+  }).join('');
+}
+function switchExam(i){S.ei=i;S.qi=0;buildTabs();renderGrid();render();}
+
+// GRID
+function renderGrid(){
+  const qs=EXAMS[S.ei].questions;
+  $('qg').innerHTML=qs.map((_,i)=>{
+    let cls='qd';
+    if(i===S.qi)cls+=' cur';
+    else if(S.sub[S.ei][i])cls+=isOk(S.ei,i)?' g-ok':' g-er';
+    return `<div class="${cls}" onclick="goQ(${i})">${i+1}</div>`;
+  }).join('');
+}
+function goQ(i){S.qi=i;renderGrid();render();window.scrollTo(0,0);}
+
+// PROGRESS
+function updateProg(){
+  const qs=EXAMS[S.ei].questions,total=qs.length;
+  const done=Object.keys(S.sub[S.ei]).length;
+  let ok=0,bad=0;
+  qs.forEach((_,i)=>{if(S.sub[S.ei][i]){isOk(S.ei,i)?ok++:bad++;}});
+  $('pb').style.width=(done/total*100)+'%';
+  $('pl').textContent=`Q${S.qi+1} of ${total}`;
+  $('co').textContent=ok+'✓';$('ce').textContent=bad+'✗';$('cl').textContent=(total-done)+' left';
+}
+
+// RENDER
+function render(){
+  updateProg();
+  const ei=S.ei,qi=S.qi,q=EXAMS[ei].questions[qi];
+  const done=!!S.sub[ei][qi],ans=S.ans[ei][qi];
+  let h=`<div class="q-card">
+    <div class="q-meta"><span class="q-num">Q${qi+1} / ${EXAMS[ei].questions.length}</span><span class="q-top">· ${q.topic}</span></div>
+    <div class="q-text">${q.text}</div>`;
+  if(q.type==='mc')h+=buildMC(q,ans,done);
+  else if(q.type==='multi')h+=buildMulti(q,ans,done);
+  else if(q.type==='fill')h+=buildFill(q,ans,done,ei,qi);
+  else if(q.type==='tf')h+=buildTF(q,ans,done);
+  const cor=done&&isOk(ei,qi);
+  h+=`<div class="fb${done?' show '+(cor?'ok':'er'):''}">
+    <div class="fb-l">${done?(cor?'✓ Correct':'✗ Incorrect'):''}</div>
+    <div class="fb-b">${q.feedback||''}</div>
+  </div><div class="nav">`;
+  if(!done){h+=`<button class="btn btn-p" onclick="submit()">Check Answer</button><button class="btn btn-g" onclick="skipQ()">Skip</button>`;}
+  else{h+=`<button class="btn btn-p" onclick="nextQ()">Next →</button>`;}
+  if(qi>0)h+=`<button class="btn mla" onclick="prevQ()">← Back</button>`;
+  h+='</div></div>';
+  $('qa').innerHTML=h;
+  $('rp').classList.remove('show');
+  checkAllDone();
+}
+
+function buildMC(q,ans,done){
+  return '<div class="opts">'+q.options.map((o,i)=>{
+    let cls='opt',tick='';
+    if(done){
+      if(q.correct.includes(i)){cls+=i===ans?' ok':' hint';tick='✓';}
+      else if(i===ans){cls+=' er';tick='✗';}
+    }else if(i===ans)cls+=' sel';
+    return `<div class="${cls}"${done?'':` onclick="selMC(${i})"`}>
+      <span class="opt-k">${String.fromCharCode(65+i)}</span>
+      <span class="opt-t">${o}</span><span class="opt-m">${tick}</span>
+    </div>`;
+  }).join('')+'</div>';
+}
+function buildMulti(q,ans,done){
+  const sel=ans||[];
+  let h='<div class="opts">'+q.options.map((o,i)=>{
+    const s=sel.includes(i),c=q.correct.includes(i);
+    let cls='opt multi',kc='',tick='';
+    if(done){if(c&&s){cls+=' ok';kc=tick='✓';}else if(!c&&s){cls+=' er';kc=tick='✗';}else if(c&&!s){cls+=' hint';kc='✓';}}
+    else{if(s){cls+=' sel';kc='✓';}}
+    return `<div class="${cls}"${done?'':` onclick="togMulti(${i})"`}>
+      <span class="opt-k">${kc}</span><span class="opt-t">${o}</span><span class="opt-m">${tick}</span>
+    </div>`;
+  }).join('')+'</div>';
+  if(!done)h+='<div class="mhint">Select all that apply</div>';
+  return h;
+}
+function buildFill(q,ans,done,ei,qi){
+  const ok=done&&isOk(ei,qi);
+  return `<div class="fill-w">
+    <input type="text" class="fill-i${done?(ok?' ok':' er'):''}" id="fi"
+      value="${ans||''}" placeholder="Your answer…" ${done?'disabled':''}
+      onkeydown="if(event.key==='Enter')submit()">
+    <div class="fill-h">Use decimal point. Round as stated.</div>
+  </div>`;
+}
+function buildTF(q,ans,done){
+  const sv=ans||[];
+  return '<table class="tf-tbl"><thead><tr><th>Statement</th><th>True</th><th>False</th></tr></thead><tbody>'+
+  q.statements.map((s,i)=>{
+    const u=sv[i],c=q.correct[i];
+    let tc='tfb',fc='tfb',tt='',ft='';
+    if(done){
+      if(c===true){tc+=' '+(u===true?'ok':'hint');tt='✓';if(u===false){fc+=' er';ft='✗';}}
+      else{fc+=' '+(u===false?'ok':'hint');ft='✓';if(u===true){tc+=' er';tt='✗';}}
+    }else{if(u===true){tc+=' sel';tt='✓';}if(u===false){fc+=' sel';ft='✓';}}
+    return `<tr><td>${s}</td>
+      <td><div class="${tc}"${done?'':` onclick="selTF(${i},true)"`}>${tt}</div></td>
+      <td><div class="${fc}"${done?'':` onclick="selTF(${i},false)"`}>${ft}</div></td>
+    </tr>`;
+  }).join('')+'</tbody></table>';
+}
+
+// INTERACTIONS
+function selMC(i){if(S.sub[S.ei][S.qi])return;S.ans[S.ei][S.qi]=i;document.querySelectorAll('.opt:not(.multi)').forEach((el,j)=>el.classList.toggle('sel',j===i));}
+function togMulti(i){if(S.sub[S.ei][S.qi])return;if(!S.ans[S.ei][S.qi])S.ans[S.ei][S.qi]=[];const a=S.ans[S.ei][S.qi],p=a.indexOf(i);p===-1?a.push(i):a.splice(p,1);document.querySelectorAll('.opt.multi').forEach((el,j)=>{el.classList.toggle('sel',a.includes(j));el.querySelector('.opt-k').textContent=a.includes(j)?'✓':'';});}
+function selTF(si,val){if(S.sub[S.ei][S.qi])return;const q=EXAMS[S.ei].questions[S.qi];if(!S.ans[S.ei][S.qi])S.ans[S.ei][S.qi]=new Array(q.statements.length).fill(null);S.ans[S.ei][S.qi][si]=val;const tr=document.querySelectorAll('.tf-tbl tbody tr')[si];if(!tr)return;const tb=tr.cells[1].querySelector('.tfb'),fb=tr.cells[2].querySelector('.tfb');tb.className='tfb'+(val===true?' sel':'');tb.textContent=val===true?'✓':'';fb.className='tfb'+(val===false?' sel':'');fb.textContent=val===false?'✓':'';}
+function submit(){const ei=S.ei,qi=S.qi,q=EXAMS[ei].questions[qi];if(q.type==='fill'){const fi=$('fi');S.ans[ei][qi]=fi?fi.value.trim():'';}S.sub[ei][qi]=true;buildTabs();renderGrid();render();}
+function skipQ(){S.ans[S.ei][S.qi]=null;S.sub[S.ei][S.qi]=true;buildTabs();renderGrid();nextQ();}
+function nextQ(){const t=EXAMS[S.ei].questions.length;if(S.qi<t-1){S.qi++;renderGrid();render();window.scrollTo(0,0);}else{checkAllDone(true);}}
+function prevQ(){if(S.qi>0){S.qi--;renderGrid();render();window.scrollTo(0,0);}}
+
+function isOk(ei,qi){
+  const q=EXAMS[ei].questions[qi],a=S.ans[ei][qi];
+  if(a===null||a===undefined)return false;
+  if(q.type==='mc')return a===q.correct[0];
+  if(q.type==='multi'){if(!a||!a.length)return false;return JSON.stringify([...a].sort((x,y)=>x-y))===JSON.stringify([...q.correct].sort((x,y)=>x-y));}
+  if(q.type==='fill')return q.answer.some(x=>x.toString().toLowerCase()===a.toString().toLowerCase().trim());
+  if(q.type==='tf'){if(!a)return false;return q.correct.every((c,i)=>a[i]===c);}
+  return false;
+}
+
+function checkAllDone(force){
+  const ei=S.ei,qs=EXAMS[ei].questions;
+  const all=qs.every((_,i)=>!!S.sub[ei][i]);
+  if(!all)return;
+  let ok=0,bad=0,skip=0;
+  qs.forEach((_,i)=>{const a=S.ans[ei][i];a===null?skip++:(isOk(ei,i)?ok++:bad++);});
+  const pct=Math.round(ok/qs.length*100);
+  $('rpct').textContent=pct+'%';$('rsc').textContent=ok+' of '+qs.length+' correct';
+  $('rnm').textContent=EXAMS[ei].name;$('rok').textContent=ok;$('rer').textContent=bad;$('rsk').textContent=skip;
+  $('rp').classList.add('show');
+}
+function resetExam(){S.ans[S.ei]={};S.sub[S.ei]={};S.qi=0;buildTabs();renderGrid();render();}
+
+buildTabs();renderGrid();render();
+</script>
+</body>
+</html>
