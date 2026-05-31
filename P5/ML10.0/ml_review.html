@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Machine Learning — Full Review</title>
+<style>
+:root {
+  --blue: #1a73e8; --blue-light: #e8f0fe;
+  --green: #188038; --green-light: #e6f4ea;
+  --red: #c5221f; --red-light: #fce8e6;
+  --orange: #e37400; --orange-light: #fef3e2;
+  --purple: #7b1fa2; --purple-light: #f3e5f5;
+  --teal: #00796b; --teal-light: #e0f2f1;
+  --gray: #5f6368; --gray-light: #f8f9fa;
+  --dark: #202124; --border: #dadce0;
+  --sidebar-w: 260px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Arial, sans-serif; background: #fff; color: var(--dark); line-height: 1.7; }
+
+/* NAV */
+#nav { position: fixed; top: 0; left: 0; width: var(--sidebar-w); height: 100vh; overflow-y: auto; background: var(--dark); color: #e8eaed; padding: 20px 0; z-index: 100; }
+#nav h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: #9aa0a6; padding: 0 20px 10px; }
+#nav a { display: block; padding: 6px 20px; color: #e8eaed; text-decoration: none; font-size: 13px; border-left: 3px solid transparent; transition: all 0.15s; }
+#nav a:hover, #nav a.active { background: rgba(255,255,255,0.08); border-left-color: var(--blue); color: #fff; }
+#nav .section-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #9aa0a6; padding: 14px 20px 4px; }
+
+/* MAIN */
+#main { margin-left: var(--sidebar-w); padding: 40px 60px 80px; max-width: 960px; }
+
+/* HEADINGS */
+h1 { font-size: 32px; font-weight: 700; margin-bottom: 8px; color: var(--dark); }
+h2 { font-size: 22px; font-weight: 700; margin: 48px 0 16px; padding-top: 16px; border-bottom: 2px solid var(--border); padding-bottom: 8px; }
+h3 { font-size: 17px; font-weight: 600; margin: 28px 0 10px; color: var(--dark); }
+h4 { font-size: 15px; font-weight: 600; margin: 18px 0 8px; color: var(--gray); }
+p { margin-bottom: 12px; }
+ul, ol { padding-left: 22px; margin-bottom: 12px; }
+li { margin-bottom: 4px; }
+code { background: var(--gray-light); padding: 1px 5px; border-radius: 3px; font-family: monospace; font-size: 13px; }
+strong { color: var(--dark); }
+
+/* SECTION */
+.section { margin-bottom: 20px; scroll-margin-top: 20px; }
+
+/* CARDS */
+.card { background: var(--gray-light); border: 1px solid var(--border); border-radius: 8px; padding: 16px 20px; margin: 14px 0; }
+.card-blue { background: var(--blue-light); border-color: #aecbfa; }
+.card-green { background: var(--green-light); border-color: #a8d5b5; }
+.card-red { background: var(--red-light); border-color: #f5c6c5; }
+.card-orange { background: var(--orange-light); border-color: #fcd29f; }
+.card-purple { background: var(--purple-light); border-color: #d7aee8; }
+.card-teal { background: var(--teal-light); border-color: #80cbc4; }
+
+.trap { background: #fff3cd; border-left: 4px solid #e37400; padding: 10px 14px; border-radius: 0 6px 6px 0; margin: 10px 0; font-size: 14px; }
+.trap::before { content: "⚠️ TRAP: "; font-weight: bold; }
+.key { background: var(--green-light); border-left: 4px solid var(--green); padding: 10px 14px; border-radius: 0 6px 6px 0; margin: 10px 0; font-size: 14px; }
+.key::before { content: "✓ KEY: "; font-weight: bold; color: var(--green); }
+
+/* TABLES */
+table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 14px; }
+th { background: var(--dark); color: #fff; padding: 8px 12px; text-align: left; font-weight: 600; }
+td { padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tr:nth-child(even) td { background: var(--gray-light); }
+tr:hover td { background: var(--blue-light); }
+
+/* SVG DIAGRAMS */
+.diagram { text-align: center; margin: 20px 0; }
+.diagram svg { max-width: 100%; }
+.diagram p { font-size: 12px; color: var(--gray); margin-top: 6px; }
+
+/* FORMULA */
+.formula { background: var(--dark); color: #fff; padding: 12px 20px; border-radius: 6px; font-family: monospace; font-size: 14px; margin: 12px 0; overflow-x: auto; }
+
+/* COMPARE GRID */
+.compare { display: grid; gap: 14px; margin: 14px 0; }
+.compare-2 { grid-template-columns: 1fr 1fr; }
+.compare-3 { grid-template-columns: 1fr 1fr 1fr; }
+.compare-item { border: 1px solid var(--border); border-radius: 8px; padding: 14px; }
+.compare-item h4 { margin-top: 0; font-size: 14px; }
+
+/* STEPS */
+.steps { counter-reset: step; }
+.steps li { counter-increment: step; list-style: none; padding-left: 36px; position: relative; margin-bottom: 10px; }
+.steps li::before { content: counter(step); position: absolute; left: 0; top: 0; width: 24px; height: 24px; background: var(--blue); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; line-height: 24px; text-align: center; }
+
+/* TAG */
+.tag { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; margin: 1px; }
+.tag-sup { background: var(--blue-light); color: var(--blue); }
+.tag-unsup { background: var(--green-light); color: var(--green); }
+.tag-lazy { background: var(--orange-light); color: var(--orange); }
+.tag-exam { background: #fce8e6; color: #c5221f; }
+
+/* HERO */
+.hero { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: white; padding: 40px; border-radius: 12px; margin-bottom: 32px; }
+.hero h1 { color: white; font-size: 28px; }
+.hero p { color: #9aa0a6; margin-bottom: 0; }
+
+@media (max-width: 900px) {
+  #nav { display: none; }
+  #main { margin-left: 0; padding: 20px; }
+  .compare-2, .compare-3 { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR NAV -->
+<nav id="nav">
+  <h2>ML Review</h2>
+  <div class="section-label">Foundations</div>
+  <a href="#learning-types">1. Learning Paradigms</a>
+  <a href="#algorithms">2. All Algorithms</a>
+  <a href="#linear">3. Linear Models</a>
+  <a href="#knn">4. k-NN</a>
+  <a href="#svm">5. SVMs</a>
+  <div class="section-label">Neural Networks</div>
+  <a href="#nn">6. Neural Networks</a>
+  <a href="#activations">7. Activations & Reg.</a>
+  <a href="#cnn">8. CNNs</a>
+  <a href="#sequences">9. RNN / LSTM / Transformer</a>
+  <div class="section-label">Advanced Models</div>
+  <a href="#generative">10. Generative Models</a>
+  <a href="#embeddings">11. Embeddings & RecSys</a>
+  <a href="#rl">12. Reinforcement Learning</a>
+  <a href="#trees">13. Trees & Ensembles</a>
+  <div class="section-label">Theory</div>
+  <a href="#probability">14. Probability & Info Theory</a>
+  <a href="#evaluation">15. Evaluation & Methodology</a>
+  <div class="section-label">Application Types</div>
+  <a href="#app-ranking">A. Ranking Errors</a>
+  <a href="#app-entropy">B. Entropy</a>
+  <a href="#app-backprop">C. Backprop</a>
+  <a href="#app-dt">D. Decision Trees</a>
+  <a href="#app-nb">E. Naive Bayes</a>
+  <a href="#app-matrix">F. Matrix Backprop</a>
+  <a href="#app-elbo">G. ELBO / VAE</a>
+  <a href="#traps">⚠️ All Traps</a>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main id="main">
+
+<div class="hero">
+  <h1>Machine Learning — Full Exam Review</h1>
+  <p>VU Amsterdam · 40 MCQ · 2 hours · All topics covered with depth and visuals</p>
+</div>
+
+<!-- ============================================================ -->
+<div class="section" id="learning-types">
+<h2>1. Learning Paradigms</h2>
+
+<table>
+  <tr><th>Paradigm</th><th>What you have</th><th>Goal</th><th>Algorithms</th></tr>
+  <tr><td><strong>Supervised</strong></td><td>Labeled pairs (x, y)</td><td>Learn f: x → y</td><td>Linear reg, logistic reg, SVM, decision tree, random forest, MLP, CNN, LSTM, k-NN, Naive Bayes</td></tr>
+  <tr><td><strong>Unsupervised</strong></td><td>Unlabeled x only</td><td>Find structure</td><td>k-Means, PCA, autoencoder, VAE, GAN, matrix factorization, Word2Vec</td></tr>
+  <tr><td><strong>Reinforcement</strong></td><td>State + reward signal</td><td>Learn policy</td><td>Policy Gradients, DQN</td></tr>
+  <tr><td><strong>Online</strong></td><td>Streaming data</td><td>Update as data arrives</td><td>Any model adapted to streaming</td></tr>
+  <tr><td><strong>Transductive</strong></td><td>Train data + test features (no test labels)</td><td>Predict for those test instances only</td><td>Semi-supervised methods</td></tr>
+</table>
+
+<div class="trap">Transductive ≠ inductive. Transductive: model sees test <em>features</em> during training (not labels). Inductive: learn general model, apply to unseen data.</div>
+
+<!-- Learning types visual -->
+<div class="diagram">
+<svg width="680" height="180" viewBox="0 0 680 180">
+  <!-- Supervised -->
+  <rect x="10" y="20" width="180" height="140" rx="10" fill="#e8f0fe" stroke="#1a73e8" stroke-width="2"/>
+  <text x="100" y="48" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a73e8">Supervised</text>
+  <text x="100" y="68" text-anchor="middle" font-size="11" fill="#5f6368">Input x</text>
+  <text x="100" y="84" text-anchor="middle" font-size="18">↓</text>
+  <rect x="50" y="92" width="100" height="24" rx="4" fill="#1a73e8"/>
+  <text x="100" y="109" text-anchor="middle" font-size="11" fill="white">Model f(x)</text>
+  <text x="100" y="130" text-anchor="middle" font-size="11" fill="#5f6368">Label y (known)</text>
+  <text x="100" y="148" text-anchor="middle" font-size="10" fill="#c5221f">✓ Has ground truth</text>
+  <!-- Unsupervised -->
+  <rect x="210" y="20" width="180" height="140" rx="10" fill="#e6f4ea" stroke="#188038" stroke-width="2"/>
+  <text x="300" y="48" text-anchor="middle" font-size="14" font-weight="bold" fill="#188038">Unsupervised</text>
+  <text x="300" y="68" text-anchor="middle" font-size="11" fill="#5f6368">Input x</text>
+  <text x="300" y="84" text-anchor="middle" font-size="18">↓</text>
+  <rect x="245" y="92" width="110" height="24" rx="4" fill="#188038"/>
+  <text x="300" y="109" text-anchor="middle" font-size="11" fill="white">Pattern / Group</text>
+  <text x="300" y="130" text-anchor="middle" font-size="11" fill="#5f6368">No labels</text>
+  <text x="300" y="148" text-anchor="middle" font-size="10" fill="#c5221f">✗ No ground truth</text>
+  <!-- RL -->
+  <rect x="410" y="20" width="180" height="140" rx="10" fill="#fef3e2" stroke="#e37400" stroke-width="2"/>
+  <text x="500" y="48" text-anchor="middle" font-size="14" font-weight="bold" fill="#e37400">Reinforcement</text>
+  <text x="500" y="66" text-anchor="middle" font-size="11" fill="#5f6368">State s</text>
+  <text x="500" y="80" text-anchor="middle" font-size="18">↓</text>
+  <rect x="445" y="88" width="110" height="24" rx="4" fill="#e37400"/>
+  <text x="500" y="105" text-anchor="middle" font-size="11" fill="white">Action a</text>
+  <text x="500" y="122" text-anchor="middle" font-size="18">↓</text>
+  <text x="500" y="142" text-anchor="middle" font-size="11" fill="#5f6368">Reward r (delayed)</text>
+  <text x="500" y="158" text-anchor="middle" font-size="10" fill="#c5221f">Non-differentiable!</text>
+</svg>
+<p>Three core learning paradigms and what distinguishes them</p>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<div class="section" id="algorithms">
+<h2>2. All Algorithms at a Glance</h2>
+
+<table>
+  <tr><th>Algorithm</th><th>Supervised?</th><th>Lazy?</th><th>Linear boundary?</th><th>Notes</th></tr>
+  <tr><td>Linear Regression</td><td><span class="tag tag-sup">Yes</span></td><td>No</td><td>Yes</td><td>Continuous output</td></tr>
+  <tr><td>Logistic Regression</td><td><span class="tag tag-sup">Yes</span></td><td>No</td><td>Yes</td><td>1-layer NN with sigmoid</td></tr>
+  <tr><td>k-NN</td><td><span class="tag tag-sup">Yes</span></td><td><span class="tag tag-lazy">Lazy</span></td><td>No</td><td>Stores ALL training data</td></tr>
+  <tr><td>SVM (linear)</td><td><span class="tag tag-sup">Yes</span></td><td>No</td><td>Yes</td><td>Max-margin hyperplane</td></tr>
+  <tr><td>SVM (kernel)</td><td><span class="tag tag-sup">Yes</span></td><td>No</td><td>No</td><td>Non-linear via kernel trick</td></tr>
+  <tr><td>Decision Tree</td><td><span class="tag tag-sup">Yes</span></td><td>No</td><td>No</td><td>Axis-aligned splits</td></tr>
+  <tr><td>Random Forest</td><td><span class="tag tag-sup">Yes</span></td><td>No</td><td>No</td><td>Bagging + random features</td></tr>
+  <tr><td>AdaBoost / Grad. Boosting</td><td><span class="tag tag-sup">Yes</span></td><td>No</td><td>No</td><td>Sequential, reduces bias</td></tr>
+  <tr><td>MLP / Neural Net</td><td><span class="tag tag-sup">Yes</span></td><td>No</td><td>No</td><td>Universal approximator</td></tr>
+  <tr><td>Naive Bayes</td><td><span class="tag tag-sup">Yes</span></td><td>No</td><td>Yes (linear in log space)</td><td>Generative; feature independence</td></tr>
+  <tr><td>k-Means</td><td><span class="tag tag-unsup">No</span></td><td>No</td><td>—</td><td>Builds centroids (NOT lazy)</td></tr>
+  <tr><td>PCA</td><td><span class="tag tag-unsup">No</span></td><td>No</td><td>Yes</td><td>Directions of max variance</td></tr>
+  <tr><td>Autoencoder</td><td><span class="tag tag-unsup">No</span></td><td>No</td><td>No</td><td>Learns latent representation</td></tr>
+  <tr><td>VAE</td><td><span class="tag tag-unsup">No</span></td><td>No</td><td>No</td><td>Generative; no discriminator</td></tr>
+  <tr><td>GAN</td><td><span class="tag tag-unsup">No</span></td><td>No</td><td>No</td><td>Generator + Discriminator</td></tr>
+  <tr><td>Word2Vec</td><td><span class="tag tag-unsup">No</span></td><td>No</td><td>—</td><td>Word embeddings from text</td></tr>
+  <tr><td>Matrix Factorization</td><td><span class="tag tag-unsup">No</span></td><td>No</td><td>—</td><td>User/item embeddings</td></tr>
+</table>
+
+<div class="trap">k-Means is NOT lazy — it builds centroids during training and can then discard the data. k-NN IS lazy — it stores everything and does all work at prediction time.</div>
+</div>
+
+<!-- ============================================================ -->
+<div class="section" id="linear">
+<h2>3. Linear Models</h2>
+
+<h3>Linear Regression</h3>
+<div class="formula">ŷ = w·x + b &nbsp;&nbsp;&nbsp; Loss = ½ Σ(ŷᵢ − yᵢ)²</div>
+<p>The ½ exists so it cancels the 2 from the chain rule when differentiating. Predicts continuous values.</p>
+
+<h3>Logistic Regression</h3>
+<div class="formula">p = σ(w·x + b) &nbsp;&nbsp;&nbsp; σ(z) = 1/(1+e⁻ᶻ) &nbsp;&nbsp;&nbsp; Loss = cross-entropy</div>
+<p>Binary classification. Output is a probability in (0,1). Equivalent to a 1-layer neural network with sigmoid activation. Points <strong>near the boundary</strong> weigh most heavily in the loss.</p>
+
+<h3>Why Square the Error (MSE)?</h3>
+<div class="compare compare-2">
+  <div class="compare-item card-green">
+    <h4>✓ Valid reasons</h4>
+    <ul>
+      <li>Prevents + and − errors from cancelling</li>
+      <li>Penalizes large errors more than small ones</li>
+      <li>Equivalent to MLE under Gaussian noise</li>
+    </ul>
+  </div>
+  <div class="compare-item card-red">
+    <h4>✗ NOT a reason</h4>
+    <ul>
+      <li>"Points near the boundary weigh most heavily" — that describes log loss, not MSE</li>
+    </ul>
+  </div>
+</div>
+
+<h3>Decision Boundary</h3>
+<p>For a linear classifier: boundary = hyperplane where <code>w·x + b = 0</code>. Points on one side → positive class, other side → negative class.</p>
+
+<!-- Decision boundary diagram -->
+<div class="diagram">
+<svg width="320" height="220" viewBox="0 0 320 220">
+  <rect width="320" height="220" fill="#f8f9fa" rx="8"/>
+  <!-- axes -->
+  <line x1="30" y1="190" x2="300" y2="190" stroke="#ccc" stroke-width="1"/>
+  <line x1="30" y1="10" x2="30" y2="190" stroke="#ccc" stroke-width="1"/>
+  <text x="305" y="194" font-size="11" fill="#666">x₁</text>
+  <text x="22" y="15" font-size="11" fill="#666">x₂</text>
+  <!-- decision boundary -->
+  <line x1="50" y1="170" x2="280" y2="30" stroke="#1a73e8" stroke-width="2.5" stroke-dasharray="6,3"/>
+  <text x="250" y="28" font-size="12" fill="#1a73e8" font-weight="bold">w·x+b=0</text>
+  <!-- + side label -->
+  <text x="200" y="160" font-size="13" fill="#188038" font-weight="bold">+ side</text>
+  <text x="185" y="175" font-size="11" fill="#188038">w·x+b &gt; 0</text>
+  <!-- - side label -->
+  <text x="45" y="80" font-size="13" fill="#c5221f" font-weight="bold">− side</text>
+  <text x="35" y="95" font-size="11" fill="#c5221f">w·x+b &lt; 0</text>
+  <!-- positive dots -->
+  <circle cx="220" cy="140" r="6" fill="#188038"/>
+  <circle cx="250" cy="110" r="6" fill="#188038"/>
+  <circle cx="190" cy="155" r="6" fill="#188038"/>
+  <circle cx="260" cy="145" r="6" fill="#188038"/>
+  <!-- negative dots -->
+  <circle cx="70" cy="60" r="6" fill="none" stroke="#c5221f" stroke-width="2"/>
+  <circle cx="100" cy="100" r="6" fill="none" stroke="#c5221f" stroke-width="2"/>
+  <circle cx="60" cy="130" r="6" fill="none" stroke="#c5221f" stroke-width="2"/>
+  <circle cx="90" cy="50" r="6" fill="none" stroke="#c5221f" stroke-width="2"/>
+  <!-- w vector -->
+  <line x1="160" y1="105" x2="185" y2="68" stroke="#e37400" stroke-width="2" marker-end="url(#arr)"/>
+  <defs><marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#e37400"/></marker></defs>
+  <text x="188" y="68" font-size="11" fill="#e37400" font-weight="bold">w</text>
+</svg>
+<p>Linear decision boundary: w points perpendicular to the boundary, toward the positive class</p>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<div class="section" id="knn">
+<h2>4. k-Nearest Neighbours (k-NN)</h2>
+
+<div class="compare compare-2">
+  <div class="card card-orange">
+    <h4>How it works</h4>
+    <ol class="steps">
+      <li>Store all training data (no training phase)</li>
+      <li>For new point: compute distance to all training points</li>
+      <li>Find k nearest neighbours</li>
+      <li>Majority vote (classification) or average (regression)</li>
+    </ol>
+  </div>
+  <div class="card">
+    <h4>Properties</h4>
+    <ul>
+      <li><strong>Lazy</strong>: all computation deferred to prediction</li>
+      <li><strong>Non-parametric</strong>: no fixed model form</li>
+      <li>Small k → overfitting | Large k → underfitting</li>
+      <li>O(n) prediction time — slow for large n</li>
+      <li>Sensitive to irrelevant features → normalize first</li>
+    </ul>
+  </div>
+</div>
+
+<!-- k-NN diagram -->
+<div class="diagram">
+<svg width="400" height="200" viewBox="0 0 400 200">
+  <rect width="400" height="200" fill="#f8f9fa" rx="8"/>
+  <!-- training points -->
+  <circle cx="80" cy="80" r="8" fill="#1a73e8" opacity="0.7"/><text x="92" y="84" font-size="10" fill="#333">+</text>
+  <circle cx="110" cy="60" r="8" fill="#1a73e8" opacity="0.7"/><text x="122" y="64" font-size="10" fill="#333">+</text>
+  <circle cx="70" cy="120" r="8" fill="#1a73e8" opacity="0.7"/><text x="82" y="124" font-size="10" fill="#333">+</text>
+  <circle cx="250" cy="130" r="8" fill="#c5221f" opacity="0.7"/><text x="262" y="134" font-size="10" fill="#333">−</text>
+  <circle cx="290" cy="100" r="8" fill="#c5221f" opacity="0.7"/><text x="302" y="104" font-size="10" fill="#333">−</text>
+  <circle cx="270" cy="150" r="8" fill="#c5221f" opacity="0.7"/><text x="282" y="154" font-size="10" fill="#333">−</text>
+  <circle cx="320" cy="130" r="8" fill="#c5221f" opacity="0.7"/>
+  <!-- query point -->
+  <circle cx="170" cy="100" r="10" fill="#e37400" stroke="#fff" stroke-width="2"/>
+  <text x="182" y="96" font-size="11" fill="#e37400" font-weight="bold">?</text>
+  <!-- k=3 circle -->
+  <circle cx="170" cy="100" r="75" fill="none" stroke="#e37400" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="170" y="185" text-anchor="middle" font-size="11" fill="#666">k=3 circle: 2 blue + 1 red → predict Blue (+)</text>
+  <!-- dashed lines to nearest -->
+  <line x1="170" y1="100" x2="110" y2="60" stroke="#e37400" stroke-width="1" stroke-dasharray="4,2" opacity="0.6"/>
+  <line x1="170" y1="100" x2="80" y2="80" stroke="#e37400" stroke-width="1" stroke-dasharray="4,2" opacity="0.6"/>
+  <line x1="170" y1="100" x2="250" y2="130" stroke="#e37400" stroke-width="1" stroke-dasharray="4,2" opacity="0.6"/>
+</svg>
+<p>k-NN with k=3: the query point (orange) finds its 3 nearest neighbours and predicts by majority vote</p>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<div class="section" id="svm">
+<h2>5. Support Vector Machines (SVMs)</h2>
+
+<p>SVMs find the hyperplane that <strong>maximizes the margin</strong> — the distance between the boundary and the nearest training points.</p>
+
+<div class="diagram">
+<svg width="420" height="230" viewBox="0 0 420 230">
+  <rect width="420" height="230" fill="#f8f9fa" rx="8"/>
+  <!-- margin bands -->
+  <line x1="60" y1="190" x2="290" y2="10" stroke="#1a73e8" stroke-width="2.5"/>
+  <line x1="30" y1="190" x2="260" y2="10" stroke="#1a73e8" stroke-width="1" stroke-dasharray="5,3" opacity="0.5"/>
+  <line x1="90" y1="190" x2="320" y2="10" stroke="#1a73e8" stroke-width="1" stroke-dasharray="5,3" opacity="0.5"/>
+  <!-- margin fill -->
+  <polygon points="30,190 60,190 290,10 260,10" fill="#e8f0fe" opacity="0.5"/>
+  <text x="155" y="140" text-anchor="middle" font-size="11" fill="#1a73e8">← margin →</text>
+  <!-- decision boundary label -->
+  <text x="295" y="20" font-size="12" fill="#1a73e8" font-weight="bold">boundary</text>
+  <!-- + dots -->
+  <circle cx="320" cy="120" r="7" fill="#188038"/>
+  <circle cx="350" cy="80" r="7" fill="#188038"/>
+  <circle cx="370" cy="140" r="7" fill="#188038"/>
+  <circle cx="340" cy="170" r="7" fill="#188038"/>
+  <!-- - dots -->
+  <circle cx="40" cy="60" r="7" fill="none" stroke="#c5221f" stroke-width="2"/>
+  <circle cx="60" cy="100" r="7" fill="none" stroke="#c5221f" stroke-width="2"/>
+  <circle cx="20" cy="130" r="7" fill="none" stroke="#c5221f" stroke-width="2"/>
+  <circle cx="70" cy="50" r="7" fill="none" stroke="#c5221f" stroke-width="2"/>
+  <!-- support vectors highlighted -->
+  <circle cx="260" cy="110" r="7" fill="#188038" stroke="#e37400" stroke-width="3"/>
+  <circle cx="100" cy="90" r="7" fill="none" stroke="#e37400" stroke-width="3"/>
+  <circle cx="90" cy="140" r="7" fill="none" stroke="#e37400" stroke-width="3"/>
+  <text x="420" y="220" text-anchor="end" font-size="10" fill="#e37400">● = support vectors</text>
+</svg>
+<p>SVM: maximize the margin between classes. Support vectors (orange ring) are the points that define the margin.</p>
+</div>
+
+<div class="compare compare-2">
+  <div class="card card-blue">
+    <h4>Hard Margin SVM</h4>
+    <p>No misclassifications allowed. Only works when data is linearly separable.</p>
+  </div>
+  <div class="card card-orange">
+    <h4>Soft Margin SVM (C)</h4>
+    <p>Allow violations with penalty C. Large C → smaller margin, fewer violations. Small C → larger margin, more violations allowed.</p>
+    <div class="formula" style="font-size:12px;">Loss = ½||w||² + C·Σ max(0, 1 − yᵢ(w·xᵢ+b))</div>
+  </div>
+</div>
+
+<h3>Kernel Trick</h3>
+<p>Replace dot products x·z with a kernel function k(x,z) = φ(x)·φ(z). This implicitly maps to a higher-dimensional space where data is linearly separable, without ever computing φ(x) explicitly. Enables non-linear boundaries.</p>
+</div>
+
+<!-- ============================================================ -->
+<div class="section" id="nn">
+<h2>6. Neural Networks</h2>
+
+<h3>Why we need activations</h3>
+<div class="card card-red">
+  <strong>Composing linear functions = still linear.</strong> f(g(x)) = A(Bx) = (AB)x — just another linear transformation. No matter how many layers you stack without activations, the network is equivalent to a single linear model.
+</div>
+
+<p>Activation functions break this: ReLU(Wx + b) is non-linear. With enough hidden units and non-linear activations, an MLP is a <strong>universal approximator</strong>.</p>
+
+<!-- Neural network diagram -->
+<div class="diagram">
+<svg width="500" height="200" viewBox="0 0 500 200">
+  <rect width="500" height="200" fill="#f8f9fa" rx="8"/>
+  <!-- Layer labels -->
+  <text x="60" y="15" text-anchor="middle" font-size="11" fill="#666">Input</text>
+  <text x="200" y="15" text-anchor="middle" font-size="11" fill="#666">Hidden 1</text>
+  <text x="340" y="15" text-anchor="middle" font-size="11" fill="#666">Hidden 2</text>
+  <text x="460" y="15" text-anchor="middle" font-size="11" fill="#666">Output</text>
+  <!-- connections (grey lines) -->
+  <g stroke="#dadce0" stroke-width="0.8" opacity="0.6">
+    <line x1="75" y1="60" x2="185" y2="50"/><line x1="75" y1="60" x2="185" y2="90"/><line x1="75" y1="60" x2="185" y2="130"/><line x1="75" y1="60" x2="185" y2="170"/>
+    <line x1="75" y1="100" x2="185" y2="50"/><line x1="75" y1="100" x2="185" y2="90"/><line x1="75" y1="100" x2="185" y2="130"/><line x1="75" y1="100" x2="185" y2="170"/>
+    <line x1="75" y1="140" x2="185" y2="50"/><line x1="75" y1="140" x2="185" y2="90"/><line x1="75" y1="140" x2="185" y2="130"/><line x1="75" y1="140" x2="185" y2="170"/>
+    <line x1="215" y1="50" x2="325" y2="70"/><line x1="215" y1="50" x2="325" y2="120"/><line x1="215" y1="50" x2="325" y2="160"/>
+    <line x1="215" y1="90" x2="325" y2="70"/><line x1="215" y1="90" x2="325" y2="120"/><line x1="215" y1="90" x2="325" y2="160"/>
+    <line x1="215" y1="130" x2="325" y2="70"/><line x1="215" y1="130" x2="325" y2="120"/><line x1="215" y1="130" x2="325" y2="160"/>
+    <line x1="215" y1="170" x2="325" y2="70"/><line x1="215" y1="170" x2="325" y2="120"/><line x1="215" y1="170" x2="325" y2="160"/>
+    <line x1="355" y1="70" x2="445" y2="110"/><line x1="355" y1="120" x2="445" y2="110"/><line x1="355" y1="160" x2="445" y2="110"/>
+  </g>
+  <!-- Input neurons -->
+  <circle cx="75" cy="60" r="14" fill="#e8f0fe" stroke="#1a73e8" stroke-width="2"/><text x="75" y="64" text-anchor="middle" font-size="11" fill="#1a73e8">x₁</text>
+  <circle cx="75" cy="100" r="14" fill="#e8f0fe" stroke="#1a73e8" stroke-width="2"/><text x="75" y="104" text-anchor="middle" font-size="11" fill="#1a73e8">x₂</text>
+  <circle cx="75" cy="140" r="14" fill="#e8f0fe" stroke="#1a73e8" stroke-width="2"/><text x="75" y="144" text-anchor="middle" font-size="11" fill="#1a73e8">x₃</text>
+  <!-- Hidden 1 -->
+  <circle cx="200" cy="50" r="14" fill="#e6f4ea" stroke="#188038" stroke-width="2"/>
+  <circle cx="200" cy="90" r="14" fill="#e6f4ea" stroke="#188038" stroke-width="2"/>
+  <circle cx="200" cy="130" r="14" fill="#e6f4ea" stroke="#188038" stroke-width="2"/>
+  <circle cx="200" cy="170" r="14" fill="#e6f4ea" stroke="#188038" stroke-width="2"/>
+  <!-- Hidden 2 -->
+  <circle cx="340" cy="70" r="14" fill="#e6f4ea" stroke="#188038" stroke-width="2"/>
+  <circle cx="340" cy="120" r="14" fill="#e6f4ea" stroke="#188038" stroke-width="2"/>
+  <circle cx="340" cy="160" r="14" fill="#e6f4ea" stroke="#188038" stroke-width="2"/>
+  <!-- Output -->
+  <circle cx="460" cy="110" r="16" fill="#fef3e2" stroke="#e37400" stroke-width="2.5"/><text x="460" y="115" text-anchor="middle" font-size="11" fill="#e37400" font-weight="bold">ŷ</text>
+  <!-- activation labels -->
+  <text x="200" y="192" text-anchor="middle" font-size="10" fill="#188038">ReLU</text>
+  <text x="340" y="192" text-anchor="middle" font-size="10" fill="#188038">ReLU</text>
+  <text x="460" y="190" text-anchor="middle" font-size="10" fill="#e37400">σ / softmax</text>
+</svg>
+<p>Multi-layer perceptron (MLP). Each layer applies: output = activation(W·input + b)</p>
+</div>
+
+<h3>Backpropagation</h3>
+<p>Algorithm to compute gradients efficiently using the chain rule. Two passes:</p>
+<div class="compare compare-2">
+  <div class="card">
+    <h4>Forward pass</h4>
+    <p>Compute outputs layer by layer, store intermediate values (needed for gradients)</p>
+  </div>
+  <div class="card card-blue">
+    <h4>Backward pass</h4>
+    <p>Propagate gradient from loss back through network using chain rule. Each layer computes: upstream_grad × local_derivative</p>
+  </div>
+</div>
+
+<div class="key">The gradient points <strong>uphill</strong> (direction of steepest increase in loss). Gradient descent subtracts the gradient: θ ← θ − η∇L to go downhill.</div>
+</div>
+
+<!-- ============================================================ -->
+<div class="section" id="activations">
+<h2>7. Activations, Regularization & Batch Norm</h2>
+
+<h3>Activation Functions</h3>
+<table>
+  <tr><th>Function</th><th>Formula</th><th>Derivative</th><th>Problem / Use</th></tr>
+  <tr><td><strong>Sigmoid</strong></td><td>1/(1+e⁻ˣ)</td><td>σ(x)(1−σ(x)) ≤ 0.25</td><td>Output layer (binary). Causes vanishing gradients in deep nets.</td></tr>
+  <tr><td><strong>ReLU</strong></td><td>max(0, x)</td><td>1 if x>0, else 0</td><td>Hidden layers. Fixes vanishing gradients. Fast.</td></tr>
+  <tr><td><strong>Tanh</strong></td><td>(eˣ−e⁻ˣ)/(eˣ+e⁻ˣ)</td><td>1−tanh²(x) ≤ 1</td><td>Better than sigmoid but still vanishes.</td></tr>
+  <tr><td><strong>Softmax</strong></td><td>eˣⁱ/Σeˣʲ</td><td>—</td><td>Multi-class output. Converts logits to probabilities summing to 1.</td></tr>
+</table>
+
+<!-- Activation diagram -->
+<div class="diagram">
+<svg width="500" height="160" viewBox="0 0 500 160">
+  <rect width="500" height="160" fill="#f8f9fa" rx="8"/>
+  <!-- Sigmoid -->
+  <g transform="translate(10,10)">
+    <text x="75" y="15" text-anchor="middle" font-size="12" font-weight="bold" fill="#c5221f">Sigmoid</text>
+    <line x1="10" y1="80" x2="140" y2="80" stroke="#ccc" stroke-width="1"/>
+    <line x1="75" y1="20" x2="75" y2="140" stroke="#ccc" stroke-width="1"/>
+    <path d="M10,125 Q30,125 50,100 Q65,80 75,75 Q85,70 100,55 Q115,35 130,30" stroke="#c5221f" stroke-width="2.5" fill="none"/>
+    <text x="75" y="148" text-anchor="middle" font-size="10" fill="#666">squashes to (0,1)</text>
+    <text x="10" y="135" font-size="9" fill="#888">0</text>
+    <text x="10" y="32" font-size="9" fill="#888">1</text>
+  </g>
+  <!-- ReLU -->
+  <g transform="translate(170,10)">
+    <text x="75" y="15" text-anchor="middle" font-size="12" font-weight="bold" fill="#188038">ReLU</text>
+    <line x1="10" y1="80" x2="140" y2="80" stroke="#ccc" stroke-width="1"/>
+    <line x1="75" y1="20" x2="75" y2="140" stroke="#ccc" stroke-width="1"/>
+    <path d="M10,80 L75,80 L130,25" stroke="#188038" stroke-width="2.5" fill="none"/>
+    <text x="75" y="148" text-anchor="middle" font-size="10" fill="#666">max(0,x): zero or linear</text>
+  </g>
+  <!-- Vanishing gradient illustration -->
+  <g transform="translate(330,10)">
+    <text x="75" y="15" text-anchor="middle" font-size="11" font-weight="bold" fill="#e37400">Vanishing Gradient</text>
+    <text x="75" y="35" text-anchor="middle" font-size="10" fill="#555">Sigmoid: deriv ≤ 0.25</text>
+    <text x="75" y="52" text-anchor="middle" font-size="10" fill="#555">After 4 layers:</text>
+    <text x="75" y="70" text-anchor="middle" font-size="13" fill="#c5221f" font-weight="bold">0.25⁴ = 0.004</text>
+    <text x="75" y="90" text-anchor="middle" font-size="10" fill="#555">ReLU: deriv = 1</text>
+    <text x="75" y="107" text-anchor="middle" font-size="10" fill="#555">After 4 layers:</text>
+    <text x="75" y="125" text-anchor="middle" font-size="13" fill="#188038" font-weight="bold">1⁴ = 1.0 ✓</text>
+  </g>
+</svg>
+<p>Sigmoid causes vanishing gradients in deep networks. ReLU avoids this.</p>
+</div>
+
+<h3>L1 vs L2 Regularization — Deep Comparison</h3>
+<table>
+  <tr><th>Property</th><th>L1 (Lasso)</th><th>L2 (Ridge)</th></tr>
+  <tr><td>Penalty</td><td>Σ|wᵢ|</td><td>Σwᵢ²</td></tr>
+  <tr><td>Effect on weights</td><td><strong>Drives to exactly 0</strong> (sparsity)</td><td>Shrinks toward 0, never reaches it</td></tr>
+  <tr><td>Why exact zeros?</td><td>Subdifferential at w=0 includes [−1,+1]: if loss gradient < 1, update stops at 0</td><td>Gradient = 2w → 0 as w→0, so force vanishes before reaching 0</td></tr>
+  <tr><td>Geometry</td><td>Diamond-shaped constraint: solutions hit corners (= axes = sparse)</td><td>Sphere-shaped constraint: solutions hit sphere surface (rarely on axis)</td></tr>
+  <tr><td>Use case</td><td>Feature selection — irrelevant features get weight = 0</td><td>General overfitting prevention</td></tr>
+  <tr><td>Solution</td><td>Sparse (many zeros)</td><td>Small but non-zero everywhere</td></tr>
+</table>
+
+<!-- L1 vs L2 geometry diagram -->
+<div class="diagram">
+<svg width="400" height="180" viewBox="0 0 400 180">
+  <rect width="400" height="180" fill="#f8f9fa" rx="8"/>
+  <!-- L1 diamond -->
+  <g transform="translate(80,90)">
+    <text x="0" y="-82" text-anchor="middle" font-size="12" font-weight="bold" fill="#c5221f">L1 Constraint</text>
+    <polygon points="0,-65 65,0 0,65 -65,0" fill="#fce8e6" stroke="#c5221f" stroke-width="2"/>
+    <!-- optimal point hits corner -->
+    <circle cx="65" cy="0" r="5" fill="#c5221f"/>
+    <text x="72" y="4" font-size="10" fill="#c5221f">w₂=0</text>
+    <!-- loss contours ellipses -->
+    <ellipse cx="80" cy="-20" rx="40" ry="25" fill="none" stroke="#888" stroke-width="1" stroke-dasharray="3,2"/>
+    <ellipse cx="80" cy="-20" rx="60" ry="38" fill="none" stroke="#888" stroke-width="1" stroke-dasharray="3,2"/>
+    <text x="115" y="-10" font-size="9" fill="#666">loss contours</text>
+  </g>
+  <!-- L2 sphere -->
+  <g transform="translate(300,90)">
+    <text x="0" y="-82" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a73e8">L2 Constraint</text>
+    <circle cx="0" cy="0" r="65" fill="#e8f0fe" stroke="#1a73e8" stroke-width="2"/>
+    <!-- optimal point on circle surface (not on axis) -->
+    <circle cx="46" cy="-46" r="5" fill="#1a73e8"/>
+    <text x="50" y="-48" font-size="10" fill="#1a73e8">neither = 0</text>
+    <!-- loss contours -->
+    <ellipse cx="80" cy="-20" rx="40" ry="25" fill="none" stroke="#888" stroke-width="1" stroke-dasharray="3,2"/>
+    <ellipse cx="80" cy="-20" rx="60" ry="38" fill="none" stroke="#888" stroke-width="1" stroke-dasharray="3,2"/>
+  </g>
+</svg>
+<p>L1 constraint is a diamond — loss contours hit the corners (axes), creating sparse solutions. L2 is a sphere — solutions land on the smooth surface, rarely on axes.</p>
+</div>
+
+<h3>Batch Normalization</h3>
+<p>Normalizes activations to approximately <strong>N(0,1)</strong> over the current mini-batch. Applied between layers. Stabilizes training, allows higher learning rates.</p>
+<div class="trap">Batch norm normalizes to a <em>normal (Gaussian)</em> distribution, NOT uniform. It operates on the batch dimension, not the feature dimension.</div>
+
+<h3>Dropout</h3>
+<p>Randomly sets neuron outputs to 0 during training (probability p). Creates ensemble effect — each forward pass uses a different network topology. At test time, all neurons active (outputs scaled by 1−p). Reduces overfitting.</p>
+</div>
+
+<!-- ============================================================ -->
+<div class="section" id="cnn">
+<h2>8. Convolutional Neural Networks (CNNs)</h2>
+
+<div class="card card-blue">
+  <strong>A convolutional layer = a fully connected layer with two constraints:</strong>
+  <ol style="margin-top:8px;">
+    <li><strong>Connections removed</strong>: each output unit connects only to a local region (receptive field)</li>
+    <li><strong>Weights shared</strong>: the same filter weights are applied at every spatial position</li>
+  </ol>
+  <p style="margin-top:8px; color:#c5221f">❌ NOT: limiting the L2 norm of weights. ❌ NOT: pooling operations.</p>
+</div>
+
+<!-- CNN diagram -->
+<div class="diagram">
+<svg width="550" height="160" viewBox="0 0 550 160">
+  <rect width="550" height="160" fill="#f8f9fa" rx="8"/>
+  <!-- Input image -->
+  <rect x="20" y="30" width="80" height="80" fill="#e8f0fe" stroke="#1a73e8" stroke-width="2" rx="4"/>
+  <text x="60" y="80" text-anchor="middle" font-size="11" fill="#1a73e8" font-weight="bold">Input</text>
+  <text x="60" y="95" text-anchor="middle" font-size="10" fill="#666">H×W×C</text>
+  <!-- filter -->
+  <rect x="120" y="50" width="40" height="40" fill="#fef3e2" stroke="#e37400" stroke-width="2" rx="3"/>
+  <text x="140" y="68" text-anchor="middle" font-size="10" fill="#e37400" font-weight="bold">Filter</text>
+  <text x="140" y="82" text-anchor="middle" font-size="9" fill="#e37400">k×k</text>
+  <text x="140" y="130" text-anchor="middle" font-size="10" fill="#666">Same weights</text>
+  <text x="140" y="143" text-anchor="middle" font-size="10" fill="#666">everywhere</text>
+  <!-- arrow -->
+  <line x1="175" y1="70" x2="205" y2="70" stroke="#666" stroke-width="1.5" marker-end="url(#arr2)"/>
+  <defs><marker id="arr2" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#666"/></marker></defs>
+  <!-- Feature map -->
+  <rect x="210" y="30" width="70" height="70" fill="#e6f4ea" stroke="#188038" stroke-width="2" rx="4"/>
+  <text x="245" y="65" text-anchor="middle" font-size="11" fill="#188038" font-weight="bold">Feature</text>
+  <text x="245" y="80" text-anchor="middle" font-size="11" fill="#188038" font-weight="bold">Map</text>
+  <text x="245" y="118" text-anchor="middle" font-size="10" fill="#666">Activation at</text>
+  <text x="245" y="131" text-anchor="middle" font-size="10" fill="#666">each position</text>
+  <!-- arrow -->
+  <line x1="285" y1="65" x2="315" y2="65" stroke="#666" stroke-width="1.5" marker-end="url(#arr2)"/>
+  <!-- Max pooling -->
+  <rect x="320" y="40" width="60" height="50" fill="#f3e5f5" stroke="#7b1fa2" stroke-width="2" rx="4"/>
+  <text x="350" y="63" text-anchor="middle" font-size="10" fill="#7b1fa2" font-weight="bold">Max</text>
+  <text x="350" y="78" text-anchor="middle" font-size="10" fill="#7b1fa2" font-weight="bold">Pooling</text>
+  <text x="350" y="105" text-anchor="middle" font-size="10" fill="#666">Reduce size</text>
+  <!-- arrow -->
+  <line x1="385" y1="65" x2="415" y2="65" stroke="#666" stroke-width="1.5" marker-end="url(#arr2)"/>
+  <!-- output -->
+  <rect x="420" y="40" width="60" height="50" fill="#fce8e6" stroke="#c5221f" stroke-width="2" rx="4"/>
+  <text x="450" y="60" text-anchor="middle" font-size="10" fill="#c5221f" font-weight="bold">Smaller</text>
+  <text x="450" y="75" text-anchor="middle" font-size="10" fill="#c5221f" font-weight="bold">Feature</text>
+  <text x="450" y="90" text-anchor="middle" font-size="10" fill="#c5221f" font-weight="bold">Map</text>
+</svg>
+<p>CNN pipeline: input → convolve with filter (same weights everywhere) → feature map → pool → smaller feature map</p>
+</div>
+
+<table>
+  <tr><th>Operation</th><th>What it does</th><th>Effect on size</th></tr>
+  <tr><td>Convolution (stride=1, no pad)</td><td>Apply filter at every position</td><td>Shrinks slightly</td></tr>
+  <tr><td>Padding</td><td>Add zeros around border</td><td>Preserves size</td></tr>
+  <tr><td>Stride=2</td><td>Filter moves 2 pixels at a time</td><td>Halves spatial dimensions</td></tr>
+  <tr><td>Max pooling (2×2)</td><td>Keep max in each 2×2 region</td><td>Halves spatial dimensions</td></tr>
+</table>
+</div>
+
+<!-- ============================================================ -->
+<div class="section" id="sequences">
+<h2>9. Sequences: RNN vs LSTM vs Transformer</h2>
+
+<div class="compare compare-3">
+  <div class="compare-item card-blue">
+    <h4>RNN</h4>
+    <p>hₜ = f(hₜ₋₁, xₜ)</p>
+    <p>Sequential processing. Maintains hidden state. <strong>Problem: vanishing gradients</strong> — early tokens forgotten.</p>
+    <p style="color:#c5221f">❌ Can't model long-range dependencies well</p>
+  </div>
+  <div class="compare-item card-green">
+    <h4>LSTM</h4>
+    <p>Has <strong>cell state</strong> + forget gate + input gate + output gate</p>
+    <p>Forget gate decides what to keep from cell state. Cell state = "conveyor belt" — information can flow unchanged.</p>
+    <p style="color:#188038">✓ Solves vanishing gradients ❌ Still sequential</p>
+    <p>Does NOT make Markov assumption.</p>
+  </div>
+  <div class="compare-item card-purple">
+    <h4>Transformer</h4>
+    <p>Self-attention: every token attends to every other token simultaneously.</p>
+    <p>Needs <strong>position embeddings</strong> (attention is order-invariant without them).</p>
+    <p style="color:#7b1fa2">✓ Parallelizable ✓ Long-range direct ❌ Quadratic memory</p>
+  </div>
+</div>
+
+<!-- LSTM cell diagram -->
+<div class="diagram">
+<svg width="500" height="180" viewBox="0 0 500 180">
+  <rect width="500" height="180" fill="#f8f9fa" rx="8"/>
+  <!-- cell state line (top) -->
+  <line x1="20" y1="40" x2="480" y2="40" stroke="#188038" stroke-width="3"/>
+  <text x="250" y="28" text-anchor="middle" font-size="11" fill="#188038" font-weight="bold">Cell State Cₜ (conveyor belt — long-term memory)</text>
+  <!-- forget gate -->
+  <rect x="60" y="55" width="70" height="40" rx="6" fill="#fce8e6" stroke="#c5221f" stroke-width="2"/>
+  <text x="95" y="72" text-anchor="middle" font-size="10" fill="#c5221f" font-weight="bold">Forget</text>
+  <text x="95" y="86" text-anchor="middle" font-size="10" fill="#c5221f" font-weight="bold">Gate σ</text>
+  <line x1="95" y1="55" x2="95" y2="40" stroke="#c5221f" stroke-width="1.5"/>
+  <text x="95" y="108" text-anchor="middle" font-size="9" fill="#666">0=forget all</text>
+  <text x="95" y="120" text-anchor="middle" font-size="9" fill="#666">1=keep all</text>
+  <!-- input gate -->
+  <rect x="185" y="55" width="70" height="40" rx="6" fill="#e8f0fe" stroke="#1a73e8" stroke-width="2"/>
+  <text x="220" y="72" text-anchor="middle" font-size="10" fill="#1a73e8" font-weight="bold">Input</text>
+  <text x="220" y="86" text-anchor="middle" font-size="10" fill="#1a73e8" font-weight="bold">Gate σ</text>
+  <line x1="220" y1="55" x2="220" y2="40" stroke="#1a73e8" stroke-width="1.5"/>
+  <!-- output gate -->
+  <rect x="310" y="55" width="70" height="40" rx="6" fill="#e6f4ea" stroke="#188038" stroke-width="2"/>
+  <text x="345" y="72" text-anchor="middle" font-size="10" fill="#188038" font-weight="bold">Output</text>
+  <text x="345" y="86" text-anchor="middle" font-size="10" fill="#188038" font-weight="bold">Gate σ</text>
+  <line x1="345" y1="55" x2="345" y2="40" stroke="#188038" stroke-width="1.5"/>
+  <!-- hidden state line (bottom) -->
+  <line x1="20" y1="150" x2="480" y2="150" stroke="#7b1fa2" stroke-width="2" stroke-dasharray="6,3"/>
+  <text x="250" y="168" text-anchor="middle" font-size="10" fill="#7b1fa2">Hidden state hₜ (short-term memory)</text>
+  <!-- inputs -->
+  <text x="30" y="155" font-size="9" fill="#666">hₜ₋₁</text>
+  <text x="30" y="45" font-size="9" fill="#666">Cₜ₋₁</text>
+  <text x="455" y="155" font-size="9" fill="#666">hₜ</text>
+  <text x="455" y="45" font-size="9" fill="#666">Cₜ</text>
+</svg>
+<p>LSTM cell: cell state (top) carries long-term memory through gates that control what to forget/remember/output</p>
+</div>
+
+<h3>Sequence-to-Sequence layers</h3>
+<div class="compare compare-2">
+  <div class="card card-green">
+    <h4>✓ Are sequence layers</h4>
+    <p>1D Convolution, RNN, LSTM, Transformer</p>
+  </div>
+  <div class="card card-red">
+    <h4>✗ NOT sequence layers</h4>
+    <p>Gradient Boosting, Word2Vec, DQN, standard MLP (no sequential structure)</p>
+  </div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<div class="section" id="generative">
+<h2>10. Generative Models</h2>
+
+<div class="compare compare-3">
+  <div class="compare-item card">
+    <h4>Autoencoder</h4>
+    <p><strong>Encoder</strong>: x → z (single point)</p>
+    <p><strong>Decoder</strong>: z → x̂</p>
+    <p>Loss: reconstruction only ||x − x̂||²</p>
+    <p>Cannot generate new samples (unstructured latent space)</p>
+  </div>
+  <div class="compare-item card-blue">
+    <h4>VAE</h4>
+    <p><strong>Encoder</strong>: x → (μ, σ) — a distribution</p>
+    <p><strong>Sample</strong>: z = μ + σ·ε, ε~N(0,I)</p>
+    <p><strong>Decoder</strong>: z → x̂</p>
+    <p>Loss: reconstruction + KL(q||N(0,I))</p>
+    <p style="color:#c5221f"><strong>NO discriminator</strong></p>
+  </div>
+  <div class="compare-item card-purple">
+    <h4>GAN</h4>
+    <p><strong>Generator G</strong>: noise z → fake data</p>
+    <p><strong>Discriminator D</strong>: real or fake?</p>
+    <p>Adversarial training (minimax game)</p>
+    <p>Mode collapse: G produces same few outputs</p>
+    <p style="color:#7b1fa2"><strong>Has discriminator</strong></p>
+  </div>
+</div>
+
+<!-- VAE architecture diagram -->
+<div class="diagram">
+<svg width="580" height="160" viewBox="0 0 580 160">
+  <rect width="580" height="160" fill="#f8f9fa" rx="8"/>
+  <!-- Input -->
+  <rect x="10" y="50" width="60" height="60" rx="6" fill="#e8f0fe" stroke="#1a73e8" stroke-width="2"/>
+  <text x="40" y="85" text-anchor="middle" font-size="12" fill="#1a73e8" font-weight="bold">x</text>
+  <!-- arrow -->
+  <line x1="73" y1="80" x2="100" y2="80" stroke="#666" stroke-width="1.5" marker-end="url(#arr2)"/>
+  <!-- Encoder -->
+  <rect x="103" y="40" width="80" height="80" rx="6" fill="#e6f4ea" stroke="#188038" stroke-width="2"/>
+  <text x="143" y="78" text-anchor="middle" font-size="11" fill="#188038" font-weight="bold">Encoder</text>
+  <text x="143" y="95" text-anchor="middle" font-size="10" fill="#188038">q(z|x)</text>
+  <!-- arrow -->
+  <line x1="186" y1="80" x2="213" y2="80" stroke="#666" stroke-width="1.5" marker-end="url(#arr2)"/>
+  <!-- μ σ -->
+  <rect x="216" y="45" width="55" height="30" rx="4" fill="#fce8e6" stroke="#c5221f" stroke-width="1.5"/>
+  <text x="243" y="65" text-anchor="middle" font-size="11" fill="#c5221f">μ, σ</text>
+  <!-- sample -->
+  <rect x="216" y="85" width="55" height="30" rx="4" fill="#fff3cd" stroke="#e37400" stroke-width="1.5"/>
+  <text x="243" y="105" text-anchor="middle" font-size="10" fill="#e37400">z=μ+σε</text>
+  <!-- arrow -->
+  <line x1="274" y1="95" x2="300" y2="82" stroke="#666" stroke-width="1.5" marker-end="url(#arr2)"/>
+  <line x1="274" y1="62" x2="300" y2="77" stroke="#666" stroke-width="1.5" marker-end="url(#arr2)"/>
+  <!-- latent z -->
+  <circle cx="315" cy="80" r="20" fill="#f3e5f5" stroke="#7b1fa2" stroke-width="2"/>
+  <text x="315" y="84" text-anchor="middle" font-size="12" fill="#7b1fa2" font-weight="bold">z</text>
+  <!-- arrow -->
+  <line x1="338" y1="80" x2="365" y2="80" stroke="#666" stroke-width="1.5" marker-end="url(#arr2)"/>
+  <!-- Decoder -->
+  <rect x="368" y="40" width="80" height="80" rx="6" fill="#e6f4ea" stroke="#188038" stroke-width="2"/>
+  <text x="408" y="78" text-anchor="middle" font-size="11" fill="#188038" font-weight="bold">Decoder</text>
+  <text x="408" y="95" text-anchor="middle" font-size="10" fill="#188038">p(x|z)</text>
+  <!-- arrow -->
+  <line x1="451" y1="80" x2="478" y2="80" stroke="#666" stroke-width="1.5" marker-end="url(#arr2)"/>
+  <!-- Reconstruction -->
+  <rect x="481" y="50" width="60" height="60" rx="6" fill="#e8f0fe" stroke="#1a73e8" stroke-width="2"/>
+  <text x="511" y="85" text-anchor="middle" font-size="12" fill="#1a73e8" font-weight="bold">x̂</text>
+  <!-- loss labels -->
+  <text x="496" y="140" text-anchor="middle" font-size="10" fill="#c5221f">Reconstruction loss</text>
+  <text x="240" y="140" text-anchor="middle" font-size="10" fill="#c5221f">KL to N(0,I)</text>
+</svg>
+<p>VAE architecture: encoder outputs a distribution, we sample from it, decoder reconstructs. No discriminator.</p>
+</div>
+
+<h3>GAN Variants</h3>
+<table>
+  <tr><th>Variant</th><th>Key feature</th><th>Use case</th></tr>
+  <tr><td><strong>Standard GAN</strong></td><td>G + D adversarial game</td><td>Unconditional generation (e.g., faces)</td></tr>
+  <tr><td><strong>Conditional GAN</strong></td><td>Both G and D receive conditioning signal y (e.g., class label)</td><td><strong>Paired</strong> input→output (sketch→photo, grayscale→color)</td></tr>
+  <tr><td><strong>CycleGAN</strong></td><td>Two G's + two D's + cycle-consistency loss: G(F(x)) ≈ x</td><td><strong>Unpaired</strong> translation (horse→zebra without matched pairs)</td></tr>
+  <tr><td><strong>StyleGAN</strong></td><td>Separates style and content in latent space</td><td>High-quality face generation with style control</td></tr>
+</table>
+
+<div class="trap">Conditional GAN requires PAIRED training examples. CycleGAN works with unpaired collections. Know this difference!</div>
+
+<h3>ELBO — Why VAEs can't maximize ln p(x) directly</h3>
+<div class="formula">L(q,θ) + KL(q,p) = ln p(x|θ)
+Since KL ≥ 0 always:  L(q,θ) ≤ ln p(x|θ)
+→ ELBO is a LOWER BOUND on the log-likelihood</div>
+<p><strong>Why we need it</strong>: ln p(x|θ) = ln ∫p(x,z|θ)dz — we'd need to integrate over all possible z. Intractable. ELBO is tractable and gives a lower bound we can optimize instead.</p>
+<p><strong>VAE loss</strong> (negated, since we minimize): <code>−E_q[ln p(x|z)] + KL(q(z|x) || N(0,I))</code></p>
+<ul>
+  <li>First term = reconstruction loss (how well decoder reconstructs x)</li>
+  <li>Second term = KL regularizer (forces latent space to be structured like N(0,I))</li>
+</ul>
+</div>
+
+<!-- ============================================================ -->
+<div class="section" id="embeddings">
+<h2>11. Embeddings & Recommender Systems</h2>
+
+<div class="compare compare-2">
+  <div class="card card-blue">
+    <h4>Matrix Factorization</h4>
+    <p>Decomposes user-item rating matrix R ≈ U × Vᵀ</p>
+    <p>Each user u → vector uᵤ, each item i → vector vᵢ</p>
+    <p>Predicted rating: r̂ᵤᵢ = uᵤ · vᵢ (dot product)</p>
+    <p><strong>Cold start</strong>: new item/user has no interactions → no embedding can be learned</p>
+  </div>
+  <div class="card card-green">
+    <h4>Word2Vec</h4>
+    <p>Learns word embeddings from unlabeled text via co-occurrence</p>
+    <p>CBOW: predict word from context words</p>
+    <p>Skip-gram: predict context from word</p>
+    <p>Similar words → similar vectors (king − man + woman ≈ queen)</p>
+  </div>
+</div>
+
+<div class="key">Both matrix factorization and Word2Vec learn embeddings for <strong>featureless objects</strong> — items/users/words that have no predefined feature vector. The embedding IS the learned representation.</div>
+
+<div class="trap">Cold start = new item or user with NO historical interaction data. NOT about incomplete feature records. You can't learn an embedding without any interaction history.</div>
+
+<h3>Implicit vs Explicit Feedback</h3>
+<table>
+  <tr><th>Type</th><th>Examples</th><th>Properties</th></tr>
+  <tr><td><strong>Explicit</strong></td><td>Star ratings, written reviews, thumbs up/down</td><td>Rare, high quality, biased toward active users</td></tr>
+  <tr><td><strong>Implicit</strong></td><td>Clicks, views, purchases, listening time, pauses</td><td>Abundant, noisier, more representative</td></tr>
+</table>
+</div>
+
+<!-- ============================================================ -->
+<div class="section" id="rl">
+<h2>12. Reinforcement Learning</h2>
+
+<div class="diagram">
+<svg width="500" height="140" viewBox="0 0 500 140">
+  <rect width="500" height="140" fill="#f8f9fa" rx="8"/>
+  <!-- Agent box -->
+  <rect x="30" y="40" width="120" height="60" rx="8" fill="#fef3e2" stroke="#e37400" stroke-width="2"/>
+  <text x="90" y="68" text-anchor="middle" font-size="13" fill="#e37400" font-weight="bold">Agent</text>
+  <text x="90" y="85" text-anchor="middle" font-size="10" fill="#666">Policy π(a|s)</text>
+  <!-- Environment box -->
+  <rect x="350" y="40" width="130" height="60" rx="8" fill="#e6f4ea" stroke="#188038" stroke-width="2"/>
+  <text x="415" y="68" text-anchor="middle" font-size="13" fill="#188038" font-weight="bold">Environment</text>
+  <text x="415" y="85" text-anchor="middle" font-size="10" fill="#666">Non-differentiable!</text>
+  <!-- action arrow -->
+  <line x1="153" y1="58" x2="347" y2="58" stroke="#1a73e8" stroke-width="2" marker-end="url(#arr2)"/>
+  <text x="250" y="50" text-anchor="middle" font-size="11" fill="#1a73e8" font-weight="bold">action a</text>
+  <!-- state + reward arrow back -->
+  <line x1="347" y1="82" x2="153" y2="82" stroke="#c5221f" stroke-width="2" marker-end="url(#arr2)"/>
+  <text x="250" y="100" text-anchor="middle" font-size="11" fill="#c5221f" font-weight="bold">state s, reward r</text>
+  <!-- note -->
+  <text x="250" y="128" text-anchor="middle" font-size="10" fill="#666">Gradient can't flow through environment → use Policy Gradients or Q-learning</text>
+</svg>
+</div>
+
+<div class="compare compare-2">
+  <div class="card card-orange">
+    <h4>Policy Gradients (PG)</h4>
+    <p>Network outputs <strong>probability distribution over actions</strong> π(a|s)</p>
+    <p>Directly optimizes policy by estimating gradient of expected reward</p>
+  </div>
+  <div class="card card-blue">
+    <h4>Deep Q-Network (DQN)</h4>
+    <p>Network outputs <strong>Q-value for each action</strong> Q(s,a) = expected future reward</p>
+    <p>Learns a value function; policy = take action with highest Q-value</p>
+  </div>
+</div>
+
+<div class="trap">Why gradient descent is hard in RL: the step from model output → action → reward involves the environment, which is non-differentiable. Can't backpropagate through it directly.</div>
+</div>
+
+<!-- ============================================================ -->
+<div class="section" id="trees">
+<h2>13. Decision Trees & Ensembles</h2>
+
+<h3>Decision Tree Splits</h3>
+<div class="formula">Information Gain = H(parent) − Σᵥ (|Sᵥ|/|S|) × H(Sᵥ)
+Entropy H(p) = −Σ p(x) log₂ p(x)</div>
+
+<p><strong>Shortcut</strong>: look at class distribution on each side. Most uneven = highest info gain. If one split gives pure leaves (all one class) → IG = H(parent), can't do better.</p>
+
+<table>
+  <tr><th>Distribution</th><th>Entropy</th></tr>
+  <tr><td>All same class (1, 0)</td><td>0 bits (pure)</td></tr>
+  <tr><td>50/50 (1/2, 1/2)</td><td>1 bit (maximum binary)</td></tr>
+  <tr><td>Uniform over n classes</td><td>log₂(n) bits</td></tr>
+  <tr><td>(2/3, 1/3)</td><td>≈ 0.918 bits</td></tr>
+  <tr><td>(3/4, 1/4)</td><td>≈ 0.811 bits</td></tr>
+  <tr><td>(7/8, 1/8)</td><td>≈ 0.544 bits</td></tr>
+</table>
+
+<div class="trap">Categorical feature: once you split on it in a branch, don't split on it again (already partitioned). Numeric feature: CAN split multiple times with different thresholds.</div>
+
+<h3>Bagging vs Boosting</h3>
+
+<!-- Bagging vs Boosting diagram -->
+<div class="diagram">
+<svg width="560" height="170" viewBox="0 0 560 170">
+  <rect width="560" height="170" fill="#f8f9fa" rx="8"/>
+  <!-- BAGGING -->
+  <text x="130" y="20" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a73e8">BAGGING (parallel)</text>
+  <rect x="20" y="30" width="220" height="30" rx="5" fill="#e8f0fe" stroke="#1a73e8" stroke-width="1.5"/>
+  <text x="130" y="50" text-anchor="middle" font-size="11" fill="#1a73e8">Training Data</text>
+  <!-- bootstrap samples -->
+  <rect x="20" y="75" width="60" height="25" rx="4" fill="#e6f4ea" stroke="#188038" stroke-width="1.5"/>
+  <text x="50" y="91" text-anchor="middle" font-size="10" fill="#188038">T1 (boot)</text>
+  <rect x="90" y="75" width="60" height="25" rx="4" fill="#e6f4ea" stroke="#188038" stroke-width="1.5"/>
+  <text x="120" y="91" text-anchor="middle" font-size="10" fill="#188038">T2 (boot)</text>
+  <rect x="160" y="75" width="60" height="25" rx="4" fill="#e6f4ea" stroke="#188038" stroke-width="1.5"/>
+  <text x="190" y="91" text-anchor="middle" font-size="10" fill="#188038">T3 (boot)</text>
+  <!-- lines from data to samples -->
+  <line x1="130" y1="60" x2="50" y2="75" stroke="#888" stroke-width="1"/>
+  <line x1="130" y1="60" x2="120" y2="75" stroke="#888" stroke-width="1"/>
+  <line x1="130" y1="60" x2="190" y2="75" stroke="#888" stroke-width="1"/>
+  <!-- models -->
+  <rect x="20" y="113" width="60" height="22" rx="4" fill="#f3e5f5" stroke="#7b1fa2" stroke-width="1.5"/>
+  <text x="50" y="128" text-anchor="middle" font-size="10" fill="#7b1fa2">M1</text>
+  <rect x="90" y="113" width="60" height="22" rx="4" fill="#f3e5f5" stroke="#7b1fa2" stroke-width="1.5"/>
+  <text x="120" y="128" text-anchor="middle" font-size="10" fill="#7b1fa2">M2</text>
+  <rect x="160" y="113" width="60" height="22" rx="4" fill="#f3e5f5" stroke="#7b1fa2" stroke-width="1.5"/>
+  <text x="190" y="128" text-anchor="middle" font-size="10" fill="#7b1fa2">M3</text>
+  <!-- vote -->
+  <rect x="80" y="148" width="100" height="18" rx="4" fill="#e37400" opacity="0.8"/>
+  <text x="130" y="161" text-anchor="middle" font-size="10" fill="white" font-weight="bold">Average/Vote → low variance</text>
+
+  <!-- divider -->
+  <line x1="280" y1="10" x2="280" y2="165" stroke="#ccc" stroke-width="1" stroke-dasharray="4,3"/>
+
+  <!-- BOOSTING -->
+  <text x="420" y="20" text-anchor="middle" font-size="13" font-weight="bold" fill="#c5221f">BOOSTING (sequential)</text>
+  <!-- rounds -->
+  <rect x="295" y="30" width="80" height="25" rx="5" fill="#fce8e6" stroke="#c5221f" stroke-width="1.5"/>
+  <text x="335" y="47" text-anchor="middle" font-size="10" fill="#c5221f">Round 1: M1</text>
+  <line x1="335" y1="55" x2="335" y2="68" stroke="#888" stroke-width="1.5" marker-end="url(#arr2)"/>
+  <rect x="295" y="70" width="80" height="25" rx="5" fill="#fce8e6" stroke="#c5221f" stroke-width="1.5"/>
+  <text x="335" y="87" text-anchor="middle" font-size="10" fill="#c5221f">Reweight errors</text>
+  <line x1="335" y1="95" x2="335" y2="108" stroke="#888" stroke-width="1.5" marker-end="url(#arr2)"/>
+  <rect x="295" y="110" width="80" height="25" rx="5" fill="#fce8e6" stroke="#c5221f" stroke-width="1.5"/>
+  <text x="335" y="127" text-anchor="middle" font-size="10" fill="#c5221f">Round 2: M2</text>
+  <!-- ensemble -->
+  <rect x="390" y="30" width="90" height="25" rx="5" fill="#e6f4ea" stroke="#188038" stroke-width="1.5"/>
+  <text x="435" y="47" text-anchor="middle" font-size="10" fill="#188038">M1+M2+... →</text>
+  <rect x="390" y="60" width="90" height="25" rx="5" fill="#e6f4ea" stroke="#188038" stroke-width="1.5"/>
+  <text x="435" y="77" text-anchor="middle" font-size="10" fill="#188038">reduced BIAS</text>
+  <text x="420" y="155" text-anchor="middle" font-size="10" fill="#c5221f">AdaBoost: reweight misclassified</text>
+  <text x="420" y="167" text-anchor="middle" font-size="10" fill="#c5221f">Grad. Boost: fit residuals</text>
+</svg>
+</div>
+
+<table>
+  <tr><th></th><th>Bagging</th><th>Boosting</th></tr>
+  <tr><td><strong>Training</strong></td><td>Parallel (independent)</td><td>Sequential (each corrects previous)</td></tr>
+  <tr><td><strong>Reduces</strong></td><td>Variance</td><td>Bias</td></tr>
+  <tr><td><strong>Use when</strong></td><td>Model overfits (high variance)</td><td>Model underfits (high bias)</td></tr>
+  <tr><td><strong>Example</strong></td><td>Random Forest</td><td>AdaBoost, Gradient Boosting</td></tr>
+  <tr><td><strong>Data sampling</strong></td><td>Bootstrap (with replacement)</td><td>Reweight hard examples</td></tr>
+</table>
+</div>
+
+<!-- ============================================================ -->
+<div class="section" id="probability">
+<h2>14. Probability & Information Theory</h2>
+
+<h3>Bayes' Rule</h3>
+<div class="formula">P(B|A) = P(A|B) × P(B) / P(A)
+For classification: P(class|data) ∝ P(data|class) × P(class)</div>
+
+<h3>Entropy & Cross-Entropy — Full picture</h3>
+
+<div class="formula">Entropy:       H(p) = −Σ p(x) log₂ p(x)
+Cross-entropy: H(p,q) = −Σ p(x) log₂ q(x)   ← p is TRUE, q goes in log
+KL divergence: KL(p||q) = H(p,q) − H(p) ≥ 0</div>
+
+<p><strong>Intuition</strong>: H(p) = minimum bits to encode a draw from p. H(p,q) = bits needed if you use a code optimized for q but data actually comes from p. KL = extra wasted bits.</p>
+
+<!-- Entropy visualized -->
+<div class="diagram">
+<svg width="500" height="150" viewBox="0 0 500 150">
+  <rect width="500" height="150" fill="#f8f9fa" rx="8"/>
+  <!-- axes -->
+  <line x1="30" y1="120" x2="470" y2="120" stroke="#ccc" stroke-width="1"/>
+  <line x1="30" y1="10" x2="30" y2="120" stroke="#ccc" stroke-width="1"/>
+  <text x="470" y="130" font-size="10" fill="#666">p</text>
+  <text x="14" y="14" font-size="10" fill="#666">H</text>
+  <text x="10" y="25" font-size="9" fill="#666">1</text>
+  <text x="10" y="122" font-size="9" fill="#666">0</text>
+  <!-- entropy curve for binary H(p,1-p) -->
+  <path d="M30,120 Q100,15 250,20 Q400,15 470,120" stroke="#1a73e8" stroke-width="2.5" fill="#e8f0fe" fill-opacity="0.4"/>
+  <!-- marks -->
+  <line x1="250" y1="20" x2="250" y2="120" stroke="#c5221f" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="250" y="136" text-anchor="middle" font-size="10" fill="#c5221f">p=0.5 → H=1 bit (max)</text>
+  <circle cx="30" cy="120" r="4" fill="#188038"/>
+  <text x="38" y="118" font-size="9" fill="#188038">p=0 → H=0</text>
+  <circle cx="470" cy="120" r="4" fill="#188038"/>
+  <text x="455" y="118" font-size="9" fill="#188038">p=1 → H=0</text>
+  <!-- title -->
+  <text x="250" y="148" text-anchor="middle" font-size="10" fill="#666">Binary entropy H(p, 1−p): maximum at uniform distribution</text>
+</svg>
+</div>
+
+<h3>THE critical cross-entropy trap</h3>
+
+<div class="card card-red">
+  <strong>H(p,q) is UNDEFINED when q(x)=0 but p(x)>0</strong>
+  <p style="margin-top:8px;">Reason: you'd need log₂(0) = −∞, making the term p(x)·(−∞) = +∞</p>
+  <p><strong>H(p,q) IS defined (=0) when both p(x)=0 AND q(x)=0.</strong> By convention: 0·log(0) = 0.</p>
+  <p style="margin-top:8px; font-weight:bold;">Every recent exam includes one undefined cross-entropy. Check every position where q(x)=0.</p>
+</div>
+
+<h3>Quick log₂ reference</h3>
+<table>
+  <tr><th>x</th><th>log₂(x)</th><th>x</th><th>log₂(x)</th></tr>
+  <tr><td>1</td><td>0</td><td>1/2</td><td>−1</td></tr>
+  <tr><td>2</td><td>1</td><td>1/4</td><td>−2</td></tr>
+  <tr><td>4</td><td>2</td><td>1/8</td><td>−3</td></tr>
+  <tr><td>8</td><td>3</td><td>3/4</td><td>≈ −0.415</td></tr>
+  <tr><td>3</td><td>≈ 1.585</td><td>2/3</td><td>≈ −0.585</td></tr>
+</table>
+<p><strong>Calculator</strong>: log₂(x) = ln(x)/ln(2)</p>
+</div>
+
+<!-- ============================================================ -->
+<div class="section" id="evaluation">
+<h2>15. Evaluation & Methodology</h2>
+
+<h3>Confusion Matrix</h3>
+<table>
+  <tr><th></th><th>Predicted +</th><th>Predicted −</th></tr>
+  <tr><td><strong>Actual +</strong></td><td>TP (true positive)</td><td>FN (false negative — missed)</td></tr>
+  <tr><td><strong>Actual −</strong></td><td>FP (false positive — false alarm)</td><td>TN (true negative)</td></tr>
+</table>
+
+<table>
+  <tr><th>Metric</th><th>Formula</th><th>Question it answers</th></tr>
+  <tr><td>Accuracy</td><td>(TP+TN)/total</td><td>Overall correctness</td></tr>
+  <tr><td>Recall / TPR</td><td>TP/(TP+FN)</td><td>Of all actual positives, how many did we find?</td></tr>
+  <tr><td>Precision</td><td>TP/(TP+FP)</td><td>Of all our positive predictions, how many were right?</td></tr>
+  <tr><td>FPR</td><td>FP/(FP+TN)</td><td>Of all actual negatives, how many did we wrongly flag?</td></tr>
+  <tr><td>F1</td><td>2·P·R/(P+R)</td><td>Harmonic mean of precision and recall</td></tr>
+  <tr><td>ROC AUC</td><td>Area under TPR vs FPR curve</td><td>Ranking quality. Needs score, not just binary prediction.</td></tr>
+</table>
+
+<div class="trap">ROC AUC requires a RANKING classifier (real-valued score). Cannot compute from a confusion matrix alone — confusion matrix only gives one operating point, not the full curve.</div>
+
+<h3>Bias-Variance Decomposition</h3>
+
+<div class="diagram">
+<svg width="450" height="150" viewBox="0 0 450 150">
+  <rect width="450" height="150" fill="#f8f9fa" rx="8"/>
+  <!-- axes -->
+  <line x1="40" y1="130" x2="420" y2="130" stroke="#ccc" stroke-width="1"/>
+  <line x1="40" y1="10" x2="40" y2="130" stroke="#ccc" stroke-width="1"/>
+  <text x="230" y="148" text-anchor="middle" font-size="11" fill="#666">Model Complexity</text>
+  <text x="16" y="70" text-anchor="middle" font-size="10" fill="#666" transform="rotate(-90,16,70)">Error</text>
+  <!-- bias curve (decreasing) -->
+  <path d="M50,20 Q150,30 280,80 Q360,110 410,120" stroke="#c5221f" stroke-width="2" fill="none"/>
+  <text x="415" y="118" font-size="10" fill="#c5221f">Bias²</text>
+  <!-- variance curve (increasing) -->
+  <path d="M50,110 Q150,100 280,70 Q360,40 410,20" stroke="#1a73e8" stroke-width="2" fill="none"/>
+  <text x="415" y="22" font-size="10" fill="#1a73e8">Variance</text>
+  <!-- total error curve -->
+  <path d="M50,95 Q120,60 210,50 Q310,55 410,75" stroke="#188038" stroke-width="2.5" fill="none" stroke-dasharray="5,3"/>
+  <text x="415" y="74" font-size="10" fill="#188038">Total</text>
+  <!-- sweet spot -->
+  <line x1="210" y1="50" x2="210" y2="130" stroke="#e37400" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <text x="210" y="143" text-anchor="middle" font-size="10" fill="#e37400">sweet spot</text>
+  <!-- labels -->
+  <text x="80" y="115" font-size="10" fill="#c5221f">← Underfitting</text>
+  <text x="310" y="115" font-size="10" fill="#1a73e8">Overfitting →</text>
+</svg>
+<p>As model complexity increases: bias decreases, variance increases. Optimal at the sweet spot.</p>
+</div>
+
+<div class="trap">Bias and variance CANNOT be computed from a single model on a single dataset. You need multiple training datasets (or bootstrapping) to observe how much predictions vary.</div>
+
+<h3>Train / Validation / Test — Rules</h3>
+<ol class="steps">
+  <li>Train model on <strong>training set</strong></li>
+  <li>Tune hyperparameters using <strong>validation set</strong> (or cross-validation)</li>
+  <li>Report final performance on <strong>test set ONCE</strong> — never use test set for decisions</li>
+</ol>
+<p>Using test set multiple times inflates performance via the <strong>multiple testing problem</strong>.</p>
+<p><strong>Walk-forward validation</strong>: for time series data. Always train on past, validate on future. Never mix time periods.</p>
+<p><strong>Data leakage</strong>: computing normalization statistics (mean/std) on the full dataset including test data. Always compute on train set only, then apply to test.</p>
+</div>
+
+<!-- ============================================================ -->
+<!-- APPLICATION QUESTION TYPES -->
+<h2 style="margin:48px 0 16px; padding-top:16px; border-bottom: 3px solid #1a73e8; border-bottom-color:#1a73e8; color:#1a73e8;">APPLICATION QUESTION PROCEDURES</h2>
+
+<!-- ============================================================ -->
+<div class="section" id="app-ranking">
+<h2>A. Ranking Errors & Coverage</h2>
+<p><span class="tag tag-exam">Every exam Q26–28</span></p>
+
+<ol class="steps">
+  <li>Compute <strong>score</strong> for each instance: s = w·x + b</li>
+  <li><strong>Rank</strong> instances from lowest score (most negative) to highest (most positive)</li>
+  <li>Count <strong>ranking errors</strong>: a PAIR (pos, neg) where negative is ranked more positive than positive</li>
+  <li><strong>Coverage</strong> = ranking errors / (#pos × #neg)</li>
+</ol>
+
+<div class="card card-red">
+  <strong>⚠ Ranking error = PAIR, not misclassification.</strong> For each positive instance p, count how many negatives n are ranked above it (have higher score). Sum over all positives.
+</div>
+
+<h3>Worked Example</h3>
+<p>Classifier: score = 2x₁ − x₂. Instances:</p>
+<table>
+  <tr><th>Instance</th><th>x₁</th><th>x₂</th><th>Label</th><th>Score</th></tr>
+  <tr><td>a</td><td>3</td><td>4</td><td>Pos</td><td>2(3)−4 = <strong>2</strong></td></tr>
+  <tr><td>b</td><td>1</td><td>5</td><td>Pos</td><td>2(1)−5 = <strong>−3</strong></td></tr>
+  <tr><td>c</td><td>2</td><td>6</td><td>Neg</td><td>2(2)−6 = <strong>−2</strong></td></tr>
+  <tr><td>d</td><td>4</td><td>1</td><td>Neg</td><td>2(4)−1 = <strong>7</strong></td></tr>
+</table>
+<p>Ranking (neg to pos): <strong>b(−3), c(−2), a(2), d(7)</strong></p>
+<p>Positives: a, b. Negatives: c, d.</p>
+<p>For b (Pos, score=−3): c(−2) > b(−3) ✗ = error; d(7) > b(−3) ✗ = error → 2 errors</p>
+<p>For a (Pos, score=2): d(7) > a(2) ✗ = error → 1 error</p>
+<p><strong>Total: 3 ranking errors. Coverage = 3 / (2×2) = 3/4</strong></p>
+</div>
+
+<!-- ============================================================ -->
+<div class="section" id="app-entropy">
+<h2>B. Entropy & Cross-Entropy Computation</h2>
+<p><span class="tag tag-exam">Every exam Q31–33</span></p>
+
+<div class="formula">H(p) = −Σ p(x) log₂ p(x)         [entropy of p]
+H(p,q) = −Σ p(x) log₂ q(x)       [p is TRUE, q in log]
+KL(p||q) = H(p,q) − H(p)          [always ≥ 0]</div>
+
+<h3>Step-by-step procedure</h3>
+<ol class="steps">
+  <li><strong>Check for undefined</strong> first: is there any position where q(x)=0 but p(x)>0? If yes → H(p,q) = undefined. Stop.</li>
+  <li>For each outcome x: compute −p(x)·log₂(q(x)) and sum</li>
+  <li>Remember: 0·log(0) = 0 (when p(x)=0, the term is 0 regardless of q(x))</li>
+</ol>
+
+<h3>Worked Example</h3>
+<p>p = (1/2, 1/4, 1/8, 1/8), q = (1/4, 1/4, 1/4, 1/4)</p>
+<p><strong>H(p)</strong> = −(1/2)log₂(1/2) − (1/4)log₂(1/4) − (1/8)log₂(1/8) − (1/8)log₂(1/8)</p>
+<p>= (1/2)(1) + (1/4)(2) + (1/8)(3) + (1/8)(3) = 0.5 + 0.5 + 0.375 + 0.375 = <strong>1.75 bits</strong></p>
+<p><strong>H(p,q)</strong>: q is uniform, so log₂(1/4) = −2 for all terms:</p>
+<p>= −(1/2)(−2) − (1/4)(−2) − (1/8)(−2) − (1/8)(−2) = 1+0.5+0.25+0.25 = <strong>2.0 bits</strong></p>
+<p><strong>KL(p||q)</strong> = 2.0 − 1.75 = <strong>0.25 bits</strong></p>
+</div>
+
+<!-- ============================================================ -->
+<div class="section" id="app-backprop">
+<h2>C. Scalar Backpropagation</h2>
+<p><span class="tag tag-exam">Every exam Q29–30</span></p>
+
+<ol class="steps">
+  <li>Break f(x) into <strong>named modules</strong> with simple operations</li>
+  <li><strong>Draw computation graph</strong> — find ALL paths from x to output</li>
+  <li>Compute <strong>local derivative</strong> of each module: ∂output/∂input</li>
+  <li>If x reaches f through <strong>multiple paths</strong>: sum chain rule along each path (multivariate chain rule)</li>
+</ol>
+
+<h3>Key local derivatives</h3>
+<table>
+  <tr><th>Module</th><th>Output</th><th>∂output/∂input</th></tr>
+  <tr><td>sin(a)</td><td>f</td><td>cos(a)</td></tr>
+  <tr><td>cos(a)</td><td>f</td><td>−sin(a)</td></tr>
+  <tr><td>eᵃ</td><td>f</td><td>eᵃ</td></tr>
+  <tr><td>ln(a)</td><td>f</td><td>1/a</td></tr>
+  <tr><td>aⁿ</td><td>f</td><td>n·aⁿ⁻¹</td></tr>
+  <tr><td>1/a</td><td>f</td><td>−1/a²</td></tr>
+  <tr><td>f = a·b</td><td>—</td><td>∂f/∂a = b, ∂f/∂b = a</td></tr>
+  <tr><td>f = a/b</td><td>—</td><td>∂f/∂a = 1/b, ∂f/∂b = −a/b²</td></tr>
+</table>
+
+<h3>Worked Example (2026 Exam)</h3>
+<p>f(x) = sin(3/cos x) · cos x</p>
+<table>
+  <tr><th>Module</th><th>Definition</th></tr>
+  <tr><td>a</td><td>cos x</td></tr>
+  <tr><td>b</td><td>3/a</td></tr>
+  <tr><td>c</td><td>sin b</td></tr>
+  <tr><td>f</td><td>a · c</td></tr>
+</table>
+<p><strong>Two paths</strong> from x to f: path 1 = x→a→f (direct); path 2 = x→a→b→c→f</p>
+<div class="formula">∂f/∂x = (∂f/∂a)(∂a/∂x) + (∂f/∂c)(∂c/∂b)(∂b/∂a)(∂a/∂x)
+       = c·(−sin x) + a·cos(b)·(−3/a²)·(−sin x)
+       = −sin x · (c − 3cos(b)/a)</div>
+</div>
+
+<!-- ============================================================ -->
+<div class="section" id="app-dt">
+<h2>D. Decision Tree — Information Gain</h2>
+<p><span class="tag tag-exam">Every exam Q36–38</span></p>
+
+<ol class="steps">
+  <li>For each feature, <strong>tally class distribution</strong> on both sides of the split</li>
+  <li>Find the <strong>most uneven</strong> distribution → highest info gain (shortcut, no computation needed if obvious)</li>
+  <li>To compute exact IG: IG = H(parent) − Σ (weight × H(child))</li>
+</ol>
+
+<h3>Worked Example</h3>
+<p>12 instances at a node. Feature x₁ split gives: left={5Y, 1N}, right={2Y, 4N}</p>
+<p>H(parent, 7Y+5N of 12): −(7/12)log₂(7/12) − (5/12)log₂(5/12) ≈ 0.980 bits</p>
+<p>H(left, 5Y+1N of 6): −(5/6)log₂(5/6) − (1/6)log₂(1/6) ≈ 0.650 bits</p>
+<p>H(right, 2Y+4N of 6): −(2/6)log₂(2/6) − (4/6)log₂(4/6) = H(1/3,2/3) ≈ 0.918 bits</p>
+<p>Weighted: (6/12)(0.650) + (6/12)(0.918) = 0.784 bits</p>
+<p><strong>IG = 0.980 − 0.784 = 0.196 bits</strong></p>
+</div>
+
+<!-- ============================================================ -->
+<div class="section" id="app-nb">
+<h2>E. Naive Bayes — Spam/Ham Classification</h2>
+<p><span class="tag tag-exam">Appears in recent exams Q33–35</span></p>
+
+<div class="formula">P(class | x₁,...,xₙ) ∝ P(class) × P(x₁|class) × P(x₂|class) × ... × P(xₙ|class)</div>
+
+<ol class="steps">
+  <li><strong>Compute class priors</strong>: P(Spam) = #spam/#total</li>
+  <li><strong>Count conditional probs</strong>: P(feature=T|Spam) = #spam with feature T / #spam total</li>
+  <li><strong>Multiply scores</strong>: Score(Spam) = P(Spam)×P(f1|Spam)×P(f2|Spam)×...</li>
+  <li><strong>Argmax</strong>: predict class with higher score</li>
+  <li>For exact probability: P(Spam|email) = Score(Spam)/(Score(Spam)+Score(Ham))</li>
+</ol>
+
+<h3>Laplace Smoothing</h3>
+<p>If any count is 0 → whole product = 0. Fix: add pseudo-observations.</p>
+<div class="formula">Smoothed P(feature=T | class) = (count + 1) / (class_total + #feature_values)
+For binary feature: +1 numerator, +2 denominator
+Example: 3/4 → smoothed = (3+1)/(4+2) = 4/6</div>
+<div class="trap">Do NOT simplify fractions before smoothing. 2/4 → 1/2 then +1/+2 = 2/4 ≠ (2+1)/(4+2) = 3/6. Keep the original counts.</div>
+
+<h3>Full Worked Example (2026 Exam)</h3>
+<p>8 emails, features: "crypto" (T/F), "schedule" (T/F):</p>
+<table>
+  <tr><th>crypto</th><th>schedule</th><th>label</th></tr>
+  <tr><td>T</td><td>F</td><td>Spam</td></tr>
+  <tr><td>T</td><td>F</td><td>Ham</td></tr>
+  <tr><td>F</td><td>T</td><td>Spam</td></tr>
+  <tr><td>T</td><td>F</td><td>Ham</td></tr>
+  <tr><td>F</td><td>F</td><td>Spam</td></tr>
+  <tr><td>F</td><td>F</td><td>Ham</td></tr>
+  <tr><td>F</td><td>T</td><td>Spam</td></tr>
+  <tr><td>T</td><td>T</td><td>Ham</td></tr>
+</table>
+<p>Spam (4): rows 1,3,5,7. Ham (4): rows 2,4,6,8.</p>
+<p>P(crypto=T|Spam) = 1/4. P(schedule=T|Spam) = 2/4. P(Spam)=1/2</p>
+<p>P(crypto=T|Ham) = 3/4. P(schedule=T|Ham) = 1/4. P(Ham)=1/2</p>
+<p><strong>Email with both words (crypto=T, schedule=T):</strong></p>
+<p>Score Spam = (1/2)(1/4)(2/4) = 2/32 = <strong>1/16</strong></p>
+<p>Score Ham = (1/2)(3/4)(1/4) = 3/32 = <strong>3/32</strong></p>
+<p>3/32 > 2/32 → predict <strong>Ham</strong></p>
+</div>
+
+<!-- ============================================================ -->
+<div class="section" id="app-matrix">
+<h2>F. Matrix Backpropagation</h2>
+<p><span class="tag tag-exam">Recent exams Q39–40</span></p>
+
+<p>Setup: <code>y = xA</code> where x is a 1×n row vector, A is n×m, y is 1×m row vector.</p>
+<div class="formula">y_i = Σₖ A_{ki} x_k
+
+Scalar derivative: ∂y_i/∂x_j = A_{ji}
+
+Backward pass: x∇ = y∇ · Aᵀ</div>
+
+<h3>Why x∇ = y∇Aᵀ</h3>
+<p>The j-th component of x∇ is: x∇ⱼ = Σᵢ y∇ᵢ · (∂yᵢ/∂xⱼ) = Σᵢ y∇ᵢ · Aⱼᵢ = (y∇Aᵀ)ⱼ</p>
+
+<h3>Worked Example</h3>
+<p>x=[1,0,1], A=[[2,1],[0,1],[1,0]], y∇=[3,−1]</p>
+<p>Aᵀ = [[2,0,1],[1,1,0]]</p>
+<p>x∇ = [3,−1] · [[2,0,1],[1,1,0]] = [3·2+(−1)·1, 3·0+(−1)·1, 3·1+(−1)·0] = <strong>[5, −1, 3]</strong></p>
+<div class="trap">x∇ = y∇Aᵀ NOT y∇A. You must transpose A.</div>
+</div>
+
+<!-- ============================================================ -->
+<div class="section" id="app-elbo">
+<h2>G. ELBO Fill-in-the-Blanks</h2>
+<p><span class="tag tag-exam">Appears in some exams</span></p>
+
+<div class="formula">L(q,θ) + KL(q,p) = ln p(x|θ)
+
+L(q,θ) = E_q [ln p(x,z|θ)/q(z|x)]   ← the ELBO
+KL(q,p) = −E_q [ln p(z|x,θ)/q(z|x)]  ← always ≥ 0
+
+Therefore: L(q,θ) ≤ ln p(x|θ)   [ELBO is lower bound]</div>
+
+<p>VAE loss (minimized): <code>−E_q[ln p(x|z)] + KL(q(z|x) || N(0,I))</code></p>
+<p>The key fill-in for the 2026 exam: ⟨a⟩ = p(z,x|θ)p(x|θ), ⟨b⟩ = ln p(x|θ)</p>
+</div>
+
+<!-- ============================================================ -->
+<div class="section" id="traps">
+<h2>⚠️ All Critical Traps</h2>
+
+<table>
+  <tr><th>Question</th><th>❌ Wrong</th><th>✓ Correct</th></tr>
+  <tr><td>What does bagging reduce?</td><td>Bias</td><td><strong>Variance</strong></td></tr>
+  <tr><td>What does boosting reduce?</td><td>Variance</td><td><strong>Bias</strong></td></tr>
+  <tr><td>Does a VAE have a discriminator?</td><td>Yes</td><td><strong>No — that's GAN</strong></td></tr>
+  <tr><td>Does LSTM make Markov assumption?</td><td>Yes</td><td><strong>No</strong></td></tr>
+  <tr><td>Composing perceptrons gives?</td><td>Non-linear function</td><td><strong>Still linear — need activations</strong></td></tr>
+  <tr><td>Ranking error is?</td><td>A misclassification</td><td><strong>A PAIR (pos, neg) ranked wrong way</strong></td></tr>
+  <tr><td>Coverage formula?</td><td>errors/total instances</td><td><strong>errors / (#pos × #neg)</strong></td></tr>
+  <tr><td>0·log₂(0) =?</td><td>Undefined</td><td><strong>0 (by convention in entropy)</strong></td></tr>
+  <tr><td>log₂(0) =?</td><td>0</td><td><strong>Undefined (−∞)</strong></td></tr>
+  <tr><td>H(p,q) when q(x)=0, p(x)>0?</td><td>0</td><td><strong>Undefined</strong></td></tr>
+  <tr><td>Can bootstrapping estimate variance?</td><td>No</td><td><strong>Yes — it can</strong></td></tr>
+  <tr><td>Cold start =?</td><td>Incomplete feature records</td><td><strong>New item/user with no interaction history</strong></td></tr>
+  <tr><td>Matrix backprop y=xA: x∇ =?</td><td>y∇A</td><td><strong>y∇Aᵀ</strong></td></tr>
+  <tr><td>L1 regularization drives weights to?</td><td>Small values</td><td><strong>Exactly 0 (sparsity)</strong></td></tr>
+  <tr><td>L2 regularization drives weights to?</td><td>Exactly 0</td><td><strong>Small but non-zero</strong></td></tr>
+  <tr><td>Preferred activation for hidden layers?</td><td>Sigmoid</td><td><strong>ReLU (avoids vanishing gradients)</strong></td></tr>
+  <tr><td>Is imputation a normalization method?</td><td>Yes</td><td><strong>No — it fills missing values</strong></td></tr>
+  <tr><td>H(p,q) ≥ or ≤ H(p)?</td><td>Could be less</td><td><strong>Always H(p,q) ≥ H(p)</strong></td></tr>
+  <tr><td>Is KL(p||q) symmetric?</td><td>Yes</td><td><strong>No — KL(p||q) ≠ KL(q||p)</strong></td></tr>
+  <tr><td>Bias/variance from single model?</td><td>Yes, computable</td><td><strong>No — need multiple datasets</strong></td></tr>
+  <tr><td>Disjoint events → independent?</td><td>Yes</td><td><strong>Opposite! Disjoint + P>0 → dependent</strong></td></tr>
+  <tr><td>Gradient points?</td><td>Downhill</td><td><strong>Uphill — descent subtracts gradient</strong></td></tr>
+  <tr><td>Is gradient boosting a sequence layer?</td><td>Yes</td><td><strong>No — it's a tree ensemble method</strong></td></tr>
+  <tr><td>Is k-NN lazy?</td><td>No (it uses data)</td><td><strong>Yes — stores everything, computes at prediction</strong></td></tr>
+  <tr><td>Is k-Means lazy?</td><td>Yes</td><td><strong>No — builds centroids during training</strong></td></tr>
+  <tr><td>Can numeric feature be split twice in tree?</td><td>No</td><td><strong>Yes — different thresholds are allowed</strong></td></tr>
+  <tr><td>Batch norm normalizes to?</td><td>Uniform distribution</td><td><strong>Normal (Gaussian) distribution</strong></td></tr>
+  <tr><td>Conditional GAN needs paired examples?</td><td>No</td><td><strong>Yes — CycleGAN handles unpaired</strong></td></tr>
+  <tr><td>Class imbalance = cost imbalance?</td><td>Same thing</td><td><strong>Different: class = skewed data; cost = misclassification penalty</strong></td></tr>
+  <tr><td>AUC = ? (in terms of ranking)</td><td>Something else</td><td><strong>P(random positive ranked above random negative) = 1 − coverage</strong></td></tr>
+</table>
+</div>
+
+</main>
+
+<script>
+// Highlight active section in nav
+const sections = document.querySelectorAll('.section');
+const links = document.querySelectorAll('#nav a');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      links.forEach(l => l.classList.remove('active'));
+      const id = entry.target.id;
+      const link = document.querySelector(`#nav a[href="#${id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
