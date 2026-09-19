@@ -4,58 +4,95 @@
     "type": "split",
     "children": [
       {
-        "id": "56be93e9f2a210b8",
+        "id": "4ac98e992c3abe8f",
         "type": "tabs",
         "children": [
           {
-            "id": "fa34fd5ebcf875ad",
+            "id": "c5f46f72c80ef8b9",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "P5/HoAI/HAI_9_playbook.md",
+                "file": "P5/two_exams.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "HAI_9_playbook"
+              "title": "two_exams"
             }
           },
           {
-            "id": "8d2b6c8c3a590c4b",
+            "id": "4d119250b681ff9c",
             "type": "leaf",
             "state": {
-              "type": "pdf",
+              "type": "markdown",
               "state": {
-                "file": "P5/Databases/past_exams/ExerciseExamSolutions (1).pdf"
+                "file": "P5/HoAI/my_practice/Practice Answers.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "lucide-file-text",
-              "title": "ExerciseExamSolutions (1)"
+              "icon": "lucide-file",
+              "title": "Practice Answers"
             }
           },
           {
-            "id": "755e08a74232ed8d",
+            "id": "5e0f16147d847a60",
             "type": "leaf",
             "state": {
-              "type": "graph",
-              "state": {},
-              "icon": "lucide-git-fork",
-              "title": "Graph view"
-            }
-          },
-          {
-            "id": "b81ac4a260c6d2a6",
-            "type": "leaf",
-            "state": {
-              "type": "pdf",
+              "type": "markdown",
               "state": {
-                "file": "P5/Databases/past_exams/ExerciseExam (1).pdf"
+                "file": "Untitled.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "lucide-file-text",
-              "title": "ExerciseExam (1)"
+              "icon": "lucide-file",
+              "title": "Untitled"
+            }
+          },
+          {
+            "id": "ac2bfb98360561a9",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Reviews.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Reviews"
+            }
+          },
+          {
+            "id": "7648841798c766e0",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Robotics Full.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Robotics Full"
+            }
+          },
+          {
+            "id": "c78222a0f6fccde8",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Other/Career/The Path - Programs and Strategy.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "The Path - Programs and Strategy"
             }
           }
-        ]
+        ],
+        "currentTab": 5
       }
     ],
     "direction": "vertical"
@@ -75,7 +112,9 @@
               "type": "file-explorer",
               "state": {
                 "sortOrder": "alphabetical",
-                "autoReveal": false
+                "autoReveal": false,
+                "showSearch": false,
+                "searchQuery": ""
               },
               "icon": "lucide-folder-closed",
               "title": "Files"
@@ -217,54 +256,54 @@
       "obsidian-excalidraw-plugin:New drawing": false
     }
   },
-  "active": "fa34fd5ebcf875ad",
+  "active": "77837552dc6fb3a9",
   "lastOpenFiles": [
-    "P5/HoAI/my_practice/all_outlines.md",
-    "P5/HoAI/my_practice",
-    "P5/HoAI/HAI_exam_feedback.md",
-    "P5/HoAI/HAI_9_playbook.md",
-    "P5/HoAI/computer-a-history-of-the-information-machine-4nbsped-1032203471-9781032203478_compress.pdf",
-    "P5/HoAI/Past_Exams/Exam XB_0113 2025 II (1).pdf",
-    "P5/HoAI/Past_Exams/Exam XB_0113 2025 I (1).pdf",
-    "P5/Text Mining/Cram Card.md",
-    "P5/000 MOC — Exam Season 2026.md",
-    "P5/Text Mining/Final Exam Practice/Exam 14 - Mixed Topics VII.md",
-    "P5/Text Mining/Final Exam Practice/Exam 13 - Mixed Topics VI.md",
-    "P5/Text Mining/Final Exam Practice/Exam 12 - Mixed Topics V.md",
-    "P5/Text Mining/Final Exam Practice/Exam 11 - Mixed Topics IV.md",
-    "P5/Text Mining/Final Exam Practice/Exam 10 - Mixed Topics III.md",
-    "P5/Text Mining/Final Exam Practice/Exam 9 - Mixed Topics II.md",
-    "P5/Text Mining/Final Exam Practice/Exam 8 - Mixed Topics I.md",
-    "P5/Text Mining/Final Exam Practice/TM_Final_Exams_Interactive.html",
-    "P5/Text Mining/Lectures/tm-ba-lecture-6-topic-modelling.pdf",
-    "P5/Text Mining/Final Exam Practice/_audit_report.md",
-    "P5/Text Mining/Final Exam Practice/Exam 7 - Topic Modelling, Text Classification & Advanced Transformers.md",
-    "P5/Text Mining/Final Exam Practice/Exam 6 - Named Entity Recognition & Classification.md",
-    "P5/Text Mining/Final Exam Practice/Exam 5 - Sentiment & Subjectivity Analysis.md",
-    "P5/Text Mining/Final Exam Practice/Exam 4 - Word Embeddings, Neural Models & Transformers.md",
-    "P5/Text Mining/Final Exam Practice/Exam 3 - Machine Learning for NLP (Evaluation & Representation).md",
-    "P5/Text Mining/Final Exam Practice/Exam 2 - Linguistics (Morphology, Syntax, Semantics, Pragmatics).md",
-    "P5/Text Mining/Final Exam Practice/Exam 1 - NLP Foundations & Preprocessing.md",
-    "P5/Text Mining/Final Exam Practice",
-    "P5/Text Mining/Lectures/tm-ba-lecture-5a-nerc.pdf",
-    "P5/Text Mining/Lectures/tm-ba-lecture-4-sentiment.pdf",
-    "P5/Text Mining/Lectures/tm-ba-lecture-3-machine-learning-nlp-part2.pdf",
-    "P5/Text Mining/Lectures/Screenshot 2026-05-23 at 5.27.24 PM.png",
-    "Showcase of ME.md",
-    "Robotics Last Meeting Notes.md",
-    "Robotics.md",
-    "Research Notes.md",
-    "Research.md",
-    "Feedback orq-skills.md",
-    "Screenshot 2026-05-19 at 11.33.39 AM.png",
-    "Screenshot 2026-05-19 at 11.33.22 AM.png",
-    "Screenshot 2026-05-19 at 11.33.00 AM.png",
-    "Screenshot 2026-05-19 at 11.32.53 AM.png",
-    "Screenshot 2026-03-17 at 11.41.07 AM.png",
-    "P5/Text Mining/Quizzes/Screenshot 2026-05-01 at 12.07.57 AM.png",
-    "P5/Text Mining/Quizzes/Screenshot 2026-05-01 at 12.08.28 AM.png",
-    "P5/Text Mining/Quizzes/Screenshot 2026-05-01 at 12.21.30 AM.png",
-    "P5/Text Mining/Quizzes/Screenshot 2026-05-01 at 12.28.14 AM.png",
+    "HKUST/Operating Systems/Course Notes - Operating Systems.md",
+    "HKUST/Operating Systems/Course Overview - Operating Systems.md",
+    "HKUST/Discrete Math Tools/Course Notes - Discrete Math Tools.md",
+    "HKUST/Discrete Math Tools/Course Overview - Discrete Math Tools.md",
+    "HKUST/Discrete Math Tools/resources/past_exams/2013-midterm.pdf",
+    "HKUST/Discrete Math Tools/resources/past_exams/COMP2711_S2025_Midterm.pdf",
+    "HKUST/Discrete Math Tools/resources/past_exams/COMP2711_F2025_Midterm.pdf",
+    "HKUST/Discrete Math Tools/resources/past_exams/COMP2711_S2024_Midterm.pdf",
+    "HKUST/Discrete Math Tools/resources/past_exams/COMP2711_F2024_Midterm.pdf",
+    "HKUST/Discrete Math Tools/resources/past_exams/COMP2711_S2023_Midterm.pdf",
+    "HKUST/Discrete Math Tools/resources/past_exams/COMP2711_F2023_Midterm.pdf",
+    "HKUST/Discrete Math Tools/resources/past_exams/2022-midterm.pdf",
+    "HKUST/Discrete Math Tools/resources/past_exams/2021-midterm.pdf",
+    "HKUST/Discrete Math Tools/resources/past_exams/2020-midterm.pdf",
+    "HKUST/Algorithms/Course Notes - Algorithms.md",
+    "HKUST/Algorithms/Course Overview - Algorithms.md",
+    "HKUST/Theory of Computation/Course Notes - Theory of Computation.md",
+    "HKUST/Theory of Computation/Course Overview - Theory of Computation.md",
+    "HKUST/Data Mining/Course Notes - Data Mining.md",
+    "HKUST/Data Mining/Course Overview - Data Mining.md",
+    "Other/Career/The 5 Questions Every Interview Asks.md",
+    "Other/Career/Networking Script Templates.md",
+    "Other/Career/Index - Career.md",
+    "DAL/ExamPrep AI/DDD (Domain Driven Design).md",
+    "DAL/ExamPrep AI/Database Schema.md",
+    "25-26/P5/Text Mining/Final Exam Practice/Exam 1 - NLP Foundations & Preprocessing.md",
+    "25-26/P5/Text Mining/Final Exam Practice/_audit_report.md",
+    "25-26/P5/CLAUDE_CODE_MASTER_PROMPT.md",
+    "25-26/P5/_vault_scan.md",
+    "25-26/P5/000 MOC — Exam Season 2026.md",
+    "25-26/P5/Databases/Practice_Exam_2.md",
+    "25-26/P5/Databases/Practice_Exam_Solutions.md",
+    "25-26/P5/Databases/EXAM_TIPS_AND_TRICKS.md",
+    "25-26/Data Structures & Algorithms/Book/Chapter 6 - Linear-Time Selection.md",
+    "25-26/Data Structures & Algorithms/Book/Chapter 5 - The Fast Fourier Transform.md",
+    "25-26/Data Structures & Algorithms/Book/Chapter 4 - The Master Method.md",
+    "Unsorted/Screenshot 2026-06-12 at 3.57.54 PM.png",
+    "Unsorted/Screenshot 2026-06-12 at 12.08.02 PM.png",
+    "Unsorted/Screenshot 2026-06-12 at 11.00.59 AM.png",
+    "Unsorted/Screenshot 2026-06-12 at 10.44.32 AM.png",
+    "Unsorted/Screenshot 2026-06-12 at 10.40.48 AM.png",
+    "Unsorted/Screenshot 2026-06-12 at 10.40.39 AM.png",
+    "Unsorted/Screenshot 2026-06-12 at 10.39.40 AM.png",
+    "Unsorted/Screenshot 2026-06-11 at 1.56.44 PM.png",
+    "25-26/P5/Text Mining/Lectures/Screenshot 2026-05-23 at 5.27.24 PM.png",
+    "Unsorted/Screenshot 2026-05-19 at 11.33.39 AM.png",
     "Untitled.canvas",
     "Untitled 1.canvas"
   ]
