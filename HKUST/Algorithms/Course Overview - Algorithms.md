@@ -1,6 +1,6 @@
 # COMP 3711 - Design and Analysis of Algorithms (Fall 2026)
 
-Updated 2026-10-15. Study materials: [[Study Guides/COMP3711 Midterm Cram Notes (60 min)]] (read this first), [[Study Guides/Algorithms Midterm Cram.html]], cheat sheet and two practice midterms in `Study Guides/`. Notes: [[Course Notes - Algorithms]].
+Updated 2026-10-15. Study materials: [[Study Guides/COMP3711 Midterm Cram Notes (60 min)]] (read this first), [[Study Guides/COMP3711 Midterm Worked Examples (one per algorithm)]] (one example question and solution per algorithm), [[Study Guides/Algorithms Midterm Cram.html]], cheat sheet and two practice midterms in `Study Guides/`. Notes: [[Course Notes - Algorithms]].
 
 ## Logistics
 
