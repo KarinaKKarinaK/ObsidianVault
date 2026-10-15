@@ -4,7 +4,7 @@ Written 2026-10-15, updated the same evening. The sheets below live in this fold
 
 | File | Pages | Who it is for |
 | --- | --- | --- |
-| `COMP3711 Midterm Cheat Sheet CLEAR (double-sided, bring this).pdf` | 2 sides | **bring this one.** Rebuilt after the "too crammed" feedback: 2 columns, about 8pt, one fact per line, numbered sections 1 to 8 with an index strip at the top of each side, every section opens with an "In words" box then a "Formal" box, then templates, results, pitfalls. Same colour scheme. Covers everything in the FINAL sheet except a few rarely used rows. |
+| `COMP3711 Midterm Cheat Sheet CLEAR (double-sided, bring this).pdf` | 2 sides | **bring this one.** Rebuilt twice on 2026-10-15: 2 columns, keyword router at the top of each side, symbol per section, pattern tables with worked examples instead of memorised answers, answer shapes, properly typeset formulas. About 7.2pt on side A and 7.3pt on side B, which is the largest that fits two pages. |
 | `COMP3711 Midterm Cheat Sheet FINAL (double-sided, colour).pdf` | 2 sides | the dense version (3 columns, 7.3pt), kept as a backup. Everything: side A theory, side B randomness, heaps, lower bounds, the answer bank from all 11 past midterms, tutorials 1 to 5, lecture decks 01 to 07, and the exam protocol. Colour coded by topic. |
 | `COMP3711 Midterm Cheat Sheet (simple, from zero).pdf` | 2 sides | plain-words version: what every symbol means, the pseudocode template, how to draw heaps step by step, the classic expectations with set-ups. Same colour scheme. Read it the evening before. |
 | `COMP3711 Midterm Cheat Sheet v1 (colour, side A only).pdf` | 1 side | side A of FINAL on its own, for a single-sided print |
@@ -41,9 +41,20 @@ Side A (theory, numbered A1 to A4) and side B (applications and exam bank, numbe
 - **B4 Past-exam answer bank**, middle and right. Every A/B/U row from the 11 papers with its answer; the order-the-functions answers; the recurrence derivations that were asked "from first principles", written out; a list of every design question that recurred, with the idea and the time.
 - **B5 Exam protocol**, bottom right. Time budget, the five-part answer structure, the sentences that earn marks, the pitfalls list, and the math facts (logs, Stirling, binomial bounds, geometric sums).
 
-## Where things are on CLEAR
+## Where things are on CLEAR (rebuilt 2026-10-15 evening)
 
-Side A: 1 Asymptotics (definitions, ladder, rewrite rules, sums, A/B/U rule, reused rows) · 2 Recurrences (expansion template, Master cases, lookup table) · 3 Binary search and divide and conquer (pseudocode block, one-line algorithms, design answer template) · 4 Sorting and selection (partition, quicksort, select pseudocode, the two proofs, sorting facts table). Side B: 5 Randomness (recipe, table of every classic expectation) · 6 Heaps (formal ops, drawing steps, build-heap proof, design table) · 7 Lower bounds and linear sorting (four-line template, counts table, counting and radix sort, when radix is linear) · 8 Exam protocol and math facts.
+Each side starts with a black-bordered router: "The question says ... → go to section". Sections carry a symbol so you can find them by eye: ≍ 1 Comparing growth, ↻ 2 Recurrences, ⌕ 3 Binary search and divide and conquer, ⇅ 4 Sorting and selection (side A); ∑ 5 Expectation and randomized algorithms, △ 6 Heaps, ⊥ 7 Lower bounds and linear-time sorting, ✎ 8 Formulas (side B).
+
+Inside every section the boxes always come in the same order:
+- ◉ IN WORDS (blue): what the idea means in plain language.
+- § FORMAL (blue border): the exact definition or statement to write.
+- ▶ HOW TO (green): numbered steps.
+- Yellow-headed tables: "Shapes you see" or "Question says" → trick or pattern → a worked example with its answer. Match the question to a row, copy the trick.
+- ✎ ANSWER SHAPE (green dashed): the sentence skeleton to fill in.
+- ★ REMEMBER (yellow): results to quote.
+- ⚠ PITFALLS (red).
+
+No past-exam answers are hardcoded any more; every row is a reusable pattern with one example. Formulas are typeset properly and section 8 lists them in four groups: logs, exponents, sums, approximations. The exam protocol section was dropped to make room.
 
 ## How to navigate it in the exam
 
