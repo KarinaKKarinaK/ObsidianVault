@@ -1,10 +1,11 @@
 # How to use the COMP3711 cheat sheets
 
-Written 2026-10-15. Three sheets live in this folder. The exam allows one A4 sheet, single or double sided, printed or handwritten. Pick one to bring; print it double sided on one page.
+Written 2026-10-15, updated the same evening. The sheets below live in this folder. The exam allows one A4 sheet, single or double sided, printed or handwritten. Pick one to bring; print it double sided on one page.
 
 | File | Pages | Who it is for |
 | --- | --- | --- |
-| `COMP3711 Midterm Cheat Sheet FINAL (double-sided, colour).pdf` | 2 sides | **bring this one.** Everything: side A theory, side B randomness, heaps, lower bounds, the answer bank from all 11 past midterms, tutorials 1 to 5, lecture decks 01 to 07, and the exam protocol. Colour coded by topic. |
+| `COMP3711 Midterm Cheat Sheet CLEAR (double-sided, bring this).pdf` | 2 sides | **bring this one.** Rebuilt after the "too crammed" feedback: 2 columns, about 8pt, one fact per line, numbered sections 1 to 8 with an index strip at the top of each side, every section opens with an "In words" box then a "Formal" box, then templates, results, pitfalls. Same colour scheme. Covers everything in the FINAL sheet except a few rarely used rows. |
+| `COMP3711 Midterm Cheat Sheet FINAL (double-sided, colour).pdf` | 2 sides | the dense version (3 columns, 7.3pt), kept as a backup. Everything: side A theory, side B randomness, heaps, lower bounds, the answer bank from all 11 past midterms, tutorials 1 to 5, lecture decks 01 to 07, and the exam protocol. Colour coded by topic. |
 | `COMP3711 Midterm Cheat Sheet (simple, from zero).pdf` | 2 sides | plain-words version: what every symbol means, the pseudocode template, how to draw heaps step by step, the classic expectations with set-ups. Same colour scheme. Read it the evening before. |
 | `COMP3711 Midterm Cheat Sheet v1 (colour, side A only).pdf` | 1 side | side A of FINAL on its own, for a single-sided print |
 | `COMP3711 Midterm Cheat Sheet v2 (double-sided).pdf` | 2 sides | same content as FINAL without colour (black and white printer) |
@@ -21,6 +22,7 @@ Written 2026-10-15. Three sheets live in this folder. The exam allows one A4 she
 - Brown bar: decision trees and lower bounds.
 - Slate bar: past-exam answer bank. Black bar: exam protocol.
 - Block types: blue box = definition; green box = template to copy; yellow box = result or derivation to quote; red box = pitfalls. Yellow highlight = a formula to memorise.
+- On FINAL and v1, every blue definition box starts with an "In words" sentence (plain-English meaning, a tiny example) followed by "Formal" (the exact wording to write on the exam). Sections A1, A2, B1, B2, B3 have them. v2 (black and white) does not have the "In words" lines.
 
 ## What is where on FINAL (and v2)
 
@@ -38,6 +40,10 @@ Side A (theory, numbered A1 to A4) and side B (applications and exam bank, numbe
 - **B3 Decision trees and lower bounds**, middle. The four-line template and the counts for sorting, k smallest in order, block lists, merging, median of three, minimum of four.
 - **B4 Past-exam answer bank**, middle and right. Every A/B/U row from the 11 papers with its answer; the order-the-functions answers; the recurrence derivations that were asked "from first principles", written out; a list of every design question that recurred, with the idea and the time.
 - **B5 Exam protocol**, bottom right. Time budget, the five-part answer structure, the sentences that earn marks, the pitfalls list, and the math facts (logs, Stirling, binomial bounds, geometric sums).
+
+## Where things are on CLEAR
+
+Side A: 1 Asymptotics (definitions, ladder, rewrite rules, sums, A/B/U rule, reused rows) · 2 Recurrences (expansion template, Master cases, lookup table) · 3 Binary search and divide and conquer (pseudocode block, one-line algorithms, design answer template) · 4 Sorting and selection (partition, quicksort, select pseudocode, the two proofs, sorting facts table). Side B: 5 Randomness (recipe, table of every classic expectation) · 6 Heaps (formal ops, drawing steps, build-heap proof, design table) · 7 Lower bounds and linear sorting (four-line template, counts table, counting and radix sort, when radix is linear) · 8 Exam protocol and math facts.
 
 ## How to navigate it in the exam
 

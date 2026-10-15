@@ -49,7 +49,7 @@ Updated 2026-10-15. Study materials: [[Study Guides/COMP3711 Midterm Cram Notes 
 
 ## Folder map
 
-- `Study Guides/`: `COMP3711 Midterm Cram Notes (60 min).md` (all lecture content for the midterm in plain words, 60-minute read), cram page, cheat sheets (FINAL double-sided colour, simple from-zero, v1), `Cheat Sheet Guide.md` (what is where and how to navigate), practice midterms A and B with solutions, `Past Midterm Patterns.md` (question-type tally over all 11 past midterms and the likely Oct 16 paper).
+- `Study Guides/`: `COMP3711 Midterm Cram Notes (60 min).md` (all lecture content for the midterm in plain words, 60-minute read), cram page, cheat sheets (CLEAR double-sided is the one to bring; FINAL dense, simple from-zero, v1 kept), `Cheat Sheet Guide.md` (what is where and how to navigate), practice midterms A and B with solutions, `Past Midterm Patterns.md` (question-type tally over all 11 past midterms and the likely Oct 16 paper).
 - `resources/Lecture Slides/`: decks 00-07 (stack and queue review through quicksort and selection). The heaps and linear-sorting decks are on Canvas only.
 - `resources/Tutorials/`: tutorials 1-6 (5 is heaps and linear sort, 6 is greedy, after the midterm).
 - `resources/Homework/`: HW1 and HW2 with solutions, plus your submissions.

@@ -78,7 +78,7 @@ Honest arithmetic with a 20/100 midterm: the maximum possible overall is 10 + 12
 
 ## What matters most, in order
 
-1. **Algorithms midterm, Fri Oct 16, 20:00, LTC.** 30% with a hard 85 cutoff. Use the cram page, the two practice midterms, `Past Midterm Patterns.md`, and the printed FINAL double-sided cheat sheet in `Algorithms/Study Guides/` (see `Cheat Sheet Guide.md`). Do Fall 2025 and Spring 2026 under time first; they are the current format.
+1. **Algorithms midterm, Fri Oct 16, 20:00, LTC.** 30% with a hard 85 cutoff. Use the cram page, the two practice midterms, `Past Midterm Patterns.md`, and the printed CLEAR double-sided cheat sheet in `Algorithms/Study Guides/` (`COMP3711 Midterm Cheat Sheet CLEAR (double-sided, bring this).pdf`; FINAL is the dense backup) (see `Cheat Sheet Guide.md`). Do Fall 2025 and Spring 2026 under time first; they are the current format.
 2. **OS HW2 tonight (Oct 15), then the OS midterm Oct 29.** Half the grade is coursework you already ace.
 3. **Discrete Math midterm Oct 30, 35%.** Four past fall midterms under time.
 4. **PA2 by Oct 27** so the exam days are clear.
@@ -90,7 +90,7 @@ Honest arithmetic with a 20/100 midterm: the maximum possible overall is 10 + 12
 - Coursework is free points: keep every homework and project at 100. It is 20 to 50% of every course.
 - Go to every lecture from now on. Two courses tie 10% to unannounced in-class quizzes, and you are at zero in both.
 - Open-book exams (OS, ToC) reward prepared materials: print slides, past papers with solutions, and the template sheets. Tab them.
-- Closed-book exams with cheat sheets (Algorithms, Discrete Math) reward one dense A4. The Algorithms one is done (FINAL, double-sided, colour coded); write the Discrete Math one by hand the day before.
+- Closed-book exams with cheat sheets (Algorithms, Discrete Math) reward one dense A4. The Algorithms one is done (CLEAR, double-sided, colour coded, plain-words boxes before every formal block); write the Discrete Math one by hand the day before.
 - Past papers under time are the best predictor. Every course reuses question shapes.
 - Never leave a blank. Graders award points per step, per blank, per Gantt block.
 - Protect the schedule: Oct 29 and Oct 30 are back-to-back midterms plus the PA2 deadline. Finish PA2 by Oct 27.
