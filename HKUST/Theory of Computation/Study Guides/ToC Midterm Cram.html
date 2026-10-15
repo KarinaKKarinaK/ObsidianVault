@@ -1,0 +1,1411 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>COMP3721 Midterm Review</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<style>
+:root{--bg:#f7f7f5;--fg:#1a1a1a;--muted:#5c5c5c;--card:#fff;--line:#dcdcd6;--accent:#1f5fbf;--accent-bg:#e8f0fc;--ok:#1a7f37;--ok-bg:#e6f4ea;--bad:#b3261e;--bad-bg:#fbe9e7;--warn-bg:#fff6d6;--code:#f0f0ec}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15161a;--fg:#e8e8e6;--muted:#a0a0a0;--card:#1f2026;--line:#34353c;--accent:#7aa7ff;--accent-bg:#1c2a44;--ok:#5ad27a;--ok-bg:#15301e;--bad:#ff7b72;--bad-bg:#3a1d1b;--warn-bg:#3a3214;--code:#2a2b32}}
+:root[data-theme="dark"]{--bg:#15161a;--fg:#e8e8e6;--muted:#a0a0a0;--card:#1f2026;--line:#34353c;--accent:#7aa7ff;--accent-bg:#1c2a44;--ok:#5ad27a;--ok-bg:#15301e;--bad:#ff7b72;--bad-bg:#3a1d1b;--warn-bg:#3a3214;--code:#2a2b32}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+a{color:var(--accent)}
+.wrap{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
+nav{position:sticky;top:0;height:100vh;overflow:auto;border-right:1px solid var(--line);padding:16px 12px;background:var(--card)}
+nav h1{font-size:15px;margin:0 0 10px}
+nav a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--fg);font-size:14px}
+nav a:hover{background:var(--accent-bg)}
+nav .grp{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:12px 8px 4px}
+main{padding:24px 32px 80px;max-width:980px}
+section{margin-bottom:48px;scroll-margin-top:16px}
+h2{font-size:26px;border-bottom:2px solid var(--line);padding-bottom:6px;margin:0 0 16px}
+h3{font-size:19px;margin:28px 0 8px}
+h4{font-size:16px;margin:18px 0 6px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin:12px 0}
+.def{border-left:4px solid var(--accent)}
+.thm{border-left:4px solid var(--ok)}
+.warn{background:var(--warn-bg);border-left:4px solid #d9a400}
+.ex{border-left:4px solid #9a6fd8}
+.tag{display:inline-block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:4px}
+table{border-collapse:collapse;width:100%;margin:10px 0;font-size:15px}
+th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-bg)}
+code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:14px}
+code{background:var(--code);padding:1px 5px;border-radius:4px}
+pre{background:var(--code);padding:10px 14px;border-radius:8px;overflow:auto;line-height:1.45}
+details{margin:8px 0}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+details .card{margin-top:8px}
+ul,ol{padding-left:22px}
+li{margin:3px 0}
+.banner{background:var(--accent-bg);border:1px solid var(--accent);border-radius:10px;padding:14px 18px;margin-bottom:24px}
+.banner b{color:var(--accent)}
+.q{margin:10px 0;padding:12px 14px;border:1px solid var(--line);border-radius:8px;background:var(--card)}
+.q .opts button{display:block;width:100%;text-align:left;margin:4px 0;padding:7px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg);cursor:pointer;font:inherit}
+.q .opts button:hover{border-color:var(--accent)}
+.q .opts button.ok{background:var(--ok-bg);border-color:var(--ok)}
+.q .opts button.bad{background:var(--bad-bg);border-color:var(--bad)}
+.q .why{display:none;margin-top:8px;font-size:14px;color:var(--muted)}
+.q.done .why{display:block}
+.score{font-weight:600;margin:8px 0}
+.fc{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.fc .c{min-height:120px;border:1px solid var(--line);border-radius:10px;background:var(--card);padding:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;text-align:center}
+.fc .c .b{display:none;color:var(--accent)}
+.fc .c.flip .f{display:none}.fc .c.flip .b{display:block}
+.sim{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.sim label{display:block;font-size:13px;color:var(--muted);margin-top:8px}
+.sim input,.sim select{width:100%;padding:7px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg);font:inherit}
+.sim button,.btn{margin-top:10px;padding:8px 14px;border-radius:6px;border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer;font:inherit}
+.trace{font-family:ui-monospace,Menlo,monospace;font-size:14px;white-space:pre-wrap;background:var(--code);padding:10px;border-radius:8px;min-height:60px}
+.acc{color:var(--ok);font-weight:700}.rej{color:var(--bad);font-weight:700}
+.chk label{display:block;padding:5px 0;cursor:pointer}
+.chk input{margin-right:8px}
+.pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;background:var(--accent-bg);color:var(--accent);margin-left:6px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:860px){.wrap{grid-template-columns:1fr}nav{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line)}main{padding:16px}.sim,.two{grid-template-columns:1fr}}
+nav a.on{background:var(--accent);color:#fff}
+.btn{padding:8px 14px;border-radius:6px;border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer;font:inherit}
+main{font-size:17px}
+.card{padding:18px 22px;border-radius:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav>
+<h1>COMP3721 Midterm</h1>
+<a href="#exam">Exam info</a>
+<a href="#zero">Start from zero</a>
+<a href="#sheet">Exam sheet</a>
+<div class="grp">Regular</div>
+<a href="#l1">L1 Sets, relations</a>
+<a href="#l2">L2 Languages, R.E.</a>
+<a href="#l3">L3 Countability</a>
+<a href="#l4">L4 DFA</a>
+<a href="#l5">L5 NFA</a>
+<a href="#l6">L6 DFA = NFA = RE</a>
+<a href="#l7">L7 Closure (RL)</a>
+<a href="#l8">L8 Pumping (RL)</a>
+<div class="grp">Context-free</div>
+<a href="#l9">L9 CFG</a>
+<a href="#l10">L10 PDA</a>
+<a href="#l11">L11 PDA = CFG</a>
+<a href="#l12">L12 Closure (CFL)</a>
+<a href="#l13">L13 Pumping (CFL)</a>
+<div class="grp">Prepare</div>
+<a href="#sheet">Exam sheet</a>
+<a href="#guide">Decision guide</a>
+<a href="#practice">Practice problems</a>
+<a href="#quiz">Quiz</a>
+<a href="#cards">Flashcards</a>
+<a href="#check">Checklist</a>
+</nav>
+<main>
+
+<section id="exam">
+<div class="banner">
+<b>Midterm: Wednesday Oct 14, 7:30 to 9:10pm. Room 2404 (last names A to L). Coverage: L1 to L13.</b><br>
+From the review slide, the exam tests: decision problems as language recognition, countability, building DFA/NFA/RE for tasks, conversions between them, regular closure properties, pumping theorem, building CFG and PDA, PDA to CFG conversion, CFL closure properties, CFL pumping. The course uses Lewis and Papadimitriou notation: $e$ for the empty word, $\emptyset^*$ for $\{e\}$, no $\varepsilon$, no $b^+$ in regular expressions.
+</div>
+<h2>What the midterm looks like (from the 2011, 2012, 2013 papers)</h2>
+<div class="card">
+Open book, open notes. 5 to 7 questions, 80 to 120 minutes. State diagrams are accepted and preferred for automata. Every past paper had the same seven question types:
+<table>
+<tr><th>Type</th><th>Past examples</th><th>Points</th><th>Where to drill</th></tr>
+<tr><td>1. Build a DFA / NFA / R.E. for a described language</td><td>even 0s and odd 1s; contains / does not contain $aba$; ends with $aba$ then convert NFA to DFA; binary numbers 0 to 11</td><td>10 to 20</td><td><a href="#l4">L4</a>, <a href="#l5">L5</a>, <a href="#l6">L6</a></td></tr>
+<tr><td>2. Build a CFG and a PDA</td><td>more $a$s than $b$s; even-length non-palindromes $xy$ with $x\ne y^R$</td><td>10 to 20</td><td><a href="#l9">L9</a>, <a href="#l10">L10</a></td></tr>
+<tr><td>3. Prove a language is NOT regular</td><td>twice as many $b$s as $a$s; $\{x\bar{x}\}$; more $a$s than $b$s</td><td>15 to 20</td><td><a href="#l8">L8</a></td></tr>
+<tr><td>4. Closure true/false with counterexamples</td><td>7 statements mixing Regular and CFL, 35 pts</td><td>35</td><td><a href="#closure">Closure table</a></td></tr>
+<tr><td>5. Prove a closure property / a class inclusion</td><td>$L^R$ regular; finite languages regular; R.E. to CFG directly</td><td>20</td><td><a href="#l7">L7</a>, <a href="#l12">L12</a></td></tr>
+<tr><td>6. Countable or uncountable (no proof) or find the flaw in a diagonalization proof</td><td>pairs $(x,y)$ with $x\ne y$; all languages; finite languages</td><td>8 to 10</td><td><a href="#l3">L3</a></td></tr>
+<tr><td>7. Modify a machine model and complete its formal definition</td><td>queue automaton; PDA accepting by final state only ($L_F(M)$)</td><td>20 to 30</td><td><a href="#l10">L10</a>, <a href="#mt">past papers</a></td></tr>
+</table>
+<b>Strategy:</b> read all questions first (they say so on the cover). Do the build questions and true/false first, they are fast points. Leave the 20-point proofs for last and use the templates on this page. For every closure true/false, the answer is either "yes, by closure under X and Y" or "no, here is $A$ and $B$". Have the standard counterexamples memorized: $\{a^nb^n\}$, $\{a^nb^nc^n\}$, $\Sigma^*$, $\emptyset$, $\{a^nb^n\}$ with its complement.
+</div>
+<h3>How to use this page</h3>
+<ul>
+<li>Read "Start from zero" first, then the "Exam sheet". The lecture sections are the detailed reference. Each lecture: an analogy to get the idea fast, definitions you must write verbatim, worked examples, exam templates, then "try it" questions with hidden answers. Say your answer out loud before opening.</li>
+<li>Two simulators (DFA in L4, PDA in L10) let you trace strings step by step. Use them to check machines you design.</li>
+<li>End: a decision guide for "is this regular / context-free?", all three past midterms fully solved, tutorial and homework problems, a scored quiz, flashcards, and a checklist that saves in your browser.</li>
+</ul>
+</section>
+
+
+<section id="zero">
+<h2>Start here: the whole midterm from zero</h2>
+<p>This part assumes you know nothing. Read it top to bottom once. It uses the actual midterm questions as the examples. The lecture sections further down are the detailed reference; come back to them when a template needs a precise definition.</p>
+
+<h3>0. The one question behind the whole course</h3>
+<div class="card ex">
+Every language in this course is a set of strings. The only thing that matters is: <b>how much memory does a machine need to check whether a string belongs?</b>
+<table>
+<tr><th>Minimum memory needed</th><th>Smallest class it fits</th><th>Tools</th><th>Example</th></tr>
+<tr><td>none, just "which of a few situations am I in"</td><td>regular</td><td>DFA, NFA, regex</td><td>"has an even number of $a$s", "contains $aba$"</td></tr>
+<tr><td>one stack (a pile you can only touch the top of)</td><td>context-free</td><td>grammar, PDA</td><td>$a^nb^n$, palindromes, same number of $a$s and $b$s</td></tr>
+<tr><td>more than that</td><td>neither</td><td>none in this course</td><td>$a^nb^nc^n$, $ww$</td></tr>
+</table>
+The classes are nested: every regular language is also context-free (a PDA can ignore its stack), so "even number of $a$s" is both. The table lists each example under the <b>smallest</b> class that can handle it, because "is it regular?" on the exam means "can it be done with no stack?". Rule of thumb: even / odd / mod $k$ / contains a pattern needs finite memory (regular); exactly equal / more than / twice as many needs an unbounded count (a stack, so context-free but not regular); two independent counts or comparing with a copy needs more (not context-free).<br><br>Every midterm question is one of: build the tool for a language, say which class a language is in and prove it, or say whether combining languages keeps you in a class. That is all.
+</div>
+
+<h3>1. Strings and languages</h3>
+<div class="card">
+<ul>
+<li>An <b>alphabet</b> is the set of letters allowed. Written $\Sigma$. Example $\Sigma=\{a,b\}$.</li>
+<li>A <b>string</b> is letters in a row: $a$, $ab$, $abba$. The string with no letters is written $e$. Its length is 0.</li>
+<li>$\Sigma^*$ means "every string you can make", including $e$.</li>
+<li>A <b>language</b> is any set of strings. Examples: $\{ab, abb\}$ (two strings), "all strings with an even number of $a$s" (infinitely many), $\emptyset$ (no strings at all), $\{e\}$ (one string, the empty one). <b>$\emptyset$ and $\{e\}$ are different.</b></li>
+<li>Gluing languages: $L_1L_2$ = take any string of $L_1$ then any string of $L_2$. $L^*$ = glue zero or more strings of $L$ together ($e$ always included). $L^+$ = one or more.</li>
+<li>$w^R$ = $w$ written backwards. $|w|_a$ = number of $a$s in $w$.</li>
+</ul>
+Exam use: the questions describe languages in words like "$w$ has twice as many $b$s as $a$s" or with set notation like $\{a^ib^j : i\le 2j\}$, which reads "some $a$s then some $b$s, where the number of $a$s is at most twice the number of $b$s".
+</div>
+
+<h3>2. Regular expressions: recipes for strings</h3>
+<div class="card">
+A regex is a formula that describes a language. Only three building moves:
+<table>
+<tr><th>Symbol</th><th>Read it as</th><th>Example</th></tr>
+<tr><td>$\alpha\beta$ (side by side)</td><td>"$\alpha$ then $\beta$"</td><td>$ab$ = the string $ab$</td></tr>
+<tr><td>$\alpha\cup\beta$</td><td>"$\alpha$ or $\beta$"</td><td>$a\cup b$ = one letter, either one</td></tr>
+<tr><td>$\alpha^*$</td><td>"$\alpha$ repeated 0 or more times"</td><td>$a^*$ = $e, a, aa, aaa,\dots$</td></tr>
+</table>
+Special: $\emptyset$ is the recipe that produces nothing. $\emptyset^*$ produces exactly $e$. <b>You may not write $e$ or $+$ inside a regex in this course.</b> Write $\emptyset^*$ for $e$ and $aa^*$ for "one or more $a$".<br><br>
+<b>How to read one:</b> $(a\cup b)^*a$ = "any letters, any number of them, then an $a$" = strings ending in $a$.<br>
+<b>How to write one:</b> say the language in words using only "then", "or", "repeat", then translate. "Contains $aba$" = "anything, then $aba$, then anything" = $(a\cup b)^*aba(a\cup b)^*$.<br><br>
+<b>Midterm 2013 Q2:</b> binary numbers 0 to 11 = $\{0,1,10,11,100,101,110,111,1000,1001,1010,1011\}$. Group by length: one digit $0\cup1$; two digits $1(0\cup1)$; three digits $1(0\cup1)(0\cup1)$; four digits must start $10$: $10(0\cup1)(0\cup1)$. Join with $\cup$. Lesson: a finite language is just the "or" of its strings, so every finite language is regular.
+</div>
+
+<h3>3. DFA: a machine with no notebook</h3>
+<div class="card">
+A DFA is a drawing of circles (states) and arrows (transitions). You put your finger on the start circle (the one with an arrow coming from nowhere), read the string one letter at a time, and follow the arrow with that letter. When the string ends, if your finger is on a double circle (final state), the answer is yes.<br><br>
+<b>The rule that makes it a DFA:</b> every circle has exactly one arrow for each letter. So there is never a choice and never a dead end. If some letter should lead nowhere useful, draw a "dead" circle that loops to itself on everything and is not final.<br><br>
+<b>The key idea:</b> the circle you are standing in is the machine's entire memory. So to design a DFA you ask: <i>what is the small piece of information I need to remember while reading?</i> One circle per possible value of that information.<br>
+<table>
+<tr><th>Language</th><th>What to remember</th><th>Circles</th></tr>
+<tr><td>even number of $a$s</td><td>is the count so far even or odd</td><td>2</td></tr>
+<tr><td>number of $a$s divisible by 3</td><td>count mod 3</td><td>3</td></tr>
+<tr><td>contains $aba$</td><td>how much of $aba$ have I matched so far: nothing, $a$, $ab$, $aba$</td><td>4</td></tr>
+<tr><td>even $a$s AND odd $b$s</td><td>both parities at once</td><td>$2\times2=4$</td></tr>
+</table>
+<b>Midterm 2012 Q1a, "contains $aba$", step by step:</b>
+<ol>
+<li>Circles: $q_e$ (matched nothing yet), $q_a$ (last letter was $a$), $q_{ab}$ (last two were $ab$), $q_{aba}$ (found it). Start $q_e$. Final $q_{aba}$.</li>
+<li>Forward arrows spell the pattern: $q_e\xrightarrow{a}q_a\xrightarrow{b}q_{ab}\xrightarrow{a}q_{aba}$.</li>
+<li>Other arrows: ask "after this letter, what is the longest tail of what I read that is a beginning of $aba$?" $q_e$ on $b$: nothing, stay. $q_a$ on $a$: the last letter is still $a$, stay in $q_a$. $q_{ab}$ on $b$: $abb$ ends with nothing useful, back to $q_e$. $q_{aba}$: found, loop on both letters.</li>
+<li>Count: 4 circles times 2 letters = 8 arrows. Check with $abab$ (yes) and $abb$ (no).</li>
+</ol>
+<b>Q1b "does not contain $aba$":</b> same drawing, swap which circles are double. This works because a DFA has exactly one path per string. (Never do this to an NFA.)<br><br>
+<b>Midterm 2011 Q1, "even 0s and odd 1s":</b> run two tiny machines at once. Circles are pairs (parity of 0s, parity of 1s). Start (even, even). Reading 0 flips the first part, reading 1 flips the second. Final: (even, odd). This "pairs of states" trick is called the product construction and handles any "and" or "or" of two conditions.<br><br>
+<b>Writing the answer:</b> the drawing is enough and preferred. Add one line saying what each circle means, which is the start, which are final.
+</div>
+
+<h3>4. NFA: the machine that may guess</h3>
+<div class="card">
+An NFA is the same drawing but the strictness is gone: a circle can have two arrows for the same letter, or none, and it can have arrows labelled $e$ that you may follow without reading a letter. A string is accepted if <b>there exists at least one way</b> of choosing arrows that ends in a final circle with the whole string read. If a branch has no arrow for the next letter, that branch just dies.<br><br>
+Think of it as the machine guessing. "Ends with $aba$": the machine reads letters in a loop, at some point guesses "the last three start now", and then checks $a$, $b$, $a$. If the guess was right, that branch accepts.<br>
+<b>Midterm 2012 Q1c:</b> $q_0$ with loops on $a$ and $b$; $q_0\xrightarrow{a}q_1\xrightarrow{b}q_2\xrightarrow{a}q_3$; $q_3$ final. Note $q_0$ has two arrows on $a$ (stay or go to $q_1$): that is the guess.<br><br>
+<b>Why NFAs matter:</b> they make "or", "then", "repeat" easy to draw (that is how a regex becomes a machine), and any NFA can be turned into a DFA, so guessing adds no power.<br><br>
+<b>Turning an NFA into a DFA (subset construction), midterm 2012 Q1d:</b> a DFA circle will be "the set of NFA circles I could be in right now". Start with $\{q_0\}$. For each letter, look at every circle in the set, collect everything reachable with that letter, then also add anything reachable by $e$-arrows. Each new set is a new row.
+<table>
+<tr><th>Set</th><th>on $a$</th><th>on $b$</th><th>final?</th></tr>
+<tr><td>$\{q_0\}$</td><td>$\{q_0,q_1\}$</td><td>$\{q_0\}$</td><td>no</td></tr>
+<tr><td>$\{q_0,q_1\}$</td><td>$\{q_0,q_1\}$</td><td>$\{q_0,q_2\}$</td><td>no</td></tr>
+<tr><td>$\{q_0,q_2\}$</td><td>$\{q_0,q_1,q_3\}$</td><td>$\{q_0\}$</td><td>no</td></tr>
+<tr><td>$\{q_0,q_1,q_3\}$</td><td>$\{q_0,q_1\}$</td><td>$\{q_0,q_2\}$</td><td>yes (contains $q_3$)</td></tr>
+</table>
+Stop when no new sets appear. Draw the four sets as circles with those arrows. Done.<br><br>
+<b>Regex to NFA, the three gluing pictures:</b> "or": new start with $e$-arrows into both machines. "Then": $e$-arrows from the finals of the first into the start of the second. "Repeat": a <b>new</b> start circle that is also final, $e$-arrow into the old start, $e$-arrows from the old finals back to the new start. <b>Midterm 2012 Q2</b> asked why you need a new start circle for "repeat" instead of just making the old start final. Answer: if the old start has arrows coming into it, making it final accepts strings that merely return there mid-way. Example machine for $a(ba)^*$: $s\xrightarrow{a}f$, $f\xrightarrow{b}s$. Making $s$ final accepts $ab$, which is not in $(a(ba)^*)^*$ because every non-empty string there ends in $a$. The wrong construction always accepts everything it should, plus extra, so $L(M')\supseteq L^*$.
+</div>
+
+<h3>5. Lego rule for regular languages</h3>
+<div class="card">
+If $A$ and $B$ are regular, then so are: $A\cup B$, $AB$, $A^*$, $\overline A$ (everything not in $A$), $A\cap B$, $A-B$, $A^R$ (reverse every string). Why: regex gives union, then, repeat; a DFA with finals swapped gives complement; pairs of states give intersection; and $A-B=A\cap\overline B$.<br><br>
+This is used two ways on the exam:
+<ul>
+<li><b>Show something is regular without drawing it:</b> "numbers divisible by 2 or 3" = (divisible by 2) $\cup$ (divisible by 3), each is a small DFA, so the union is regular.</li>
+<li><b>Prove a property is preserved (midterm 2011 Q6, $A^R$ regular, 20 pts):</b> go through the regex cases. Reverse of $\emptyset$ is $\emptyset$, of a letter is the letter, of "$\alpha$ or $\beta$" is "$\alpha^R$ or $\beta^R$", of "$\alpha$ then $\beta$" is "$\beta^R$ then $\alpha^R$" (order flips), of "$\alpha$ repeated" is "$\alpha^R$ repeated". That is a complete proof by induction on the regex. Same pattern works for Pref (all beginnings of strings) and Subseq.</li>
+</ul>
+</div>
+
+<h3>6. Proving a language is NOT regular</h3>
+<div class="card">
+<b>The idea in a story.</b> A DFA with $n$ circles reading a string of $n$ or more letters must step on some circle twice within the first $n$ letters (there are more steps than circles). The letters read between the two visits form a loop. The machine cannot tell whether you went round that loop once, twice, or zero times. So if $w$ is accepted, so is $w$ with that loop repeated or removed.<br><br>
+<b>The theorem says exactly this:</b> if $L$ is regular, there is a number $n$ such that every $w\in L$ with $|w|\ge n$ can be cut as $w=xyz$ where $y$ is not empty, $xy$ is within the first $n$ letters, and $xy^iz\in L$ for every $i\ge0$ ($y$ repeated $i$ times).<br><br>
+<b>How to use it to prove NOT regular:</b> assume $L$ is regular, pick one clever long string in $L$, show that no matter where the loop $y$ is, repeating or deleting it leaves $L$. That contradicts the theorem.<br>
+The clever string: make its first $n$ letters all the same, so that $y$ is forced to be some number of that letter. Then count.<br><br>
+<b>Midterm 2011 Q5, "twice as many $b$s as $a$s", full answer:</b>
+<pre>Suppose L is regular, and let n be the pumping constant.
+Let w = a^n b^(2n). Then w ∈ L and |w| ≥ n.
+Write w = xyz with y ≠ e, |xy| ≤ n. Because |xy| ≤ n, xy is inside the a's, so y = a^k for some k ≥ 1.
+Take i = 0: xz = a^(n-k) b^(2n). It has n-k a's and 2n b's, and 2(n-k) ≠ 2n since k ≥ 1.
+So xz ∉ L, contradicting the pumping theorem. Hence L is not regular.</pre>
+<b>Midterm 2012 Q4c, "more $a$s than $b$s":</b> pick $w=b^na^{n+1}$ ($b$s first on purpose). $y=b^k$. Repeat it: $i=2$ gives $b^{n+k}a^{n+1}$, now $b$s $\ge$ $a$s, not in $L$. If you had put $a$s first, repeating $a$s keeps you in $L$ and you would have to delete instead.<br>
+<b>Midterm 2013 Q4, $\{x\bar x\}$ (a string followed by its bit-flip):</b> shortcut. If $L$ were regular, then $L\cap L(0^*1^*)$ would be regular (Lego rule). But a string of the form "0s then 1s" that is $x\bar x$ must be $0^n1^n$. And $\{0^n1^n\}$ is not regular (the textbook pumping: $w=0^n1^n$, $y=0^k$, $i=0$). Contradiction. This "intersect with a simple regex to land on $a^nb^n$" trick is often the fastest.
+</div>
+
+<h3>7. Grammars: rules that build strings</h3>
+<div class="card">
+A grammar is a list of rewrite rules. Capital letters are placeholders. Start with $S$. Pick any capital in your current string and replace it using one of its rules. Stop when no capitals remain. Every string you can reach this way is in the language.<br>
+Example $S\to aSb\mid e$ (the bar means "or"): $S\Rightarrow aSb\Rightarrow aaSbb\Rightarrow aabb$. The language is $\{a^nb^n\}$. Notice this needs counting, which a DFA cannot do, so grammars are more powerful than regex.<br><br>
+<b>How to design a grammar:</b> give every capital a meaning in words, then write rules that keep the meaning true.
+<ul>
+<li>$E$ = "equal number of $a$s and $b$s". Rules: $E\to e$ (empty is equal). If the string starts with $a$, walk until the count of $a$s minus $b$s first returns to zero; that position is a $b$. Between them is an equal string, after it is an equal string: $E\to aEbE$. Symmetric: $E\to bEaE$.</li>
+<li><b>Midterm 2012 Q4a, "more $a$s than $b$s":</b> $S$ = "more $a$s". Walk until the count first reaches $+1$: before that is an equal string $E$, then the letter $a$, then the rest has count $\ge0$, so it is either equal ($E$) or more ($S$): $S\to EaE\mid EaS$.</li>
+<li>$T$ = "$a^mb^n$ with $m\ge n$": extra $a$s in front then a matched part: $T\to aT\mid U$, $U\to aUb\mid e$.</li>
+<li><b>Midterm 2011 Q2, even-length strings that are not palindromes:</b> think of matching letters from the outside in. Outer pairs match for a while ($S\to 0S0\mid1S1$), then one pair mismatches ($S\to 0A1\mid 1A0$), then anything of even length inside ($A\to 0A0\mid0A1\mid1A0\mid1A1\mid e$).</li>
+</ul>
+<b>Writing the answer:</b> list the rules, say what each capital means, derive one example string.<br><br>
+<b>Regular languages are also context-free (midterm 2013 Q5):</b> turn a regex into a grammar case by case. Letter $\sigma$: $S\to\sigma$. "$\alpha$ or $\beta$": $S\to S_\alpha\mid S_\beta$. "$\alpha$ then $\beta$": $S\to S_\alpha S_\beta$. "$\alpha$ repeated": $S\to e\mid SS_\alpha$. Use different capital names for the two sub-grammars so they do not interfere.
+</div>
+
+<h3>8. PDA: an NFA with a stack of plates</h3>
+<div class="card">
+A PDA is an NFA plus a stack. Each arrow is labelled <b>letter, pop $\to$ push</b>: "reading this letter, if this is on top of the stack, remove it and put that instead". Any part can be $e$ (read nothing, pop nothing, push nothing). A string is accepted if some branch finishes reading it <b>in a final state with an empty stack</b>. Both conditions.<br><br>
+<b>Running one by hand</b> uses triples (state, unread input, stack with top on the left). For $\{a^nb^n\}$ with arrows $s$: $a,e\to a$ (push an $a$ for each $a$); $s\to f$ on $e,e\to e$ (switch phase); $f$: $b,a\to e$ (pop an $a$ for each $b$):<br>
+$(s,aabb,e)\vdash(s,abb,a)\vdash(s,bb,aa)\vdash(f,bb,aa)\vdash(f,b,a)\vdash(f,e,e)$ accept.<br><br>
+<b>The design recipe:</b> phase 1 pushes while reading the first part, an $e$-move switches phase (that move is a guess if the middle is not marked), phase 2 pops while reading the second part. The stack must be empty at the end, which is what forces the counts to match.<br><br>
+<b>The counter trick (for "same number", "more", "twice as many"):</b> first push a bottom marker $c$ (so you can tell the stack is otherwise empty). The stack always holds only the surplus letter. Reading $a$: if a $b$ is on top, pop it (they cancel); otherwise push $a$. Reading $b$: mirror. At the end, pop $c$ to accept. For <b>"more $a$s than $b$s" (midterm 2012 Q4b)</b>, instead of popping $c$ directly, first require an $a$ on top (pop it and move to a cleanup state), then pop the remaining $a$s and $c$ with $e$-moves. For <b>$\{a^ib^j : i\le2j\}$</b>, each $b$ may pop zero, one, or two $a$s (three arrows); the empty-stack rule forces all $a$s to be gone.<br><br>
+<b>Writing the answer:</b> the drawing with labels, a line "in state $q$ the stack holds ...", and one traced example.
+</div>
+
+<h3>9. Grammar and PDA are the same thing</h3>
+<div class="card">
+<b>Grammar to PDA:</b> push $S$. Whenever a capital is on top, replace it (pop it, push the right side of one of its rules; this is the guess). Whenever a small letter is on top, it must equal the next input letter; pop it and read the letter. The stack always shows the part of the derivation still to come. Only two states: $p$ (push $S$) and $q$ (everything else, final).<br>
+<b>PDA to grammar:</b> make a capital $A_{pq}$ for every pair of states, meaning "strings that take the machine from $p$ to $q$ starting and ending with an empty stack". Three rule shapes: $A_{pq}\to aA_{rs}b$ when the first push (at $p\to r$ reading $a$) is popped by the last move (at $s\to q$ reading $b$); $A_{pq}\to A_{pr}A_{rq}$ when the stack empties in the middle at $r$; $A_{pp}\to e$. You will be asked to state these, not to run them on a big machine.
+</div>
+
+<h3>10. Lego rule for context-free languages</h3>
+<div class="card">
+If $A$ and $B$ are CF, then $A\cup B$, $AB$, $A^*$ are CF (glue the grammars: $S\to S_A\mid S_B$, $S\to S_AS_B$, $S\to e\mid SS_A$). Also $A\cap R$ is CF when $R$ is regular (run the PDA and the DFA together as pairs of states). <b>But</b> $A\cap B$ and $\overline A$ need not be CF: $\{a^nb^nc^m\}\cap\{a^mb^nc^n\}=\{a^nb^nc^n\}$, which is not CF.<br><br>
+<b>How to answer true/false closure questions (midterm 2013 Q3, 35 points):</b> for each statement ask "can I build the result using only allowed operations?" If yes, write "true, by closure under ...". If the statement claims something is NOT in a class, it is almost always false: try $A=\emptyset$, $A=\Sigma^*$, or $B=\overline A$. The full list with answers is in the closure table below.<br>
+<b>Midterm 2011 Q4:</b> the complement of $\{a^nb^nc^n\}$ IS context-free, even though the language itself is not. The complement = (strings not shaped $a^*b^*c^*$, which is regular) $\cup$ ($a^ib^jc^k$ with $i\ne j$, CF) $\cup$ ($a^ib^jc^k$ with $j\ne k$, CF). Union of CF pieces is CF.
+</div>
+
+<h3>11. Proving a language is NOT context-free</h3>
+<div class="card">
+Same story as for regular, but the repeatable part comes in two pieces $v$ and $y$ around a middle $x$ (because a tall parse tree repeats a capital, and that capital has stuff on both sides). The theorem: there is $N$ such that any $w\in L$ with $|w|\ge N$ can be cut as $uvxyz$ with $v$ and $y$ not both empty, $|vxy|\le N$, and $uv^ixy^iz\in L$ for all $i$.<br>
+Use: pick $w=a^Nb^Nc^N$. Because $vxy$ is short, it touches at most two of the three blocks. Repeating $v$ and $y$ grows at most two blocks, so the third no longer matches. Contradiction. Shortcut: intersect with $a^*b^*c^*$ to land on $\{a^nb^nc^n\}$, which is known not CF.
+</div>
+
+<h3>12. Countable or uncountable</h3>
+<div class="card">
+A set is countable if you can line its elements up in a queue where everyone gets served after a finite wait. Anything made of finite strings over a finite alphabet is countable: list by length, then alphabetically. So every language is countable, all regexes, all grammars, all machines, pairs of numbers, finite sets of numbers.<br>
+"All subsets of an infinite set" and "all infinite 0/1 sequences" are uncountable. Why (diagonal trick): suppose someone hands you the queue $A_0,A_1,A_2,\dots$ of all subsets of $\mathbb N$. Build $D$ = the numbers $i$ that are not in $A_i$. $D$ disagrees with $A_i$ about the number $i$, for every $i$, so $D$ is not in the queue. But $D$ is a subset. The queue was incomplete.<br>
+<b>Midterm 2011 Q3:</b> pairs $(x,y)$ with $x\ne y$: countable. Any infinite language: countable. All languages: uncountable. All finite languages: countable. <b>Midterm 2012 Q3b (find the flaw):</b> someone runs the diagonal trick on the queue of all finite languages and gets $D$. The flaw: $D$ is not finite, so "$D$ should be in the queue" is simply false, no contradiction.<br>
+<b>Why this matters:</b> there are uncountably many languages but only countably many regexes, grammars, programs. So most languages have no description at all.
+</div>
+
+<h3>13. "Define a new machine" questions</h3>
+<div class="card">
+The exam likes to change the storage (a queue instead of a stack, or accepting without emptying the stack) and ask you to write the formal definition and build an example. Everything stays identical except the storage line. Snapshot = (state, unread input, storage). One step = there is an arrow $((p,a,\beta),(q,\gamma))$ with the next input letter $a$ and the storage updated by removing $\beta$ and adding $\gamma$. For a stack both happen at the top: storage $\beta\eta$ becomes $\gamma\eta$. For a queue you remove at the front and add at the back: $\beta\eta$ becomes $\eta\gamma$. Accept: $(s,w,e)\vdash^*(f,e,e)$.<br>
+<b>Midterm 2012 Q5b:</b> a queue accepts $a^nb^ma^nb^m$ because it gives back the first half in the same order; a stack would give it reversed. Store the first $a^n b^m$, guess the middle, then match. <b>Midterm 2011 Q7:</b> accept by final state only versus final state plus empty stack; the conversions are in the L10 template.
+</div>
+
+<h3>14. Why this is actually easy</h3>
+<div class="card ex">
+There are only three ideas. (1) Classify by memory: none, one stack, more. (2) Every machine has the same four-line definition with one slot changed. (3) Closure is Lego. Everything else is a template you fill in: build, classify and prove, or combine. The exam is open book and the same languages come back every year: $a^nb^n$, palindromes, equal counts, more $a$s than $b$s, $a^nb^nc^n$, $ww$. Learn those six and you have most of the counterexamples and most of the proofs.
+</div>
+</section>
+
+<section id="l1">
+<h2>Reference. L1. Sets, relations, functions</h2>
+<div class="card def"><span class="tag">Definitions</span>
+<ul>
+<li>$A \subseteq B$: every element of $A$ is in $B$. $A = B$ iff $A \subseteq B$ and $B \subseteq A$. This is how you prove set equality: <b>both inclusions</b>.</li>
+<li>Power set $2^A$ = set of all subsets. $|2^A| = 2^{|A|}$. $2^{\{c,d\}} = \{\emptyset,\{c\},\{d\},\{c,d\}\}$.</li>
+<li>Partition: non-empty, pairwise disjoint subsets whose union is $A$.</li>
+<li>$A \times B$ = ordered pairs. A binary relation is any subset of $A \times B$.</li>
+<li>Reflexive, symmetric, transitive. All three = equivalence relation, splits $A$ into equivalence classes.</li>
+<li>Function $f: A \to B$: a relation with exactly one pair per element of $A$. Injective (one-to-one): different inputs give different outputs. Surjective (onto): every $b$ is hit. Bijection: both.</li>
+</ul></div>
+<div class="card warn"><span class="tag">Traps</span>
+$\emptyset \in \emptyset$ is false. $\emptyset \subseteq \emptyset$ is true. $\{a,b\} \subseteq \{a,b,\{a,b\}\}$ true, and $\{a,b\} \in \{a,b,\{a,b\}\}$ also true. $\{a\} \ne a$.
+</div>
+</section>
+
+<section id="l2">
+<h2>L2. Languages and regular expressions</h2>
+<div class="card ex"><span class="tag">Analogy</span>
+A language is just a <b>set of accepted passwords</b>. A regular expression is a <b>recipe that generates</b> every valid password: $\cup$ means "pick one of", concatenation means "then", $*$ means "repeat zero or more times". Think of $\emptyset$ as a recipe that produces nothing, and $\emptyset^*$ as "repeat nothing zero times", which produces exactly the empty password $e$.
+</div>
+<div class="card def"><span class="tag">Words and languages</span>
+<ul>
+<li>Alphabet $\Sigma$: finite set of symbols. Word: finite sequence. $|w|$ = length. Empty word $e$, $|e|=0$, $e \notin \Sigma$.</li>
+<li>Concatenation $wu$, associative, $ew = we = w$. Reversal: $e^R = e$, $(au)^R = u^R a$. Theorem $(uw)^R = w^R u^R$ by induction on $|u|$. This is the model proof for the course.</li>
+<li>Language: any $L \subseteq \Sigma^*$. <b>$\emptyset \ne \{e\}$</b>.</li>
+<li>$L_1L_2 = \{xy : x\in L_1, y \in L_2\}$. $L^0=\{e\}$, $L^{n+1}=L^nL$. $L^* = L^0 \cup L^1 \cup \cdots$ (so $e \in L^*$ always). $L^+ = LL^*$, and $e \in L^+$ iff $e \in L$.</li>
+</ul></div>
+<div class="card warn"><span class="tag">Edge cases to memorize</span>
+$\{e\}^{1000} = \{e\}$. $L\emptyset = \emptyset$. $\emptyset^* = \{e\}$. $L^n \subseteq L^{n+1}$ is <b>not</b> true in general (only if $e \in L$), but $L^n \subseteq L^*$ always. $L^+ = L^*$ iff $e \in L$.
+</div>
+<div class="card def"><span class="tag">Regular expressions (inductive definition)</span>
+<ol>
+<li>$\emptyset$ and each $\sigma \in \Sigma$ are R.E.s.</li>
+<li>If $\alpha, \beta$ are R.E.s, so are $(\alpha\beta)$, $(\alpha \cup \beta)$, $\alpha^*$.</li>
+<li>Nothing else.</li>
+</ol>
+$L(\emptyset)=\emptyset$, $L(\sigma)=\{\sigma\}$, $L(\alpha\beta)=L(\alpha)L(\beta)$, $L(\alpha\cup\beta)=L(\alpha)\cup L(\beta)$, $L(\alpha^*)=L(\alpha)^*$. Precedence: $*$ then concatenation then $\cup$.<br>
+<b>$e$ is not an R.E.</b> Write $\emptyset^*$ for $\{e\}$. $\{e,a,aa\}$ is $\emptyset^* \cup a \cup aa$. There is no $+$ operator in this course.<br>
+A language is <b>regular</b> iff it equals $L(\alpha)$ for some R.E. $\alpha$. Every finite language is regular.
+</div>
+<div class="card ex"><span class="tag">Worked constructions over $\{0,1\}$ and $\{a,b\}$</span>
+<table><tr><th>Language</th><th>R.E.</th></tr>
+<tr><td>ends with $a$</td><td>$(a\cup b)^*a$</td></tr>
+<tr><td>even number of 0s</td><td>$1^*(01^*01^*)^*$</td></tr>
+<tr><td>at least two 0s</td><td>$1^*01^*0(0\cup1)^*$</td></tr>
+<tr><td>even length</td><td>$((0\cup1)(0\cup1))^*$</td></tr>
+<tr><td>no substring $ac$ over $\{a,b,c\}$</td><td>$c^*(a \cup bc^*)^*$</td></tr>
+<tr><td>no substring $aa$</td><td>$(b\cup ab)^*(a\cup \emptyset^*)$</td></tr>
+<tr><td>no substring $aab$</td><td>$(b\cup ab)^*a^*$</td></tr>
+<tr><td>number of $a$s divisible by 3</td><td>$b^*(ab^*ab^*ab^*)^*$ (leading $b^*$ needed for all-$b$ strings)</td></tr>
+<tr><td>at most 3 $a$s</td><td>$b^*(ab^*\cup b^*)^3$ written out</td></tr>
+<tr><td>odd number of $a$s</td><td>$b^*ab^*(ab^*ab^*)^*$</td></tr>
+<tr><td>contains $ab$</td><td>$(a\cup b)^*ab(a\cup b)^*$</td></tr>
+<tr><td>does not contain $ab$</td><td>$b^*a^*$</td></tr>
+</table>
+</div>
+<div class="card thm"><span class="tag">Proving $L(\alpha) = L$</span>
+Always two inclusions. $\subseteq$: show any string produced by the expression has the property (follow the structure). $\supseteq$: take any string with the property and show how to segment it to match the expression. Classic mistake (Tutorial 1): proving $\{a,b\}^* = \{a\}^*(\{b\}\{a\}^*)^*$ you must handle the case "no $b$ at all" separately.
+</div>
+<div class="card warn"><span class="tag">Notation hygiene</span>
+$\{a,b\}^*$ is a language. $(a\cup b)^*$ is an expression. Write $w \in L((a\cup b)^*)$, never $w \in (a\cup b)^*$.
+</div>
+<details><summary>Try it: is $abcd \in L((a(cd)^*b)^*)$? Is $\{a^nb^n\}\{b^nc^n\} = \{a^nb^{2n}c^n\}$?</summary><div class="card">
+No: every non-empty member of $L((a(cd)^*b)^*)$ ends in $b$. No: the two $n$ are independent, so $abbbcc \in \{a^nb^n\}\{b^nc^n\}$ but not in $\{a^nb^{2n}c^n\}$.
+</div></details>
+<details><summary>Try it: regex over $\{0,1\}$ for strings whose third-last symbol is 1</summary><div class="card">
+$(0\cup1)^*1(0\cup1)(0\cup1)$. Also a classic NFA-easy, DFA-hard example (DFA needs 8 states).
+</div></details>
+<div class="card" style="border-left:4px solid #8e5fd0;background:var(--accent-bg)"><span class="tag">Why it matters</span>Regular expressions are in every text editor, log search, and input validator you will ever write. The exact rules here are why a regex engine can run in linear time.</div>
+</section>
+
+<section id="l3">
+<h2>L3. Countability</h2>
+<div class="card ex"><span class="tag">Analogy</span>
+A set is countable if you can put its elements in a <b>queue</b> where everyone eventually gets served (finite waiting time). Finite strings can be queued (shortest first). Infinite objects like "all subsets of $\mathbb{N}$" cannot: whatever queue you propose, the diagonal trick builds a subset that disagrees with person number $i$ on item $i$, so it is nowhere in the queue. Exam shortcut: anything made of <b>finite strings over a finite alphabet is countable</b>; anything that is "all subsets" or "all infinite sequences" of an infinite set is uncountable.
+</div>
+<div class="card def"><span class="tag">Definitions</span>
+<ul>
+<li>Equinumerous: a bijection exists. Countably infinite: equinumerous with $\mathbb{N}$. Countable = finite or countably infinite. Otherwise uncountable.</li>
+<li>Fact: $A$ is countably infinite iff its elements can be listed $a_0, a_1, a_2, \dots$ with every element at some finite position.</li>
+<li>Pigeonhole (finite sets): $|A| > |B|$ means no injection $A \to B$.</li>
+</ul></div>
+<div class="card thm"><span class="tag">What is countable</span>
+<table><tr><th>Set</th><th>Countable?</th><th>Why</th></tr>
+<tr><td>$A \cup B$, finite unions</td><td>yes</td><td>interleave the lists</td></tr>
+<tr><td>countable union of countable sets</td><td>yes</td><td>walk the grid by anti-diagonals (dovetailing)</td></tr>
+<tr><td>$A\times B$, $\mathbb{N}\times\mathbb{N}$, finite products</td><td>yes</td><td>zigzag; $(a,b)$ appears at position $\frac{(a+b)(a+b+1)}{2}+a$</td></tr>
+<tr><td>$\Sigma^*$, finite languages, finite subsets of $\mathbb{N}$</td><td>yes</td><td>list by length, then lexicographically</td></tr>
+<tr><td>$2^{\mathbb{N}}$, $2^{\Sigma^*}$ (all languages), functions $A\to\{0,1\}$ for infinite $A$</td><td><b>no</b></td><td>diagonalization</td></tr>
+<tr><td>$[0,1]$, infinite products $A_1\times A_2\times\cdots$</td><td><b>no</b></td><td>diagonalization on digits</td></tr>
+</table></div>
+<div class="card thm"><span class="tag">Diagonalization principle (Cantor)</span>
+For $R \subseteq A\times A$ let $R_a = \{b : (a,b)\in R\}$ and $D = \{a : (a,a)\notin R\}$. Then $D \ne R_a$ for every $a$ (they differ at element $a$).<br>
+<b>$2^{\mathbb{N}}$ uncountable:</b> suppose a list $A_0, A_1, \dots$ of all subsets. Let $D = \{i : i \notin A_i\}$. $D$ is a subset of $\mathbb{N}$ so $D = A_k$ for some $k$. Then $k \in D \iff k \notin A_k = D$. Contradiction.<br>
+<b>$[0,1]$ uncountable:</b> list $x_i = 0.d_{i0}d_{i1}\dots$; build $x$ whose $i$-th digit is $0$ if $d_{ii}\ne 0$, else $1$. $x$ differs from every $x_i$.
+</div>
+<div class="card thm"><span class="tag">First major theorem</span>
+Any finite representation (R.E., program, grammar) is a finite string over a finite alphabet, so there are only countably many representations. There are uncountably many languages ($2^{\Sigma^*}$). So <b>some languages have no finite representation in any system</b>: non-regular languages and unsolvable problems exist. This proves existence only.
+</div>
+<details><summary>Try it (Quiz 2): which is uncountable for countably infinite $A$: finite unions of countable sets, $A\times A$, or functions $A\to\{0,1\}$?</summary><div class="card">
+Functions $A\to\{0,1\}$. Each such function is a subset of $A$ (its preimage of 1), so this set is $2^A$, uncountable. The others stay countable.
+</div></details>
+<details><summary>Try it (HW1): prove the set of finite subsets of $\mathbb{N}$ is countable</summary><div class="card">
+Let $F_k$ = subsets of $\{0,\dots,k\}$; each $F_k$ is finite (size $2^{k+1}$). Every finite subset lies in some $F_k$, so the set is $\bigcup_k F_k$, a countable union of finite sets, hence countable. Alternative: encode each finite subset as a finite binary string over $\{0,1\}$; $\{0,1\}^*$ is countable.
+</div></details>
+<div class="card" style="border-left:4px solid #8e5fd0;background:var(--accent-bg)"><span class="tag">Why it matters</span>Countability is the reason there exist problems no program can solve: there are more problems than programs. It returns in the halting problem and in every undecidability proof later in the course.</div>
+</section>
+
+<section id="l4">
+<h2>L4. Deterministic finite automata</h2>
+<div class="card ex"><span class="tag">Analogy</span>
+A DFA is a <b>person with no notebook</b> reading a ticker tape one symbol at a time. All they can remember is which "mood" (state) they are in, and the moods are fixed in advance. Each symbol forces exactly one mood change. At the end, you check if the mood is a happy one (final). Because there is no notebook, a DFA cannot count arbitrarily high: it can tell "even or odd number of $b$s" (two moods) but not "same number of $a$s as $b$s" (infinitely many moods needed).
+</div>
+<div class="card def"><span class="tag">Definition (write it verbatim)</span>
+$M = (K, \Sigma, \delta, s, F)$: finite set of states $K$, alphabet $\Sigma$, transition <b>function</b> $\delta: K\times\Sigma \to K$ (total: exactly one move per state and symbol), initial state $s\in K$, final states $F\subseteq K$.<br>
+Configuration $(q, w)$ = current state, unread input. $(q,\sigma w') \vdash_M (q', w')$ iff $\delta(q,\sigma)=q'$. $\vdash_M^*$ = zero or more steps.<br>
+$M$ accepts $w$ iff $(s,w)\vdash_M^*(q,e)$ with $q\in F$. $L(M)$ = set of accepted strings.
+</div>
+<div class="card ex"><span class="tag">Design patterns</span>
+<ul>
+<li><b>Parity / mod k:</b> state = remainder so far. Even $b$s: 2 states, $b$ toggles, $a$ self-loops. Decimal divisible by 3: 3 states for digit sum mod 3; digits 0,3,6,9 self-loop, 1,4,7 advance by 1, 2,5,8 advance by 2.</li>
+<li><b>Substring search:</b> one state per prefix of the pattern already matched (like Ctrl-F). Forward edges spell the pattern; other edges fall back to the longest prefix of the pattern that is a suffix of what was read. Final state loops on everything.</li>
+<li><b>Sink / dead state:</b> a non-final state that loops on all symbols; needed to keep $\delta$ total when you want to reject.</li>
+<li><b>Totality check:</b> every state must have exactly one outgoing edge per symbol. Count them.</li>
+</ul></div>
+<div class="card thm"><span class="tag">Closure via DFAs</span>
+<ul>
+<li><b>Complement:</b> swap final and non-final states: $(K,\Sigma,\delta,s,K-F)$. Works only for a DFA (one run per string). Do not do this to an NFA.</li>
+<li><b>Intersection (product):</b> $K_1\times K_2$, $\delta((p,q),\sigma) = (\delta_1(p,\sigma),\delta_2(q,\sigma))$, start $(s_1,s_2)$, finals $F_1\times F_2$. Run both machines in parallel.</li>
+<li><b>Union:</b> same product, finals $(F_1\times K_2)\cup(K_1\times F_2)$. Only the final-state set differs from intersection.</li>
+<li>Concatenation and star are awkward with DFAs (where to split?) which motivates NFAs.</li>
+</ul></div>
+<div class="card"><span class="tag">DFA simulator</span>
+<div class="sim">
+<div>
+<label>Machine</label>
+<select id="dfaSel"></select>
+<label>Input string</label>
+<input id="dfaIn" value="aabba">
+<button onclick="runDFA()">Run</button>
+<div id="dfaDesc" style="font-size:13px;color:var(--muted);margin-top:8px"></div>
+</div>
+<div><label>Trace</label><div class="trace" id="dfaOut"></div></div>
+</div>
+</div>
+<details><summary>Try it (Tutorial 2): DFA for "contains the substring $abbab$"</summary><div class="card">
+States $q_e, q_a, q_{ab}, q_{abb}, q_{abba}, q_{abbab}$ (prefix matched so far). Forward edges: $q_e \xrightarrow{a} q_a \xrightarrow{b} q_{ab} \xrightarrow{b} q_{abb} \xrightarrow{a} q_{abba} \xrightarrow{b} q_{abbab}$. Fallbacks: $q_e \xrightarrow{b} q_e$, $q_a \xrightarrow{a} q_a$, $q_{ab} \xrightarrow{a} q_a$, $q_{abb}\xrightarrow{b} q_e$, $q_{abba}\xrightarrow{a} q_a$. $q_{abbab}$ loops on both. For "does not contain", swap finals.
+</div></details>
+<details><summary>Try it: odd number of $a$s AND even number of $b$s</summary><div class="card">
+Product of two parity machines, states $(o/e, o/e)$. $a$ toggles the first coordinate, $b$ the second. Start $(e,e)$. Accept only $(o,e)$. For OR, accept everything except $(e,o)$.
+</div></details>
+<div class="card" style="border-left:4px solid #8e5fd0;background:var(--accent-bg)"><span class="tag">Why it matters</span>DFAs are how network firewalls, lexers in compilers, and protocol parsers are built. If you can draw the machine, you can implement the matcher.</div>
+</section>
+
+<section id="l5">
+<h2>L5. Nondeterministic finite automata</h2>
+<div class="card ex"><span class="tag">Analogy</span>
+An NFA is the same tape reader but with a <b>superpower: it can clone itself</b> whenever there is a choice, and it can also move "for free" ($e$-transitions). The string is accepted if <b>at least one clone</b> ends happy. Clones with no legal move just die (the branch is stuck). NFAs are not a real machine; they are a way to <i>specify</i> a language by guessing ("guess where the last three symbols start"). The subset construction shows the guessing adds no power, only convenience.
+</div>
+<div class="card def"><span class="tag">Definition</span>
+$M = (K, \Sigma, \Delta, s, F)$ with transition <b>relation</b> $\Delta \subseteq K\times(\Sigma\cup\{e\})\times K$. The only difference from a DFA is $\Delta$ (a relation) versus $\delta$ (a function). Every DFA is an NFA.<br>
+$(q,w)\vdash_M(q',w')$ iff $w = uw'$ for some $u\in\Sigma\cup\{e\}$ with $(q,u,q')\in\Delta$.<br>
+$w$ is accepted iff <b>some</b> computation $(s,w)\vdash_M^*(q,e)$ has $q\in F$. Rejected only if every branch fails or gets stuck.
+</div>
+<div class="card ex"><span class="tag">Where NFAs shine</span>
+<ul>
+<li>"ends with $aba$": $q_0$ loops on $a,b$; $q_0\xrightarrow{a}q_1\xrightarrow{b}q_2\xrightarrow{a}q_3$, $F=\{q_3\}$. Four states, no fallback edges. The NFA guesses when the final $aba$ begins.</li>
+<li>$(ab\cup aba)^*$: 3 states as an NFA, 5 as a DFA (with trap).</li>
+<li>Union: new start with $e$-edges to both machines. Concatenation: $e$-edges from finals of the first to the start of the second.</li>
+<li><b>Reversal:</b> reverse every edge, swap start and final roles. If several finals, add a new start with $e$-edges into the old finals. Old start becomes the unique final.</li>
+</ul></div>
+<div class="card warn"><span class="tag">Exam trap</span>
+Do not complement an NFA by swapping finals. A string can have one accepting and one rejecting branch; after the swap it is still accepted. Convert to a DFA first.
+</div>
+<details><summary>Try it: NFA for $abba^* \cup a(ab\cup ba)^*bb$ (HW1)</summary><div class="card">
+New start $s$ with $e$-edges to two chains. Chain 1: $s_1\xrightarrow{a}\xrightarrow{b}\xrightarrow{b}\xrightarrow{a}f_1$ with $f_1$ looping on $a$. Chain 2: $s_2\xrightarrow{a}p$; from $p$ a loop reading $ab$ and a loop reading $ba$ (two intermediate states), then $p\xrightarrow{b}\xrightarrow{b}f_2$. $F=\{f_1,f_2\}$. In the exam, draw it; the formal tuple is optional.
+</div></details>
+</section>
+
+<section id="l6">
+<h2>L6. DFA = NFA = Regular expression</h2>
+<div class="card thm"><span class="tag">Fundamental theorem</span>
+For any $L\subseteq\Sigma^*$ these are equivalent: some DFA accepts $L$; some NFA accepts $L$; some R.E. represents $L$. Proof cycle: R.E. $\to$ NFA $\to$ DFA $\to$ R.E. (DFA $\to$ NFA is trivial.)<br>
+Use: to show a language is regular you may give whichever of the three is easiest. To show it is not regular, show no R.E. (equivalently no DFA) exists.
+</div>
+<h3>R.E. $\to$ NFA (structural induction)</h3>
+<div class="card">
+<ul>
+<li>$\emptyset$: one non-final state, no edges. $\sigma$: two states, one $\sigma$-edge.</li>
+<li>$\alpha\cup\beta$: new start, $e$-edges to $s_1$ and $s_2$; finals $F_1\cup F_2$.</li>
+<li>$\alpha\beta$: $e$-edges from every final of $M_1$ to $s_2$; start $s_1$; finals $F_2$ only.</li>
+<li>$\alpha^*$: <b>new start state $s$, which is also final</b>; $e$-edge $s\to s_1$; $e$-edges from every final back to $s$.</li>
+</ul>
+<div class="card warn"><span class="tag">Why a NEW start state for star (asked on the 2012 midterm, 15 pts)</span>
+Suppose instead you make the old start $s_1$ final and add $e$-edges from finals to $s_1$. Counterexample: $M$ for $a(ba)^*$ with $s_1\xrightarrow{a}f$, $f\xrightarrow{b}s_1$, $F=\{f\}$. With $s_1$ final, $ab$ is accepted ($s_1\to f\to s_1$) but $ab\notin L^*$ (every string in $L^*$ ends with $a$ or is $e$). In general the wrong construction accepts a <b>superset</b> of $L^*$: every string of $L^*$ is still accepted, plus junk that re-enters $s_1$ mid-word. The problem is edges that come back into $s_1$.
+</div>
+</div>
+<h3>NFA $\to$ DFA (subset construction)</h3>
+<div class="card">
+$E(q)$ = set of states reachable from $q$ by $e$-moves alone ($q\in E(q)$).<br>
+DFA states are subsets of $K$. Start $E(s)$. $\delta'(Q,\sigma) = \bigcup_{q\in Q}\{E(p) : (q,\sigma,p)\in\Delta\}$: take all $\sigma$-moves from any state in $Q$, then $e$-close. Finals: subsets containing some state of $F$. $\emptyset$ is the dead state. Build only reachable subsets.
+<div class="card ex"><span class="tag">Worked (2012 midterm 1d): "ends with $aba$"</span>
+NFA: $q_0$ loops on $a,b$; $q_0\xrightarrow{a}q_1\xrightarrow{b}q_2\xrightarrow{a}q_3$.
+<table><tr><th>DFA state</th><th>on $a$</th><th>on $b$</th><th>final?</th></tr>
+<tr><td>$\{q_0\}$</td><td>$\{q_0,q_1\}$</td><td>$\{q_0\}$</td><td>no</td></tr>
+<tr><td>$\{q_0,q_1\}$</td><td>$\{q_0,q_1\}$</td><td>$\{q_0,q_2\}$</td><td>no</td></tr>
+<tr><td>$\{q_0,q_2\}$</td><td>$\{q_0,q_1,q_3\}$</td><td>$\{q_0\}$</td><td>no</td></tr>
+<tr><td>$\{q_0,q_1,q_3\}$</td><td>$\{q_0,q_1\}$</td><td>$\{q_0,q_2\}$</td><td><b>yes</b></td></tr>
+</table>
+Four reachable subsets out of sixteen. Notice this is exactly the "prefix of $aba$ matched" DFA.
+</div>
+</div>
+<h3>DFA $\to$ R.E. (the $R(i,j,k)$ method)</h3>
+<div class="card">
+Number states $q_1,\dots,q_n$ with $s=q_1$. $R(i,j,k)$ = strings that drive $M$ from $q_i$ to $q_j$ passing only through intermediate states numbered $\le k$ (endpoints exempt).<br>
+$L(M) = \bigcup\{R(1,j,n) : q_j\in F\}$.<br>
+$R(i,j,k) = R(i,j,k-1)\ \cup\ R(i,k,k-1)\,R(k,k,k-1)^*\,R(k,j,k-1)$: either avoid $q_k$, or go to $q_k$, loop at $q_k$ any number of times, leave $q_k$.<br>
+Basis $R(i,j,0)$: direct edge labels, plus $e$ (written $\emptyset^*$) if $i=j$. Induction on $k$ uses only $\cup$, concatenation, $*$, so every $R(i,j,k)$ has an R.E.
+<div class="card ex"><span class="tag">Practical tip for the exam</span>
+For small machines, do not expand the recurrence blindly. Eliminate states one at a time: for each state $q$ to remove, for every pair (in-edge $\alpha$ from $p$, out-edge $\gamma$ to $r$) with self-loop $\beta$ on $q$, add edge $p\to r$ labelled $\alpha\beta^*\gamma$. That is the same recurrence written as a diagram.
+</div>
+</div>
+<details><summary>Try it: triangle DFA, $a$ self-loops everywhere, $b$-edges $q_1\to q_2\to q_3\to q_1$, $F=\{q_2\}$. What language, what R.E.?</summary><div class="card">
+Strings whose number of $b$s is $\equiv 1 \pmod 3$. R.E.: $a^*ba^*(ba^*ba^*ba^*)^*$. Expanding $R(1,2,3)$ gives an uglier but equivalent expression.
+</div></details>
+<div class="card" style="border-left:4px solid #8e5fd0;background:var(--accent-bg)"><span class="tag">Why it matters</span>This equivalence is the reason you can type a regex and a tool like grep compiles it to a fast automaton behind the scenes.</div>
+</section>
+
+<section id="l7">
+<h2>L7. Closure properties of regular languages</h2>
+<div class="card thm"><span class="tag">Theorem</span>
+Regular languages are closed under union, concatenation, Kleene star (via R.E.s or NFAs), complementation (DFA, swap finals), intersection (De Morgan: $L_1\cap L_2 = \overline{\overline{L_1}\cup\overline{L_2}}$, or product DFA), reversal (reverse the NFA, or structural induction on the R.E.), difference ($A - B = A\cap\overline{B}$), symmetric difference.
+</div>
+<div class="card ex"><span class="tag">Analogy</span>
+Closure properties are <b>Lego rules</b>: if you build a regular language out of regular bricks using only allowed operations, the result is still regular. On the exam this cuts two ways. To prove something IS regular, decompose it into simple regular pieces and glue. To prove something is NOT regular, show that gluing it with regular pieces would produce a known non-regular language, which is a contradiction.
+</div>
+<div class="card ex"><span class="tag">Three ways to prove a language is regular</span>
+<ol><li>Give an R.E.</li><li>Give a DFA or NFA.</li><li>Write it as a combination of known regular languages using closure operations.</li></ol>
+Worked: decimal numbers divisible by 2 or 3. $L_1 = \{0\}\cup\{1..9\}\Sigma^*$ (no leading zeros, regular). $L_2 = L_1\cap\Sigma^*\{0,2,4,6,8\}$. $L_3 = L_1\cap L_4$ with $L_4$ the digit-sum mod 3 DFA. $L = L_2\cup L_3$ regular by closure.
+</div>
+<div class="card thm"><span class="tag">Exam template: prove $L^R$ is regular (2011 midterm, 20 pts)</span>
+By structural induction on the R.E. $\alpha$ with $L = L(\alpha)$, build $\alpha^R$: $\emptyset^R = \emptyset$, $\sigma^R = \sigma$, $(\alpha\cup\beta)^R = \alpha^R\cup\beta^R$, $(\alpha\beta)^R = \beta^R\alpha^R$, $(\alpha^*)^R = (\alpha^R)^*$. Then $L(\alpha^R) = L(\alpha)^R$ by induction, using $(uw)^R = w^Ru^R$. Alternative: NFA with edges reversed, new start with $e$-edges to old finals, old start becomes the only final.
+</div>
+<div class="card thm"><span class="tag">Exam template: Pref, Subseq, and similar (Tutorials 1 and 4)</span>
+Same pattern: define the operation on each R.E. case and check the language equation. $\mathrm{Pref}(\emptyset)=\emptyset$; $\mathrm{Pref}(\sigma) = \emptyset^*\cup\sigma$; $\mathrm{Pref}(L_1\cup L_2)=\mathrm{Pref}(L_1)\cup\mathrm{Pref}(L_2)$; $\mathrm{Pref}(L_1L_2) = \mathrm{Pref}(L_1)\cup L_1\mathrm{Pref}(L_2)$; $\mathrm{Pref}(L_1^*) = L_1^*\mathrm{Pref}(L_1)$. Automaton version: make every state that can reach a final state final. For $\mathrm{Subseq}(L)$: add an $e$-edge parallel to every edge of the NFA (skip any symbol).
+</div>
+<details><summary>Try it (Tutorial 4): true or false? (a) every subset of a regular language is regular; (b) $L$ regular implies $\{xy : x\in L, y\notin L\}$ regular; (c) $\{w : w = w^R\}$ regular; (d) $L$ regular implies $\{w\in L : w^R\in L\}$ regular.</summary><div class="card">
+(a) False: $\{a^nb^n\}\subseteq\{a,b\}^*$. (b) True: it is $L\overline{L}$, concatenation of two regular languages. (c) False: palindromes are not regular (pump $a^nba^n$). (d) True: it is $L\cap L^R$.
+</div></details>
+</section>
+
+<section id="l8">
+<h2>L8. Proving non-regularity: the pumping theorem</h2>
+<div class="card ex"><span class="tag">Analogy</span>
+A DFA with $n$ states reading a string longer than $n$ must <b>revisit a state</b> (pigeonhole: $n+1$ visits into $n$ rooms). The piece of input between the two visits is a loop you can <b>cut out or replay</b> any number of times, and the machine cannot tell. So every long accepted string has a "replayable" chunk near its start. If you can find a long string in $L$ where every possible chunk, replayed, leaves $L$, the language cannot be regular.<br>
+Think of a bouncer who only remembers a mood. If they let in $a^nb^n$, there is some loop of $a$s they cannot count, so they also let in $a^{n+k}b^n$.
+</div>
+<div class="card thm"><span class="tag">Pumping theorem (write exactly this)</span>
+Let $L$ be regular. Then there is $n\ge1$ such that every $w\in L$ with $|w|\ge n$ can be written $w = xyz$ with (1) $y\ne e$, (2) $|xy|\le n$, (3) $xy^iz\in L$ for all $i\ge0$.<br>
+Quantifiers: $\exists n\ \forall w\ \exists x,y,z\ \forall i$. The negation you must prove: $\forall n\ \exists w\ \forall$ splits $\exists i$ with $xy^iz\notin L$.
+</div>
+<div class="card thm"><span class="tag">Proof template (copy this structure in the exam)</span>
+<ol>
+<li>Suppose $L$ is regular. Let $n$ be the constant from the pumping theorem.</li>
+<li>Choose one specific $w\in L$ with $|w|\ge n$. Make the first $n$ symbols all the same letter so that $|xy|\le n$ pins $y$ inside one block.</li>
+<li>Consider any split $w = xyz$ with $y\ne e$, $|xy|\le n$. So $y = a^k$ for some $k\ge1$ (say why).</li>
+<li>Pick one $i$ (usually $0$ or $2$) and show $xy^iz\notin L$ by counting.</li>
+<li>This contradicts the pumping theorem. So $L$ is not regular.</li>
+</ol>
+Points are lost for: choosing $w$ that depends on the split, forgetting $y\ne e$, not using $|xy|\le n$, or only treating one split.
+</div>
+<div class="card ex"><span class="tag">Worked examples (all appeared on past midterms or tutorials)</span>
+<ul>
+<li>$\{a^ib^i\}$: $w=a^nb^n$, $y=a^k$, $i=0$: $a^{n-k}b^n\notin L$.</li>
+<li>Twice as many $b$s as $a$s (2011, 20 pts): $w = a^nb^{2n}$, $y=a^k$, $i=0$ gives $a^{n-k}b^{2n}$, and $2(n-k)\ne 2n$.</li>
+<li>More $a$s than $b$s (2012, 15 pts): $w = b^na^{n+1}$. $y = b^k$, $i=2$: $b^{n+k}a^{n+1}$ has at least as many $b$s as $a$s. Choosing $b$s first matters: with $w=a^{n+1}b^n$ pumping up keeps you in $L$; you would need $i=0$ and care about $k$.</li>
+<li>$\{a^ib^j : i>j\ge1\}$: $w=a^{n+1}b^n$, $y=a^k$, $i=0$: $a^{n+1-k}b^n$ with $n+1-k\le n$.</li>
+<li>$\{ww\}$: $w=a^nba^nb$, $y=a^k$ in the first block, $i=0$ or $2$ breaks the halves.</li>
+<li>$\{x\bar{x}\}$ with $\bar{x}$ the bit-flip (2013, 20 pts): easier by closure. $L\cap L(0^*1^*) = \{0^n1^n\}$, which is not regular, so $L$ is not regular. If you pump directly: $w=0^n1^n$, $y=0^k$, $i=0$.</li>
+<li>$\{a^i : i \text{ prime}\}$: $w=a^p$, $p\ge n$ prime, $y=a^q$, pump to $i=p+1$: length $p+pq = p(1+q)$, composite.</li>
+<li>Palindromes: $w=a^nba^n$, $y=a^k$, $i=2$.</li>
+<li>$\{(bab)^i(babbab)^i\}$: $w=(bab)^n(babbab)^n$, $|xy|\le n$ puts $y$ inside the first $(bab)^n$ block; pumping changes its length by $k$ which breaks the count or the pattern.</li>
+</ul></div>
+<div class="card thm"><span class="tag">The closure shortcut (often cleaner)</span>
+To show $L$ not regular: find a regular $R$ such that $L\cap R$ (or $h(L)$, $L^R$, etc.) equals a known non-regular language. If $L$ were regular, closure would make the result regular, contradiction. Example: $L$ = equal number of $a$s and $b$s. $L\cap L(a^*b^*) = \{a^nb^n\}$. Done.
+</div>
+<div class="card warn"><span class="tag">Limits</span>
+The pumping theorem is necessary, not sufficient. Satisfying it does not prove regularity. It can never be used to show a language IS regular.
+</div>
+<details><summary>Try it: is $\{w\in\{0,1\}^* : \#01 = \#10\}$ (number of $01$ substrings equals number of $10$ substrings) regular?</summary><div class="card">
+Yes. $\#01 = \#10$ iff $w$ starts and ends with the same symbol or $|w|\le1$. R.E.: $\emptyset^*\cup0\cup1\cup0(0\cup1)^*0\cup1(0\cup1)^*1$. Lesson: "needs counting" intuition is not a proof.
+</div></details>
+<div class="card" style="border-left:4px solid #8e5fd0;background:var(--accent-bg)"><span class="tag">Why it matters</span>Knowing what regular languages cannot do tells you when a regex is the wrong tool, which is why "parse HTML with regex" is a famous mistake.</div>
+</section>
+
+<section id="l9">
+<h2>L9. Context-free grammars</h2>
+<div class="card ex"><span class="tag">Analogy</span>
+A CFG is a <b>set of rewrite rules for building sentences</b>: start with $S$ ("sentence"), repeatedly replace a non-terminal by one of its allowed expansions, stop when only terminals remain. Each non-terminal is a "slot" with its own meaning. The trick for designing grammars is to <b>name each non-terminal by the property of the strings it produces</b> ($E$ = equal $a$s and $b$s, $A$ = one more $a$ than $b$) and then write rules that preserve that property.
+</div>
+<div class="card def"><span class="tag">Definition</span>
+$G = (V,\Sigma,R,S)$: $V$ an alphabet of terminals and non-terminals, $\Sigma\subseteq V$ the terminals, $R\subseteq(V-\Sigma)\times V^*$ a finite set of rules (left side is a <b>single non-terminal</b>, that is what "context-free" means), $S\in V-\Sigma$ the start symbol. Write $A\to u$ for $(A,u)$.<br>
+$xAy\Rightarrow xuy$ if $A\to u$. $\Rightarrow^*$ = zero or more steps. $L(G) = \{w\in\Sigma^* : S\Rightarrow^* w\}$. A language is context-free if some CFG generates it.<br>
+Leftmost derivation: always expand the leftmost non-terminal. Parse tree: picture of a derivation; each parse tree has exactly one leftmost derivation. Ambiguous grammar: some string has two different parse trees. Inherently ambiguous language: every grammar for it is ambiguous, e.g. $\{a^ib^jc^k : i=j \text{ or } j=k\}$.
+</div>
+<div class="card ex"><span class="tag">Grammar cookbook (memorize these shapes)</span>
+<table>
+<tr><th>Language</th><th>Grammar</th><th>Idea</th></tr>
+<tr><td>$\{a^nb^n\}$</td><td>$S\to aSb\mid e$</td><td>match outer pair, recurse inside</td></tr>
+<tr><td>palindromes</td><td>$S\to aSa\mid bSb\mid a\mid b\mid e$</td><td>match outer pair</td></tr>
+<tr><td>$\{ww^R\}$</td><td>$S\to aSa\mid bSb\mid e$</td><td>even palindromes</td></tr>
+<tr><td>$\{a^mb^n : m\ge n\}$</td><td>$S\to aS\mid T,\ T\to aTb\mid e$</td><td>extra $a$s first, then matched part</td></tr>
+<tr><td>$\{a^ib^j : i\ne j\}$</td><td>$S\to A\mid B$, $A\to aA\mid aT$, $B\to Bb\mid Tb$, $T\to aTb\mid e$</td><td>union of $i>j$ and $i<j$</td></tr>
+<tr><td>balanced parentheses</td><td>$S\to e\mid SS\mid (S)$</td><td></td></tr>
+<tr><td>equal $a$s and $b$s</td><td>$E\to e\mid aEbE\mid bEaE$</td><td>first symbol $a$: find the matching $b$ where count returns to 0</td></tr>
+<tr><td>more $a$s than $b$s (2012 midterm)</td><td>$S\to EaE\mid EaS$, $E$ as above</td><td>prefix with sum 0, then the $a$ that pushes the count to $+1$, then a rest with sum $\ge0$</td></tr>
+<tr><td>$\{a^ib^jc^k : i+j=k\}$</td><td>$S\to aSc\mid T,\ T\to bTc\mid e$</td><td>$c$s match $a$s outside, $b$s inside</td></tr>
+<tr><td>$\{a^nb^nc^m\}$</td><td>$S\to TC,\ T\to aTb\mid e,\ C\to cC\mid e$</td><td>concatenation</td></tr>
+<tr><td>$\{a^mb^nc^pd^q : m+n=p+q\}$ (Tutorial 5)</td><td>$S\to aSd\mid X\mid Z$; $X\to aXc\mid Y$, $Y\to bYc\mid e$; $Z\to bZd\mid W$, $W\to bWc\mid e$</td><td>case $m\ge q$: $a$s cover all $d$s, leftover $a$s and all $b$s match $c$s; case $m\lt q$: symmetric</td></tr>
+<tr><td>even-length non-palindromes $xy$, $|x|=|y|$, $x\ne y^R$ (2011 midterm)</td><td>$S\to 0S0\mid 1S1\mid 0A1\mid 1A0$; $A\to 0A0\mid 0A1\mid 1A0\mid 1A1\mid e$</td><td>matched pairs outside, first mismatch, anything of even length inside</td></tr>
+<tr><td>even length (Tutorial 5)</td><td>$S\to aSb\mid aSa\mid bSa\mid bSb\mid e$</td><td>each rule adds 2 symbols</td></tr>
+</table>
+</div>
+<div class="card thm"><span class="tag">Regular $\Rightarrow$ context-free (two proofs, both examinable)</span>
+<b>From a DFA:</b> non-terminals = states, $S = s$, rules $q\to ap$ for each $\delta(q,a)=p$, and $q\to e$ for each $q\in F$. A derivation $S\Rightarrow\sigma_1q_1\Rightarrow\sigma_1\sigma_2q_2\Rightarrow\cdots$ mirrors the run of the DFA; $w\in L(M)$ iff $S\Rightarrow^*w$.<br>
+<b>Directly from an R.E. (2013 midterm, 20 pts):</b> structural induction. $\emptyset$: grammar with no rules. $\sigma$: $S\to\sigma$. $\alpha\cup\beta$: rename non-terminals apart, add $S\to S_\alpha\mid S_\beta$. $\alpha\beta$: $S\to S_\alpha S_\beta$. $\alpha^*$: $S\to e\mid SS_\alpha$. Each case is exactly the CFL closure construction of L12.
+</div>
+<div class="card thm"><span class="tag">Proving $L(G) = L$ (Tutorial 5, Q2)</span>
+Two directions. $L(G)\subseteq L$: induction on the length of the derivation, show every sentential form keeps the invariant (e.g. every rule adds two terminals, so the yield has even length). $L\subseteq L(G)$: induction on $|w|$, peel off symbols that a rule can produce and apply the hypothesis to the inside.
+</div>
+<details><summary>Try it: which rule of $E\to e\mid aEbE\mid bEaE$ handles $w = abba$? Give the leftmost derivation.</summary><div class="card">
+$E\Rightarrow aEbE\Rightarrow abE\Rightarrow abbEaE\Rightarrow abbaE\Rightarrow abba$. The first $a$ is matched with the $b$ at the first point where the running count returns to zero (position 2), leaving $ba$ for the trailing $E$.
+</div></details>
+<details><summary>Try it: unique parse tree for $(id+id)*id+id$ under $E\to E+T\mid T$, $T\to T*F\mid F$, $F\to(E)\mid id$</summary><div class="card">
+Root $E\to E+T$ with the right $T\to F\to id$ (the last $+id$). Left $E\to T\to T*F$ with $F\to id$ and $T\to F\to(E)$ where the inner $E\to E+T$ gives $id+id$. The grammar forces $*$ to bind tighter than $+$ and both to associate left.
+</div></details>
+<div class="card" style="border-left:4px solid #8e5fd0;background:var(--accent-bg)"><span class="tag">Why it matters</span>Every programming language, JSON parser, and compiler front end is a context-free grammar plus a parser. The grammar design skill here is the one you use when writing a config format.</div>
+</section>
+
+<section id="l10">
+<h2>L10. Pushdown automata</h2>
+<div class="card ex"><span class="tag">Analogy</span>
+A PDA is the NFA tape reader with <b>one stack of plates</b>. It can only see the top plate, push plates, or pop plates. That is enough to "remember" one unbounded count or to match nested things ($a$s with $b$s, brackets), because you push on the way in and pop on the way out. It is not enough to compare three things ($a^nb^nc^n$) or two separated copies ($ww$): once the plates are popped, the information is gone. Nondeterminism lets it guess, e.g. where the middle of $ww^R$ is.
+</div>
+<div class="card def"><span class="tag">Definition (write it verbatim)</span>
+$M = (K,\Sigma,\Gamma,\Delta,s,F)$: states, input alphabet, stack alphabet, start, finals, and $\Delta$ a finite subset of $(K\times(\Sigma\cup\{e\})\times\Gamma^*)\times(K\times\Gamma^*)$.<br>
+Transition $((p,a,\beta),(q,\gamma))$: in state $p$, reading $a$ (or nothing if $a=e$), with $\beta$ on top of the stack, pop $\beta$, push $\gamma$, go to $q$. The <b>leftmost symbol of a string is the top</b> of the stack. Diagram label: $a,\beta\to\gamma$.<br>
+Configuration $(p,w,\beta)\in K\times\Sigma^*\times\Gamma^*$: state, unread input, stack (top on the left).<br>
+$(p,x,\alpha)\vdash_M(q,y,\zeta)$ iff there is $((p,a,\beta),(q,\gamma))\in\Delta$ with $x = ay$, $\alpha = \beta\eta$, $\zeta = \gamma\eta$ for some $\eta\in\Gamma^*$.<br>
+$M$ accepts $w$ iff $(s,w,e)\vdash_M^*(f,e,e)$ for some $f\in F$: input finished, <b>final state, and empty stack</b>. Nondeterministic by definition. Deterministic PDAs are strictly weaker (cannot do $\{ww^R\}$).
+</div>
+<div class="card ex"><span class="tag">Four transition idioms</span>
+<ul>
+<li>push: $((p,a,e),(q,\gamma))$. pop: $((p,a,\beta),(q,e))$.</li>
+<li>push on top of a specific symbol: $((p,a,\beta),(q,\gamma\beta))$.</li>
+<li>free state change: $((p,e,e),(q,e))$. Used to "guess the middle" or move to a cleanup phase.</li>
+<li>bottom marker: first move $((s,e,e),(q,c))$ pushes $c$, last move $((q,e,c),(f,e))$ pops it. Lets you test "stack otherwise empty".</li>
+</ul></div>
+<div class="card ex"><span class="tag">PDA cookbook</span>
+<table>
+<tr><th>Language</th><th>Machine</th></tr>
+<tr><td>$\{wcw^R\}$</td><td>$s$: $a,e\to a$; $b,e\to b$; $c,e\to e$ to $f$. $f$: $a,a\to e$; $b,b\to e$.</td></tr>
+<tr><td>$\{ww^R\}$</td><td>same but $e,e\to e$ from $s$ to $f$ (guess the middle)</td></tr>
+<tr><td>$\{a^nb^n\}$</td><td>$s$: $a,e\to a$; $e,e\to e$ to $f$; $f$: $b,a\to e$</td></tr>
+<tr><td>equal $a$s and $b$s</td><td>$s$: $e,e\to c$ to $q$. $q$: $a,c\to ac$; $a,a\to aa$; $a,b\to e$; $b,c\to bc$; $b,b\to bb$; $b,a\to e$; $e,c\to e$ to $f$. Stack = surplus of one letter.</td></tr>
+<tr><td>more $a$s than $b$s (2012)</td><td>same counter, but leave $q$ with $e,a\to e$ to $f$ (at least one surplus $a$), and $f$: $e,a\to e$; $e,c\to e$.</td></tr>
+<tr><td>$\{a^ib^j : i\le 2j\}$ (Tutorial 5)</td><td>$s$: $a,e\to a$; $e,e\to e$ to $f$. $f$: $b,e\to e$; $b,a\to e$; $b,aa\to e$. Each $b$ pops 0, 1 or 2 $a$s; stack must end empty, so $i\le2j$.</td></tr>
+<tr><td>$\{a^ib^jc^k : i=j+k\}$</td><td>push $a$s; state 2 pops one $a$ per $b$; state 3 pops one $a$ per $c$; $e$-moves between states.</td></tr>
+<tr><td>twice as many $b$s as $a$s</td><td>counter with marker $c$: reading $b$ does one "$-1$" step (push $b$ or pop $a$); reading $a$ does two "$+1$" steps via an intermediate state: $((q,a,e),(r,e))$, then $r$ and $r'$ each push $a$ on $c$ or $a$, or pop a $b$. Accept at $e,c\to e$.</td></tr>
+<tr><td>$\{a^mb^n : m\le n\le 2m\}$</td><td>for each $a$ nondeterministically push one or two $a$s; each $b$ pops one.</td></tr>
+</table>
+</div>
+<div class="card"><span class="tag">PDA simulator (breadth-first over all nondeterministic branches)</span>
+<div class="sim">
+<div>
+<label>Machine</label>
+<select id="pdaSel"></select>
+<label>Input string</label>
+<input id="pdaIn" value="aabb">
+<button onclick="runPDA()">Run</button>
+<div id="pdaDesc" style="font-size:13px;color:var(--muted);margin-top:8px"></div>
+</div>
+<div><label>Accepting computation (or rejection)</label><div class="trace" id="pdaOut"></div></div>
+</div>
+</div>
+<div class="card thm"><span class="tag">Exam template: acceptance by final state only (2011 midterm Q7, and in this year's review)</span>
+Define $L_F(M) = \{w : (s,w,e)\vdash^*(f,e,\beta),\ f\in F,\ \beta\in\Gamma^*\}$ (stack may be non-empty).<br>
+<b>(a) Build $M'$ with $L(M') = L_F(M)$:</b> add one new state $f'$, make $F' = \{f'\}$. Add $((f,e,e),(f',e))$ for every $f\in F$, and $((f',e,\sigma),(f',e))$ for every $\sigma\in\Gamma$. If $w$ reaches some $f$ with stack $\beta$, jump to $f'$ and pop everything, accept. Conversely an accepting run of $M'$ must enter $f'$, which only happens from some $f\in F$, and $f'$ reads no input, so the input was already exhausted in $f$: $w\in L_F(M)$.<br>
+<b>(b) Build $M''$ with $L_F(M'') = L(M)$:</b> use a bottom marker $Z\notin\Gamma$. New start $s'$ with $((s',e,e),(s,Z))$. New final $f'$ with $F'' = \{f'\}$ and $((f,e,Z),(f',e))$ for every $f\in F$. Now $f'$ is reachable exactly when $M$ is in a final state with its own stack empty (only $Z$ left). The old finals are not final in $M''$. This is the corrected version shown in the review session; the naive "pop everything at $f$" attempt fails because $f$ may still have outgoing transitions that read input, so reaching $f$ with an empty stack is not the same as accepting.
+</div>
+<div class="card thm"><span class="tag">Exam template: a new machine model (2012 midterm Q5, queue automaton, 30 pts)</span>
+When asked to define "yields in one step" for a variant, copy the PDA pattern and change only the storage rule. Queue (pop at front, push at back): $(p,x,\alpha)\vdash(q,y,\zeta)$ iff $\exists((p,a,\beta),(q,\gamma))\in\Delta$ with $x=ay$, $\alpha=\beta\eta$, $\zeta=\eta\gamma$. Accept: $(s,w,e)\vdash^*(f,e,e)$, $f\in F$.<br>
+Queue automaton for $\{a^nb^ma^nb^m\}$: enqueue every $a$ then every $b$ of the first half (states $s$, $t$), then guess the middle with an $e$-move and dequeue a matching $a$ for each $a$ (state $u$) then a matching $b$ for each $b$ (state $v$). FIFO order replays the first half exactly, which a stack cannot do.<br>
+Why a queue can do everything a CFG can: keep the sentential form in the queue with a marker $\#$. To expand the front non-terminal $A$, dequeue it, enqueue the right side, then rotate the rest of the queue (dequeue and re-enqueue up to and including $\#$) so order is restored. Terminals at the front are matched against the input. This simulates a leftmost derivation.
+</div>
+<details><summary>Try it: trace $abba$ on the $\{ww^R\}$ machine and show one failing branch</summary><div class="card">
+$(s,abba,e)\vdash(s,bba,a)\vdash(s,ba,ba)\vdash(f,ba,ba)\vdash(f,a,a)\vdash(f,e,e)$ accept. Failing branch: $(s,abba,e)\vdash(f,abba,e)$, stuck (nothing to pop). Acceptance needs only one good branch.
+</div></details>
+<div class="card" style="border-left:4px solid #8e5fd0;background:var(--accent-bg)"><span class="tag">Why it matters</span>Stack machines are how parsers, calculators, and virtual machines (the JVM, WebAssembly) actually execute.</div>
+</section>
+
+<section id="l11">
+<h2>L11. PDA = CFG</h2>
+<div class="card ex"><span class="tag">Analogy</span>
+A grammar is a <b>recipe</b>; a PDA is a <b>cook with a to-do stack</b>. CFG to PDA: put $S$ on the stack; whenever the top is a non-terminal, replace it by one of its rules (guess which); whenever the top is a terminal, it must match the next input symbol, so pop both. The stack always holds "the rest of the leftmost derivation still to be produced". PDA to CFG: a non-terminal $A_{pq}$ means "a string that takes the machine from $p$ to $q$ with an empty stack both times", and the rules describe how the first push is eventually popped.
+</div>
+<div class="card thm"><span class="tag">Theorem 1: CFG $\to$ PDA (know the construction cold)</span>
+Given $G=(V,\Sigma,R,S)$, let $M = (\{p,q\},\Sigma,V,\Delta,p,\{q\})$ with
+<ol>
+<li>$((p,e,e),(q,S))$: push the start symbol.</li>
+<li>$((q,e,A),(q,x))$ for every rule $A\to x$: expand the top non-terminal.</li>
+<li>$((q,a,a),(q,e))$ for every $a\in\Sigma$: match a terminal with the input.</li>
+</ol>
+The stack content mimics a leftmost derivation. Example for $S\to SS\mid[S]\mid e$ on $[[\,]][\,]$: $(p,[[]][],e)\vdash(q,[[]][],S)\vdash(q,[[]][],SS)\vdash(q,[[]][],[S]S)\vdash(q,[]][],S]S)\vdash\cdots\vdash(q,e,e)$.
+</div>
+<div class="card thm"><span class="tag">Theorem 2: PDA $\to$ CFG</span>
+First make the PDA <b>simple</b>: one accepting state $q_{acc}$, and every transition either pushes exactly one symbol $((q,a,e),(p,t))$ or pops exactly one $((q,a,t),(p,e))$ (split bigger transitions through extra states; wrap with a bottom marker to get a single final state with empty stack).<br>
+Non-terminals $A_{pq}$ for all $p,q\in K$, start symbol $A_{q_0,q_{acc}}$. Rules:
+<ol>
+<li>If $((p,a,e),(r,t))$ and $((s,b,t),(q,e))$ are transitions, add $A_{pq}\to aA_{rs}b$. (The symbol pushed first is popped last.)</li>
+<li>For all $p,q,r$: $A_{pq}\to A_{pr}A_{rq}$. (The first push was popped somewhere in the middle, at state $r$.)</li>
+<li>For all $p$: $A_{pp}\to e$.</li>
+</ol>
+Claim: $A_{pq}\Rightarrow^* w$ iff $w$ takes $M$ from $p$ with empty stack to $q$ with empty stack. Key observation: any such computation starts with a push and ends with a pop, and either that first symbol survives until the last step (rule 1) or it is popped earlier (rule 2).
+</div>
+<details><summary>Try it: write the PDA for $S\to aSb\mid e$ via Theorem 1 and trace $ab$</summary><div class="card">
+$\Delta = \{((p,e,e),(q,S)),\ ((q,e,S),(q,aSb)),\ ((q,e,S),(q,e)),\ ((q,a,a),(q,e)),\ ((q,b,b),(q,e))\}$.<br>
+$(p,ab,e)\vdash(q,ab,S)\vdash(q,ab,aSb)\vdash(q,b,Sb)\vdash(q,b,b)\vdash(q,e,e)$.
+</div></details>
+</section>
+
+<section id="l12">
+<h2>L12. Closure properties of CFLs</h2>
+<div class="card thm"><span class="tag">Closed under</span>
+<ul>
+<li><b>Union:</b> rename non-terminals apart, add $S\to S_1\mid S_2$.</li>
+<li><b>Concatenation:</b> $S\to S_1S_2$.</li>
+<li><b>Kleene star:</b> $S\to e\mid SS_1$.</li>
+<li><b>Intersection with a regular language:</b> product of a PDA $M_1$ and a DFA $M_2$. States $K_1\times K_2$, stack from $M_1$, start $(s_1,s_2)$, finals $F_1\times F_2$. For each $((q_1,a,\beta),(p_1,\gamma))$ and every $q_2$: add $(((q_1,q_2),a,\beta),((p_1,\delta(q_2,a)),\gamma))$. For $e$-moves of $M_1$ the DFA component stays put. Build only reachable states.</li>
+<li>Consequence: $L - R = L\cap\overline{R}$ is context-free when $L$ is CF and $R$ regular (Tutorial 6).</li>
+</ul></div>
+<div class="card thm"><span class="tag">NOT closed under</span>
+<ul>
+<li><b>Intersection:</b> $\{a^nb^nc^m\}\cap\{a^mb^nc^n\} = \{a^nb^nc^n\}$, not CF. Both pieces are CF: $S\to TC, T\to aTb\mid e, C\to cC\mid e$ and $S\to AT, T\to bTc\mid e, A\to aA\mid e$.</li>
+<li><b>Complement:</b> if CFLs were closed under complement, then $L_1\cap L_2 = \overline{\overline{L_1}\cup\overline{L_2}}$ would make them closed under intersection. Contradiction.</li>
+<li>Concrete (2011 midterm Q4): $\overline{\{a^nb^nc^n\}}$ IS context-free. It equals $\overline{L(a^*b^*c^*)}\ \cup\ \{a^ib^jc^k : i\ne j\}\ \cup\ \{a^ib^jc^k : j\ne k\}$: one regular piece and two CF pieces, union is CF. So complement of a non-CFL can be CF, which shows the class is not closed under complement.</li>
+</ul></div>
+<div class="card ex"><span class="tag">Worked: is $L = \{w : |w|_a = |w|_b,\ w$ has neither $abaa$ nor $babb$ as substring$\}$ context-free?</span>
+Yes. $L = L_1\cap R$ with $L_1$ = equal counts (CF) and $R$ = avoids the two substrings. $\overline{R} = L((a\cup b)^*(abaa\cup babb)(a\cup b)^*)$ is regular, so $R$ is regular, so $L$ is CF by the intersection theorem.
+</div>
+<details><summary>Try it (Tutorial 6): show $\{xx^Ryy^Rzz^R : x,y,z\in\{a,b\}^*\}$ and $\{a^ib^j : i\ne j\}$ are CF using closure</summary><div class="card">
+First is $PPP$ with $P=\{ww^R\}$ (CF), concatenation closure. Second is $\{a^ib^j:i>j\}\cup\{a^ib^j:i\lt j\}$, union of two CFLs ($S\to aS\mid aT$, $T\to aTb\mid e$ and the mirror).
+</div></details>
+</section>
+
+<section id="l13">
+<h2>L13. Pumping theorem for CFLs</h2>
+<div class="card ex"><span class="tag">Analogy</span>
+A long string needs a <b>tall parse tree</b>, and a tall tree must <b>reuse some non-terminal $A$ on one root-to-leaf path</b> (pigeonhole on the finitely many non-terminals). The subtree under the upper $A$ yields $vxy$; the lower $A$ yields $x$. You can swap the small subtree for the big one (pumping up: $uv^2xy^2z$) or the big for the small (pumping down: $uxz$). Unlike the regular case, the pumped pieces come <b>in pairs</b> $v$ and $y$ around a middle $x$, which is why CFLs can match two things but not three.
+</div>
+<div class="card thm"><span class="tag">Theorem (write exactly this)</span>
+Let $L$ be context-free. Then there is $N\ge1$ such that every $w\in L$ with $|w|\ge N$ can be written $w = uvxyz$ with (1) $vy\ne e$, (2) $|vxy|\le N$, (3) $uv^ixy^iz\in L$ for all $i\ge0$.<br>
+Proof sketch: $b$ = max right-hand-side length (fanout), $N = b^{|V-\Sigma|+1}$. A parse tree with $\ge N$ leaves has height $\ge|V-\Sigma|+1$, so some path has a repeated non-terminal. Take the tree with fewest leaves and the lowest repeat so that $vy\ne e$ and $|vxy|\le N$.
+</div>
+<div class="card thm"><span class="tag">Proof template</span>
+<ol>
+<li>Suppose $L$ is CF, let $N$ be the pumping constant.</li>
+<li>Choose $w\in L$, $|w|\ge N$, typically with blocks of length $N$ so that $|vxy|\le N$ means $vxy$ touches at most <b>two adjacent blocks</b>.</li>
+<li>Case on where $vxy$ sits. In each case pick $i$ ($0$ or $2$) and show the counts or the block order break.</li>
+<li>Also cover the case where $v$ or $y$ straddles two blocks: pumping then breaks the $a^*b^*c^*$ shape.</li>
+<li>Contradiction.</li>
+</ol>
+</div>
+<div class="card ex"><span class="tag">Worked</span>
+<ul>
+<li>$\{a^ib^ic^i\}$: $w = a^Nb^Nc^N$. $vxy$ cannot contain both $a$s and $c$s. If it lies in one block, pumping changes one count. If it spans two blocks, pumping changes at most two of the three counts, or breaks the order. Either way $uv^2xy^2z\notin L$.</li>
+<li>$\{a^nb^ma^nb^m\}$: $w = a^Nb^Na^Nb^N$. If $v$ or $y$ mixes letters, order breaks. Otherwise $v$ and $y$ sit in at most two adjacent blocks, so pumping changes one $a$-block without the other, or one $b$-block without the other.</li>
+<li>$\{a^ib^ic^{2i}\}$ (Tutorial 6): same as the first with $w=a^Nb^Nc^{2N}$.</li>
+<li>$\{a^ib^jc^k : j = \max(i,k)\}$ (Tutorial 6): $w=a^Nb^Nc^N$. $vxy$ in $a$s only: pump up, $i\gt j$. In $b$s only: pump up, $j\gt\max$. In $c$s only: pump up, $k\gt j$. Across $a$s and $b$s: pump down, then $j\lt k$. Across $b$s and $c$s: pump down, then $j\lt i$.</li>
+<li>Equal numbers of $a$s, $b$s, $c$s: use closure. $L\cap L(a^*b^*c^*) = \{a^ib^ic^i\}$, not CF, so $L$ is not CF.</li>
+</ul></div>
+<div class="card warn"><span class="tag">Which is which</span>
+CF: $\{a^nb^n\}$, $\{ww^R\}$, $\{a^ib^jc^k : i+j=k\}$, palindromes, balanced brackets, equal $a$s and $b$s, $\{a^ib^j : i\ne j\}$, complement of $\{a^nb^nc^n\}$.<br>
+Not CF: $\{a^nb^nc^n\}$, $\{ww\}$, $\{a^nb^ma^nb^m\}$, $\{a^ib^ic^{2i}\}$, equal counts of three letters, $\{a^{n^2}\}$, $\{a^p : p$ prime$\}$.
+</div>
+<div class="card" style="border-left:4px solid #8e5fd0;background:var(--accent-bg)"><span class="tag">Why it matters</span>Limits of context-free languages are why some languages need a type checker on top of the grammar, and why indentation-based syntax is tricky.</div>
+</section>
+
+<section id="guide">
+<h2>Decision guide: is it regular? Is it context-free?</h2>
+<div class="card">
+<ol>
+<li><b>Finite?</b> Regular (union of its words).</li>
+<li><b>Can a bounded memory decide it?</b> Parity, mod $k$, "contains / ends with / avoids a substring", fixed-length lookback: regular. Write the DFA or R.E.</li>
+<li><b>Needs one unbounded counter or matching nested pairs?</b> $\{a^nb^n\}$, palindromes, equal counts of two letters, balanced brackets, $i\le2j$: context-free, not regular. Write a CFG (name non-terminals by property) or a PDA (push then pop).</li>
+<li><b>Needs two counters, or comparing two separated copies?</b> $\{a^nb^nc^n\}$, $\{ww\}$, $\{a^nb^ma^nb^m\}$: not even context-free.</li>
+<li><b>Built from known languages by closure?</b> Regular ops: $\cup,\cdot,*,\cap,\overline{\ },-,R$. CF ops: $\cup,\cdot,*$, and $\cap$ with a regular language. CF is NOT closed under $\cap$ or complement.</li>
+<li><b>To prove NOT regular:</b> pumping theorem with first $n$ symbols identical, or intersect with a regular language to reach $\{a^nb^n\}$.</li>
+<li><b>To prove NOT CF:</b> CFL pumping with blocks of length $N$, or intersect with $a^*b^*c^*$ to reach $\{a^nb^nc^n\}$.</li>
+</ol>
+</div>
+<h3 id="closure">Closure true/false drill (2013 midterm Q3 was 35 points of exactly this)</h3>
+<div class="card">
+<table>
+<tr><th>Statement</th><th>Verdict</th><th>Reason or counterexample</th></tr>
+<tr><td>$A,B$ regular $\Rightarrow A\ominus B$ regular</td><td>True</td><td>$(A\cap\overline B)\cup(B\cap\overline A)$, closure under complement, intersection, union</td></tr>
+<tr><td>$A$ regular, $B$ not $\Rightarrow A\cap B$ not regular</td><td>False</td><td>$A=\emptyset$, or $A$ finite</td></tr>
+<tr><td>$A,B$ both not regular $\Rightarrow A\cup B$ not regular</td><td>False</td><td>$A=\{a^nb^n\}$, $B=\overline A$, union is $\Sigma^*$</td></tr>
+<tr><td>$A$ regular, $B$ not, $A\cap B=\emptyset\Rightarrow A\cup B$ not regular</td><td>True</td><td>else $B = (A\cup B) - A$ would be regular</td></tr>
+<tr><td>$A$ CF, $B$ regular $\Rightarrow A\cap B$ regular</td><td>False</td><td>$A=\{a^nb^n\}$, $B=\Sigma^*$</td></tr>
+<tr><td>$A,B$ CF $\Rightarrow A\cup B$ CF</td><td>True</td><td>$S\to S_1\mid S_2$</td></tr>
+<tr><td>$A,B$ CF and non-regular $\Rightarrow A\cap B$ not regular</td><td>False</td><td>$A=\{a^nb^n\}$, $B=\{b^na^n\}$, intersection $\{e\}$</td></tr>
+<tr><td>$A,B$ CF $\Rightarrow A\cap B$ CF</td><td>False</td><td>$\{a^nb^nc^m\}\cap\{a^mb^nc^n\}$</td></tr>
+<tr><td>$A$ CF $\Rightarrow\overline A$ CF</td><td>False</td><td>would give intersection closure via De Morgan</td></tr>
+<tr><td>$A$ CF, $R$ regular $\Rightarrow A - R$ CF</td><td>True</td><td>$A\cap\overline R$, $\overline R$ regular</td></tr>
+<tr><td>$A$ regular $\Rightarrow$ every subset of $A$ regular</td><td>False</td><td>$\{a^nb^n\}\subseteq\{a,b\}^*$</td></tr>
+<tr><td>$A$ regular $\Rightarrow A^R$, $\mathrm{Pref}(A)$, $\mathrm{Subseq}(A)$ regular</td><td>True</td><td>induction on the R.E. or edit the NFA</td></tr>
+<tr><td>$A$ not regular $\Rightarrow\overline A$ not regular</td><td>True</td><td>complement twice</td></tr>
+<tr><td>$A$ regular, $B$ CF $\Rightarrow AB$ CF</td><td>True</td><td>regular is CF; concatenation closure</td></tr>
+<tr><td>$A$ CF $\Rightarrow A^R$ CF</td><td>True</td><td>reverse every rule's right side</td></tr>
+</table>
+</div>
+<h3>Countability drill</h3>
+<div class="card">
+<table>
+<tr><th>Set</th><th>Verdict</th></tr>
+<tr><td>$\{(x,y)\in\mathbb{N}^2 : x\ne y\}$</td><td>countable (subset of $\mathbb{N}\times\mathbb{N}$)</td></tr>
+<tr><td>any infinite language over $\Sigma$</td><td>countable (subset of $\Sigma^*$)</td></tr>
+<tr><td>all languages over $\Sigma$</td><td>uncountable ($2^{\Sigma^*}$)</td></tr>
+<tr><td>all finite languages over $\Sigma$</td><td>countable (each is a finite string listing its words)</td></tr>
+<tr><td>all regular languages, all CFLs, all DFAs, all grammars, all programs</td><td>countable (finite descriptions)</td></tr>
+<tr><td>all infinite binary sequences, $[0,1]$, functions $\mathbb{N}\to\{0,1\}$</td><td>uncountable</td></tr>
+</table>
+<b>Find the flaw (2012 Q3b):</b> the diagonal language $D=\{w_i : w_i\notin L_i\}$ built from an enumeration of all finite languages is in general <b>infinite</b>, so "$D$ should be a member of FL" is unjustified. No contradiction. Diagonalization only works when the diagonal object is guaranteed to belong to the class you enumerated.
+</div>
+</section>
+
+<section id="mt">
+<h2>Past midterms, fully solved</h2>
+<p>Try each question on paper first (set a timer: about 1 minute per point), then open the solution.</p>
+
+<h3>Fall 2011 (120 min)</h3>
+<details><summary>Q1 (10). DFA: even number of 0s and odd number of 1s over $\{0,1\}$</summary><div class="card">
+Product of two parity machines. States $(p_0,p_1)$ with $p_0\in\{E,O\}$ for the 0-count and $p_1\in\{E,O\}$ for the 1-count. Start $(E,E)$. Reading $0$ flips the first coordinate, reading $1$ flips the second. Final: $\{(E,O)\}$. Four states, eight edges.
+</div></details>
+<details><summary>Q2 (10). CFG for $\{xy : x,y\in\{0,1\}^+, |x|=|y|, x\ne y^R\}$</summary><div class="card">
+These are the even-length strings of length $\ge2$ that are not palindromes. Some outermost mismatched pair exists; pairs outside it match.<br>
+$S\to 0S0\mid 1S1\mid 0A1\mid 1A0$, $A\to 0A0\mid 0A1\mid 1A0\mid 1A1\mid e$.<br>
+$A$ generates every even-length string. $S$ wraps matched pairs around the first mismatch. No $S\to e$, so length $\ge2$.
+</div></details>
+<details><summary>Q3 (8). Countable or uncountable</summary><div class="card">
+(a) countable. (b) countable. (c) uncountable. (d) countable. See the drill above.
+</div></details>
+<details><summary>Q4 (12). Show $\overline{\{a^nb^nc^n\}}$ is context-free</summary><div class="card">
+$\overline L = \overline{L(a^*b^*c^*)}\cup\{a^ib^jc^k : i\ne j\}\cup\{a^ib^jc^k : j\ne k\}$.<br>
+First piece is the complement of a regular language, hence regular, hence CF. Second: $S\to XC$, $X\to aXb\mid aA\mid bB$, $A\to aA\mid e$, $B\to bB\mid e$, $C\to cC\mid e$ (generate $a^ib^j$ with $i\ne j$ then any $c$s). Third is symmetric with $a$s free in front. CFLs are closed under union, so $\overline L$ is CF. A string is in $\overline L$ iff it is not of the form $a^*b^*c^*$, or it is but with $i\ne j$ or $j\ne k$.
+</div></details>
+<details><summary>Q5 (20). Prove "twice as many $b$s as $a$s" is not regular</summary><div class="card">
+Suppose regular with pumping constant $n$. Take $w=a^nb^{2n}\in L$. Any split $w=xyz$ with $|xy|\le n$, $y\ne e$ has $y=a^k$, $1\le k\le n$. Then $xy^0z = a^{n-k}b^{2n}$ has $2(n-k)\ne2n$ $b$s, so $xy^0z\notin L$. Contradiction.<br>
+Alternative: $L\cap L(a^*b^*) = \{a^nb^{2n}\}$; show that non-regular the same way.
+</div></details>
+<details><summary>Q6 (20). $L$ regular $\Rightarrow L^R$ regular</summary><div class="card">
+See the L7 template: structural induction on the regular expression, or reverse the NFA. For full marks state the induction hypothesis ($L(\alpha^R) = L(\alpha)^R$) and check all five cases, using $(uw)^R = w^Ru^R$ for the concatenation case.
+</div></details>
+<details><summary>Q7 (20). PDA accepting by final state only: $L(M') = L_F(M)$ and $L_F(M'') = L(M)$</summary><div class="card">
+See the L10 template. (a) new final $f'$ reached by $e$-moves from each $f\in F$, with $f'$ popping any symbol. (b) bottom marker $Z$ pushed by a new start, new final $f'$ reachable from each $f\in F$ only by popping $Z$.
+</div></details>
+
+<h3>Spring 2012 (120 min)</h3>
+<details><summary>Q1 (20). DFA contains $aba$; DFA does not contain $aba$; NFA ends with $aba$; convert to DFA</summary><div class="card">
+(a) States $q_e,q_a,q_{ab},q_{aba}$. $q_e$: $a\to q_a$, $b\to q_e$. $q_a$: $a\to q_a$, $b\to q_{ab}$. $q_{ab}$: $a\to q_{aba}$, $b\to q_e$. $q_{aba}$ loops. Final $q_{aba}$.<br>
+(b) Same machine, finals $\{q_e,q_a,q_{ab}\}$.<br>
+(c) $q_0$ loops on $a,b$; $q_0\xrightarrow{a}q_1\xrightarrow{b}q_2\xrightarrow{a}q_3$, final $q_3$.<br>
+(d) Subset construction table in L6. Four states: $\{q_0\},\{q_0,q_1\},\{q_0,q_2\},\{q_0,q_1,q_3\}$.
+</div></details>
+<details><summary>Q2 (15). Why "make $s$ final and add $e$ from $f$ to $s$" fails for Kleene star</summary><div class="card">
+(a) $M$: $s\xrightarrow{a}f$, $f\xrightarrow{b}s$, $F=\{f\}$, so $L=a(ba)^*$. In $M'$ the string $ab$ runs $s\to f\to s$ and $s$ is final, so $ab\in L(M')$, but $ab\notin L^*$ (every non-empty string of $L^*$ ends in $a$).<br>
+(b) ii: $L(M')\supseteq L^*$ always, sometimes strictly. Every concatenation of $L$-strings is accepted using the new $e$-edge, and $e$ is accepted since $s$ is final. The extra strings come from paths that re-enter $s$ through original edges and stop there.
+</div></details>
+<details><summary>Q3 (20). Finite languages are regular; find the flaw</summary><div class="card">
+(a) $L=\{w_1,\dots,w_k\}$. Each $w_i = \sigma_1\cdots\sigma_m$ is $L(\sigma_1\cdots\sigma_m)$, a concatenation of symbol expressions; $e$ is $L(\emptyset^*)$. Then $L = L(w_1\cup\cdots\cup w_k)$, and $\emptyset$ is $L(\emptyset)$.<br>
+(b) $D$ need not be finite, so $D\notin FL$ is not a contradiction. The proof only shows $D$ differs from every $L_i$, which is fine because $D$ is an infinite language.
+</div></details>
+<details><summary>Q4 (25). More $a$s than $b$s: CFG, PDA, not regular</summary><div class="card">
+(a) $S\to EaE\mid EaS$, $E\to e\mid aEbE\mid bEaE$.<br>
+(b) Counter PDA with marker: $((s,e,e),(q,c))$; in $q$: $a,c\to ac$; $a,a\to aa$; $a,b\to e$; $b,c\to bc$; $b,b\to bb$; $b,a\to e$; then $((q,e,a),(f,e))$; in $f$: $e,a\to e$; $e,c\to e$. Accept iff at least one surplus $a$ remains.<br>
+(c) Pumping with $w=b^na^{n+1}$, $y=b^k$, $i=2$: $b^{n+k}a^{n+1}\notin L$.
+</div></details>
+<details><summary>Q5 (20+10). Queue automaton</summary><div class="card">
+See the L10 template: yields relation with $\alpha=\beta\eta$, $\zeta=\eta\gamma$; acceptance $(s,w,e)\vdash^*(f,e,e)$; machine for $a^nb^ma^nb^m$ with four states; simulation of a leftmost derivation using rotation with a marker.
+</div></details>
+
+<h3>Spring 2013 (80 min)</h3>
+<details><summary>Q1 (5). Automaton accepting only your student ID</summary><div class="card">
+A chain of states, one edge per digit, last state final. For a DFA add a dead state for all other edges.
+</div></details>
+<details><summary>Q2 (20). $L=\{b(n) : 0\le n\le11\}$ in binary: R.E., NFA, DFA</summary><div class="card">
+$L = \{0,1,10,11,100,101,110,111,1000,1001,1010,1011\}$.<br>
+(a) $0\cup1\cup1(0\cup1)\cup1(0\cup1)(0\cup1)\cup10(0\cup1)(0\cup1)$.<br>
+(b) NFA: a new start with $e$-edges into one chain per term, or a trie with all prefix states final as appropriate.<br>
+(c) DFA as a trie: $s\xrightarrow{0}z$ (final), $s\xrightarrow{1}p_1$ (final), $p_1\xrightarrow{0}p_{10}$, $p_1\xrightarrow{1}p_{11}$ (both final), $p_{10}\xrightarrow{0,1}p_{10x}$ (final), $p_{11}\xrightarrow{0,1}p_{11x}$ (final), $p_{10x}\xrightarrow{0,1}p_{10xx}$ (final), everything else to a dead state. Nine states.
+</div></details>
+<details><summary>Q3 (35). Seven closure statements</summary><div class="card">
+(a) right. (b) wrong, $A=\emptyset$. (c) wrong, $A=\{a^nb^n\}$, $B=\overline A$. (d) right. (e) wrong, $A=\{a^nb^n\}$, $B=\Sigma^*$. (f) right. (g) wrong, $A=\{a^nb^n\}$, $B=\{b^na^n\}$. Full reasons in the closure table.
+</div></details>
+<details><summary>Q4 (20). $L=\{x\bar x\}$ not regular</summary><div class="card">
+$L\cap L(0^*1^*) = \{0^n1^n\}$: a string $x\bar x$ with all $0$s before all $1$s must have $x=0^n$, $\bar x = 1^n$. If $L$ were regular the intersection would be regular, but $\{0^n1^n\}$ is not (pump $0^n1^n$ with $y=0^k$, $i=0$). Contradiction.
+</div></details>
+<details><summary>Q5 (20). R.E. $\to$ CFG directly</summary><div class="card">
+Structural induction, see L9: $\emptyset$ (no rules), $\sigma$ ($S\to\sigma$), union ($S\to S_1\mid S_2$), concatenation ($S\to S_1S_2$), star ($S\to e\mid SS_1$), with non-terminals renamed apart. State and check $L(G_\alpha) = L(\alpha)$ in each case.
+</div></details>
+</section>
+
+<section id="practice">
+<h2>Tutorial and homework problems</h2>
+<details><summary>T3. NFA to DFA for $(ab\cup aab\cup aba)^*$; show $\mathrm{Pref}(L)$ regular</summary><div class="card">
+Build the NFA with a start state $s$ (final) and three loops reading $ab$, $aab$, $aba$ back to $s$; then run the subset construction from $\{s\}$. For Pref: make every state that can reach a final state final (or use the R.E. induction in L7).
+</div></details>
+<details><summary>T4. $\mathrm{Subseq}(L)$ and $L^R$ regular</summary><div class="card">
+Subseq: for every edge $(p,\sigma,q)$ of an NFA for $L$ add $(p,e,q)$. Any subsequence is obtained by skipping symbols. Reversal: see L7.
+</div></details>
+<details><summary>T5. Palindromes; $a^mb^n$ with $m\ge n$; $a^mb^nc^pd^q$ with $m+n=p+q$; PDAs for $i\le2j$, $i=j+k$, twice as many $b$s</summary><div class="card">
+All grammars and machines are in the L9 and L10 cookbooks.
+</div></details>
+<details><summary>T6. $\{a^ib^jc^k : i+j=k\}$, $\{a^ib^ic^{2i}\}$, $\{a^ib^jc^k : j=\max(i,k)\}$; closure proofs</summary><div class="card">
+First is CF ($S\to aSc\mid T$, $T\to bTc\mid e$). Second and third are not CF, see L13 worked examples. Closure: $\{a^ib^j:i\ne j\}$ is a union; $xx^Ryy^Rzz^R$ is a concatenation; $L-R = L\cap\overline R$.
+</div></details>
+<details><summary>HW1 Q5. Make every state that can reach $F$ final: what language?</summary><div class="card">
+$\mathrm{Pref}(L(M))$. A string ends in such a state iff some continuation leads to acceptance.
+</div></details>
+<details><summary>HW1 Q7. Perfect shuffle of two regular languages is regular</summary><div class="card">
+Product construction that alternates: states $K_1\times K_2\times\{1,2\}$; in phase 1 read a symbol with $M_1$ and switch to phase 2, in phase 2 read with $M_2$ and switch back. Finals $F_1\times F_2\times\{1\}$.
+</div></details>
+<details><summary>Quiz 2 recap</summary><div class="card">
+$L^+=L^*$ iff $e\in L$. No substring $aa$: $(b\cup ab)^*(a\cup\emptyset^*)$; $(ba\cup b)^*$ misses $aba$; $b^+$ is not valid syntax. $L(\emptyset^*)=\{e\}$. Functions $A\to\{0,1\}$ for countably infinite $A$ are uncountable.
+</div></details>
+</section>
+
+
+<section id="sheet">
+<h2>Final notes: the sheet I bring into the exam</h2>
+<p>Everything below is written to be copied onto paper. Gaps are marked like <code>___</code>. Fill the gap, keep the rest of the sentence.</p>
+
+<h3>Plain-words glossary</h3>
+<div class="card">
+<table>
+<tr><th>Word</th><th>What it really means</th></tr>
+<tr><td>alphabet $\Sigma$</td><td>the letters you are allowed to use, e.g. $\{a,b\}$ or $\{0,1\}$</td></tr>
+<tr><td>string / word</td><td>any finite sequence of those letters, e.g. $abba$. $e$ is the string with zero letters.</td></tr>
+<tr><td>$\Sigma^*$</td><td>every possible string, including $e$</td></tr>
+<tr><td>language</td><td>a set of strings. Think "the list of accepted passwords". Can be infinite.</td></tr>
+<tr><td>regular expression (regex)</td><td>a short formula that generates a language. Three operators only: $\cup$ (pick one), writing side by side (then), $*$ (repeat 0 or more times). $(a\cup b)^*a$ = "any letters, then an $a$".</td></tr>
+<tr><td>regular language</td><td>a language some regex (equivalently some DFA) describes. The "easy" languages.</td></tr>
+<tr><td>automaton / machine</td><td>a diagram of circles and arrows that reads a string letter by letter and answers yes or no</td></tr>
+<tr><td>state ("mood")</td><td>one circle in the diagram. It is the only memory the machine has: "which circle am I in right now". A machine with 3 states can remember 3 different things, no more.</td></tr>
+<tr><td>transition</td><td>an arrow: "in this state, reading this letter, go to that state"</td></tr>
+<tr><td>start state, final state</td><td>where reading begins; the double circles where the answer is yes</td></tr>
+<tr><td>DFA</td><td>deterministic: from every state, every letter has exactly one arrow. No choices.</td></tr>
+<tr><td>NFA</td><td>nondeterministic: a letter can have several arrows or none, and $e$-arrows move for free. The string is accepted if at least one way of choosing ends in a final state.</td></tr>
+<tr><td>configuration</td><td>a snapshot: (current state, letters not yet read). For a PDA also the stack.</td></tr>
+<tr><td>$\vdash$ (yields)</td><td>one step of the machine. $\vdash^*$ means any number of steps.</td></tr>
+<tr><td>$L(M)$, $L(G)$, $L(\alpha)$</td><td>the language the machine accepts, the grammar generates, the regex describes</td></tr>
+<tr><td>grammar (CFG)</td><td>rewrite rules. Start with $S$, keep replacing capital letters by what their rules allow, stop when only small letters remain. The strings you can reach form the language.</td></tr>
+<tr><td>terminal / nonterminal</td><td>small letters that stay (terminals) versus capital letters that get replaced (nonterminals)</td></tr>
+<tr><td>derivation</td><td>the sequence of replacements $S\Rightarrow\cdots\Rightarrow w$. Leftmost: always replace the leftmost capital.</td></tr>
+<tr><td>parse tree</td><td>the derivation drawn as a tree. Ambiguous grammar: some string has two different trees.</td></tr>
+<tr><td>context-free language (CFL)</td><td>a language some grammar (equivalently some PDA) describes. The "medium" languages.</td></tr>
+<tr><td>PDA</td><td>an NFA with a stack of plates. Can push a plate, pop the top plate, or look at the top plate. Accepts when the input is finished, the state is final, and the stack is empty.</td></tr>
+<tr><td>stack</td><td>last in, first out. Top is the leftmost symbol when written as a string.</td></tr>
+<tr><td>closed under X</td><td>doing operation X to languages of a class gives a language still in that class</td></tr>
+<tr><td>pumping</td><td>repeating a chunk of a string. The pumping theorems say long strings in regular / CF languages always have a repeatable chunk.</td></tr>
+<tr><td>countable</td><td>you can list the elements one by one so every element eventually appears</td></tr>
+<tr><td>diagonalization</td><td>the trick that builds an element disagreeing with item $i$ of any proposed list at position $i$, so the list is incomplete</td></tr>
+<tr><td>reduction / contradiction proof</td><td>"suppose it were true, then this known-false thing would follow, so it is not true"</td></tr>
+</table>
+</div>
+
+<h3>Things I will use for sure</h3>
+<div class="card">
+<ul>
+<li>Write every tuple with all its parts, even when drawing a diagram: $M=(K,\Sigma,\delta,s,F)$, $G=(V,\Sigma,R,S)$, $M=(K,\Sigma,\Gamma,\Delta,s,F)$.</li>
+<li>$e$ not $\varepsilon$. $\emptyset^*$ not $e$ inside a regex. No $+$ superscript in regex.</li>
+<li>Draw diagrams, then check: DFA has one arrow per letter per state. Add a dead state if needed.</li>
+<li>The memory question: finite memory means regular, one stack means CF, more means neither.</li>
+<li>Standard languages: $\{a^nb^n\}$ is CF not regular. $\{a^nb^nc^n\}$ and $\{ww\}$ are not CF. $\{ww^R\}$ and palindromes are CF.</li>
+<li>Counterexample kit: $\{a^nb^n\}$, its complement, $\emptyset$, $\Sigma^*$, $\{a^nb^nc^m\}$ and $\{a^mb^nc^n\}$, $\{a^nb^n\}$ and $\{b^na^n\}$.</li>
+<li>Any proof that something is NOT in a class starts with "Suppose it were" and ends with "contradiction".</li>
+</ul>
+</div>
+
+<h3>Template 1: build a DFA</h3>
+<div class="card">
+<b>Steps.</b> (1) Ask: what must I remember while reading? Make one state per possible memory value. (2) Mark the start (memory at the beginning). (3) For every state and every letter draw exactly one arrow. (4) Mark final the states where the memory means "yes". (5) Test on two strings: one in, one out.<br>
+<b>Memory values by task.</b> "even/odd number of $x$": 2 states. "number of $x$ mod $k$": $k$ states. "contains pattern $p$": one state per prefix of $p$ matched so far. "does not contain $p$": same, swap finals. Two conditions with and/or: product, states are pairs.<br>
+<b>Write on paper.</b><br>
+<code>States: ___ (meaning: ___). Start: ___. Final: ___ because ___. Transitions: [diagram]. Check: ___ is accepted, ___ is rejected.</code>
+</div>
+
+<h3>Template 2: build an NFA, then convert to DFA</h3>
+<div class="card">
+<b>Steps.</b> (1) Let the machine guess: a start state that loops on all letters, then a chain spelling the pattern. (2) For union, a new start with $e$-arrows into each piece. (3) For concatenation, $e$-arrows from the finals of the first piece to the start of the second. (4) For star, a new start that is also final, $e$ into the old start, $e$ from old finals back to the new start.<br>
+<b>Convert.</b> Table with rows = sets of NFA states reached so far. Start row $E(s)$. For each letter: collect all states reachable by that letter from any state in the row, then add $e$-closures. New sets become new rows. A row is final if it contains a final NFA state. Stop when no new sets appear.<br>
+<b>Write on paper.</b><br>
+<code>NFA: [diagram]. Subset construction: start {___}. Row {___}: on a → {___}, on b → {___}. ... Final rows: those containing ___. DFA: [diagram with the sets as state names].</code>
+</div>
+
+<h3>Template 3: write a regex</h3>
+<div class="card">
+<b>Steps.</b> Describe the strings in words with "then", "or", "repeat". Translate word for word. Check $e$: should the empty string be in? Check the all-one-letter strings.<br>
+<b>Patterns.</b> any string: $(a\cup b)^*$. contains $p$: $(a\cup b)^*p(a\cup b)^*$. ends with $p$: $(a\cup b)^*p$. even number of $a$s: $b^*(ab^*ab^*)^*$. no $aa$: $(b\cup ab)^*(a\cup\emptyset^*)$. finite set: union of the words. exactly $\{e\}$: $\emptyset^*$.
+</div>
+
+<h3>Template 4: write a CFG</h3>
+<div class="card">
+<b>Steps.</b> (1) Give each nonterminal a meaning in words: "$S$ = strings with property P". (2) Ask how a string with P is built from smaller strings with P or with related properties. Write one rule per way. (3) Add the base case ($e$ or a single letter). (4) Derive one example string to check.<br>
+<b>Shapes.</b> Matching from outside in: $S\to aSb$. Free repetition: $A\to aA\mid e$. "Or": $S\to A\mid B$. "Then": $S\to AB$. Equal counts: $E\to e\mid aEbE\mid bEaE$. One extra: $S\to EaE\mid EaS$.<br>
+<b>Write on paper.</b><br>
+<code>G = (V, Σ, R, S), V = {___}, Σ = {___}. Rules: ___. Meaning: S generates ___, A generates ___. Example derivation: S ⇒ ___ ⇒ ___ ⇒ w.</code>
+</div>
+
+<h3>Template 5: build a PDA</h3>
+<div class="card">
+<b>Steps.</b> (1) Decide what the stack counts or stores. (2) Phase 1: push while reading the first part. (3) An $e$-move to phase 2 (a guess if the middle is unknown). (4) Phase 2: pop while reading the second part, matching symbols. (5) Final state is the one you end in; stack must be empty, so if you used a bottom marker, pop it with an $e$-move at the end.<br>
+<b>Counter trick.</b> Push a bottom marker $c$. Stack holds only the surplus letter: reading $a$ with $b$ on top pops it, otherwise pushes $a$. Same for $b$. At the end pop $c$.<br>
+<b>Write on paper.</b><br>
+<code>M = (K, Σ, Γ, Δ, s, F), K = {___}, Γ = {___}, F = {___}. Δ = { ((s, a, e), (s, a)), ... }. [diagram with labels letter, pop → push]. Idea: in state ___ the stack holds ___. Trace: (s, ___, e) ⊢ ... ⊢ (f, e, e).</code>
+</div>
+
+<h3>Template 6: prove NOT regular (pumping)</h3>
+<div class="card">
+<b>Choose $w$:</b> in $L$, length at least $n$, first $n$ letters all the same.<br>
+<b>Write on paper (fill the gaps).</b><br>
+<pre>Suppose L is regular. Let n be the constant from the pumping theorem.
+Take w = ___ . Then w ∈ L and |w| ≥ n.
+By the theorem w = xyz with y ≠ e, |xy| ≤ n, and xy^i z ∈ L for all i ≥ 0.
+Since |xy| ≤ n, y lies inside the first block of ___ , so y = ___^k with k ≥ 1.
+Take i = ___ . Then xy^i z = ___ .
+This string is not in L because ___ (count the letters).
+Contradiction. So L is not regular.</pre>
+Pick $i=0$ when removing letters breaks it, $i=2$ when adding does. Choose the block so that the pumped letter makes the string wrong whichever $k$ is.
+</div>
+
+<h3>Template 7: prove NOT regular or NOT CF (closure shortcut)</h3>
+<div class="card">
+<pre>Suppose L is regular (CF). The language R = ___ is regular.
+Then L ∩ R = ___ would be regular (CF) by closure under intersection with a regular language.
+But ___ is known not to be regular (CF).
+Contradiction. So L is not regular (CF).</pre>
+Usual $R$: $a^*b^*$ or $a^*b^*c^*$. Usual target: $\{a^nb^n\}$ or $\{a^nb^nc^n\}$. Say in one line why $L\cap R$ equals the target.
+</div>
+
+<h3>Template 8: prove NOT context-free (pumping)</h3>
+<div class="card">
+<pre>Suppose L is context-free. Let N be the constant from the CFL pumping theorem.
+Take w = ___ (blocks of length N). w ∈ L, |w| ≥ N.
+Then w = uvxyz with vy ≠ e, |vxy| ≤ N, uv^i x y^i z ∈ L for all i.
+Since |vxy| ≤ N, vxy touches at most two adjacent blocks. Cases:
+ (1) vxy inside one block: pumping i = 2 changes that block only, so ___ ≠ ___ .
+ (2) vxy across two blocks: pumping changes at most those two, the third stays, so ___ .
+ (3) v or y contains two different letters: pumping breaks the order a*b*c*.
+In every case some i gives a string outside L. Contradiction. So L is not CF.</pre>
+</div>
+
+<h3>Template 9: closure true/false</h3>
+<div class="card">
+<b>Decide.</b> Is the result built only from allowed operations on the given classes? Regular allows everything. CF allows union, concat, star, intersection with regular, difference by a regular. If yes: TRUE. If the statement claims something is NOT in a class, try $A=\emptyset$ or $A=\Sigma^*$ or $B=\overline A$: usually FALSE.<br>
+<b>Write on paper, true case.</b> <code>True. ___ = ___ (rewrite with ∪, ∩, complement), and the class is closed under ___ .</code><br>
+<b>Write on paper, false case.</b> <code>False. Let A = ___ and B = ___ . Then A is ___, B is ___, but A op B = ___ which is ___ .</code><br>
+Memorize: $A\ominus B=(A\cap\overline B)\cup(B\cap\overline A)$. $A-B=A\cap\overline B$. If $A$ regular, $B$ not, $A\cap B=\emptyset$, then $A\cup B$ not regular (else $B=(A\cup B)-A$).
+</div>
+
+<h3>Template 10: countable or uncountable</h3>
+<div class="card">
+<code>Countable: it is a subset of ___ (Σ*, N×N) which is countable.</code> or <code>Countable: each element is a finite string over a finite alphabet, so it can be listed by length.</code><br>
+<code>Uncountable: it contains all subsets of ___ (or all infinite 0/1 sequences), which is uncountable by diagonalization.</code><br>
+Finding a flaw in a diagonal proof: check whether the diagonal object $D$ actually belongs to the class that was listed. If the class is "finite languages", $D$ is usually infinite, so no contradiction.
+</div>
+
+<h3>Template 11: prove a class is closed under an operation (induction on regex)</h3>
+<div class="card">
+<pre>Claim: for every regex α there is a regex α' with L(α') = op(L(α)).
+Base: α = ∅: α' = ___ . α = σ: α' = ___ .
+Step: assume it holds for α and β.
+ α ∪ β: (α ∪ β)' = ___ because op(L1 ∪ L2) = ___ .
+ αβ:    (αβ)' = ___ because op(L1 L2) = ___ .
+ α*:    (α*)' = ___ because op(L1*) = ___ .
+By induction the claim holds, so the class is closed under op.</pre>
+Reversal: swap the order in concatenation. Pref: $\mathrm{Pref}(L_1L_2)=\mathrm{Pref}(L_1)\cup L_1\mathrm{Pref}(L_2)$. Regex to CFG: $S\to S_\alpha\mid S_\beta$, $S\to S_\alpha S_\beta$, $S\to e\mid SS_\alpha$.
+</div>
+
+<h3>Template 12: prove $L(G)=L$ or $L(M)=L$</h3>
+<div class="card">
+<pre>(⊆) Every string generated has property P: by induction on the length of the derivation,
+    every rule preserves P (rule ___ adds ___, so ___).
+(⊇) Every string with P is generated: by induction on |w|. If |w| = 0 use rule ___.
+    Otherwise w = ___ u ___ where u is shorter and has P, so by hypothesis S ⇒* u, then apply rule ___.</pre>
+</div>
+
+<h3>Template 13: a new kind of machine</h3>
+<div class="card">
+Copy the PDA pattern, change only the storage line.<br>
+<pre>Configuration: (state, unread input, storage) ∈ K × Σ* × Ψ*.
+(p, x, α) ⊢ (q, y, ζ) iff there is ((p, a, β), (q, γ)) ∈ Δ with
+   x = a y   (read a, or a = e),
+   storage rule: ___   (stack: α = βη, ζ = γη.  queue: α = βη, ζ = ηγ).
+M accepts w iff (s, w, e) ⊢* (f, e, e) for some f ∈ F.</pre>
+To build one for a language: phase 1 store, $e$-move, phase 2 match. A queue replays in the same order (good for $a^nb^ma^nb^m$), a stack replays reversed (good for $ww^R$).
+</div>
+
+<h3>Phrases that earn marks</h3>
+<div class="card">
+<ul>
+<li>"by the pumping theorem there exists $n$ such that..."</li>
+<li>"since $|xy|\le n$, $y$ consists only of..."</li>
+<li>"for all possible splits" and "for some $i$" (the quantifiers)</li>
+<li>"by closure of regular languages under intersection / complement"</li>
+<li>"the intersection of a CFL and a regular language is a CFL"</li>
+<li>"nondeterministically guess the middle"</li>
+<li>"the stack content mimics a leftmost derivation"</li>
+<li>"this contradicts..., hence..."</li>
+<li>"both inclusions: ($\subseteq$) ... ($\supseteq$) ..."</li>
+</ul>
+</div>
+
+<h3>Mistakes that lose marks</h3>
+<div class="card">
+<ul>
+<li>DFA with a missing arrow or two arrows for one letter.</li>
+<li>Complementing an NFA by swapping finals.</li>
+<li>Choosing $w$ after seeing the split, or a $w$ whose first $n$ letters are mixed.</li>
+<li>Only handling one split or one case in a pumping proof.</li>
+<li>Forgetting the stack must be empty at acceptance, or forgetting to pop the bottom marker.</li>
+<li>Writing $e$ or $+$ inside a regex, or $w\in(a\cup b)^*$ instead of $w\in L((a\cup b)^*)$.</li>
+<li>Claiming CFLs are closed under intersection or complement.</li>
+<li>Using the pumping theorem to prove a language IS regular.</li>
+</ul>
+</div>
+</section>
+
+<section id="quiz">
+<h2>Quiz <span class="pill" id="scorePill">0 / 0</span></h2>
+<p>Click an answer. Wrong answers show the reason. Reload to retry.</p>
+<div id="quizBox"></div>
+</section>
+
+<section id="cards">
+<h2>Flashcards</h2>
+<p>Click a card to flip. Shuffle before the exam.</p>
+<button class="btn" onclick="shuffleCards()">Shuffle</button>
+<div class="fc" id="cardBox"></div>
+</section>
+
+<section id="check">
+<h2>Checklist (saved in this browser)</h2>
+<div class="card chk" id="chkBox"></div>
+</section>
+
+</main>
+</div>
+
+<script>
+// ---------- DFA simulator ----------
+const DFAS = {
+  evenB: {name:"Even number of b's", desc:"States q0 (even, final), q1 (odd). b toggles, a self-loops.", start:"q0", finals:["q0"], delta:{"q0,a":"q0","q0,b":"q1","q1,a":"q1","q1,b":"q0"}},
+  evenAoddB: {name:"Even a's AND odd b's (product)", desc:"State (parity of a, parity of b). Start EE. Accept EO.", start:"EE", finals:["EO"], delta:{"EE,a":"OE","EE,b":"EO","OE,a":"EE","OE,b":"OO","EO,a":"OO","EO,b":"EE","OO,a":"EO","OO,b":"OE"}},
+  containsAba: {name:"Contains substring aba", desc:"State = longest prefix of aba matched. Final: aba.", start:"e", finals:["aba"], delta:{"e,a":"a","e,b":"e","a,a":"a","a,b":"ab","ab,a":"aba","ab,b":"e","aba,a":"aba","aba,b":"aba"}},
+  noAba: {name:"Does not contain aba (complement)", desc:"Same machine, finals swapped.", start:"e", finals:["e","a","ab"], delta:{"e,a":"a","e,b":"e","a,a":"a","a,b":"ab","ab,a":"aba","ab,b":"e","aba,a":"aba","aba,b":"aba"}},
+  div3: {name:"Number of a's divisible by 3", desc:"States 0,1,2 = count mod 3. b self-loops.", start:"0", finals:["0"], delta:{"0,a":"1","0,b":"0","1,a":"2","1,b":"1","2,a":"0","2,b":"2"}},
+  endsAba: {name:"Ends with aba (DFA from subset construction)", desc:"States are NFA subsets: {q0}, {q0,q1}, {q0,q2}, {q0,q1,q3}.", start:"{q0}", finals:["{q0,q1,q3}"], delta:{"{q0},a":"{q0,q1}","{q0},b":"{q0}","{q0,q1},a":"{q0,q1}","{q0,q1},b":"{q0,q2}","{q0,q2},a":"{q0,q1,q3}","{q0,q2},b":"{q0}","{q0,q1,q3},a":"{q0,q1}","{q0,q1,q3},b":"{q0,q2}"}},
+};
+function runDFA(){
+  const m = DFAS[document.getElementById('dfaSel').value];
+  const w = document.getElementById('dfaIn').value.trim();
+  let q = m.start, out = `(${q}, ${w||'e'})`;
+  for (let i=0;i<w.length;i++){
+    const nq = m.delta[q+','+w[i]];
+    if (nq===undefined){ out += `\n  symbol '${w[i]}' not in alphabet`; document.getElementById('dfaOut').innerHTML = out + '\n<span class="rej">REJECT</span>'; return; }
+    q = nq; out += ` ⊢ (${q}, ${w.slice(i+1)||'e'})`;
+  }
+  const acc = m.finals.includes(q);
+  document.getElementById('dfaOut').innerHTML = out + `\n\nfinal state ${q} ${acc?'∈':'∉'} F  →  <span class="${acc?'acc':'rej'}">${acc?'ACCEPT':'REJECT'}</span>`;
+}
+(function(){
+  const sel = document.getElementById('dfaSel');
+  for (const k in DFAS){ const o=document.createElement('option'); o.value=k; o.textContent=DFAS[k].name; sel.appendChild(o); }
+  sel.onchange = ()=>{ document.getElementById('dfaDesc').textContent = DFAS[sel.value].desc; };
+  sel.onchange();
+})();
+
+// ---------- PDA simulator (BFS over configurations) ----------
+// transition: [p, a, pop, q, push]  (a may be "", pop/push strings, leftmost = top)
+const PDAS = {
+  anbn: {name:"{a^n b^n}", desc:"s: a,e→a ; e,e→e to f ; f: b,a→e", start:"s", finals:["f"], d:[["s","a","","s","a"],["s","","","f",""],["f","b","a","f",""]]},
+  wcwr: {name:"{w c w^R}", desc:"s pushes a,b; c moves to f; f pops matching symbols", start:"s", finals:["f"], d:[["s","a","","s","a"],["s","b","","s","b"],["s","c","","f",""],["f","a","a","f",""],["f","b","b","f",""]]},
+  wwr: {name:"{w w^R} (guess the middle)", desc:"like wcw^R but with an e-move s→f", start:"s", finals:["f"], d:[["s","a","","s","a"],["s","b","","s","b"],["s","","","f",""],["f","a","a","f",""],["f","b","b","f",""]]},
+  equal: {name:"Equal a's and b's", desc:"bottom marker c; stack holds the surplus letter", start:"s", finals:["f"], d:[["s","","","q","c"],["q","a","c","q","ac"],["q","a","a","q","aa"],["q","a","b","q",""],["q","b","c","q","bc"],["q","b","b","q","bb"],["q","b","a","q",""],["q","","c","f",""]]},
+  moreA: {name:"More a's than b's (2012 midterm)", desc:"counter, then leave q only if an a is on top", start:"s", finals:["f"], d:[["s","","","q","c"],["q","a","c","q","ac"],["q","a","a","q","aa"],["q","a","b","q",""],["q","b","c","q","bc"],["q","b","b","q","bb"],["q","b","a","q",""],["q","","a","f",""],["f","","a","f",""],["f","","c","f",""]]},
+  le2j: {name:"{a^i b^j : i ≤ 2j}", desc:"each b pops 0, 1 or 2 a's", start:"s", finals:["f"], d:[["s","a","","s","a"],["s","","","f",""],["f","b","","f",""],["f","b","a","f",""],["f","b","aa","f",""]]},
+  cfgAnbn: {name:"CFG S→aSb|e converted to PDA (L11)", desc:"push S; expand nonterminal on top; match terminals", start:"p", finals:["q"], d:[["p","","","q","S"],["q","","S","q","aSb"],["q","","S","q",""],["q","a","a","q",""],["q","b","b","q",""]]},
+};
+function runPDA(){
+  const m = PDAS[document.getElementById('pdaSel').value];
+  const w = document.getElementById('pdaIn').value.trim();
+  const key = c=>c.join('|');
+  const start = [m.start, w, ""];
+  const prev = new Map([[key(start), null]]);
+  let frontier=[start], steps=0, found=null;
+  while(frontier.length && steps<20000 && !found){
+    const next=[];
+    for(const c of frontier){
+      const [p,rest,st]=c;
+      if(m.finals.includes(p) && rest==="" && st===""){ found=c; break; }
+      for(const [tp,a,pop,q,push] of m.d){
+        if(tp!==p) continue;
+        if(a && rest[0]!==a) continue;
+        if(!st.startsWith(pop)) continue;
+        const nc=[q, a?rest.slice(1):rest, push+st.slice(pop.length)];
+        if(nc[2].length>w.length+5) continue; // ponytail: cap stack growth so e-loops terminate
+        const k=key(nc); if(prev.has(k)) continue;
+        prev.set(k,c); next.push(nc); steps++;
+      }
+    }
+    frontier=next;
+  }
+  const out=document.getElementById('pdaOut');
+  if(!found){ out.innerHTML=`no branch reaches (f, e, e)\n<span class="rej">REJECT</span>`; return; }
+  const path=[]; for(let c=found;c;c=prev.get(key(c))) path.unshift(c);
+  out.innerHTML = path.map(([p,r,s])=>`(${p}, ${r||'e'}, ${s||'e'})`).join(' ⊢\n') + `\n<span class="acc">ACCEPT</span> (${path.length-1} steps)`;
+}
+(function(){
+  const sel=document.getElementById('pdaSel');
+  for(const k in PDAS){const o=document.createElement('option');o.value=k;o.textContent=PDAS[k].name;sel.appendChild(o);}
+  sel.onchange=()=>{document.getElementById('pdaDesc').textContent=PDAS[sel.value].desc;};
+  sel.onchange();
+})();
+
+// ---------- Quiz ----------
+const QUIZ = [
+ ["What is $L(\\emptyset^*)$?", ["$\\emptyset$","$\\{e\\}$","$\\Sigma^*$"],1,"Star always contains the empty word: $L^0=\\{e\\}$."],
+ ["When is $L^+ = L^*$?", ["always","never","iff $e\\in L$"],2,"$L^* = L^+\\cup\\{e\\}$."],
+ ["Which is NOT a valid regular expression in this course?", ["$\\emptyset^*\\cup a$","$b^+$","$(a\\cup b)^*$"],1,"No $+$ and no $e$ in the syntax. Write $bb^*$."],
+ ["Is $\\{a^ib^jc^k : i,j,k\\ge0\\}$ regular?", ["yes","no"],0,"It is $L(a^*b^*c^*)$. Counting is not required."],
+ ["Is $\\{w : \\#01(w) = \\#10(w)\\}$ over $\\{0,1\\}$ regular?", ["yes","no"],0,"Equivalent to: first symbol equals last symbol (or $|w|\\le1$)."],
+ ["Complement of an NFA by swapping final states gives", ["the complement language","possibly a wrong language","always $\\Sigma^*$"],1,"A string can have accepting and rejecting branches. Determinize first."],
+ ["In the R.E. to NFA star construction, why add a new start state?", ["to keep the NFA small","because the old start may have incoming edges, making the old start final would accept extra strings","it is optional"],1,"Counterexample $a(ba)^*$: making $s$ final accepts $ab$."],
+ ["Pumping theorem for regular languages: the quantifier order is", ["$\\forall n\\,\\exists w\\,\\forall xyz\\,\\exists i$","$\\exists n\\,\\forall w\\,\\exists xyz\\,\\forall i$","$\\exists n\\,\\exists w\\,\\exists xyz\\,\\forall i$"],1,"The negation (used in proofs) is $\\forall n\\,\\exists w\\,\\forall$ splits $\\exists i$."],
+ ["Best $w$ to pump for 'more $a$s than $b$s'", ["$a^{n+1}b^n$ with $i=2$","$b^na^{n+1}$ with $i=2$","$(ab)^n$"],1,"Pumping $b$s up pushes the count to $\\#b\\ge\\#a$. Pumping $a$s up stays in $L$."],
+ ["$A$ regular, $B$ not regular. $A\\cap B$ is", ["always non-regular","always regular","could be either"],2,"$A=\\emptyset$ gives regular; $A=\\Sigma^*$ gives $B$."],
+ ["$A$ regular, $B$ not regular, $A\\cap B=\\emptyset$. Then $A\\cup B$ is", ["regular","never regular","could be either"],1,"Otherwise $B=(A\\cup B)-A$ would be regular."],
+ ["$A$ and $B$ context-free. $A\\cap B$ is", ["always CF","not necessarily CF","always regular"],1,"$\\{a^nb^nc^m\\}\\cap\\{a^mb^nc^n\\}=\\{a^nb^nc^n\\}$."],
+ ["$A$ CF and $R$ regular. $A\\cap R$ is", ["always CF","always regular","not necessarily CF"],0,"Product of a PDA and a DFA."],
+ ["Is $\\overline{\\{a^nb^nc^n\\}}$ context-free?", ["yes","no"],0,"Union of a regular piece and two CF pieces ($i\\ne j$, $j\\ne k$)."],
+ ["A PDA accepts $w$ when", ["it reaches a final state","it reads all input and the stack is empty","it reads all input, is in a final state, and the stack is empty"],2,"All three conditions, on at least one branch."],
+ ["In a PDA transition $((p,a,\\beta),(q,\\gamma))$, which symbol of $\\gamma$ ends on top?", ["leftmost","rightmost"],0,"Leftmost symbol is the top of the stack."],
+ ["Deterministic PDAs are", ["as powerful as nondeterministic PDAs","strictly weaker","strictly stronger"],1,"$\\{ww^R\\}$ needs a guess of the middle."],
+ ["CFG to PDA: the stack holds", ["the input read so far","the rest of a leftmost derivation","the parse tree"],1,"Expand nonterminals on top, match terminals against input."],
+ ["PDA to CFG: $A_{pq}$ generates strings that", ["go from $p$ to $q$ ignoring the stack","go from $p$ with empty stack to $q$ with empty stack","are accepted at $q$"],1,"Rules $A_{pq}\\to aA_{rs}b$, $A_{pq}\\to A_{pr}A_{rq}$, $A_{pp}\\to e$."],
+ ["Which language is context-free?", ["$\\{a^nb^nc^n\\}$","$\\{ww\\}$","$\\{ww^R\\}$"],2,"$S\\to aSa\\mid bSb\\mid e$. The others need two counters or copy-matching."],
+ ["CFL pumping: $|vxy|\\le N$ means $vxy$ touches at most", ["one block","two adjacent blocks","three blocks"],1,"With blocks of length $N$, that is the key case split."],
+ ["Which set is uncountable?", ["all finite languages over $\\{0,1\\}$","all languages over $\\{0,1\\}$","$\\mathbb{N}\\times\\mathbb{N}$"],1,"$2^{\\Sigma^*}$ by diagonalization."],
+ ["Any infinite language over $\\Sigma$ is", ["countable","uncountable","depends"],0,"Subset of $\\Sigma^*$, which is countable."],
+ ["Grammar for 'equal number of $a$s and $b$s'", ["$S\\to aSb\\mid e$","$E\\to e\\mid aEbE\\mid bEaE$","$S\\to ab\\mid ba\\mid SS$"],1,"First only gives $a^nb^n$; third misses $aabb$."],
+ ["Every finite language is regular because", ["it has a DFA with one state","it is the union of finitely many single-word expressions","the pumping theorem says so"],1,"$L=L(w_1\\cup\\cdots\\cup w_k)$."],
+ ["DFA to R.E.: $R(i,j,k)$ equals", ["$R(i,j,k-1)\\cup R(i,k,k-1)R(k,k,k-1)^*R(k,j,k-1)$","$R(i,k,k-1)R(k,j,k-1)$","$R(i,j,k-1)^*$"],0,"Avoid $q_k$, or enter it, loop, leave it."],
+ ["Subset construction: a DFA state is final iff", ["it equals $F$","it contains at least one state of $F$","it is non-empty"],1,"Some branch accepts."],
+ ["To prove $\\{x\\bar{x}\\}$ not regular fastest", ["pump $(01)^n$","intersect with $0^*1^*$ to get $\\{0^n1^n\\}$","it is regular"],1,"Closure argument reduces to the textbook language."],
+ ["Which is true of $\\{a^ib^jc^k : i=j \\text{ or } j=k\\}$?", ["not CF","CF but inherently ambiguous","regular"],1,"Union of two CFLs; every grammar is ambiguous on $a^nb^nc^n$."],
+ ["$\\{e\\}^{1000}$ equals", ["$\\emptyset$","$\\{e\\}$","$\\{e^{1000}\\}$ which is different"],1,"$e$ concatenated with itself is $e$."],
+];
+(function(){
+  const box=document.getElementById('quizBox'); let score=0, done=0;
+  QUIZ.forEach((q,qi)=>{
+    const d=document.createElement('div'); d.className='q';
+    d.innerHTML=`<div><b>${qi+1}.</b> ${q[0]}</div><div class="opts"></div><div class="why">${q[3]}</div>`;
+    const opts=d.querySelector('.opts');
+    q[1].forEach((o,i)=>{const b=document.createElement('button'); b.innerHTML=o; b.onclick=()=>{
+      if(d.classList.contains('done')) return; d.classList.add('done'); done++;
+      if(i===q[2]){b.classList.add('ok');score++;} else {b.classList.add('bad'); opts.children[q[2]].classList.add('ok');}
+      document.getElementById('scorePill').textContent=`${score} / ${done}`;
+    }; opts.appendChild(b);});
+    box.appendChild(d);
+  });
+})();
+
+// ---------- Flashcards ----------
+const CARDS = [
+ ["DFA 5-tuple","$(K,\\Sigma,\\delta,s,F)$, $\\delta:K\\times\\Sigma\\to K$ total"],
+ ["NFA 5-tuple","$(K,\\Sigma,\\Delta,s,F)$, $\\Delta\\subseteq K\\times(\\Sigma\\cup\\{e\\})\\times K$"],
+ ["PDA 6-tuple","$(K,\\Sigma,\\Gamma,\\Delta,s,F)$, $\\Delta\\subseteq_{fin}(K\\times(\\Sigma\\cup\\{e\\})\\times\\Gamma^*)\\times(K\\times\\Gamma^*)$"],
+ ["CFG 4-tuple","$(V,\\Sigma,R,S)$, $R\\subseteq(V-\\Sigma)\\times V^*$"],
+ ["DFA acceptance","$(s,w)\\vdash^*(q,e)$, $q\\in F$"],
+ ["PDA acceptance","$(s,w,e)\\vdash^*(f,e,e)$, $f\\in F$: input read, final state, empty stack"],
+ ["PDA yields","$(p,x,\\alpha)\\vdash(q,y,\\zeta)$ iff $((p,a,\\beta),(q,\\gamma))\\in\\Delta$, $x=ay$, $\\alpha=\\beta\\eta$, $\\zeta=\\gamma\\eta$"],
+ ["$e$-closure $E(q)$","states reachable from $q$ by $e$-moves only, including $q$"],
+ ["Subset construction $\\delta'(Q,\\sigma)$","$\\bigcup_{q\\in Q}\\{E(p):(q,\\sigma,p)\\in\\Delta\\}$; finals = subsets meeting $F$"],
+ ["$R(i,j,k)$ recurrence","$R(i,j,k-1)\\cup R(i,k,k-1)R(k,k,k-1)^*R(k,j,k-1)$"],
+ ["Pumping theorem (regular)","$\\exists n\\,\\forall w\\in L,|w|\\ge n\\,\\exists xyz: y\\ne e, |xy|\\le n, \\forall i\\ xy^iz\\in L$"],
+ ["Pumping theorem (CFL)","$\\exists N\\,\\forall w\\in L,|w|\\ge N\\,\\exists uvxyz: vy\\ne e, |vxy|\\le N, \\forall i\\ uv^ixy^iz\\in L$"],
+ ["Regular closed under","$\\cup$, concat, $*$, complement, $\\cap$, difference, reversal, Pref, Subseq"],
+ ["CFL closed under","$\\cup$, concat, $*$, $\\cap$ with regular. NOT $\\cap$, NOT complement"],
+ ["Star NFA construction","new start state, also final; $e$ to old start; $e$ from old finals to new start"],
+ ["Complement of a DFA","swap $F$ and $K-F$ (DFA only)"],
+ ["Product DFA for $\\cap$ / $\\cup$","$K_1\\times K_2$; finals $F_1\\times F_2$ for $\\cap$, $(F_1\\times K_2)\\cup(K_1\\times F_2)$ for $\\cup$"],
+ ["CFG $\\to$ PDA","$((p,e,e),(q,S))$; $((q,e,A),(q,x))$ per rule; $((q,a,a),(q,e))$ per terminal"],
+ ["PDA $\\to$ CFG rules","$A_{pq}\\to aA_{rs}b$ (push $t$ at $p\\to r$, pop $t$ at $s\\to q$); $A_{pq}\\to A_{pr}A_{rq}$; $A_{pp}\\to e$"],
+ ["DFA $\\to$ CFG","$q\\to ap$ for $\\delta(q,a)=p$; $q\\to e$ for $q\\in F$; $S=s$"],
+ ["Grammar: equal $a$s and $b$s","$E\\to e\\mid aEbE\\mid bEaE$"],
+ ["Grammar: more $a$s than $b$s","$S\\to EaE\\mid EaS$"],
+ ["Grammar: $a^mb^n$, $m\\ge n$","$S\\to aS\\mid T$, $T\\to aTb\\mid e$"],
+ ["Grammar: palindromes","$S\\to aSa\\mid bSb\\mid a\\mid b\\mid e$"],
+ ["Grammar: $a^ib^jc^k$, $i+j=k$","$S\\to aSc\\mid T$, $T\\to bTc\\mid e$"],
+ ["Diagonal set","$D=\\{a:(a,a)\\notin R\\}$ differs from every row $R_a$"],
+ ["Uncountable examples","$2^{\\mathbb N}$, $2^{\\Sigma^*}$, $[0,1]$, infinite binary sequences"],
+ ["Countable examples","$\\Sigma^*$, $\\mathbb N\\times\\mathbb N$, finite subsets of $\\mathbb N$, all finite languages, any language"],
+ ["$\\emptyset^*$","$\\{e\\}$"],
+ ["$L\\emptyset$","$\\emptyset$"],
+ ["$e\\in L^+$ iff","$e\\in L$"],
+ ["Standard non-regular languages","$\\{a^nb^n\\}$, palindromes, $\\{ww\\}$, equal counts, primes, $\\{a^{n^2}\\}$"],
+ ["Standard non-CF languages","$\\{a^nb^nc^n\\}$, $\\{ww\\}$, $\\{a^nb^ma^nb^m\\}$, equal counts of 3 letters"],
+ ["Closure counterexample kit","$\\{a^nb^n\\}$ and its complement; $\\emptyset$; $\\Sigma^*$; $\\{a^nb^nc^m\\}\\cap\\{a^mb^nc^n\\}$; $\\{a^nb^n\\}\\cap\\{b^na^n\\}=\\{e\\}$"],
+ ["$L_F(M)$ to $L(M')$","new final $f'$; $e$-moves from each $f\\in F$; $f'$ pops anything"],
+ ["$L(M)$ to $L_F(M'')$","bottom marker $Z$ pushed at new start; $((f,e,Z),(f',e))$ for $f\\in F$; $F''=\\{f'\\}$"],
+ ["Inherently ambiguous CFL","$\\{a^ib^jc^k: i=j \\text{ or } j=k\\}$"],
+ ["Why queue beats stack","$\\{a^nb^ma^nb^m\\}$: FIFO replays the first half in order"],
+];
+let cardOrder=CARDS.map((_,i)=>i);
+function renderCards(){
+  const box=document.getElementById('cardBox'); box.innerHTML='';
+  cardOrder.forEach(i=>{const c=document.createElement('div'); c.className='c'; c.innerHTML=`<div class="f">${CARDS[i][0]}</div><div class="b">${CARDS[i][1]}</div>`; c.onclick=()=>c.classList.toggle('flip'); box.appendChild(c);});
+  if(window.renderMathInElement) renderMathInElement(box,{delimiters:[{left:"$",right:"$",display:false}]});
+}
+function shuffleCards(){ for(let i=cardOrder.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[cardOrder[i],cardOrder[j]]=[cardOrder[j],cardOrder[i]];} renderCards(); }
+renderCards();
+
+// ---------- Checklist ----------
+const CHECK = [
+ "Write the DFA, NFA, PDA and CFG tuples from memory",
+ "Write the yields relation for DFA, NFA and PDA from memory",
+ "Build a DFA for: parity, mod 3, contains / avoids a substring, product of two conditions",
+ "Build an NFA for 'ends with pattern' and convert it with the subset construction",
+ "Convert a 3-state DFA to a regular expression",
+ "Do the R.E. to NFA constructions including the star case and explain why a new start state is needed",
+ "Prove not regular with the pumping template: a^n b^n, twice as many b's, more a's than b's, palindromes",
+ "Prove not regular with closure: equal counts, x x-bar",
+ "Prove L^R and Pref(L) regular by induction on the R.E.",
+ "Write CFGs: a^n b^n, palindromes, equal counts, more a's, m>=n, i+j=k, i!=j",
+ "Build PDAs: wcw^R, ww^R, a^n b^n, equal counts, i<=2j",
+ "Trace a PDA computation in configuration notation",
+ "CFG to PDA construction and one traced example",
+ "PDA to CFG: the three rule types and what A_pq means",
+ "CFL closure: which operations yes, which no, with the counterexamples",
+ "Prove not CF: a^n b^n c^n with the two-block case split",
+ "Closure true/false drill: all 15 rows correct",
+ "Countability drill: all rows correct, and the flaw in the finite-languages diagonal proof",
+ "L_F(M) conversions both directions",
+ "Queue automaton: yields, acceptance, a^n b^m a^n b^m",
+ "Redo all three past midterms under time",
+];
+(function(){
+  const box=document.getElementById('chkBox'); let saved={};
+  try{ saved=JSON.parse(localStorage.getItem('toc-check')||'{}'); }catch(e){}
+  CHECK.forEach((t,i)=>{const l=document.createElement('label'); const c=document.createElement('input'); c.type='checkbox'; c.checked=!!saved[i];
+    c.onchange=()=>{saved[i]=c.checked; try{localStorage.setItem('toc-check',JSON.stringify(saved));}catch(e){}};
+    l.appendChild(c); l.appendChild(document.createTextNode(t)); box.appendChild(l);});
+})();
+
+// ---------- Math ----------
+document.addEventListener('DOMContentLoaded',()=>{
+  if(window.renderMathInElement) renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}],throwOnError:false});
+});
+</script>
+
+<script>
+// ponytail: show one section at a time, nav links become tabs, prev/next buttons at the bottom of each section
+(function(){
+  const secs=[...document.querySelectorAll('main > section')];
+  const links=[...document.querySelectorAll('nav a[href^="#"]')];
+  function show(id){
+    secs.forEach(s=>s.style.display=(s.id===id?'block':'none'));
+    links.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+id));
+    window.scrollTo(0,0); try{localStorage.setItem(location.pathname+'-sec',id);}catch(e){}
+  }
+  secs.forEach((s,i)=>{
+    const bar=document.createElement('div'); bar.style.cssText='display:flex;justify-content:space-between;margin-top:30px';
+    const mk=(t,j)=>{const b=document.createElement('button');b.textContent=t;b.className='btn';b.onclick=()=>show(secs[j].id);return b;};
+    bar.appendChild(i>0?mk('Back: '+secs[i-1].querySelector('h2').textContent.slice(0,28),i-1):document.createElement('span'));
+    if(i<secs.length-1) bar.appendChild(mk('Next: '+secs[i+1].querySelector('h2').textContent.slice(0,28),i+1));
+    s.appendChild(bar);
+  });
+  links.forEach(a=>a.addEventListener('click',e=>{e.preventDefault();show(a.getAttribute('href').slice(1));}));
+  document.querySelectorAll('main a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{const id=a.getAttribute('href').slice(1);if(document.getElementById(id)&&secs.some(s=>s.id===id)){e.preventDefault();show(id);}}));
+  let start=secs[0].id; try{start=localStorage.getItem(location.pathname+'-sec')||start;}catch(e){}
+  if(location.hash && secs.some(s=>s.id===location.hash.slice(1))) start=location.hash.slice(1);
+  show(start);
+})();
+</script>
+</body>
+</html>

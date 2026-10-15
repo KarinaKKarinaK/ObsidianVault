@@ -1,0 +1,916 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>COMP3511 Midterm Cram</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<style>
+:root{--bg:#f7f7f5;--fg:#1a1a1a;--muted:#5c5c5c;--card:#fff;--line:#dcdcd6;--accent:#1f5fbf;--accent-bg:#e8f0fc;--ok:#1a7f37;--ok-bg:#e6f4ea;--bad:#b3261e;--bad-bg:#fbe9e7;--warn-bg:#fff6d6;--code:#f0f0ec}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15161a;--fg:#e8e8e6;--muted:#a0a0a0;--card:#1f2026;--line:#34353c;--accent:#7aa7ff;--accent-bg:#1c2a44;--ok:#5ad27a;--ok-bg:#15301e;--bad:#ff7b72;--bad-bg:#3a1d1b;--warn-bg:#3a3214;--code:#2a2b32}}
+:root[data-theme="dark"]{--bg:#15161a;--fg:#e8e8e6;--muted:#a0a0a0;--card:#1f2026;--line:#34353c;--accent:#7aa7ff;--accent-bg:#1c2a44;--ok:#5ad27a;--ok-bg:#15301e;--bad:#ff7b72;--bad-bg:#3a1d1b;--warn-bg:#3a3214;--code:#2a2b32}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+a{color:var(--accent)}
+.wrap{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
+nav{position:sticky;top:0;height:100vh;overflow:auto;border-right:1px solid var(--line);padding:16px 12px;background:var(--card)}
+nav h1{font-size:15px;margin:0 0 10px}
+nav a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--fg);font-size:14px}
+nav a:hover{background:var(--accent-bg)}
+nav .grp{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:12px 8px 4px}
+main{padding:24px 32px 80px;max-width:1000px}
+section{margin-bottom:48px;scroll-margin-top:16px}
+h2{font-size:26px;border-bottom:2px solid var(--line);padding-bottom:6px;margin:0 0 16px}
+h3{font-size:19px;margin:28px 0 8px}
+h4{font-size:16px;margin:18px 0 6px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin:12px 0}
+.def{border-left:4px solid var(--accent)}
+.thm{border-left:4px solid var(--ok)}
+.warn{background:var(--warn-bg);border-left:4px solid #d9a400}
+.ex{border-left:4px solid #9a6fd8}
+.tag{display:inline-block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:4px}
+table{border-collapse:collapse;width:100%;margin:10px 0;font-size:15px}
+th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-bg)}
+code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:14px}
+code{background:var(--code);padding:1px 5px;border-radius:4px}
+pre{background:var(--code);padding:10px 14px;border-radius:8px;overflow:auto;line-height:1.45}
+details{margin:8px 0}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+details .card{margin-top:8px}
+ul,ol{padding-left:22px}
+li{margin:3px 0}
+.banner{background:var(--accent-bg);border:1px solid var(--accent);border-radius:10px;padding:14px 18px;margin-bottom:24px}
+.banner b{color:var(--accent)}
+.q{margin:10px 0;padding:12px 14px;border:1px solid var(--line);border-radius:8px;background:var(--card)}
+.q .opts button{display:block;width:100%;text-align:left;margin:4px 0;padding:7px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg);cursor:pointer;font:inherit}
+.q .opts button:hover{border-color:var(--accent)}
+.q .opts button.ok{background:var(--ok-bg);border-color:var(--ok)}
+.q .opts button.bad{background:var(--bad-bg);border-color:var(--bad)}
+.q .why{display:none;margin-top:8px;font-size:14px;color:var(--muted)}
+.q.done .why{display:block}
+.fc{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.fc .c{min-height:120px;border:1px solid var(--line);border-radius:10px;background:var(--card);padding:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;text-align:center}
+.fc .c .b{display:none;color:var(--accent)}
+.fc .c.flip .f{display:none}.fc .c.flip .b{display:block}
+.sim{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.sim label{display:block;font-size:13px;color:var(--muted);margin-top:8px}
+.sim input,.sim select,.sim textarea{width:100%;padding:7px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg);font:inherit}
+.sim textarea{font-family:ui-monospace,Menlo,monospace;font-size:13px;min-height:110px}
+.sim button,.btn{margin-top:10px;padding:8px 14px;border-radius:6px;border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer;font:inherit}
+.trace{font-family:ui-monospace,Menlo,monospace;font-size:13px;white-space:pre-wrap;background:var(--code);padding:10px;border-radius:8px;min-height:60px;overflow:auto}
+.gantt{display:flex;flex-wrap:wrap;margin:8px 0;font-size:12px;font-family:ui-monospace,Menlo,monospace}
+.gantt div{border:1px solid var(--line);padding:4px 0;text-align:center;min-width:26px;position:relative;background:var(--accent-bg)}
+.gantt div.idle{background:var(--code);color:var(--muted)}
+.gantt div span{position:absolute;left:-1px;bottom:-16px;font-size:10px;color:var(--muted)}
+.acc{color:var(--ok);font-weight:700}.rej{color:var(--bad);font-weight:700}
+.chk label{display:block;padding:5px 0;cursor:pointer}
+.chk input{margin-right:8px}
+.pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;background:var(--accent-bg);color:var(--accent);margin-left:6px}
+@media (max-width:860px){.wrap{grid-template-columns:1fr}nav{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line)}main{padding:16px}.sim{grid-template-columns:1fr}}
+nav a.on{background:var(--accent);color:#fff}
+.btn{padding:8px 14px;border-radius:6px;border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer;font:inherit}
+main{font-size:17px}
+.card{padding:18px 22px;border-radius:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav>
+<h1>COMP3511 Midterm</h1>
+<a href="#exam">Exam info and format</a>
+<a href="#zero">Start from zero</a>
+<div class="grp">Chapters</div>
+<a href="#c1">1 Introduction</a>
+<a href="#c2">2 OS structures</a>
+<a href="#c3">3 Processes</a>
+<a href="#c4">4 Threads</a>
+<a href="#c5">5 CPU scheduling</a>
+<a href="#c6">6 Synchronization</a>
+<div class="grp">Tools</div>
+<a href="#sched">Scheduling simulator</a>
+<a href="#rt">RM / EDF simulator</a>
+<a href="#calc">Amdahl, Little, cache calculators</a>
+<div class="grp">Exam prep</div>
+<a href="#lab">Lab APIs (pipe, fork, exec, pthread)</a>
+<a href="#templates">Answer templates</a>
+<a href="#past">S2026 midterm solved</a>
+<a href="#quiz">Practice quiz</a>
+<a href="#cards">Flashcards</a>
+<a href="#check">Checklist</a>
+</nav>
+<main>
+
+<section id="exam">
+<div class="banner">
+<b>Midterm: Thursday Oct 29, 8:00 to 10:00pm. L1 students: LTD. L2: LSKG012. L3: LTB. Coverage: Chapters 1 to 6 (up to Synchronization tools).</b><br>
+Open book, open notes, printed material only. Calculator allowed, no phone. Bring your own rough paper. Lab API questions possible (print lab notes). Worth 20% of the course grade.
+</div>
+<h2>What the midterm looks like (from the Spring 2026 paper, with solutions)</h2>
+<div class="card">
+<table>
+<tr><th>Part</th><th>Points</th><th>What it is</th><th>Drill</th></tr>
+<tr><td>Q1 Multiple choice, 25 questions</td><td>25</td><td>One per slide topic: interrupts, DMA, storage hierarchy, von Neumann, OS services, API vs syscall, microkernel, printf/write, layered design, fork counting, context switch, pipes, zombies, process states, threads, concurrency vs parallelism, Amdahl, signals, scheduling criteria, MLFQ, EDF, multiprocessor scheduling, semaphore output, test_and_set, bounded waiting code</td><td><a href="#quiz">Quiz</a></td></tr>
+<tr><td>Q2 Short questions</td><td>16</td><td>Define race condition with example; caching and why hit ratio alone is not enough; reason about a new scheduling policy (yes/no with one sentence); write a spinlock acquire with swap; pros and cons of spinlocks</td><td><a href="#templates">Templates</a></td></tr>
+<tr><td>Q3 Process and thread</td><td>24</td><td>Fork tree and counting with a formula in $n$; all possible outputs when fork/exec can fail; fill-in-the-blank C program with pipe, dup, read, write, waitpid</td><td><a href="#c3">Ch 3</a></td></tr>
+<tr><td>Q4 CPU scheduling</td><td>27</td><td>MLFQ Gantt chart with precise rules, average waiting and response time; RM vs EDF Gantt for 16 slots and count missed deadlines; dynamic priority with $\alpha$ and $\beta$</td><td><a href="#sched">Simulator</a></td></tr>
+<tr><td>Q5 Synchronization</td><td>8</td><td>Fill semaphore wait/signal blanks to enforce an ordering between threads</td><td><a href="#c6">Ch 6</a></td></tr>
+</table>
+<b>Strategy.</b> Points per minute: MC is 25 points in about 25 minutes, do it first with the printed slides open (answers cite slide numbers). Then Q5 (8 easy points), then Q3, then Q4 last because Gantt charts eat time. Partial credit is given per 4 correct Gantt blocks and per blank, so never leave a blank empty. Read every scheduling rule literally; the exam clarified tiebreaks mid-exam last time.
+</div>
+<h3>How to use this page</h3>
+<ul>
+<li>"Start from zero" explains every concept in plain words first. Then each chapter has the facts the MC questions are pulled from, with slide references.</li>
+<li>The simulators let you check any Gantt chart you draw by hand: FCFS, SJF, SRTF, RR, priority, the exam's MLFQ rules, and RM/EDF.</li>
+<li>The S2026 midterm is fully solved with explanations. The quiz has new questions in the same style, extrapolated from the slides.</li>
+</ul>
+</section>
+
+<section id="zero">
+<h2>Start from zero: the whole midterm in plain words</h2>
+<div class="card ex">
+<b>What an OS is.</b> Your laptop has one CPU (or a few), some memory, a disk, a keyboard. Dozens of programs want to use them at once. The operating system is the referee and the butler: it decides who gets the CPU and when (scheduling), gives each program its own memory and keeps them from trampling each other (protection), hides messy hardware behind simple calls like "read this file" (abstraction), and does it all efficiently and fairly (resource allocation). The part of the OS that is always running is the <b>kernel</b>.
+</div>
+<div class="card ex">
+<b>User mode and kernel mode.</b> Ordinary programs run in user mode, a restricted mode where dangerous instructions (talk to the disk directly, change the timer) are forbidden. When a program needs something dangerous, it asks the kernel through a <b>system call</b>: the CPU flips to kernel mode, the kernel does the work, flips back. <code>printf</code> is a library function that eventually makes the <code>write</code> system call. An <b>interrupt</b> is the hardware tapping the kernel on the shoulder ("disk finished"). A <b>trap</b> is the program itself causing the switch (divide by zero, or a system call).
+</div>
+<div class="card ex">
+<b>Process.</b> A program sitting on disk is a file. A program running is a <b>process</b>: the code plus its memory (globals, heap, stack) plus where it is right now (program counter, registers). The kernel keeps a record card for every process, the <b>PCB</b>. A process is in one of five states: new, ready (wants the CPU), running (has it), waiting (blocked on I/O), terminated. Switching the CPU from one process to another means saving one record card and loading another: a <b>context switch</b>, pure overhead.
+</div>
+<div class="card ex">
+<b>fork, exec, wait.</b> On Unix you make a new process by cloning yourself: <code>fork()</code> makes an identical copy. Both copies continue from the same line. The only difference is the return value: the parent gets the child's pid, the child gets 0. To run a different program, the child calls <code>exec()</code>, which throws away its own code and loads the new program (so lines after exec never run unless exec failed). The parent calls <code>wait()</code> to pause until the child finishes. A child that finished but whose parent has not called wait yet is a <b>zombie</b>. Exam questions count how many processes a loop of forks creates: each fork doubles the number of processes that reach it.
+</div>
+<div class="card ex">
+<b>Pipes.</b> A pipe is a one-way tube between two related processes. <code>pipe(fd)</code> gives two file descriptors: <code>fd[0]</code> to read, <code>fd[1]</code> to write. After fork both processes have both ends, so each closes the end it does not use. <code>close(0); dup(fin);</code> makes a file become standard input so that <code>scanf</code> reads from the file.
+</div>
+<div class="card ex">
+<b>Threads.</b> A thread is a worker inside a process. All threads of a process share the code, globals, heap, and open files, but each has its own stack, program counter, and registers. Creating or switching threads is cheap because the memory map does not change. <b>Concurrency</b> means making progress on several tasks by taking turns on one core. <b>Parallelism</b> means several cores really working at the same instant. Amdahl's law says the part of a program that cannot be parallelised caps your speedup: if 25% is serial you never beat $4\times$ no matter how many cores.
+</div>
+<div class="card ex">
+<b>Scheduling.</b> When several processes are ready, which one gets the CPU? FCFS: first come first served, simple but a long job makes everyone wait (convoy). SJF: shortest job first, optimal for average waiting time but you cannot know the future. SRTF: SJF with preemption. RR: everyone gets a time slice $q$ in turn, good response time. Priority: highest priority first, risk of starvation, fixed by aging. MLFQ: several queues; new jobs start in the top queue with a short slice, a job that uses its whole slice is demoted. Short interactive jobs stay on top, CPU hogs sink. Real-time: RM gives fixed priority to the task with the shortest period; EDF always runs the task whose deadline is soonest and misses fewer deadlines.
+</div>
+<div class="card ex">
+<b>Three numbers you always compute.</b> Turnaround = finish time minus arrival time. Waiting = turnaround minus CPU burst (time spent in the ready queue). Response = time of first run minus arrival. Average them over all processes.
+</div>
+<div class="card ex">
+<b>Synchronization.</b> Two threads doing <code>counter++</code> at the same time can lose an update because <code>counter++</code> is really three instructions (load, add, store) and they can interleave. That is a <b>race condition</b>. The fix is to make the dangerous part a <b>critical section</b> that only one thread enters at a time. Tools: hardware atomic instructions (<code>test_and_set</code>, <code>compare_and_swap</code>), a <b>mutex lock</b> built on them (a spinlock busy-waits, no context switch, wastes CPU), and <b>semaphores</b>, an integer with <code>wait</code> (decrement, block if it would go negative) and <code>signal</code> (increment, wake one). A semaphore initialised to 0 is a "you may go" ticket: thread B does <code>wait(s)</code> before its work, thread A does <code>signal(s)</code> after its work, so A's work always happens before B's.
+</div>
+<div class="card ex">
+<b>Why this is easy.</b> The MC questions are slide facts, and the exam is open book. The long questions are four mechanical procedures: count forks, draw a Gantt chart under stated rules, fill a C skeleton with pipe/dup/read/write, and place wait/signal to enforce an order. Each has a template below and a simulator to check yourself.
+</div>
+</section>
+
+<section id="c1">
+<h2>Chapter 1. Introduction</h2>
+<div class="card def"><span class="tag">Must-know facts (MC come straight from these)</span>
+<ul>
+<li>OS = <b>resource allocator</b> (efficient and fair use of CPU, memory, I/O) and <b>control program</b> (prevents errors and improper use). Kernel = the one program running at all times. System programs ship with the OS but are not the kernel. Middleware = frameworks like databases.</li>
+<li><b>Von Neumann</b>: instructions and data in the <b>same memory</b>, accessed by address. CPU has control unit (IR, PC), ALU, registers. Cycle: fetch, decode, fetch operands, execute, write back.</li>
+<li>Devices and CPU share a <b>common bus</b> to memory. Device controllers have local buffers and signal completion with an <b>interrupt</b>. Interrupts have <b>priorities</b>; they are not all serviced the same way. The kernel handles them.</li>
+<li><b>Interrupt</b> (hardware, asynchronous) vs <b>trap / exception</b> (software: error or system call, synchronous). Interrupt-driven I/O: the CPU checks for interrupts between instructions, saves state, runs the handler, restores.</li>
+<li><b>DMA</b>: for fast devices. The controller moves blocks between device and memory directly, one interrupt per block, <b>less CPU involvement</b>. It does not remove interrupts; CPU and DMA run concurrently.</li>
+<li><b>Storage hierarchy</b>: registers, cache, main memory (volatile, DRAM, <b>byte addressable</b>, the only big store the CPU accesses directly), SSD/NVM, HDD, tape. Faster means smaller and more expensive. Bootstrap program lives in EEPROM/firmware.</li>
+<li><b>Caching</b>: copy a hot subset from a slower bigger store to a faster smaller one. Average access time $= h \cdot t_{hit} + (1-h) \cdot t_{miss}$. A high hit ratio alone does not guarantee performance: hit time and miss penalty matter too. Works because of temporal and spatial locality.</li>
+<li><b>Dual mode</b>: mode bit, kernel 0, user 1. Privileged instructions (I/O, timer, interrupt control) only in kernel mode. A <b>timer</b> interrupt guarantees the OS regains control. Intel has rings 0 to 3.</li>
+<li><b>Multiprocessors</b>: speedup with $N$ processors is less than $N$ (bus and memory contention). Benefits: throughput, economy of scale, reliability. Asymmetric (master/slave) vs SMP (each processor does everything). Multicore = several cores on one chip with private L1 and shared L2. NUMA = each CPU has fast local memory and slower remote memory.</li>
+<li><b>Multiprogramming</b>: keep the CPU busy by holding several jobs in memory. <b>Timesharing</b>: switch so often that users can interact. Needs process management, CPU scheduling, swapping, virtual memory.</li>
+<li><b>Virtualization</b>: a VMM/hypervisor runs guest OSes on one host. <b>Cloud</b>: virtualization delivered over the network, pay per use; SaaS, PaaS, IaaS.</li>
+<li>Units: KB, MB, GB are powers of 1024 for memory; networking speeds are in bits per second.</li>
+</ul></div>
+<details><summary>Try it: a cache has hit time 1 ns, miss penalty 100 ns, hit ratio 0.95. Average access time? Would a 0.99 hit ratio with a 400 ns miss penalty be better?</summary><div class="card">
+$0.95 \cdot 1 + 0.05 \cdot 100 = 5.95$ ns. Second: $0.99 \cdot 1 + 0.01 \cdot 400 = 4.99$ ns, better. But with a 1000 ns miss penalty it would be $10.99$ ns, worse despite the higher hit ratio. That is the point of the short question.
+</div></details>
+<div class="card why" style="border-left:4px solid #8e5fd0;background:var(--accent-bg)"><span class="tag">Why it matters</span>An OS is the referee for every program you will ever ship. Interrupts, DMA, and caching explain why your code is fast on one machine and slow on another, and why a database engineer cares about memory hierarchy.</div>
+</section>
+
+<section id="c2">
+<h2>Chapter 2. OS structures</h2>
+<div class="card def"><span class="tag">Must-know facts</span>
+<ul>
+<li><b>Services for the user</b>: user interface (CLI, GUI, touch), program execution, I/O operations, file-system manipulation, communication (shared memory or message passing), error detection (errors can occur in CPU, memory, I/O devices, and user programs, not only memory and I/O). <b>Services for the system</b>: resource allocation, logging/accounting, protection and security.</li>
+<li><b>System call</b> = the programming interface to OS services. Programmers use an <b>API</b> (POSIX, Win32, Java) through a library like libc. Why API instead of raw syscalls: convenience, portability, hides implementation details. APIs are not faster and cannot bypass protection.</li>
+<li>Implementation: each syscall has a number; the kernel keeps a <b>table indexed by number</b>; the library stub traps into the kernel, which runs the handler and returns status. <code>printf()</code> (library) calls <code>write()</code> (system call). Entering printf does not immediately enter kernel mode.</li>
+<li><b>Parameter passing</b>: in registers (limited), in a memory block whose address is in a register, or on the stack. Block and stack have no limit on count or length.</li>
+<li>Six syscall categories: process control, file management, device management, information maintenance, communications, protection. <code>read(fd, buf, count)</code> returns bytes read, 0 at end of file, -1 on error.</li>
+<li><b>Linker</b> combines object files and libraries into an executable; <b>loader</b> puts it in memory and does relocation. DLLs are loaded once and shared.</li>
+<li><b>Policy vs mechanism</b>: policy = what will be done, mechanism = how. The timer is a mechanism; how long to set it is policy. Separating them gives flexibility.</li>
+<li>MS-DOS: single task, no process created when running a program, no dual mode. FreeBSD: multitasking, the shell forks then execs.</li>
+</ul></div>
+<div class="card thm"><span class="tag">OS structures table (compare/contrast question every year)</span>
+<table>
+<tr><th>Structure</th><th>Idea</th><th>Pros</th><th>Cons</th></tr>
+<tr><td>Monolithic (UNIX, Linux)</td><td>All kernel functions in one binary and address space</td><td>Fast, little overhead in syscalls and communication</td><td>Hard to implement, debug, maintain</td></tr>
+<tr><td>Layered</td><td>Layer $N$ uses only layer $N-1$; information hiding; interfaces between adjacent layers well defined</td><td>Easy to construct and debug one layer at a time</td><td>Hard to define layers; passing through many layers costs time; pure layering is not dominant today</td></tr>
+<tr><td>Microkernel (Mach, Darwin core)</td><td>Minimal kernel: process management, memory management, IPC. Other services (file system, memory management policy, device drivers) in user space, communicate by <b>message passing</b></td><td>Easy to extend, easy to port, more secure and reliable (a crashed service does not crash the kernel)</td><td><b>Worse performance</b> because of message passing overhead</td></tr>
+<tr><td>Loadable kernel modules (Linux, Solaris)</td><td>Core kernel plus modules loaded at boot or run time</td><td>Flexible like layered or microkernel but modules call each other directly, no message passing, monolithic speed</td><td></td></tr>
+<tr><td>Hybrid</td><td>Combinations: Linux is monolithic plus modules, Windows monolithic plus personalities, macOS is Darwin (Mach plus BSD)</td><td>Practical</td><td></td></tr>
+</table>
+Android: Linux kernel, HAL, Bionic libc, ART runtime, JNI to bypass the VM. iOS is closed source, Android open.
+</div>
+<details><summary>Try it: list the system calls behind <code>cp a.txt b.txt</code></summary><div class="card">
+Get file names (read arguments), open input (open), create output (open with create flag, or creat), loop read and write, close both, write a message, exit. If the output exists: possibly a prompt and a decision to abort or truncate.
+</div></details>
+<div class="card why" style="border-left:4px solid #8e5fd0;background:var(--accent-bg)"><span class="tag">Why it matters</span>System calls are the only door between your program and the hardware. Knowing the monolithic versus microkernel trade-off is the same reasoning you use when choosing a monolith versus microservices at work.</div>
+</section>
+
+<section id="c3">
+<h2>Chapter 3. Processes</h2>
+<div class="card def"><span class="tag">Must-know facts</span>
+<ul>
+<li><b>Process</b> = program in execution: text (code), data (globals), heap (grows up, malloc), stack (grows down: parameters, return addresses, locals), PC and registers. Program = passive file; process = active.</li>
+<li><b>States</b>: new, ready, running, waiting, terminated. Transitions: admitted (new to ready), scheduler dispatch (ready to running), interrupt or time slice over (running to ready), I/O or event wait (running to waiting), I/O or event completion (waiting to ready), exit (running to terminated). A process leaves running when it issues an I/O request, is preempted, or exits. Calling a function or reading cache does not.</li>
+<li><b>PCB</b> holds: state, PC, registers, scheduling info (priority, queue pointers), memory-management info, accounting, I/O status (open files). Linux: <code>task_struct</code>.</li>
+<li><b>Context switch</b>: save the state of the running process into its PCB, load the next one. Pure overhead, depends on hardware (register sets). Not the same as user-to-kernel mode switch.</li>
+<li><b>Queues</b>: ready queue and device wait queues. Long-term scheduler controls the degree of multiprogramming (I/O-bound vs CPU-bound mix). Short-term (CPU) scheduler runs every few milliseconds. Medium-term: swapping.</li>
+<li><b>Creation</b>: parent creates children, forming a tree. Child may share all, some, or none of the parent's resources. <code>fork()</code> returns child pid to parent, 0 to child, negative on failure. Copy-on-write: pages are shared until written. <code>exec()</code> replaces the image and does not return on success. <code>wait()</code> returns the pid of a terminated child and its status. <code>exit()</code> ends the process.</li>
+<li><b>Zombie</b>: terminated, but the parent has not called wait, so its PCB entry (with exit status) remains. It still has a pid. <b>Orphan</b>: parent exited first; init/systemd adopts it. Cascading termination: some systems kill all children when the parent dies.</li>
+<li><b>IPC</b>: shared memory (fast, kernel only at setup, producer-consumer with a bounded buffer; buffer of size $N$ holds $N-1$ items, empty when in == out, full when (in+1) % N == out) vs message passing (send/receive through the kernel; direct vs indirect via mailboxes; blocking vs non-blocking; rendezvous when both block; zero, bounded, unbounded buffering).</li>
+<li><b>Ordinary pipes</b>: unidirectional, parent-child only (inherited through fork), accessed like file descriptors, disappear when the processes end, <b>not</b> accessible by arbitrary processes. <code>fd[0]</code> read end, <code>fd[1]</code> write end. <b>Named pipes (FIFO)</b>: no parent-child relation needed, persist after use, bidirectional on Windows. <b>Sockets</b>: IP plus port; ports below 1024 are well known.</li>
+</ul></div>
+<div class="card thm"><span class="tag">Fork counting recipe (Q3.1 and an MC every year)</span>
+<ol>
+<li>Walk the code line by line. At each <code>fork()</code>, every process that reaches it becomes two: parent (return value pid, nonzero) and child (return value 0).</li>
+<li>Track who continues the loop and who leaves (<code>break</code>, <code>return</code>, <code>exit</code>, or an exec that succeeds).</li>
+<li>If each iteration turns one active process into $k$ active ones, after $n$ iterations there are $k^n$ active. Count stopped processes separately and add.</li>
+<li>Count outputs per process: each process prints whatever it reaches.</li>
+</ol>
+<table>
+<tr><th>Code per iteration</th><th>Active after $n$</th><th>Total processes</th></tr>
+<tr><td><code>fork();</code></td><td>$2^n$</td><td>$2^n$</td></tr>
+<tr><td><code>fork(); fork();</code></td><td>$4^n$</td><td>$4^n$</td></tr>
+<tr><td><code>if (fork()) fork();</code> (child continues too)</td><td>$3^n$</td><td>$3^n$</td></tr>
+<tr><td><code>if (fork()) fork(); else break;</code> (S2026 Q3.1)</td><td>$2^n$</td><td>$2^{n+1}-1$ (stopped: $1+2+\dots+2^{n-1} = 2^n - 1$)</td></tr>
+<tr><td><code>if (fork()==0) { fork(); print X; return; }</code> for 3 iterations (S2026 MC10)</td><td>1 (only the original finishes the loop)</td><td>7 total; 6 print X, 1 prints Y</td></tr>
+</table>
+Worked S2026 Q3.1 with $n=2$: iteration 0: P0 forks P1 (P1 breaks), P0 forks P2 (continues). Iteration 1: P0 forks P3 (breaks), P0 forks P4; P2 forks P5 (breaks), P2 forks P6. Tree: P0 has children P1, P2, P3, P4; P2 has children P5, P6. Total 7, breaks 3.
+</div>
+<div class="card thm"><span class="tag">fork / exec failure cases (Q3.2)</span>
+Always list three scenarios: (1) fork and exec succeed: child prints up to exec only, parent prints after wait. (2) fork succeeds, exec fails: child also prints the lines after exec. (3) fork fails: only the else branch runs. If there is no <code>wait</code>, say the parent and child output can interleave in any order.
+</div>
+<div class="card thm"><span class="tag">Pipe skeleton (Q3.3, lab API)</span>
+<pre>int fd[2]; pipe(fd);              // fd[0] read end, fd[1] write end
+pid_t pid = fork();
+int fin = open(file, O_RDONLY);
+close(0); dup(fin);               // now scanf reads from the file
+scanf("%d", &x);
+if (pid == 0) {                   // child
+    close(fd[0]);                 // not reading
+    write(fd[1], &cnt, sizeof(int));
+    exit(0);
+}
+waitpid(pid, &status, 0);         // parent waits for that child
+close(fd[1]);                     // not writing
+read(fd[0], &child_cnt, sizeof(int));</pre>
+Remember: <code>dup(fin)</code> returns the lowest free descriptor, which is 0 after <code>close(0)</code>. Write the address of the variable, not the value. <code>sizeof(int)</code> for one integer. Every blank is a separate point.
+</div>
+<details><summary>Try it: how many processes does this create? <code>for (i=0;i&lt;3;i++) { if (fork()==0) continue; else break; }</code></summary><div class="card">
+Iteration 0: P0 forks C1; C1 continues, P0 breaks. Iteration 1: C1 forks C2; C1 breaks, C2 continues. Iteration 2: C2 forks C3; C2 breaks, C3 continues and the loop ends. Total 4 processes, a chain (each child of the previous), not a tree with fan-out.
+</div></details>
+<details><summary>Try it: process A forks B, B terminates immediately, A runs for an hour without wait. What is B? What if A also exits?</summary><div class="card">
+B is a zombie for the hour: terminated, pid and PCB kept for the exit status. When A exits without waiting, init adopts B and reaps it. If instead B were still running when A exited, B would be an orphan adopted by init.
+</div></details>
+<div class="card why" style="border-left:4px solid #8e5fd0;background:var(--accent-bg)"><span class="tag">Why it matters</span>fork, exec, wait, and pipes are the primitives behind shells, CI runners, and process supervisors. Zombies and orphans are real bugs in production services that spawn workers.</div>
+</section>
+
+<section id="c4">
+<h2>Chapter 4. Threads and concurrency</h2>
+<div class="card def"><span class="tag">Must-know facts</span>
+<ul>
+<li><b>Thread</b> = basic unit of CPU utilization: thread id, program counter, register set, stack. Threads of one process share code, data, heap, open files, signals. They do <b>not</b> each have their own address space or file descriptors.</li>
+<li><b>Benefits</b>: responsiveness, resource sharing, economy (creating and switching threads is cheaper than processes), scalability (use multiple cores). Threads of the same process can run on different cores at the same time.</li>
+<li><b>Concurrency</b>: more than one task makes progress, possible on a single core by time multiplexing. <b>Parallelism</b>: tasks run at exactly the same time, needs multiple cores. Debugging multicore programs is harder, not easier.</li>
+<li>Multicore programming challenges: identifying tasks, balance, data splitting, data dependency, testing and debugging. <b>Data parallelism</b> (same operation, data split) vs <b>task parallelism</b> (different operations).</li>
+<li><b>Amdahl's law</b>: $speedup \le \dfrac{1}{S + \frac{1-S}{N}}$ with $S$ the serial fraction and $N$ cores. Limit as $N \to \infty$ is $1/S$. Example: $S=0.25$, $N=2$: $1/(0.25+0.375)=1.6$. S2026 MC17: 61% parallel ($S=0.39$) on 3 cores: $1/(0.39+0.61/3)=1.69$.</li>
+<li><b>User threads</b> (library: Pthreads, Windows, Java) vs <b>kernel threads</b> (scheduled by the OS). Models: many-to-one (one block blocks all, no parallelism), one-to-one (Linux, Windows; more concurrency, kernel cost per thread), many-to-many, two-level.</li>
+<li><b>Implicit threading</b>: thread pools (bounded number of threads, reuse), fork-join, OpenMP, Grand Central Dispatch.</li>
+<li><b>fork with threads</b>: some systems have two versions, duplicate all threads or only the caller. exec replaces all threads.</li>
+<li><b>Signals</b>: synchronous (caused by the thread itself: illegal memory, divide by zero) go to the causing thread; asynchronous (Ctrl-C, timer) may go to all or to a chosen thread. Users can define handlers; different signals can have different handlers; <b>not</b> every signal goes to every thread. <code>kill(pid, sig)</code> vs <code>pthread_kill(tid, sig)</code>.</li>
+<li><b>Cancellation</b>: asynchronous (immediate) vs deferred (default; target checks at cancellation points). <code>pthread_create</code>, <code>pthread_join</code>, <code>pthread_cancel</code>.</li>
+<li>Linux: threads and processes are both tasks created with <code>clone()</code>; flags CLONE_VM, CLONE_FS, CLONE_FILES, CLONE_SIGHAND decide what is shared. Windows: one-to-one, ETHREAD, KTHREAD, TEB.</li>
+</ul></div>
+<details><summary>Try it: a program is 90% parallel. Speedup on 4 cores? On infinitely many?</summary><div class="card">
+$S=0.1$. $1/(0.1 + 0.9/4) = 1/0.325 = 3.08$. Infinite cores: $1/0.1 = 10$.
+</div></details>
+<details><summary>Try it: which of these is per thread, which per process: stack, heap, open files, program counter, global variables, signal handlers</summary><div class="card">
+Per thread: stack, program counter (and registers). Per process, shared by all threads: heap, open files, globals, signal handlers.
+</div></details>
+<div class="card why" style="border-left:4px solid #8e5fd0;background:var(--accent-bg)"><span class="tag">Why it matters</span>Threads and Amdahl's law decide whether buying a 64-core machine helps. Every performance review of a service starts with "what fraction is serial".</div>
+</section>
+
+<section id="c5">
+<h2>Chapter 5. CPU scheduling</h2>
+<div class="card def"><span class="tag">Must-know facts</span>
+<ul>
+<li>Execution alternates <b>CPU bursts</b> and <b>I/O bursts</b>. Many short bursts, few long ones. I/O-bound: many short CPU bursts. CPU-bound: few long ones.</li>
+<li>Scheduling decisions happen when a process: (1) goes running to waiting, (2) terminates, (3) running to ready (interrupt), (4) waiting to ready or new arrival. 1 and 2: <b>non-preemptive</b>. 3 and 4: <b>preemptive</b>.</li>
+<li><b>Dispatcher</b>: context switch, switch to user mode, jump to the right place. <b>Dispatch latency</b> = time to stop one and start another.</li>
+<li><b>Metrics</b>: CPU utilization (fraction busy), throughput (processes per unit time), turnaround (completion minus arrival), waiting (time in ready queue = turnaround minus burst), response (first run minus arrival).</li>
+<li><b>FCFS</b>: non-preemptive, convoy effect (short jobs stuck behind a long one). Slide example bursts 24, 3, 3: average wait 17 in order P1 P2 P3, but 3 in order P2 P3 P1.</li>
+<li><b>RR</b>: quantum $q$, preempted job goes to the tail. No process waits more than $(n-1)q$. Large $q$ becomes FCFS; small $q$ needs $q \gg$ context switch time. Rule of thumb: 80% of bursts shorter than $q$. RR has better response, often worse turnaround than FCFS when jobs are equal length. Slide example $q=4$ on 24, 3, 3: wait 6, 4, 7, average 5.67; response 4, 7, 10.</li>
+<li><b>SJF</b>: pick the shortest next CPU burst. Optimal average waiting time. Problem: predicting the burst. Exponential averaging $\tau_{n+1} = \alpha t_n + (1-\alpha)\tau_n$, usually $\alpha = 1/2$; $\alpha=0$ ignores recent history, $\alpha=1$ uses only the last burst. Preemptive version = <b>SRTF</b>; slide example (0,8),(1,4),(2,9),(3,5): P1 P2 P4 P1 P3, average wait 6.5. Starvation of long jobs possible.</li>
+<li><b>Priority</b>: smallest number = highest priority in the textbook convention (the exam may say the opposite, read it). Preemptive or not. Equal priority: FCFS. Starvation, fixed by <b>aging</b>. SJF is priority scheduling with priority = predicted burst. Priority with RR: same priority share RR.</li>
+<li><b>Multilevel queue</b>: fixed queue per process type, each queue its own algorithm, fixed-priority preemptive scheduling between queues or time slicing (60/20/10/10).</li>
+<li><b>MLFQ</b>: processes move between queues. Parameters: number of queues, algorithm per queue, when to upgrade, when to demote, which queue a process enters. Textbook example: Q0 RR 8 ms, Q1 RR 16 ms, Q2 FCFS. New job enters Q0 and preempts Q1/Q2 jobs; using the whole quantum demotes; a preempted Q1/Q2 job rejoins the <b>head</b> of its queue with its remaining quantum. Approximates SRTF without knowing bursts, good response time, "fair" to CPU-bound jobs. Starvation handled by periodically moving everyone to the top queue. Slide example average wait 16.8.</li>
+<li><b>Thread scheduling</b>: PCS (process contention scope, library schedules user threads onto LWPs by programmer priority) vs SCS (system contention scope, kernel schedules kernel threads). One-to-one systems use only SCS.</li>
+<li><b>Multiprocessor</b>: asymmetric (one master does all scheduling and I/O, can bottleneck) vs SMP (each processor self-schedules from a common or private ready queue). Multicore puts several cores on one chip for speed and power, it <b>complicates</b> scheduling. <b>Memory stall</b>: waiting on memory; hardware threads per core (chip multithreading, hyperthreading) let the core switch to another thread. Two levels of scheduling: OS picks a software thread for a logical CPU, the core picks which hardware thread runs. <b>Processor affinity</b>: keep a thread on the same CPU for cache reasons; soft vs hard (<code>sched_setaffinity</code>). <b>Load balancing</b>: push migration (periodic task moves work off busy CPUs) and pull migration (idle CPU pulls); conflicts with affinity.</li>
+<li><b>Real time</b>: hard (deadline miss = failure) vs soft (just preference). Periodic task: processing time $t$, deadline $d$, period $p$, $0 \le t \le d \le p$, rate $1/p$. Admission control. <b>RM</b>: static priority, shorter period = higher priority; optimal among static-priority schemes; utilization $\sum t_i/p_i$. Slide example 25/50 + 35/80 = 94%, P2 misses its deadline at 80 (finishes at 85). <b>EDF</b>: dynamic priority, earliest deadline first; does not need periodic tasks; theoretically can reach 100% utilization; same example meets all deadlines.</li>
+<li><b>Evaluation</b>: deterministic modeling (exact numbers for a given workload), queueing models (Little's formula $n = \lambda W$: 7 arrivals per second and 14 in queue means 2 s wait), simulation (trace tapes), implementation.</li>
+</ul></div>
+<div class="card thm"><span class="tag">Gantt chart procedure (write it down, follow it mechanically)</span>
+<ol>
+<li>Make a table: process, arrival, burst, remaining, queue (for MLFQ), remaining quantum.</li>
+<li>Keep a time cursor. At every event time (arrival, quantum expiry, completion) decide who runs next using the stated rule and tiebreak.</li>
+<li>For preemptive schemes, an arrival can interrupt the running process immediately. Note what happens to the preempted process (tail of queue in RR, head of queue in the exam MLFQ rules, keeps remaining quantum).</li>
+<li>Write the chart as "0 P1 4 P2 8 P3 12 ..." with boundary times.</li>
+<li>Waiting time per process = completion minus arrival minus burst. Response = first start minus arrival. Average over processes. Show the per-process numbers; they carry partial credit.</li>
+</ol>
+</div>
+<div class="card thm"><span class="tag">The exam's MLFQ rules (S2026 Q4.1), worked</span>
+Q0 RR 4 ms, Q1 RR 8 ms, Q2 FCFS. New arrivals enter Q0 and preempt lower queues immediately. Full quantum used means demotion. Preemption alone does not demote. A preempted Q1/Q2 job goes to the <b>head</b> of its queue.<br>
+Processes (arrival, burst): P1 (0, 9), P2 (2, 25), P3 (6, 7), P4 (14, 18), P5 (45, 15), P6 (58, 6).<br>
+Chart: 0 P1 4 P2 8 P3 12 P1 14 P4 18 P1 21 P2 29 P3 32 P4 40 P2 45 P5 57 P2 58 P6 64 P2 71 P4 77 P5 80.<br>
+Explanation of the tricky moments: at 4, P1 used its full quantum and drops to Q1; P2 (arrived at 2) is in Q0 so it runs. At 12, Q0 is empty, so Q1 runs P1 (it has 5 left, gets up to 8). At 14, P4 arrives in Q0 and preempts P1, which goes to the head of Q1 with 3 left and quantum remaining. At 18, P4 drops to Q1 (behind P1, P2, P3? No: Q1 order is by when they joined: P1 at the head because it was preempted, then P2, P3; P4 joins the tail). At 45 P5 arrives and preempts P2 which is in Q2 by then. At 58 P6 preempts P5 (Q1). Waiting: P1 12, P2 44, P3 19, P4 45, P5 20, P6 0; average 23.33. Response: 4, 6, 6, 4, 4, 4; average 4.67.<br>
+Check your own attempt with the simulator below (it implements exactly these rules).
+</div>
+<div class="card thm"><span class="tag">RM vs EDF procedure (S2026 Q4.2)</span>
+Tasks (time, deadline, period): P1 (1, 3, 4), P2 (2, 4, 5), P3 (2, 6, 7), P4 (1, 5, 8). All arrive at 0. Deadlines are relative to each release: P1 deadlines 3, 7, 11, 15; P2: 4, 9, 14; P3: 6, 13; P4: 5, 13. Tie: smaller process id.<br>
+<b>RM</b>: priority order by period, P1 > P2 > P3 > P4. Fill the chart task by task: place every P1 instance first at its release, then fit P2 around it, then P3, then P4. In the official answer P4 never gets the CPU in 0 to 16 and misses both deadlines; P3 misses both of its deadlines too. <b>4 missed deadlines.</b> Chart from the official answer: 0 P1 1 P2 3 P3 4 P1 5 P2 7 P3 8 P1 9 P3 10 P2 12 P1 13 P3 14 P2 15 P1 16.<br>
+<b>EDF</b>: at every slot run the released task with the earliest absolute deadline. Official chart: 0 P1 1 P2 3 P4 4 P3 6 P1 7 P2 9 P1 10 P3 12 P4 13 P2 15 P1 16. P1 misses its 4th deadline (15, finishes 16) and P2 its 3rd (14, finishes 15). <b>2 missed deadlines.</b> EDF misses fewer, which is the expected conclusion.<br>
+Method tip: write a column of absolute deadlines per task before drawing anything. For EDF, at each release re-sort by deadline.
+</div>
+<div class="card thm"><span class="tag">Dynamic priority with $\alpha$ and $\beta$ (S2026 Q4.3)</span>
+Priority = initial + $\alpha \times$ (time waited) + $\beta \times$ (time run). Larger value wins; tie goes to the larger id (as stated). "Checks every 3 units" means decisions only at multiples of 3.<br>
+(a) $\alpha=0$, $\beta=3$: a running process keeps gaining, so no preemption ever; among waiting processes all have priority 0, tie to larger id. Order: P1 (0 to 7), then P3 (id larger than P2, 7 to 13), P4 (13 to 17), P2 (17 to 22).<br>
+(b) $\alpha=1$, $\beta=0$, P1 and P2 only, checks every 3: waiting raises priority, running does not, so they alternate at checkpoints: 0 P1 3 P2 6 P1 9 P2 11 P1 12.<br>
+(c) $\alpha=1$, $\beta=-2$, start 30, checks every 3: running loses 2 per unit while waiters gain 1, so at each check the CPU rotates: 0 P1 3 P2 6 P3 9 P4 12 P1 15 P2 17 P3 20 P4 21 P1 22.<br>
+Procedure: keep a table of priorities, recompute at every check time, pick the max with the stated tiebreak, run until the next check or completion.
+</div>
+<details><summary>Try it: SRTF on P1 (0, 8), P2 (1, 4), P3 (2, 9), P4 (3, 5). Chart and average waiting time?</summary><div class="card">
+0 P1 1 P2 5 P4 10 P1 17 P3 26. Waiting: P1 $17-0-8=9$, P2 $5-1-4=0$, P3 $26-2-9=15$, P4 $10-3-5=2$. Average 6.5. Check it in the simulator.
+</div></details>
+<details><summary>Try it: exponential averaging with $\alpha = 0.5$, $\tau_0 = 10$, bursts 6, 4, 6, 4. Predictions?</summary><div class="card">
+$\tau_1 = 0.5\cdot6+0.5\cdot10 = 8$, $\tau_2 = 0.5\cdot4+0.5\cdot8 = 6$, $\tau_3 = 0.5\cdot6+0.5\cdot6=6$, $\tau_4 = 0.5\cdot4+0.5\cdot6 = 5$.
+</div></details>
+<details><summary>Try it: RM with P1 (20, period 50) and P2 (35, period 100). Utilization and schedulable?</summary><div class="card">
+$20/50 + 35/100 = 0.75$. P1 runs 0 to 20, P2 20 to 55 but P1 is released at 50 and preempts: P2 runs 20 to 50, P1 50 to 70, P2 70 to 75. All deadlines met.
+</div></details>
+<div class="card why" style="border-left:4px solid #8e5fd0;background:var(--accent-bg)"><span class="tag">Why it matters</span>Scheduling is the heart of Kubernetes, of your laptop staying responsive while compiling, and of real-time control in cars and drones. MLFQ is what Windows and BSD actually run.</div>
+</section>
+
+<section id="c6">
+<h2>Chapter 6. Synchronization tools</h2>
+<div class="card def"><span class="tag">Must-know facts</span>
+<ul>
+<li><b>Race condition</b>: several processes access and manipulate shared data concurrently and the outcome depends on the particular order of access. Example: <code>counter++</code> and <code>counter--</code> are each three machine instructions (load into register, add, store); interleaving with counter = 5 can leave 4 or 6 instead of 5. Kernel example: two forks racing on <code>next_available_pid</code> can hand out the same pid.</li>
+<li><b>Critical section</b>: code that touches shared data. Structure: entry section, critical section, exit section, remainder section. A solution must give: (1) <b>mutual exclusion</b>, (2) <b>progress</b> (if nobody is inside, the choice of who enters cannot be postponed forever), (3) <b>bounded waiting</b> (a limit on how many times others enter before a waiting process gets in).</li>
+<li>Kernel: <b>preemptive kernel</b> allows preemption in kernel mode, so race conditions are possible and harder on SMP. <b>Non-preemptive kernel</b> runs until it exits kernel mode, blocks, or yields, so it is essentially race-free on a single processor.</li>
+<li>Uniprocessor trick: disable interrupts. Inefficient on multiprocessors.</li>
+<li><b>Atomic hardware instructions</b> (non-interruptible):<br>
+<code>test_and_set(&amp;target)</code>: returns the old value and sets target to TRUE. Lock: <code>while (test_and_set(&amp;lock)); /* CS */ lock = false;</code><br>
+<code>compare_and_swap(&amp;value, expected, new)</code>: if value == expected set value = new; always returns the old value. Lock: <code>while (compare_and_swap(&amp;lock, 0, 1) != 0); /* CS */ lock = 0;</code><br>
+Atomic variables: <code>increment</code> built on a compare_and_swap loop.</li>
+<li><b>Bounded-waiting mutual exclusion with test_and_set</b>: <code>waiting[i] = true; key = true; while (waiting[i] &amp;&amp; key) key = test_and_set(&amp;lock); waiting[i] = false;</code> critical section; then scan <code>j = (i+1) % n</code> cyclically for the first <code>waiting[j]</code>; if none, <code>lock = false</code>, else <code>waiting[j] = false</code> (hand the lock directly to j). Mutual exclusion: only the first test_and_set sees false. Progress: exit sets lock false or frees a waiter. Bounded waiting: at most $n-1$ turns. test_and_set does <b>not</b> release the lock.</li>
+<li><b>Mutex lock</b>: <code>acquire()</code> (busy wait while not available, then take) and <code>release()</code>, both atomic. A busy-waiting lock is a <b>spinlock</b>: wastes CPU cycles, but no context switch, so good when the lock is held briefly and on multiprocessors (spin on one core while the holder runs on another). With the atomic <code>swap(x, v)</code>: <code>while (swap(locked, 1) == 1);</code></li>
+<li><b>Semaphore</b> (Dijkstra, P and V): integer with atomic <code>wait(S)</code> (while S &le; 0 busy wait; S--) and <code>signal(S)</code> (S++). <b>Counting</b> semaphore: initialised to the number of resource instances. <b>Binary</b>: 0 or 1, like a mutex. <b>Ordering</b>: semaphore synch = 0; P1 does S1 then <code>signal(synch)</code>; P2 does <code>wait(synch)</code> then S2. Guarantees S1 before S2.</li>
+<li><b>Semaphore without busy waiting</b>: struct with value and a waiting list. <code>wait</code>: value--; if value &lt; 0, add to list and <code>block()</code>. <code>signal</code>: value++; if value &le; 0, remove one process and <code>wakeup(P)</code>. A negative value's magnitude = number of waiting processes.</li>
+<li><b>Deadlock</b>: two processes each wait for a signal only the other can give (P0: wait(S), wait(Q); P1: wait(Q), wait(S)). <b>Starvation</b>: indefinite blocking, e.g. LIFO semaphore queue.</li>
+</ul></div>
+<div class="card thm"><span class="tag">Semaphore ordering recipe (Q5, 8 points, and MC23)</span>
+<ol>
+<li>Write the required order as arrows: "C before B", "B before A", "C before A".</li>
+<li>One semaphore per arrow, all initialised to 0.</li>
+<li>The earlier thread does <code>signal(sem)</code> <b>after</b> its work. The later thread does <code>wait(sem)</code> <b>before</b> its work.</li>
+<li>If an arrow is implied by others (C before A follows from C before B before A) you can still use the given semaphore; the exam told you which semaphores exist. Fill every blank, writing <code>/* Nothing */</code> where nothing is needed.</li>
+</ol>
+S2026 Q5: A depends on B and C, B depends on C. Given: A does <code>wait(&amp;s1)</code>, B ends with <code>signal(&amp;s2)</code>, C ends with <code>signal(&amp;s1)</code>. Blanks: A also <code>wait(&amp;s2)</code> (B before A); B starts with <code>wait(&amp;s0)</code> (C before B); C starts with nothing; C also does <code>signal(&amp;s0)</code> after printing. Output always C, B, A.<br>
+MC23 pattern: sem = 0, worker2 waits on it first, worker1 posts after its update, so worker1 always goes first: "A 2; B 5;".
+</div>
+<div class="card thm"><span class="tag">Reading a semaphore program for output</span>
+Track the value. Initial 0 means the first <code>wait</code> blocks until a <code>signal</code>. Initial 1 means one thread passes, the rest queue. A mutex around the shared update does not decide the order, only prevents interleaving inside the update. The order comes from semaphores and from which thread can pass first.
+</div>
+<details><summary>Try it: three threads must print "1", "2", "3" in that order. They start in random order. Semaphores and placement?</summary><div class="card">
+s12 = 0, s23 = 0. T1: print 1; signal(s12). T2: wait(s12); print 2; signal(s23). T3: wait(s23); print 3.
+</div></details>
+<details><summary>Try it: a semaphore has value $-3$ in the blocking implementation. What does that mean? What happens on signal?</summary><div class="card">
+Three processes are blocked on it. <code>signal</code> makes the value $-2$, which is still $\le 0$, so one blocked process is woken and moved to the ready queue.
+</div></details>
+<details><summary>Try it: why is <code>while (test_and_set(&amp;lock));</code> alone not bounded waiting?</summary><div class="card">
+A fast process can leave the critical section and re-acquire the lock before a spinning process gets its test_and_set in, repeatedly. Nothing limits how many times that can happen. The waiting[] array version fixes it by handing the lock to the next waiter in cyclic order.
+</div></details>
+<div class="card why" style="border-left:4px solid #8e5fd0;background:var(--accent-bg)"><span class="tag">Why it matters</span>Race conditions are the most expensive bug class in concurrent systems, from bank transfers to multiplayer games. Mutexes and semaphores are the tools you will use in every language.</div>
+</section>
+
+<section id="sched">
+<h2>Scheduling simulator</h2>
+<p>One process per line: <code>name arrival burst [priority]</code>. Pick an algorithm, run, compare with your hand-drawn chart. Ties: earlier arrival first, then input order. MLFQ uses the S2026 exam rules (new arrivals preempt lower queues, demotion only on full quantum, preempted jobs rejoin the head with remaining quantum).</p>
+<div class="card">
+<div class="sim">
+<div>
+<label>Processes</label>
+<textarea id="procs">P1 0 9
+P2 2 25
+P3 6 7
+P4 14 18
+P5 45 15
+P6 58 6</textarea>
+<label>Algorithm</label>
+<select id="alg">
+<option value="fcfs">FCFS</option>
+<option value="sjf">SJF (non-preemptive)</option>
+<option value="srtf">SRTF (preemptive SJF)</option>
+<option value="rr">Round robin</option>
+<option value="prio">Priority, non-preemptive (smaller number = higher)</option>
+<option value="priop">Priority, preemptive (smaller number = higher)</option>
+<option value="mlfq" selected>MLFQ (exam rules)</option>
+</select>
+<label>RR quantum / MLFQ Q0 quantum</label>
+<input id="q0" value="4">
+<label>MLFQ Q1 quantum (Q2 is FCFS)</label>
+<input id="q1" value="8">
+<button onclick="runSched()">Run</button>
+<div style="font-size:13px;color:var(--muted);margin-top:8px">Presets: <a href="#" onclick="preset('exam');return false">S2026 MLFQ</a> · <a href="#" onclick="preset('srtf');return false">slide SRTF</a> · <a href="#" onclick="preset('rr');return false">slide RR q=4</a> · <a href="#" onclick="preset('prio');return false">slide priority</a></div>
+</div>
+<div>
+<label>Result</label>
+<div class="trace" id="schedOut"></div>
+</div>
+</div>
+</div>
+</section>
+
+<section id="rt">
+<h2>RM / EDF simulator</h2>
+<p>One task per line: <code>name time deadline period</code>. Deadline is relative to each release. All released at 0. Tie: smaller id. Jobs keep running after a missed deadline (as in the official answer).</p>
+<div class="card">
+<div class="sim">
+<div>
+<label>Tasks</label>
+<textarea id="rtasks">P1 1 3 4
+P2 2 4 5
+P3 2 6 7
+P4 1 5 8</textarea>
+<label>Horizon (time slots)</label>
+<input id="horizon" value="16">
+<button onclick="runRT()">Run RM and EDF</button>
+</div>
+<div><label>Result</label><div class="trace" id="rtOut"></div></div>
+</div>
+</div>
+</section>
+
+<section id="calc">
+<h2>Calculators</h2>
+<div class="card">
+<div class="sim">
+<div>
+<label>Amdahl: parallel fraction (0 to 1)</label><input id="amP" value="0.61">
+<label>Cores N</label><input id="amN" value="3">
+<button onclick="amdahl()">Speedup</button>
+<div class="trace" id="amOut"></div>
+</div>
+<div>
+<label>Cache: hit ratio</label><input id="chH" value="0.95">
+<label>Hit time</label><input id="chT" value="1">
+<label>Miss time (total, not extra)</label><input id="chM" value="100">
+<button onclick="cache()">Average access time</button>
+<div class="trace" id="chOut"></div>
+<label>Little: arrival rate λ</label><input id="liL" value="7">
+<label>Average in queue n</label><input id="liN" value="14">
+<button onclick="little()">W = n / λ</button>
+<div class="trace" id="liOut"></div>
+</div>
+</div>
+</div>
+</section>
+
+<section id="lab">
+<h2>Lab APIs: what the "coding questions" draw on</h2>
+<div class="card ex"><span class="tag">Analogy</span>
+A process is a running program with its own memory. The lab syscalls are the five verbs you need to run a small shell: <b>fork</b> (clone me), <b>exec</b> (become another program), <b>wait</b> (pause until my child finishes), <b>pipe</b> (a one-way tube between parent and child), <b>dup</b> (point a file descriptor somewhere else). PA1 is exactly a shell built from these; the exam's fill-in-the-blank question is a stripped version of the lab examples.
+</div>
+<div class="card def"><span class="tag">Lab 3: process and file syscalls (Peter Chung)</span>
+<table>
+<tr><th>Call</th><th>Signature</th><th>Facts the exam uses</th></tr>
+<tr><td>getpid, getppid</td><td><code>pid_t getpid(void); pid_t getppid(void);</code></td><td>own pid, parent's pid</td></tr>
+<tr><td>sleep</td><td><code>unsigned sleep(unsigned seconds);</code></td><td>usleep for sub-second; nanosleep finer</td></tr>
+<tr><td>fork</td><td><code>pid_t fork(void);</code></td><td>child gets 0, parent gets child pid, -1 on error (sets errno). Child is an almost exact copy; both continue after the fork. Custom signal handlers are inherited.</td></tr>
+<tr><td>wait</td><td><code>pid_t wait(int *status);</code></td><td>blocks until a child changes state; status pointer may be NULL (0). Returns the child's pid. <code>waitpid(pid, &amp;status, 0)</code> waits for one specific child (used in the S2026 exam, not in the lab).</td></tr>
+<tr><td>exit status</td><td><code>wait(&amp;child_status)</code></td><td>0 means normal exit; child's open files are flushed and closed, resources freed, parent notified by a signal</td></tr>
+<tr><td>open, read, write, close</td><td><code>int open(path, flags, mode); ssize_t read(fd, buf, n); ssize_t write(fd, buf, n); int close(fd);</code></td><td>low-level, return file descriptors; use these (not fopen/fread) because FILE* cannot be used with pipes. <code>open("hello.txt", O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR)</code>. read returns bytes read, 0 at EOF, -1 on error.</td></tr>
+<tr><td>pipe</td><td><code>int pipe(int pfds[2]);</code></td><td>pfds[0] read end, pfds[1] write end. Unidirectional, FIFO order, kernel enforces one writer at a time, processes must share a parent. read and write block.</td></tr>
+<tr><td>dup, dup2</td><td><code>int dup(int fd); int dup2(int old, int new);</code></td><td>dup returns the lowest free descriptor, so <code>close(0); dup(fin);</code> makes fin the new stdin. dup2(fd, 1) redirects stdout.</td></tr>
+<tr><td>exec family</td><td><code>execl, execlp, execle, execv, execvp, execvpe</code></td><td>replace the current process image; never return on success, -1 on error. <code>execlp("ls", "ls", "-l", "-h", NULL)</code>: first argument is the program, then argv[0], args, NULL. The p variants search PATH; v variants take an array.</td></tr>
+<tr><td>signal</td><td><code>signal(SIGINT, handler)</code></td><td>software interrupt; Ctrl-C sends SIGINT; handlers can be overridden; children inherit them</td></tr>
+</table>
+</div>
+<div class="card thm"><span class="tag">The lab's own "exam example": two pipes for two-way talk (Lab 4)</span>
+<pre>char buffer[10] = {};  int p2c[2], c2p[2];
+pipe(p2c);  pipe(c2p);                      // BLANK1, BLANK2
+pid_t pid = fork();
+if (pid == 0) {                             // child
+    const char msg[] = "Child";
+    close(c2p[0]);  write(c2p[1], msg, 6);  // BLANK3: send "Child" (6 bytes with the null; 5 accepted)
+    close(p2c[1]);  read(p2c[0], buffer, 7); // BLANK4: receive "Parent" (7 bytes; 6 accepted)
+    printf("Child received the message: %s\n", buffer);
+} else {                                    // parent
+    const char msg[] = "Parent";
+    close(c2p[1]);  read(c2p[0], buffer, 6); // BLANK5
+    close(p2c[0]);  write(p2c[1], msg, 7);   // BLANK6
+    printf("Parent received the message: %s\n", buffer);
+}</pre>
+Pattern: name pipes by direction (p2c, c2p), each side closes the end it does not use, write the whole string including the terminating null, read the same count. A single pipe is one-way; a process that writes then reads the same pipe may read its own message.
+</div>
+<div class="card def"><span class="tag">Lab 4: named pipes, popen, pthreads</span>
+<ul>
+<li><b>Named pipe (FIFO):</b> <code>mkfifo(name, 0777)</code> creates it as a file; unrelated processes open it with <code>open(name, O_WRONLY)</code> or <code>O_RDONLY</code>, then read and write as usual; it persists until deleted. open blocks until both ends are open (use O_NONBLOCK to avoid). Data read is consumed, so no broadcasting; writes up to PIPE_BUF bytes are atomic. Check existence with <code>access(name, F_OK)</code>.</li>
+<li><b>popen / pclose:</b> <code>FILE *fp = popen("ls", "r")</code> forks a child running the command and returns a stream connected to its stdout ("w" connects to its stdin); <code>pclose(fp)</code> waits for it and returns its status.</li>
+<li><b>Pthreads:</b> <code>pthread_create(&amp;tid, &amp;attr, runner, arg)</code>, <code>pthread_join(tid, NULL)</code>, <code>pthread_exit(0)</code>, <code>pthread_attr_init(&amp;attr)</code>. Compile with <code>-lpthread</code>. Threads share globals (the lab's <code>sum</code>). Join ten threads with a for loop.</li>
+<li><b>Thread-order trace questions:</b> main creates T1 and T2 then joins both: outputs "main: begin", then A and B in either order (T2 can run before T1, or both before main reaches the joins), then "main: end". Without a join, main may finish first.</li>
+</ul>
+</div>
+<div class="card def"><span class="tag">Lab 5: PA2 MLFQ rules (likely to be reused in a question)</span>
+N-level feedback queue, N from 1 to 4, at most 10 processes, last queue is FCFS, input sorted by arrival, first arrival at 0, no equal arrival times, CPU never idle, at most 300 Gantt steps. Walkthrough: a new arrival goes to the end of Q0 and preempts a lower-queue process; a process that uses its full quantum moves to the end of the next queue; a finished process leaves. Run <code>./mlfq &lt; input.txt &gt; output.txt</code> and compare with <code>diff --side-by-side</code>.
+</div>
+<div class="card why"><span class="tag">Why it matters</span>
+These seven calls are how every shell, web server, and container runtime starts programs and wires their inputs and outputs together. Docker, systemd, and your terminal are fork, exec, pipe, and dup in a loop. Understanding them is the difference between using a computer and running one.
+</div>
+</section>
+
+<section id="templates">
+<h2>Answer templates for each question type</h2>
+<div class="card thm"><span class="tag">Short question: "What is X? Give an example."</span>
+<pre>X is [one-sentence definition using the slide wording].
+It happens when [condition]. Example: [concrete two-line scenario with numbers].
+Consequence: [what goes wrong / why it matters].</pre>
+Race condition: "several processes access and manipulate shared data concurrently and the outcome depends on the order of execution. Example: two threads do counter++ on counter = 5; both load 5, both store 6, one increment is lost."<br>
+Caching: "temporarily copy a subset of data from a slower larger storage to a faster smaller one. Hit ratio alone is not enough: average access time = h · hit time + (1 − h) · miss time, so hit time and miss penalty also matter."
+</div>
+<div class="card thm"><span class="tag">Short question: "Here is a new scheduling policy. Yes or no, with one sentence."</span>
+Ask three things: who gets high priority (I/O-bound have short bursts; CPU-bound long), can someone wait forever (starvation when higher-priority work keeps arriving), is it preemptive (does it re-decide at arrivals or timer). Answer "Yes/No. Because [the one mechanism that decides it]."
+</div>
+<div class="card thm"><span class="tag">Code snippet questions</span>
+Spinlock acquire with swap: <code>while (swap(locked, 1) == 1);</code>. With test_and_set: <code>while (test_and_set(&amp;lock));</code>. With compare_and_swap: <code>while (compare_and_swap(&amp;lock, 0, 1) != 0);</code>. Release: <code>lock = 0;</code> or <code>locked = 0;</code>.<br>
+Spinlock trade-off: wastes CPU cycles busy waiting, but no context switch, so good for short holds and multiprocessors.
+</div>
+<div class="card thm"><span class="tag">Fork question</span>
+<pre>1. Draw the tree: label the original P0; number children in creation order.
+2. State per iteration: "one active process becomes k active plus m stopped".
+3. Recurrence A(k+1) = ... , A(0) = 1, closed form.
+4. Total = active + stopped (geometric sum). Give the final formula in n.
+5. Outputs: each process prints what it reaches; count per line.</pre>
+</div>
+<div class="card thm"><span class="tag">Gantt question</span>
+<pre>1. Table: process, arrival, burst, remaining, (queue, quantum left).
+2. Timeline with every event: arrival, quantum end, completion.
+3. Chart: 0 Pa t1 Pb t2 ...
+4. Per process: completion, turnaround = completion − arrival,
+   waiting = turnaround − burst, response = first start − arrival.
+5. Averages with the division written out (e.g. 140/6 = 23.33).</pre>
+</div>
+<div class="card thm"><span class="tag">Semaphore blanks</span>
+<pre>1. List the "before" arrows.
+2. One semaphore per arrow, initial 0 (or as given).
+3. signal after the earlier work, wait before the later work.
+4. Every blank filled; write /* Nothing */ where no operation is needed.
+5. Check: trace one bad interleaving and confirm it blocks.</pre>
+</div>
+<div class="card warn"><span class="tag">Mistakes that cost points last time</span>
+<ul>
+<li>Forgetting the first waiting gap equals first start minus arrival, not minus 0.</li>
+<li>Demoting a process that was merely preempted (rule 7), or putting a preempted job at the tail instead of the head (rule 8).</li>
+<li>Combining split blocks in the Gantt chart and then computing response time from the combined block. Keep the first-run time.</li>
+<li>Writing <code>cnt</code> instead of <code>&amp;cnt</code> in <code>write</code>/<code>read</code>; using <code>fd[1]</code> to read.</li>
+<li>Only one scenario in the fork/exec output question. There are three.</li>
+<li>Choosing "microkernel has better performance" or "all interrupts handled the same way". Both are classic false options.</li>
+</ul>
+</div>
+</section>
+
+<section id="past">
+<h2>S2026 midterm: all answers in one place</h2>
+<div class="card">
+<b>MC</b>: 1 C, 2 B, 3 D, 4 B, 5 C, 6 A, 7 B (C also accepted), 8 B, 9 B, 10 C, 11 B, 12 B, 13 B, 14 A, 15 C, 16 C, 17 C, 18 C, 19 C, 20 B, 21 B, 22 C, 23 A, 24 B, 25 A.<br>
+<b>Short</b>: race condition definition plus lost update example; caching definition plus average access time argument; new policy: yes it favours I/O-bound (small burst gives large $f_i$), yes it can starve CPU-bound; spinlock <code>while(swap(locked,1)==1);</code>, wastes cycles but no context switch.<br>
+<b>Process</b>: tree with 7 processes and 3 breaks; $T(n) = 2^{n+1}-1$; three fork/exec scenarios (Hello1 Hello3; Hello1 Hello2 Hello3; Hello4); pipe blanks close(0), dup(fin), if (number % 2 == 0) cnt++, fd[1], &amp;cnt, fd[0], &amp;child_cnt.<br>
+<b>Scheduling</b>: MLFQ chart above, average waiting 23.33, average response 4.67; RM 4 misses vs EDF 2 misses; dynamic priority charts in the Chapter 5 card.<br>
+<b>Synchronization</b>: wait(&amp;s2), wait(&amp;s0), /* Nothing */, signal(&amp;s0).<br>
+The full paper with solutions is in the resources folder: <code>COMP3511 S2026 Midterm Solution.pdf</code>. Print it and bring it.
+</div>
+</section>
+
+<section id="quiz">
+<h2>Practice quiz <span class="pill" id="scorePill">0 / 0</span></h2>
+<p>New questions in the exam's style, extrapolated from the slides. Click an answer; wrong answers show the reason and the slide area.</p>
+<div id="quizBox"></div>
+</section>
+
+<section id="cards">
+<h2>Flashcards</h2>
+<button class="btn" onclick="shuffleCards()">Shuffle</button>
+<div class="fc" id="cardBox"></div>
+</section>
+
+<section id="check">
+<h2>Checklist (saved in this browser)</h2>
+<div class="card chk" id="chkBox"></div>
+</section>
+
+</main>
+</div>
+
+<script>
+// ---------- helpers ----------
+function parseProcs(txt){
+  return txt.trim().split('\n').map((l,i)=>{const p=l.trim().split(/\s+/); return {name:p[0], arr:+p[1], burst:+p[2], prio:p[3]!==undefined?+p[3]:0, idx:i};}).filter(p=>p.name&&!isNaN(p.arr)&&!isNaN(p.burst));
+}
+function chartStr(blocks){ // blocks: [{name,start,end}]
+  const m=[]; for(const b of blocks){ if(m.length&&m[m.length-1].name===b.name&&m[m.length-1].end===b.start) m[m.length-1].end=b.end; else m.push({...b}); }
+  return m.map(b=>`${b.start} ${b.name}`).join(' ')+' '+m[m.length-1].end;
+}
+function stats(procs, blocks){
+  const rows=[]; let sw=0,st=0,sr=0;
+  for(const p of procs){
+    const mine=blocks.filter(b=>b.name===p.name); if(!mine.length) continue;
+    const comp=Math.max(...mine.map(b=>b.end)), firstSeg=mine[0].seg;
+    const firstEnd=Math.max(...mine.filter(b=>b.seg===firstSeg).map(b=>b.end)); // response = end of first run − arrival (slide 5.12)
+    const ta=comp-p.arr, w=ta-p.burst, r=firstEnd-p.arr; sw+=w; st+=ta; sr+=r;
+    rows.push(`${p.name.padEnd(4)} completion ${String(comp).padStart(3)}  turnaround ${String(ta).padStart(3)}  waiting ${String(w).padStart(3)}  response ${String(r).padStart(3)}`);
+  }
+  const n=procs.length;
+  return rows.join('\n')+`\n\naverage waiting ${sw}/${n} = ${(sw/n).toFixed(2)}\naverage turnaround ${st}/${n} = ${(st/n).toFixed(2)}\naverage response ${sr}/${n} = ${(sr/n).toFixed(2)}`;
+}
+// ---------- unit-step scheduler ----------
+function schedule(procs, alg, q0, q1){
+  const P=procs.map(p=>({...p, rem:p.burst, level:0, qleft:null, done:false}));
+  const blocks=[]; let t=0, run=null, finished=0, seg=0;
+  const queues=[[],[],[]]; // for mlfq; for others only queues[0]
+  const arrived=new Set();
+  const cmp={
+    fcfs:(a,b)=>a.arr-b.arr||a.idx-b.idx,
+    sjf:(a,b)=>a.burst-b.burst||a.arr-b.arr||a.idx-b.idx,
+    srtf:(a,b)=>a.rem-b.rem||a.arr-b.arr||a.idx-b.idx,
+    prio:(a,b)=>a.prio-b.prio||a.arr-b.arr||a.idx-b.idx,
+    priop:(a,b)=>a.prio-b.prio||a.arr-b.arr||a.idx-b.idx,
+  };
+  const guard=5000;
+  while(finished<P.length && t<guard){
+    // arrivals
+    for(const p of P) if(p.arr===t && !arrived.has(p)){ arrived.add(p); queues[0].push(p); }
+    // preemption checks
+    if(run){
+      if(alg==='srtf'||alg==='priop'){
+        const ready=[...queues[0]].sort(cmp[alg]);
+        if(ready.length && cmp[alg](ready[0],run)<0){ queues[0].push(run); run=null; }
+      } else if(alg==='mlfq'){
+        if(run.level>0 && queues[0].length){ queues[run.level].unshift(run); run=null; } // ponytail: head of its queue, keeps qleft
+      }
+    }
+    // pick
+    if(!run){
+      if(alg==='mlfq'){
+        for(let L=0;L<3;L++){ if(queues[L].length){ run=queues[L].shift(); if(run.qleft===null) run.qleft=(L===0?q0:L===1?q1:Infinity); seg++; break; } }
+      } else if(queues[0].length){
+        if(alg==='rr'){ run=queues[0].shift(); run.qleft=q0; }
+        else { queues[0].sort(cmp[alg]); run=queues[0].shift(); }
+        seg++;
+      }
+    }
+    if(!run){ blocks.push({name:'idle',start:t,end:t+1}); t++; continue; }
+    // run one unit
+    blocks.push({name:run.name,start:t,end:t+1,seg}); run.rem--; if(run.qleft!==null) run.qleft--; t++;
+    // arrivals at the new time are added before expiry handling (textbook convention)
+    for(const p of P) if(p.arr===t && !arrived.has(p)){ arrived.add(p); queues[0].push(p); }
+    if(run.rem===0){ run.done=true; finished++; run=null; continue; }
+    if(alg==='rr' && run.qleft===0){ queues[0].push(run); run.qleft=null; run=null; }
+    else if(alg==='mlfq' && run.qleft===0){ run.level=Math.min(run.level+1,2); run.qleft=null; queues[run.level].push(run); run=null; }
+  }
+  return blocks.filter(b=>b.name!=='idle' || true);
+}
+function runSched(){
+  const procs=parseProcs(document.getElementById('procs').value);
+  const alg=document.getElementById('alg').value, q0=+document.getElementById('q0').value||4, q1=+document.getElementById('q1').value||8;
+  const blocks=schedule(procs,alg,q0,q1);
+  const nonidle=blocks.filter(b=>b.name!=='idle');
+  document.getElementById('schedOut').textContent='Gantt: '+chartStr(blocks)+'\n\n'+stats(procs,nonidle);
+}
+function preset(k){
+  const T={exam:'P1 0 9\nP2 2 25\nP3 6 7\nP4 14 18\nP5 45 15\nP6 58 6', srtf:'P1 0 8\nP2 1 4\nP3 2 9\nP4 3 5', rr:'P1 0 24\nP2 0 3\nP3 0 3', prio:'P1 0 10 3\nP2 0 1 1\nP3 0 2 4\nP4 0 1 5\nP5 0 5 2'};
+  const A={exam:'mlfq',srtf:'srtf',rr:'rr',prio:'prio'};
+  document.getElementById('procs').value=T[k]; document.getElementById('alg').value=A[k]; runSched();
+}
+// ---------- RM / EDF ----------
+function simRT(tasks,H,mode){
+    const jobs=[]; const blocks=[]; let missed=[];
+    for(let t=0;t<H;t++){
+      for(const k of tasks) if(t%k.p===0) jobs.push({task:k,rel:t,dl:t+k.d,rem:k.t,n:Math.floor(t/k.p)+1});
+      const ready=jobs.filter(j=>j.rem>0);
+      if(!ready.length){ blocks.push({name:'idle',start:t,end:t+1}); continue; }
+      ready.sort(mode==='rm' ? (a,b)=>a.task.p-b.task.p||a.task.idx-b.task.idx||a.rel-b.rel : (a,b)=>a.dl-b.dl||a.task.idx-b.task.idx||a.rel-b.rel);
+      const j=ready[0]; blocks.push({name:j.task.name,start:t,end:t+1}); j.rem--; if(j.rem===0) j.fin=t+1;
+    }
+    for(const j of jobs){ if(j.dl<=H && (j.fin===undefined || j.fin>j.dl)) missed.push(`${j.task.name} instance ${j.n} (deadline ${j.dl}${j.fin!==undefined?', finished '+j.fin:', unfinished'})`); }
+    return `${mode.toUpperCase()}: ${chartStr(blocks)}\nmissed ${missed.length}: ${missed.join('; ')||'none'}`;
+}
+function parseTasks(txt){ return txt.trim().split('\n').map((l,i)=>{const p=l.trim().split(/\s+/);return {name:p[0],t:+p[1],d:+p[2],p:+p[3],idx:i};}); }
+function runRT(){
+  const tasks=parseTasks(document.getElementById('rtasks').value);
+  const H=+document.getElementById('horizon').value||16;
+  const dls=tasks.map(k=>`${k.name}: `+Array.from({length:Math.ceil(H/k.p)},(_,i)=>i*k.p+k.d).join(', ')).join('\n');
+  document.getElementById('rtOut').textContent='Absolute deadlines\n'+dls+'\n\n'+simRT(tasks,H,'rm')+'\n\n'+simRT(tasks,H,'edf');
+}
+// ---------- calculators ----------
+function amdahl(){const p=+document.getElementById('amP').value,n=+document.getElementById('amN').value;const s=1-p;document.getElementById('amOut').textContent=`speedup = 1 / (${s.toFixed(2)} + ${p.toFixed(2)}/${n}) = ${(1/(s+p/n)).toFixed(3)}\nlimit as N→∞ = ${(1/s).toFixed(2)}`;}
+function cache(){const h=+document.getElementById('chH').value,t=+document.getElementById('chT').value,m=+document.getElementById('chM').value;document.getElementById('chOut').textContent=`${h}·${t} + ${(1-h).toFixed(3)}·${m} = ${(h*t+(1-h)*m).toFixed(3)}`;}
+function little(){const l=+document.getElementById('liL').value,n=+document.getElementById('liN').value;document.getElementById('liOut').textContent=`W = ${n}/${l} = ${(n/l).toFixed(3)}`;}
+
+// ---------- quiz ----------
+const QUIZ=[
+["[Ch1] Which statement about traps is true?",["A trap is generated by an external hardware device","A trap is a software-generated interrupt caused by an error or a system call request","Traps cannot be handled by the kernel","Traps are asynchronous with respect to the running instruction"],1,"Slides 1.40 area: trap = software-generated, synchronous (error or syscall). Interrupts are hardware and asynchronous."],
+["[Ch1] A system has a 95% cache hit ratio with a 2 ns hit time and 200 ns miss time. Average access time?",["2 ns","11.9 ns","200 ns","102 ns"],1,"0.95·2 + 0.05·200 = 1.9 + 10 = 11.9 ns."],
+["[Ch1] Which is NOT a reason multiprocessor speedup with N processors is less than N?",["Contention on the shared bus","Contention for memory","Overhead of keeping processors working together","Each processor has its own registers"],3,"Own registers are normal; the limits are shared bus, memory, and coordination overhead (slide 1.20 area)."],
+["[Ch1] The timer is important because",["it makes DMA faster","it guarantees the OS regains control of the CPU from a user program","it stores the bootstrap program","it increases cache hit ratio"],1,"Dual mode plus timer: a privileged timer interrupt returns control to the OS."],
+["[Ch1] Which is true about NUMA?",["All CPUs access all memory at the same speed","Each CPU has fast local memory and slower access to other CPUs' memory, in one shared address space","Memory is not shared at all","It only exists in single-core systems"],1,"NUMA: local memory fast, remote slower, one address space, scales better."],
+["[Ch1] Timesharing differs from multiprogramming mainly because",["it keeps several jobs in memory","it switches jobs so frequently that users can interact with each program while it runs","it does not need CPU scheduling","it removes the need for virtual memory"],1,"Multiprogramming = keep CPU busy; timesharing = frequent switching for interactivity (response time)."],
+["[Ch2] The kernel finds the right system call handler by",["searching the file system","a table indexed by system call number","asking the library","the program counter value"],1,"Slide 2.2x: syscall interface maintains a table indexed by number."],
+["[Ch2] Which parameter-passing method limits the number or length of parameters?",["Registers","Block or table in memory","Stack","All of them equally"],0,"Registers are limited in count; block and stack are not."],
+["[Ch2] 'The timer is a mechanism; how long to set it is a policy.' This illustrates",["layered design","separation of policy and mechanism","microkernel message passing","dynamic linking"],1,"Policy = what, mechanism = how. Separation gives flexibility (slide 2.3x)."],
+["[Ch2] Which is true about loadable kernel modules?",["They communicate only by message passing like a microkernel","They give modularity while modules call each other directly, so performance is like a monolithic kernel","They cannot be loaded at run time","They run in user space"],1,"Modules are linked into the kernel, no message passing overhead."],
+["[Ch2] In MS-DOS, running a program",["creates a new process with its own address space","loads the program over most of the memory without creating a process, since it is single-tasking","uses fork and exec","requires dual mode"],1,"MS-DOS: single task, no process created, no dual mode on the 8088."],
+["[Ch2] read(fd, buf, count) returns 0 when",["an error occurred","the end of file was reached","count bytes were read","the file is empty only"],1,"0 = end of file, -1 = error, otherwise bytes read."],
+["[Ch3] A process in the waiting state moves to ready when",["the scheduler dispatches it","its I/O or event completes","its time slice expires","it calls exit()"],1,"Waiting to ready = I/O or event completion."],
+["[Ch3] What does fork() return in the child process?",["The parent's pid","0","The child's pid","-1"],1,"Child gets 0, parent gets child's pid, -1 on failure."],
+["[Ch3] Code: for (i=0;i<2;i++) fork(); then printf(\"X\"). How many X?",["2","3","4","8"],2,"Each fork doubles: 2^2 = 4 processes, each prints once."],
+["[Ch3] After exec() succeeds, the lines after the exec call",["run in the child","run in the parent","never run, because the process image was replaced","run only if wait() is called"],2,"exec does not return on success."],
+["[Ch3] In a bounded buffer of size N implemented with in/out indices, the buffer is full when",["in == out","(in + 1) % N == out","in == N","out == 0"],1,"Empty when in == out; full when (in+1) % N == out; holds N−1 items."],
+["[Ch3] Which is true of named pipes (FIFOs)?",["Parent-child relationship required","They disappear when the creating process exits","No parent-child relationship is needed and they persist after the processes finish","They are always bidirectional on UNIX"],2,"Named pipes: no parent-child needed, persist; half-duplex on UNIX, full-duplex on Windows."],
+["[Ch3] After close(0); dup(fin); where fin is an open file, scanf reads from",["the keyboard","the file fin","nothing, it fails","fd 1"],1,"dup returns the lowest free descriptor, which is 0, so stdin is now the file."],
+["[Ch3] A rendezvous occurs in message passing when",["send and receive are both non-blocking","the sender blocks and the receiver does not","both send and receive are blocking","the buffer is unbounded"],2,"Both blocking = rendezvous; equivalent to zero-capacity buffering."],
+["[Ch3] Medium-term scheduling refers to",["choosing which process runs next","admitting new jobs","swapping processes out of and into memory","choosing an I/O device"],2,"Long-term admits, short-term dispatches, medium-term swaps."],
+["[Ch4] Which is shared by all threads of a process?",["Stack","Program counter","Heap and open files","Register set"],2,"Per thread: id, PC, registers, stack. Shared: code, data, heap, files, signals."],
+["[Ch4] A program is 80% parallel. Speedup on 4 cores by Amdahl?",["4","2.5","3.2","1.25"],1,"1/(0.2 + 0.8/4) = 1/0.4 = 2.5."],
+["[Ch4] In the many-to-one model",["each user thread maps to a kernel thread","a blocking system call by one thread blocks the whole process and no parallelism on multicore","threads can run on different cores","it is the model Linux uses"],1,"Many-to-one: one kernel thread, so one block blocks all, no parallelism."],
+["[Ch4] Which thread model do Linux and Windows use?",["Many-to-one","One-to-one","Many-to-many","Two-level"],1,"One-to-one is the modern default."],
+["[Ch4] A synchronous signal such as division by zero is delivered to",["every thread in the process","the thread that caused it","a random thread","the parent process"],1,"Synchronous signals go to the causing thread; asynchronous may go to all or one."],
+["[Ch4] Deferred thread cancellation means",["the thread is killed immediately","the target thread checks for cancellation at cancellation points and terminates itself","cancellation never happens","the thread is cancelled when the process exits"],1,"Deferred is the default; asynchronous cancels immediately."],
+["[Ch4] Which is a benefit of threads over processes?",["Each thread has its own address space","Thread creation and context switch are cheaper","Threads cannot share data","Threads need more memory"],1,"Economy: cheaper to create and switch because the address space is shared."],
+["[Ch5] Scheduling that happens when a process goes from running to waiting is",["preemptive","non-preemptive","impossible","only in RR"],1,"Conditions 1 and 2 (running to waiting, terminate) are non-preemptive."],
+["[Ch5] FCFS on bursts 24, 3, 3 in that order has average waiting time",["3","17","27","10"],1,"Waits 0, 24, 27; average 17. Convoy effect."],
+["[Ch5] In RR with n processes and quantum q, no process waits more than",["q","nq","(n−1)q","q/n"],2,"Each of the other n−1 processes runs at most q before you."],
+["[Ch5] Exponential averaging with α = 1 means",["recent history does not count","only the actual last CPU burst counts","all bursts count equally","prediction is always τ0"],1,"α=1 → τ(n+1) = t(n). α=0 → recent history ignored."],
+["[Ch5] SRTF on P1(0,8) P2(1,4) P3(2,9) P4(3,5) gives average waiting",["7","6.5","5","8"],1,"Chart 0 P1 1 P2 5 P4 10 P1 17 P3 26; waits 9, 0, 15, 2; average 6.5 (slide 5.23)."],
+["[Ch5] The solution to starvation in priority scheduling is",["shorter quantum","aging: increase priority of waiting processes over time","FCFS","disabling interrupts"],1,"Aging (slide 5.25)."],
+["[Ch5] In the textbook MLFQ example, a job preempted by a new Q0 arrival while running in Q1",["is demoted to Q2","goes to the tail of Q1 with a fresh quantum","joins the head of Q1 with its remaining quantum","is terminated"],2,"Slide 5.31: joins the head with remaining quantum. Preemption alone does not demote."],
+["[Ch5] An MLFQ approximates which algorithm without knowing burst times?",["FCFS","SRTF","RM","EDF"],1,"CPU-bound jobs drop like a rock, short I/O-bound jobs stay near the top: approximates SRTF."],
+["[Ch5] Process-contention scope (PCS) refers to",["kernel threads competing for CPUs system-wide","the thread library scheduling user threads onto LWPs within one process","disk scheduling","real-time admission control"],1,"PCS within a process; SCS system-wide among kernel threads."],
+["[Ch5] Soft processor affinity means",["a process can never migrate","the OS tries to keep a process on the same processor but migration is possible","the process picks a subset of CPUs","there is one ready queue"],1,"Soft: attempt, not guarantee. Hard: process specifies allowed CPUs."],
+["[Ch5] Pull migration is when",["a busy CPU pushes tasks to idle CPUs","an idle CPU takes waiting tasks from a busy CPU","tasks are pulled from disk","the master server assigns tasks"],1,"Push: periodic task moves work off overloaded CPUs; pull: idle CPU pulls."],
+["[Ch5] For periodic real-time tasks with time t, deadline d, period p",["t ≤ d ≤ p","d ≤ t ≤ p","p ≤ d ≤ t","t = d = p always"],0,"0 ≤ t ≤ d ≤ p, rate 1/p (slide 5.48)."],
+["[Ch5] Rate monotonic scheduling assigns priority",["by earliest deadline, dynamically","statically, inverse to the period: shorter period gets higher priority","by burst length","randomly"],1,"RM = static, shorter period higher priority; optimal among static-priority schemes."],
+["[Ch5] P1 (t=25, p=50) and P2 (t=35, p=80) under RM",["both meet deadlines","P2 misses its deadline at 80, finishing at 85","P1 misses its deadline","utilization is 50%"],1,"Slide 5.50: utilization 94%, P2 finishes at 85."],
+["[Ch5] Little's formula with 7 arrivals per second and 14 processes in queue on average gives a waiting time of",["0.5 s","2 s","98 s","7 s"],1,"n = λW, so W = 14/7 = 2."],
+["[Ch5] Deterministic modeling",["needs probability distributions","uses a fixed workload and gives exact numbers that apply only to that workload","is the same as simulation","runs the algorithm on a real system"],1,"Simple and fast, exact, but applies only to those inputs."],
+["[Ch6] counter++ can race because",["it is a single atomic instruction","it is implemented as load, add, store, which can interleave with another thread's load, add, store","the compiler forbids it","counter is in a register only"],1,"Slide 6.7 interleaving leaves counter 4 or 6 instead of 5."],
+["[Ch6] The 'progress' requirement says",["only one process is inside the critical section","if no one is in the critical section and some want in, the decision cannot be postponed indefinitely","every process waits a bounded number of turns","processes run at equal speeds"],1,"Three requirements: mutual exclusion, progress, bounded waiting (slide 6.11)."],
+["[Ch6] A non-preemptive kernel",["allows preemption in kernel mode and so has race conditions","runs until it exits kernel mode, blocks, or yields, so it is essentially free of kernel race conditions on a single processor","is used by all SMP systems","cannot handle interrupts"],1,"Slide 6.12."],
+["[Ch6] compare_and_swap(&lock, 0, 1) returns",["the new value","the old value of lock, and sets lock to 1 only if it was 0","true or false","nothing"],1,"Always returns the old value; swaps only if equal to expected."],
+["[Ch6] In the bounded-waiting test_and_set algorithm, waiting[j] = false means",["process i releases the lock to nobody","process i hands the lock directly to process j","process j is removed from the system","the lock is broken"],1,"If some process j is waiting, i unblocks j instead of setting lock = false."],
+["[Ch6] Spinlocks are useful when",["locks are held for a long time","the system has one processor only","locks are held briefly and another core runs the holder, avoiding a context switch","there is no shared data"],2,"Slide 6.22: wastes CPU, but no context switch; good on multiprocessors for short holds."],
+["[Ch6] In the blocking semaphore implementation, if S->value is −2 then",["two processes are waiting on S","S has two resources available","the semaphore is broken","signal will do nothing"],0,"Negative magnitude = number of waiting processes."],
+["[Ch6] To guarantee S1 in P1 runs before S2 in P2 using semaphore synch = 0",["P1: wait(synch); S1. P2: S2; signal(synch)","P1: S1; signal(synch). P2: wait(synch); S2","both call wait","both call signal"],1,"Earlier thread signals after, later thread waits before (slide 6.25)."],
+["[Ch6] P0 does wait(S); wait(Q); and P1 does wait(Q); wait(S); with S = Q = 1. Possible outcome?",["Always fine","Deadlock if P0 takes S and P1 takes Q before either takes the second","Starvation only","Both run in parallel"],1,"Each waits for the other's signal that never comes (slide 6.28)."],
+["[Ch6] A counting semaphore initialised to 3 allows",["3 processes in the critical section at once","exactly one process","no process","unbounded processes"],0,"Counting semaphore = number of instances of a resource."],
+["[Ch6] Which is NOT one of the three requirements for a critical-section solution?",["Mutual exclusion","Progress","Bounded waiting","Fairness by priority"],3,"The three are mutual exclusion, progress, bounded waiting."],
+["[Ch6] Disabling interrupts to protect a critical section",["works well on multiprocessors","works on a uniprocessor but is inefficient on SMP systems","is how semaphores are always built","is impossible"],1,"Slide 6.13."],
+];
+(function(){
+  const box=document.getElementById('quizBox'); let score=0, done=0;
+  QUIZ.forEach((q,qi)=>{
+    const d=document.createElement('div'); d.className='q';
+    d.innerHTML=`<div><b>${qi+1}.</b> ${q[0]}</div><div class="opts"></div><div class="why">${q[3]}</div>`;
+    const opts=d.querySelector('.opts');
+    q[1].forEach((o,i)=>{const b=document.createElement('button'); b.textContent=String.fromCharCode(65+i)+'. '+o; b.onclick=()=>{
+      if(d.classList.contains('done')) return; d.classList.add('done'); done++;
+      if(i===q[2]){b.classList.add('ok');score++;} else {b.classList.add('bad'); opts.children[q[2]].classList.add('ok');}
+      document.getElementById('scorePill').textContent=`${score} / ${done}`;
+    }; opts.appendChild(b);});
+    box.appendChild(d);
+  });
+})();
+
+// ---------- flashcards ----------
+const CARDS=[
+["OS two roles","resource allocator (efficient, fair) and control program (prevents errors and improper use)"],
+["Interrupt vs trap","interrupt: hardware, asynchronous. trap: software, synchronous (error or system call)"],
+["DMA","controller moves blocks device↔memory directly, one interrupt per block, less CPU involvement"],
+["Average access time","h · t_hit + (1−h) · t_miss"],
+["Dual mode","mode bit: kernel 0, user 1; privileged instructions only in kernel mode; timer returns control"],
+["printf vs write","printf is a library call that invokes the write system call"],
+["Policy vs mechanism","policy = what; mechanism = how; timer = mechanism, its duration = policy"],
+["Microkernel","minimal kernel (process, memory, IPC), services in user space, message passing; extensible, portable, secure, slower"],
+["Loadable modules","modular but modules call directly, no message passing, monolithic performance"],
+["Process parts","text, data, heap (up), stack (down), PC, registers"],
+["Five states","new, ready, running, waiting, terminated"],
+["Running → ready / waiting","interrupt or time slice / I/O or event wait"],
+["PCB holds","state, PC, registers, scheduling info, memory info, accounting, I/O status"],
+["fork returns","parent: child pid; child: 0; failure: −1"],
+["exec","replaces process image; does not return on success; −1 on failure"],
+["Zombie","terminated, parent has not called wait; keeps pid and PCB"],
+["Orphan","parent died; adopted by init/systemd"],
+["Bounded buffer","empty: in == out; full: (in+1) % N == out; holds N−1"],
+["pipe(fd)","fd[0] read end, fd[1] write end; unidirectional; parent-child only"],
+["Redirect stdin to file","close(0); dup(fin);"],
+["Thread owns","id, PC, registers, stack. Shares code, data, heap, files, signals"],
+["Four thread benefits","responsiveness, resource sharing, economy, scalability"],
+["Concurrency vs parallelism","progress by time multiplexing on one core vs simultaneous execution on multiple cores"],
+["Amdahl","speedup ≤ 1 / (S + (1−S)/N); limit 1/S"],
+["Thread models","many-to-one (one blocks all), one-to-one (Linux, Windows), many-to-many, two-level"],
+["Signals","synchronous → causing thread; asynchronous → all or chosen thread; kill(pid), pthread_kill(tid)"],
+["Cancellation","asynchronous = immediate; deferred (default) = at cancellation points"],
+["Non-preemptive decisions","running→waiting, terminate. Preemptive: running→ready, waiting→ready/new arrival"],
+["Turnaround / waiting / response","completion − arrival / turnaround − burst / first start − arrival"],
+["Convoy effect","short jobs stuck behind a long one in FCFS"],
+["RR bound","no process waits more than (n−1)q; 80% of bursts should be < q"],
+["Exponential average","τ(n+1) = α t(n) + (1−α) τ(n), α usually 1/2"],
+["SJF / SRTF","optimal average waiting; starvation of long jobs possible"],
+["Aging","increase priority of waiting processes to fix starvation"],
+["MLFQ parameters","number of queues, algorithm per queue, upgrade rule, demote rule, entry queue"],
+["MLFQ exam rules","new arrival preempts lower queues; full quantum demotes; preemption alone does not; preempted job to head with remaining quantum"],
+["PCS vs SCS","library schedules user threads to LWPs within process vs kernel schedules kernel threads system-wide"],
+["Asymmetric vs SMP","one master does scheduling and I/O (bottleneck) vs each processor self-schedules"],
+["Affinity, load balancing","soft/hard affinity; push and pull migration; they conflict"],
+["Real-time task","time t, deadline d, period p, 0 ≤ t ≤ d ≤ p, rate 1/p"],
+["RM","static priority, shorter period higher; optimal among static"],
+["EDF","dynamic, earliest deadline first; can reach 100% utilization in theory"],
+["Little","n = λ W"],
+["Race condition","shared data accessed concurrently, outcome depends on order"],
+["CS requirements","mutual exclusion, progress, bounded waiting"],
+["test_and_set","returns old value, sets TRUE. Lock: while(test_and_set(&lock));"],
+["compare_and_swap","if *value == expected then *value = new; returns old value"],
+["Spinlock with swap","while (swap(locked, 1) == 1);"],
+["Spinlock trade-off","wastes CPU cycles, no context switch; good for short holds, multiprocessors"],
+["Bounded waiting TAS exit","scan waiting[] cyclically; none → lock = false; else waiting[j] = false"],
+["Semaphore wait/signal","wait: while S ≤ 0 busy wait; S−−. signal: S++"],
+["Blocking semaphore","wait: value−−, if < 0 block. signal: value++, if ≤ 0 wakeup one. negative = number waiting"],
+["Ordering with semaphore 0","earlier: work; signal. later: wait; work"],
+["Deadlock with semaphores","P0 wait(S) wait(Q); P1 wait(Q) wait(S)"],
+];
+let cardOrder=CARDS.map((_,i)=>i);
+function renderCards(){const box=document.getElementById('cardBox');box.innerHTML='';cardOrder.forEach(i=>{const c=document.createElement('div');c.className='c';c.innerHTML=`<div class="f">${CARDS[i][0]}</div><div class="b">${CARDS[i][1]}</div>`;c.onclick=()=>c.classList.toggle('flip');box.appendChild(c);});}
+function shuffleCards(){for(let i=cardOrder.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[cardOrder[i],cardOrder[j]]=[cardOrder[j],cardOrder[i]];}renderCards();}
+renderCards();
+
+// ---------- checklist ----------
+const CHECK=[
+"Print: chapter 1 to 6 slides, lab notes (pipe, dup, fork, wait APIs), S2026 midterm with solution, this page's templates",
+"Redo all 25 S2026 MC without looking, then check slide numbers for every miss",
+"Write the race condition and caching short answers from memory",
+"Fork counting: do the 5 table rows and derive the 2^(n+1) − 1 formula yourself",
+"Fork/exec/wait: list the three output scenarios for a new snippet",
+"Pipe skeleton: write it blank from memory including close(0); dup(fin)",
+"Amdahl: three quick computations by calculator",
+"FCFS, SJF, SRTF, RR charts on the slide examples, check with the simulator",
+"MLFQ exam example: draw by hand in under 15 minutes, match the official chart",
+"RM and EDF on the exam task set: write absolute deadlines first, count misses",
+"Dynamic priority with alpha and beta: redo parts a, b, c",
+"Semaphore ordering: do the Q5 blanks and the 1-2-3 printing exercise",
+"Write the three critical-section requirements and the bounded-waiting exit logic",
+"Quiz on this page: 90% or better",
+"Flashcards: shuffle, all 50 correct",
+];
+(function(){const box=document.getElementById('chkBox');let saved={};try{saved=JSON.parse(localStorage.getItem('os-check')||'{}');}catch(e){}
+CHECK.forEach((t,i)=>{const l=document.createElement('label');const c=document.createElement('input');c.type='checkbox';c.checked=!!saved[i];c.onchange=()=>{saved[i]=c.checked;try{localStorage.setItem('os-check',JSON.stringify(saved));}catch(e){}};l.appendChild(c);l.appendChild(document.createTextNode(t));box.appendChild(l);});})();
+
+document.addEventListener('DOMContentLoaded',()=>{
+  runSched(); runRT(); amdahl(); cache(); little();
+  if(window.renderMathInElement) renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}],throwOnError:false});
+});
+</script>
+
+<script>
+// ponytail: show one section at a time, nav links become tabs, prev/next buttons at the bottom of each section
+(function(){
+  const secs=[...document.querySelectorAll('main > section')];
+  const links=[...document.querySelectorAll('nav a[href^="#"]')];
+  function show(id){
+    secs.forEach(s=>s.style.display=(s.id===id?'block':'none'));
+    links.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+id));
+    window.scrollTo(0,0); try{localStorage.setItem(location.pathname+'-sec',id);}catch(e){}
+  }
+  secs.forEach((s,i)=>{
+    const bar=document.createElement('div'); bar.style.cssText='display:flex;justify-content:space-between;margin-top:30px';
+    const mk=(t,j)=>{const b=document.createElement('button');b.textContent=t;b.className='btn';b.onclick=()=>show(secs[j].id);return b;};
+    bar.appendChild(i>0?mk('Back: '+secs[i-1].querySelector('h2').textContent.slice(0,28),i-1):document.createElement('span'));
+    if(i<secs.length-1) bar.appendChild(mk('Next: '+secs[i+1].querySelector('h2').textContent.slice(0,28),i+1));
+    s.appendChild(bar);
+  });
+  links.forEach(a=>a.addEventListener('click',e=>{e.preventDefault();show(a.getAttribute('href').slice(1));}));
+  document.querySelectorAll('main a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{const id=a.getAttribute('href').slice(1);if(document.getElementById(id)&&secs.some(s=>s.id===id)){e.preventDefault();show(id);}}));
+  let start=secs[0].id; try{start=localStorage.getItem(location.pathname+'-sec')||start;}catch(e){}
+  if(location.hash && secs.some(s=>s.id===location.hash.slice(1))) start=location.hash.slice(1);
+  show(start);
+})();
+</script>
+</body>
+</html>

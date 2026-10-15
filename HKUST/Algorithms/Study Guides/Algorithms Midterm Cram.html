@@ -1,0 +1,945 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>COMP3711 Midterm Cram</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<style>
+:root{--bg:#faf9f6;--fg:#1d1d1f;--muted:#6b6b6b;--card:#fff;--line:#e3e1da;--accent:#2b63c9;--accent-bg:#e9f0fc;--ok:#1a7f37;--ok-bg:#e6f4ea;--bad:#b3261e;--bad-bg:#fbe9e7;--warn-bg:#fff6d6;--code:#f1f0ec;--why:#f3ecfb;--why-line:#8e5fd0}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15161a;--fg:#e8e8e6;--muted:#a0a0a0;--card:#1f2026;--line:#34353c;--accent:#7aa7ff;--accent-bg:#1c2a44;--ok:#5ad27a;--ok-bg:#15301e;--bad:#ff7b72;--bad-bg:#3a1d1b;--warn-bg:#3a3214;--code:#2a2b32;--why:#2a2238;--why-line:#b48cf0}}
+:root[data-theme="dark"]{--bg:#15161a;--fg:#e8e8e6;--muted:#a0a0a0;--card:#1f2026;--line:#34353c;--accent:#7aa7ff;--accent-bg:#1c2a44;--ok:#5ad27a;--ok-bg:#15301e;--bad:#ff7b72;--bad-bg:#3a1d1b;--warn-bg:#3a3214;--code:#2a2b32;--why:#2a2238;--why-line:#b48cf0}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:17px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+a{color:var(--accent)}
+header{position:sticky;top:0;z-index:5;background:var(--card);border-bottom:1px solid var(--line);padding:10px 20px;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+header b{margin-right:10px;font-size:15px}
+header button{border:1px solid var(--line);background:var(--bg);color:var(--fg);padding:6px 12px;border-radius:999px;cursor:pointer;font:inherit;font-size:14px}
+header button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+main{max-width:860px;margin:0 auto;padding:28px 20px 90px}
+.tab{display:none}.tab.on{display:block}
+h2{font-size:30px;margin:0 0 6px;line-height:1.2}
+.sub{color:var(--muted);margin:0 0 22px;font-size:16px}
+h3{font-size:20px;margin:34px 0 10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:14px 0}
+.story{border-left:5px solid #e0a52b;background:var(--warn-bg)}
+.why{border-left:5px solid var(--why-line);background:var(--why)}
+.key{border-left:5px solid var(--accent)}
+.recipe{border-left:5px solid var(--ok)}
+.tag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:6px}
+table{border-collapse:collapse;width:100%;margin:10px 0;font-size:15px}
+th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-bg)}
+code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:14px}
+code{background:var(--code);padding:1px 5px;border-radius:4px}
+pre{background:var(--code);padding:12px 14px;border-radius:10px;overflow:auto;line-height:1.5;margin:8px 0}
+details{margin:10px 0;border:1px dashed var(--line);border-radius:10px;padding:8px 14px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+details .card{margin-top:10px}
+ul,ol{padding-left:22px}
+li{margin:4px 0}
+.q{margin:12px 0;padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.q .opts button{display:block;width:100%;text-align:left;margin:5px 0;padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg);cursor:pointer;font:inherit}
+.q .opts button.ok{background:var(--ok-bg);border-color:var(--ok)}
+.q .opts button.bad{background:var(--bad-bg);border-color:var(--bad)}
+.q .why2{display:none;margin-top:8px;font-size:15px;color:var(--muted)}
+.q.done .why2{display:block}
+.fc{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.fc .c{min-height:120px;border:1px solid var(--line);border-radius:12px;background:var(--card);padding:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;text-align:center}
+.fc .c .b{display:none;color:var(--accent)}
+.fc .c.flip .f{display:none}.fc .c.flip .b{display:block}
+.sim{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.sim label{display:block;font-size:13px;color:var(--muted);margin-top:8px}
+.sim input,.sim select,.sim textarea{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg);font:inherit}
+.btn{margin-top:10px;padding:8px 16px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer;font:inherit}
+.btn.ghost{background:transparent;color:var(--accent)}
+.trace{font-family:ui-monospace,Menlo,monospace;font-size:13.5px;white-space:pre-wrap;background:var(--code);padding:12px;border-radius:10px;min-height:60px;overflow:auto}
+.bars{display:flex;align-items:flex-end;gap:4px;height:120px;margin:10px 0}
+.bars div{flex:1;background:var(--accent);border-radius:4px 4px 0 0;position:relative;min-width:12px}
+.bars div.hi{background:#e0a52b}.bars div.done{background:var(--ok)}
+.bars div span{position:absolute;bottom:-20px;left:0;right:0;text-align:center;font-size:11px;color:var(--muted)}
+.pill{display:inline-block;padding:2px 10px;border-radius:999px;font-size:12px;background:var(--accent-bg);color:var(--accent);margin-left:6px}
+.chk label{display:block;padding:6px 0;cursor:pointer}
+.chk input{margin-right:8px}
+.nextbar{display:flex;justify-content:space-between;margin-top:36px}
+.big{font-size:22px;font-weight:700}
+.acc{color:var(--ok);font-weight:700}.bad{color:var(--bad);font-weight:700}
+@media (max-width:760px){.sim{grid-template-columns:1fr}h2{font-size:24px}}
+</style>
+</head>
+<body>
+<header>
+<b>COMP3711 Midterm</b>
+<button data-t="start" class="on">Start</button>
+<button data-t="big">Big O</button>
+<button data-t="rec">Recurrences</button>
+<button data-t="dc">Divide and conquer</button>
+<button data-t="sort">Sorting</button>
+<button data-t="rand">Randomization</button>
+<button data-t="heap">Heaps and linear sorts</button>
+<button data-t="play">Playground</button>
+<button data-t="exam">Exam patterns</button>
+<button data-t="quiz">Quiz</button>
+<button data-t="cards">Cards</button>
+</header>
+<main>
+
+<!-- ===================== START ===================== -->
+<section class="tab on" id="t-start">
+<h2>Algorithms midterm, from zero to 85%</h2>
+<p class="sub">Friday Oct 16, 20:00 to 22:00. L2 students (you) in LTC, L1 in LTJ. Closed book, one A4 cheat sheet, single or double sided, printed or handwritten. No calculator. Worth 30%. Coverage announced by the teaching team: "prerequisites" through "sorting in linear time", so greedy algorithms and later topics are out.</p>
+
+<div class="card key"><span class="tag">What the paper looks like (three past papers, all solved in this page)</span>
+<table>
+<tr><th>Pattern</th><th>Seen in</th><th>Points</th></tr>
+<tr><td>Compare growth rates: fill a table with A, B, or U ("unknown")</td><td>S25, S26</td><td>5</td></tr>
+<tr><td>Solve a recurrence by expansion or recursion tree, exact form $\Theta(n^\alpha \log^\beta n)$, often with a substitution like $k = \log n$</td><td>S25, F25, S26</td><td>4 to 5</td></tr>
+<tr><td>Randomization: coupon collector variants, expected count with indicators, random probing with the good-pivot argument</td><td>S25, F25, S26</td><td>10 to 15</td></tr>
+<tr><td>Design an algorithm with a target running time, usually a binary search or divide and conquer variant (distinct values in sorted array in $O(\log^2 n)$, $k$-th smallest of two sorted arrays in $O(\log k)$)</td><td>S25, F25, S26</td><td>10 to 20</td></tr>
+<tr><td>Heaps: draw insertions, design with heaps, build-heap in $O(n)$ with a proof</td><td>S25, F25, S26</td><td>10 to 20</td></tr>
+<tr><td>Decision tree drawing and lower bound counting, radix sort trace, "which sort is best here"</td><td>S25, F25</td><td>5 to 15</td></tr>
+</table>
+Instructions this year: pseudocode or plain language, define input and output of every subroutine, you can cite any algorithm from class, homework, or tutorials without details, no correctness proofs needed, but a brief running-time justification is required.
+</div>
+
+<div class="card key"><span class="tag">Exact coverage (lecture materials page, in order)</span>
+Prerequisites and asymptotics; binary search; mergesort, merge, counting inversions; maximum contiguous subarray; integer and matrix multiplication; randomized algorithms; quicksort and selection; heap and heapsort (with the skyline-merging example); sorting lower bound and linear-time sorting. Tutorials 1 to 5 and homework 1 and 2 are fair game and the exam questions are usually variants of them. Not covered: greedy, Huffman, dynamic programming, graphs (those appear in older past papers, skip them).<br>
+<b>How the course wants an algorithm answer written (course policy page):</b> (1) main ideas in a sentence or two, this is what earns partial credit; (2) pseudocode or plain-language description with every subroutine's input and output defined; (3) correctness argument (not required on this midterm); (4) running-time analysis with a brief justification.<br>
+<b>Grade rule for this course (criterion referenced):</b> A is 85 to 100 overall, B 70 to 85, C 50 to 70, instructors may shift the cuts slightly downward. Quizzes: the lowest 30% of scores, including missed ones, are dropped.
+</div>
+<div class="card story"><span class="tag">The whole course in one story</span>
+You have a huge pile of work. Three questions decide everything. <b>How fast does the cost grow when the pile doubles?</b> That is Big O. <b>Can you split the pile, solve the pieces, and glue the answers?</b> That is divide and conquer, and the glue cost gives you a recurrence. <b>Can flipping a coin make the average case great even when an enemy picks the input?</b> That is randomization. Sorting and heaps are the two toolboxes you reach for inside every answer.
+</div>
+
+<div class="card why"><span class="tag">Why this is worth learning, not just passing</span>
+Every system you will build or be interviewed on is judged by the same three questions. "Does it scale" is Big O. "Can we shard it" is divide and conquer. "Is the hash table fast on average" is randomization. The interview whiteboard problems at Google, Jane Street, and every startup are variants of the eight problems in this page. The course is older than you and will outlive the current AI tools, because it is the vocabulary used to judge whether a solution, human or machine, is any good.
+</div>
+
+<h3>How to use this page in two days</h3>
+<div class="card">
+<ol>
+<li><b>Tonight:</b> read Big O, Recurrences, Divide and conquer. Play with the recurrence solver until you can predict its output. Do the quiz for those tabs.</li>
+<li><b>Tomorrow morning:</b> Sorting, Randomization, Heaps. Use the playground to trace mergesort, partition, and heap insertion by hand first, then check.</li>
+<li><b>Tomorrow afternoon:</b> Exam patterns tab. Do the two new practice midterms in the resources folder under time (two hours each). Mark with the solutions.</li>
+<li><b>Tomorrow night:</b> print the cheat sheet, add anything you got wrong in your own handwriting on the margins, sleep.</li>
+</ol>
+</div>
+
+<div class="nextbar"><span></span><button class="btn" onclick="go('big')">Next: Big O</button></div>
+</section>
+
+<!-- ===================== BIG O ===================== -->
+<section class="tab" id="t-big">
+<h2>Big O: how cost grows</h2>
+<p class="sub">Lecture 1, Tutorial 1, HW1 Q1, and one 5-point table on every midterm.</p>
+
+<div class="card story"><span class="tag">Analogy</span>
+Big O is <b>ignoring the price tag and looking at the shape of the curve</b>. If you pay a flat fee plus 3 dollars per item, and I pay 300 dollars per item, you are cheaper for every large order even though your fee is bigger. $O(g)$ means "for big inputs, my cost is at most a constant times $g$". $\Omega$ is "at least". $\Theta$ is "exactly this shape".
+</div>
+
+<div class="card key"><span class="tag">The three symbols, in plain words first</span>
+<p>We compare how fast two functions grow when $n$ gets huge. Constant factors do not count ($3n$ and $100n$ are "the same"), and small $n$ does not count.</p>
+<ul>
+<li><b>$f = O(g)$: $f$ grows no faster than $g$.</b> $g$ is a ceiling. $5n+3$ is $O(n^2)$ because for big $n$, $n^2$ is far above it.</li>
+<li><b>$f = \Omega(g)$: $f$ grows at least as fast as $g$.</b> $g$ is a floor. $n^2$ is $\Omega(n)$.</li>
+<li><b>$f = \Theta(g)$: same growth rate.</b> Ceiling and floor at once. $3n^2+7n$ is $\Theta(n^2)$.</li>
+</ul>
+<p>Analogy: $O$ is "I earn at most about as much as you", $\Omega$ is "at least about as much", $\Theta$ is "about the same". "About" means up to a constant factor, and only once $n$ is large.</p>
+<p><b>Formal versions, write exactly this if asked to define:</b></p>
+<ul>
+<li>$f = O(g)$: there exist constants $c > 0$ and $n_0$ with $f(n) \le c\,g(n)$ for all $n \ge n_0$.</li>
+<li>$f = \Omega(g)$: there exist $c > 0$ and $n_0$ with $f(n) \ge c\,g(n)$ for all $n \ge n_0$.</li>
+<li>$f = \Theta(g)$: both hold. To prove $\Theta$, prove $O$ and $\Omega$ separately.</li>
+<li>"Worst-case running time is $\Theta(g)$" means two things: never more than $O(g)$ on any input, and some family of inputs really costs $\Omega(g)$.</li>
+</ul>
+</div>
+
+<div class="card recipe"><span class="tag">Recipe: compare two functions in 20 seconds</span>
+<ol>
+<li>Simplify each side: drop constants, keep the dominant term, change every log to $\log_2$ (base never matters).</li>
+<li>Use the ladder: constants $\lt$ $\log\log n$ $\lt$ $(\log n)^{c}$ $\lt$ $n^{\epsilon}$ (any $\epsilon \gt 0$) $\lt$ $n \log n$ $\lt$ $n^2$ $\lt$ $n^c$ $\lt$ $2^{n}$ $\lt$ $n!$ $\lt$ $n^n$.</li>
+<li>Exponents: constants <b>added</b> to an exponent do nothing ($2^{n+5} = \Theta(2^n)$); constants <b>multiplying</b> an exponent change the class ($2^{2n} \ne O(2^n)$, $5^n$ vs $7^n$: $5^n = O(7^n)$ only).</li>
+<li>The swap identity: $a^{\log_b n} = n^{\log_b a}$. So $3^{\log_2 n} = n^{\log_2 3} = n^{1.585}$ and $2^{\log_2 \log_2 n} = \log_2 n$.</li>
+<li>Weird pairs: substitute $m = \log n$ (or $m = \sqrt n$) and compare the simpler functions of $m$.</li>
+<li>Sums: $\sum_{i=1}^n i^c = \Theta(n^{c+1})$, $\sum 1/i = \Theta(\log n)$, $\sum_{i=1}^n \sqrt{i}\,n = \Theta(n^{2.5})$, $\sum 2^{-i} = \Theta(1)$.</li>
+</ol>
+</div>
+
+<div class="card key"><span class="tag">The A / B / U table (S25 Q2, S26 Q1a)</span>
+"A" if $T_A = o(T_B)$ strictly (A always faster for large $n$), "B" if the reverse, "U" if the given information cannot decide. <b>U appears exactly when one side is only an O or only an $\Omega$ bound</b>, because then the true function could be anything below or above. If both sides are $\Theta$ you can always decide.
+<table>
+<tr><th>$T_A$</th><th>$T_B$</th><th>Answer</th><th>Why</th></tr>
+<tr><td>$\Theta(\sum_{i=1}^n \sqrt{i}\, n)$</td><td>$\Theta(n^2)$</td><td>B</td><td>sum is $n \cdot \Theta(n^{1.5}) = \Theta(n^{2.5})$</td></tr>
+<tr><td>$O((\log n)^{10})$</td><td>$\Omega(n^{0.1})$</td><td>A</td><td>A is at most polylog, B is at least a polynomial; polylog $\lt$ any $n^\epsilon$</td></tr>
+<tr><td>$\Theta(2^n)$</td><td>$\Theta(2^{n/2})$</td><td>B</td><td>$2^n = (2^{n/2})^2$</td></tr>
+<tr><td>$O(\sum 2^{-i})$</td><td>$\Omega(\log n)$</td><td>A</td><td>A is $O(1)$, B grows</td></tr>
+<tr><td>$\Theta(\sum \sqrt{i}\, i)$</td><td>$\Theta(n^{4/3})$</td><td>B</td><td>sum is $\Theta(n^{2.5})$</td></tr>
+<tr><td>$\Theta(n^2 / (\log n)^{10})$</td><td>$\Theta(n^{1.5})$</td><td>B</td><td>$n^{0.5}$ beats any polylog</td></tr>
+<tr><td>$\Theta(2^{\sqrt n})$</td><td>$\Theta(10^{\sqrt[3]{n}})$</td><td>B</td><td>exponents: $\sqrt n$ vs $3.32\sqrt[3]{n}$; $\sqrt n$ wins eventually</td></tr>
+<tr><td>$O(\sqrt{\log n})$</td><td>$\Omega(\log\log n)$</td><td>U</td><td>A could be constant or $\sqrt{\log n}$; B could be $\log\log n$ or $n^5$</td></tr>
+<tr><td>$\Theta(5^n)$</td><td>$\Theta(7^n)$</td><td>A</td><td>$(5/7)^n \to 0$</td></tr>
+<tr><td>$\Theta(n^2)$</td><td>$T_B = 2T_B(n/2) + n$</td><td>B</td><td>B is $\Theta(n \log n)$</td></tr>
+</table>
+</div>
+
+<div class="card key"><span class="tag">HW1 Q1 answers, with the trick for each</span>
+<ul>
+<li>$n^{\log\log n}$ vs $(\log n)^{\log n}$: take $\log_2$ of both: $\log\log n \cdot \log n$ versus $\log n \cdot \log\log n$. Equal, so $\Theta$.</li>
+<li>$2^{\sqrt{2\log n}}$ vs $\sqrt n = 2^{\frac12 \log n}$: compare exponents $\sqrt{2 \log n}$ vs $\frac12\log n$; the square root loses. $O$ only.</li>
+<li>$n!$ vs $n^{n/2}$: $n! \ge (n/2)^{n/2}$ and that already beats $n^{n/2}$ up to a $2^{n/2}$ factor, while $n!$ is much more. $\Omega$ only.</li>
+<li>$4^{\sqrt n}$ vs $2^n$: exponents $2\sqrt n$ vs $n$. $O$ only.</li>
+<li>$\sum 1/i = H_n = \Theta(\log n)$ vs $n \log n$: $O$ only.</li>
+</ul>
+</div>
+
+<div class="card recipe"><span class="tag">Series tricks that earn proof points</span>
+<ul>
+<li><b>Upper bound a sum:</b> replace every term by the largest term. $\sum_{i=1}^n i \le n \cdot n$.</li>
+<li><b>Lower bound a sum (half trick):</b> keep only the top half of the terms, each is at least the middle value. $\sum_{i=1}^n i \ge \frac n2 \cdot \frac n2$.</li>
+<li><b>Harmonic sum:</b> group into blocks $\{1\}, \{\frac12,\frac13\}, \{\frac14..\frac17\}, \dots$; each block sums to between $\frac12$ and 1; there are $\log_2 n$ blocks, so $H_n = \Theta(\log n)$.</li>
+<li><b>Geometric sum:</b> $\sum_{i=0}^{k} r^i = \frac{r^{k+1}-1}{r-1}$; if $r \lt 1$ it is $\Theta(1)$, if $r \gt 1$ it is $\Theta(r^k)$ (last term dominates), if $r = 1$ it is $k+1$.</li>
+<li><b>Triple loop</b> (Tutorial 1 Q6): upper bound $n^3$; lower bound: restrict to $i \le n/4$, $j \ge 3n/4$, then the inner loop runs at least $n/2$ times, giving $\ge \frac{n}{4}\cdot\frac{n}{4}\cdot\frac{n}{2}$.</li>
+</ul>
+</div>
+
+<div class="card why"><span class="tag">Why it matters</span>
+When a product manager asks "will this still work with ten times the users", Big O is the honest answer. An $O(n^2)$ feature that is fine in a demo with 100 rows falls over at 100,000. Knowing the ladder lets you say "this needs a different design" before you write code.
+</div>
+
+<details><summary>Try it: order these from slowest-growing to fastest: $n \log n$, $2^{\log_2 n}$, $(\log n)^{100}$, $n^{1.01}$, $3^{\log_2 n}$, $n!$</summary><div class="card">
+$(\log n)^{100} \lt 2^{\log_2 n} = n \lt n^{1.01} \lt n \log n$? Careful: $n \log n$ vs $n^{1.01}$: $\log n \lt n^{0.01}$ eventually, so $n \log n \lt n^{1.01}$. Order: $(\log n)^{100}$, $n$, $n\log n$, $n^{1.01}$, $3^{\log_2 n} = n^{1.585}$, $n!$.
+</div></details>
+
+<div class="nextbar"><button class="btn ghost" onclick="go('start')">Back</button><button class="btn" onclick="go('rec')">Next: Recurrences</button></div>
+</section>
+
+<!-- ===================== RECURRENCES ===================== -->
+<section class="tab" id="t-rec">
+<h2>Recurrences: the cost of recursion</h2>
+<p class="sub">HW1 Q2, Quiz 3, and a 4 to 5 point question on every midterm. Usually "do not use the Master Theorem, show your steps".</p>
+
+<div class="card story"><span class="tag">Analogy</span>
+A recurrence is a <b>family tree of chores</b>. The root does some work and hires $a$ children, each with a pile $b$ times smaller. Total cost is the sum over all generations. Three things can happen: the top generation does most of the work (root wins), every generation does the same amount (multiply by the number of generations), or the bottom generation of tiny tasks is so numerous it wins (leaves win).
+</div>
+
+<div class="card key"><span class="tag">Simplified Master Theorem (for $T(n) = aT(n/b) + n$)</span>
+<table>
+<tr><th>Case</th><th>Condition</th><th>Answer</th><th>Who wins</th></tr>
+<tr><td>1</td><td>$a \gt b$</td><td>$\Theta(n^{\log_b a})$</td><td>leaves</td></tr>
+<tr><td>2</td><td>$a = b$</td><td>$\Theta(n \log n)$</td><td>every level ties</td></tr>
+<tr><td>3</td><td>$a \lt b$</td><td>$\Theta(n)$</td><td>root</td></tr>
+</table>
+General form $T(n) = aT(n/b) + n^d$: compare $a$ with $b^d$. $a \gt b^d$ gives $\Theta(n^{\log_b a})$; $a = b^d$ gives $\Theta(n^d \log n)$; $a \lt b^d$ gives $\Theta(n^d)$. Memorize: number of leaves is $a^{\log_b n} = n^{\log_b a}$.
+</div>
+
+<div class="card recipe"><span class="tag">Recipe A: repeated expansion (what the graders want to see)</span>
+<pre>T(n) = a T(n/b) + f(n)
+     = a [ a T(n/b²) + f(n/b) ] + f(n)   = a² T(n/b²) + a f(n/b) + f(n)
+     = ...
+     = a^k T(n/b^k) + Σ_{i=0}^{k-1} a^i f(n/b^i)        ← general term, write it
+Stop when n/b^k = 1, i.e. k = log_b n. Then a^k = n^{log_b a}.
+Plug in, evaluate the sum (geometric or constant per level), state Θ.</pre>
+Worked (S26 Q1b): $T(n) = 64T(n/4) + n^3$. Each level: $64 \cdot (n/4)^3 = n^3$, so every level costs $n^3$. $k = \log_4 n$ levels plus leaves $64^{\log_4 n} = n^3$. Total $\Theta(n^3 \log n)$.
+</div>
+
+<div class="card recipe"><span class="tag">Recipe B: recursion tree table (F25 Q1a asks for exactly this layout)</span>
+<table>
+<tr><th>Level $i$</th><th>Number of nodes</th><th>Size per node</th><th>Cost per node</th><th>Level total</th></tr>
+<tr><td>0</td><td>1</td><td>$n$</td><td>$f(n)$</td><td>$f(n)$</td></tr>
+<tr><td>1</td><td>$a$</td><td>$n/b$</td><td>$f(n/b)$</td><td>$a f(n/b)$</td></tr>
+<tr><td>$i$</td><td>$a^i$</td><td>$n/b^i$</td><td>$f(n/b^i)$</td><td>$a^i f(n/b^i)$</td></tr>
+<tr><td>leaves $\log_b n$</td><td>$a^{\log_b n} = n^{\log_b a}$</td><td>1</td><td>$T(1)$</td><td>$n^{\log_b a}\, T(1)$</td></tr>
+</table>
+Worked (F25 Q1a): $T(n) = 4T(n/4) + n\log_4 n$. Level $i$ total: $4^i \cdot \frac{n}{4^i}\log_4\frac{n}{4^i} = n(\log_4 n - i)$. Sum over $i = 0..\log_4 n - 1$: $n \sum (\log_4 n - i) = n \cdot \frac{\log_4 n(\log_4 n + 1)}{2}$, plus $n$ leaves. $\Theta(n \log^2 n)$.
+</div>
+
+<div class="card recipe"><span class="tag">Recipe C: substitution for square roots and logs (S25 Q3, HW1 Q2c)</span>
+If you see $T(\sqrt n)$, set $n = 2^m$ (so $\sqrt n = 2^{m/2}$) and define $S(m) = T(2^m)$. Then $T(\sqrt n) = S(m/2)$.<br>
+$T(n) = 2T(\sqrt n) + \log n$ becomes $S(m) = 2S(m/2) + m$, which is mergesort: $S(m) = \Theta(m \log m)$, so $T(n) = \Theta(\log n \cdot \log\log n)$.<br>
+$T(n) = T(\sqrt n) + \log n$ becomes $S(m) = S(m/2) + m = \Theta(m)$, so $T(n) = \Theta(\log n)$.
+</div>
+
+<div class="card key"><span class="tag">Answers to memorize (quiz and homework)</span>
+<table>
+<tr><th>Recurrence</th><th>Solution</th><th>Reason</th></tr>
+<tr><td>$T(n/2) + 1$</td><td>$\Theta(\log n)$</td><td>binary search</td></tr>
+<tr><td>$2T(n/2) + n$</td><td>$\Theta(n\log n)$</td><td>mergesort</td></tr>
+<tr><td>$2T(n/2) + \sqrt n$</td><td>$\Theta(n)$</td><td>leaves win: level $i$ costs $\sqrt{n}\sqrt{2}^i$, geometric increasing, last level $\approx n$</td></tr>
+<tr><td>$3T(n/5) + 2n$</td><td>$\Theta(n)$</td><td>$3 \lt 5$, root wins</td></tr>
+<tr><td>$3T(n/2) + n$</td><td>$\Theta(n^{\log_2 3})$</td><td>Karatsuba</td></tr>
+<tr><td>$4T(n/2) + n$</td><td>$\Theta(n^2)$</td><td>naive multiplication</td></tr>
+<tr><td>$7T(n/2) + n^2$</td><td>$\Theta(n^{\log_2 7})$</td><td>Strassen</td></tr>
+<tr><td>$8T(n/2) + n^2$ or $+n$</td><td>$\Theta(n^3)$</td><td>naive matrix multiply</td></tr>
+<tr><td>$3T(n/4) + n$</td><td>$\Theta(n)$</td><td>root wins</td></tr>
+<tr><td>$3T(n/3) + n$</td><td>$\Theta(n\log n)$</td><td>tie</td></tr>
+<tr><td>$2T(n/2) + n\log n$</td><td>$\Theta(n\log^2 n)$</td><td>each level $\approx n\log n$, $\log n$ levels</td></tr>
+<tr><td>$T(n-1) + n$</td><td>$\Theta(n^2)$</td><td>worst-case quicksort</td></tr>
+<tr><td>$2T(n-1) + 1$</td><td>$\Theta(2^n)$</td><td>Hanoi</td></tr>
+<tr><td>$T(\alpha n) + T(\beta n) + n$, $\alpha+\beta = 1$</td><td>$\Theta(n\log n)$</td><td>every full level costs $n$, depth $\Theta(\log n)$</td></tr>
+<tr><td>$T(\alpha n) + T(\beta n) + n$, $\alpha+\beta \lt 1$</td><td>$\Theta(n)$</td><td>level $i$ costs $n(\alpha+\beta)^i$, geometric</td></tr>
+<tr><td>$T(n/4) + T(3n/4) + n$</td><td>$\Theta(n\log n)$</td><td>randomized quicksort intuition</td></tr>
+</table>
+</div>
+
+<div class="card why"><span class="tag">Why it matters</span>
+Every recursive function you write, every MapReduce job, every "split the data across machines" plan has a recurrence behind it. Being able to look at a split and say "this is $n \log n$, that one is quadratic" is what separates a design that ships from one that gets rewritten.
+</div>
+
+<details><summary>Try it: $T(n) = 9T(n/3) + n^2$, $T(n) = T(n/2) + n$, $T(n) = 16T(n/4) + n^2 \log n$</summary><div class="card">
+$9 = 3^2$: tie, $\Theta(n^2 \log n)$. $1 \lt 2$: root wins, $\Theta(n)$. $16 = 4^2$ but the extra $\log$: every level costs $n^2 \log(n/4^i)$, summing like the F25 question gives $\Theta(n^2 \log^2 n)$.
+</div></details>
+
+<div class="nextbar"><button class="btn ghost" onclick="go('big')">Back</button><button class="btn" onclick="go('dc')">Next: Divide and conquer</button></div>
+</section>
+
+<!-- ===================== DIVIDE AND CONQUER ===================== -->
+<section class="tab" id="t-dc">
+<h2>Divide and conquer: split, solve, glue</h2>
+<p class="sub">Lectures 2 to 5, Tutorial 2, HW1 Q3 to Q5, HW2 Q1. The 10 to 20 point design question on every midterm.</p>
+
+<div class="card story"><span class="tag">Analogy</span>
+You are looking for a word in a paper dictionary. You do not read from page one. You open the middle, decide which half, and throw the other half away. That is binary search, and it is why $\log n$ shows up: halving 1,000,000 pages takes only 20 steps. Divide and conquer is the same move applied to any problem where the answer to the whole can be glued from the answers to the halves plus a bit of work at the seam.
+</div>
+
+<div class="card recipe"><span class="tag">The three-line template for every D&C design answer</span>
+<pre>Solve(P):                          // input: ..., output: ...  (define these!)
+  if P is tiny: solve directly
+  split P into pieces P1..Pa of size n/b
+  R_i = Solve(P_i) for each piece
+  combine R_1..R_a into the answer     // the seam: say exactly what happens here
+Running time: T(n) = a T(n/b) + (cost of split + combine). Solve it. Done.</pre>
+Graders want: the split, the combine, the recurrence, its solution. Correctness proof not required this year, but one sentence on why the combine is right costs nothing.
+</div>
+
+<h3>Binary search and its variants</h3>
+<div class="card key">
+<pre>Search(A, l, r, x):              // sorted A, returns index of x or nil
+  if l > r: return nil
+  m = floor((l+r)/2)
+  if A[m] = x: return m
+  if x < A[m]: return Search(A, l, m-1, x) else return Search(A, m+1, r, x)
+T(n) = T(n/2) + O(1) = O(log n)</pre>
+<b>Loop version that finds the first element $\ge x$ (lower bound):</b>
+<pre>l = 1; r = n+1
+while l < r:
+  m = floor((l+r)/2)
+  if A[m] < x: l = m+1 else r = m
+return l                           // n+1 if none</pre>
+<ul>
+<li><b>Rotated sorted array</b> (Quiz 2): find the "drop" $k$ with $A[k] \gt A[k+1]$: if $A[m] \gt A[m+1]$ return $m$; if $A[m] \ge A[l]$ go right ($l = m+1$) else go left ($r = m-1$).</li>
+<li><b>Last occurrence of $x$ in a sorted array</b> (S25 Q6, S26 Q3): precondition $A[p] = x$. If $A[r] = x$ return $r$. Else $q = \lfloor (p+r)/2 \rfloor$; if $A[q] = x$ and $A[q+1] \gt x$ return $q$; if $A[q] = x$ recurse on $[q+1, r]$; else recurse on $[p, q-1]$. $O(\log n)$.</li>
+<li><b>Distinct values with frequencies when there are $\Theta(\log n)$ distinct values</b>: repeatedly find the last occurrence of $A[\text{start}]$, output value and length, jump past it. $m$ jumps times $O(\log n)$ each gives $O(\log^2 n)$. This exact question was on two of the three recent papers.</li>
+<li><b>Galloping search</b> when the answer is near the front at unknown position $k$: double an index $1, 2, 4, 8, \dots$ until you pass the target, then binary search the last interval. $O(\log k)$.</li>
+<li><b>$k$-th smallest of two sorted arrays in $O(\log k)$</b> (F25 Q4): compare $A[k/2]$ with $B[k/2]$. The smaller one, together with everything before it in its array, cannot be the answer (at most $k-1$ things are below it), so discard those $k/2$ elements and look for the $(k/2)$-th smallest in what remains. If an array is shorter than $k/2$, treat the missing entry as $\infty$. $k$ halves each round, so $O(\log k)$ rounds of $O(1)$ work.</li>
+<li><b>Local minimum in an $n \times n$ grid in $O(n)$</b> (HW2 Q1): look at the middle row, middle column, and the border (a "window frame with a cross", $O(n)$ cells). Take the minimum $M$ of those. If $M$ beats its four neighbours, done. Otherwise a smaller neighbour lies strictly inside one quadrant; recurse into that quadrant only. $T(n) = T(n/2) + O(n) = O(n)$. Why it works: the quadrant's boundary is all bigger than something inside it, so walking downhill inside can never leave.</li>
+</ul>
+</div>
+
+<h3>Mergesort and counting inversions</h3>
+<div class="card key">
+<pre>Mergesort(A, l, r):
+  if l >= r: return
+  m = floor((l+r)/2)
+  Mergesort(A, l, m); Mergesort(A, m+1, r)
+  Merge(A, l, m, r)                // two pointers, sentinels ∞ at the ends, Θ(n)
+T(n) = 2T(n/2) + n = Θ(n log n), for every input.</pre>
+<b>Inversions</b> (pairs $i \lt j$ with $A[i] \gt A[j]$, a measure of "how unsorted"): count left, count right, count crossing pairs during the merge. When the element from the right half is placed, every element still waiting in the left half is bigger than it, so add that count in one step. Same recurrence, $\Theta(n \log n)$.
+</div>
+
+<h3>Maximum subarray</h3>
+<div class="card key">
+Four speeds for the same problem, a favourite "improve this" question.
+<table>
+<tr><th>Idea</th><th>Time</th></tr>
+<tr><td>Try every $(i, j)$, sum from scratch</td><td>$\Theta(n^3)$</td></tr>
+<tr><td>Try every $(i, j)$, extend the running sum</td><td>$\Theta(n^2)$</td></tr>
+<tr><td>D&C: best in left, best in right, best crossing the middle (best suffix of left plus best prefix of right, each by one scan)</td><td>$\Theta(n \log n)$</td></tr>
+<tr><td>Kadane: $best_{end\ here} = \max(A[i],\ best_{end\ here} + A[i])$, keep the global max</td><td>$\Theta(n)$</td></tr>
+</table>
+Stock profit (buy then sell) reduces to this by taking daily differences. Max <b>product</b> subarray (Tutorial 2) needs both the max and the min prefix and suffix products, because two negatives multiply to a positive.
+</div>
+
+<h3>Multiplication and the "fewer subproblems" trick</h3>
+<div class="card key">
+<ul>
+<li>Integer multiplication: naive split gives 4 half-size products, $T = 4T(n/2) + n = \Theta(n^2)$, no gain. <b>Karatsuba</b> uses 3: $(a_1 + a_0)(b_1 + b_0) - a_1 b_1 - a_0 b_0$ gives the middle term. $T = 3T(n/2) + n = \Theta(n^{\log_2 3}) = \Theta(n^{1.585})$.</li>
+<li>Matrix multiplication: block split gives 8 products, $\Theta(n^3)$. <b>Strassen</b> uses 7: $\Theta(n^{\log_2 7}) = \Theta(n^{2.81})$.</li>
+<li>Lesson for the exam: when leaves dominate, only $a$ matters. Trading one multiplication for a few additions is a win.</li>
+</ul>
+</div>
+
+<h3>Design patterns from homework that could come back as exam variants</h3>
+<div class="card key">
+<ul>
+<li><b>More than $n/3$ votes</b> (HW1 Q4): at most 2 winners (three would exceed $n$). D&C: candidates of each half (at most 2 each) are the only possible candidates for the whole (if $x$ has more than a third overall it has more than a third in some half). Count the at most 4 candidates in $O(n)$. $T = 2T(n/2) + O(n) = O(n \log n)$. Majority ($\gt n/2$) is the same with one candidate per half.</li>
+<li><b>$k$-near-sorted arrays</b> (HW1 Q3): one stack pass removes at most $2k$ offenders in $O(n)$ (push if non-decreasing, else pop and discard both), sort the removed ones in $O(k \log k)$, merge in $O(n)$.</li>
+<li><b>Stable point sets</b> (HW1 Q5): sort by $x$, split by a vertical line, recurse, then project every point onto the line. $O(n \log n)$ time and $O(n \log n)$ added points because each level adds at most $n$ and there are $\log n$ levels.</li>
+<li><b>Closest pair</b> (Tutorial 2): sort by $x$, split, $d = \min(d_L, d_R)$, check the strip of width $2d$ sorted by $y$, each point against a constant number of neighbours. $O(n \log^2 n)$, or $O(n \log n)$ with presorting.</li>
+</ul>
+</div>
+
+<div class="card why"><span class="tag">Why it matters</span>
+Binary search is in every database index and every "git bisect" that finds the commit that broke production. Mergesort's merge is how distributed systems combine sorted shards. Karatsuba-style tricks are why your phone can do public-key cryptography on thousand-digit numbers.
+</div>
+
+<details><summary>Try it: given a sorted array of distinct integers, find an index $i$ with $A[i] = i$ in $O(\log n)$</summary><div class="card">
+$A[i] - i$ is non-decreasing (distinct integers increase by at least 1 each step). Binary search for the first index where $A[m] - m \ge 0$ and check equality. $O(\log n)$.
+</div></details>
+<details><summary>Try it: $n$ sorted arrays of $n$ elements each. Find the overall median in $O(n \log n)$? Hint: $k$-th smallest of two sorted arrays, repeated.</summary><div class="card">
+Pairwise merge is too slow. Better: any value in the union has a rank computable in $O(n \log n)$ by binary searching each array ($n$ arrays times $\log n$). Binary search on the value over the sorted union of candidate values, or use a heap-based $k$-way merge to the middle, $O(n^2 \log n)$. The exam version usually keeps it to two arrays.
+</div></details>
+
+<div class="nextbar"><button class="btn ghost" onclick="go('rec')">Back</button><button class="btn" onclick="go('sort')">Next: Sorting</button></div>
+</section>
+
+<!-- ===================== SORTING ===================== -->
+<section class="tab" id="t-sort">
+<h2>Sorting: quicksort, selection, and the sorting zoo</h2>
+<p class="sub">Lecture 7, Tutorial 4, HW2 Q3, F25 Q1d. Know every algorithm's worst case, best case, space, stability, and when it is the right pick.</p>
+
+<div class="card story"><span class="tag">Analogy</span>
+Mergesort is a careful librarian: split the pile in half, sort each half, then interleave. Quicksort is a bouncer: pick one book (the pivot), throw everything smaller to the left and bigger to the right, then deal with each side. The bouncer is faster in practice because the throwing is done in place, but if the bouncer keeps picking the smallest book as pivot, the line never shortens: that is the $n^2$ worst case. Picking the pivot at random makes a bad night vanishingly unlikely.
+</div>
+
+<div class="card key"><span class="tag">Partition (Lomuto) and quicksort</span>
+<pre>Partition(A, l, r):                 // pivot x = A[r]; returns pivot's final index
+  x = A[r]; i = l - 1
+  for j = l to r-1:
+    if A[j] <= x: i = i + 1; swap A[i], A[j]
+  swap A[i+1], A[r]; return i + 1
+Invariant: A[l..i] <= x | A[i+1..j-1] > x | unseen | x at r.   Θ(n), in place.
+
+Quicksort(A, l, r):
+  if l >= r: return
+  m = Partition(A, l, r); Quicksort(A, l, m-1); Quicksort(A, m+1, r)</pre>
+Best: $2T(n/2) + n = \Theta(n \log n)$. Worst (sorted input, last-element pivot): $T(n-1) + n = \Theta(n^2)$. Randomized pivot: expected $\Theta(n \log n)$ on <b>every</b> input.
+</div>
+
+<div class="card key"><span class="tag">The expected comparisons proof (write it from memory)</span>
+Let $z_1 \lt \dots \lt z_n$ be the sorted values. $z_i$ and $z_j$ are compared iff the first pivot chosen from $\{z_i, \dots, z_j\}$ is $z_i$ or $z_j$ (any other pivot from that set separates them forever). That first pivot is uniform over $j - i + 1$ candidates, so $\Pr[X_{ij} = 1] = \frac{2}{j-i+1}$. Then
+$$E[\text{comparisons}] = \sum_{i \lt j} \frac{2}{j-i+1} \le \sum_{i=1}^{n} \sum_{d=1}^{n} \frac{2}{d} = n \cdot 2H_n = O(n \log n).$$
+<b>3-way quicksort</b> (HW2 Q3): with many equal keys, Lomuto degenerates to $\Theta(n^2)$ on an all-equal array. Fix: partition into less, equal, greater (Dutch flag: pointers lt, i, gt; smaller swaps to lt and advances both, bigger swaps to gt and does not advance i, equal advances i). Then the comparison probability becomes $\le 2/|Z'_{ij}|$ where $Z'$ also includes ties, still $O(n \log n)$.
+</div>
+
+<div class="card key"><span class="tag">Randomized selection: $k$-th smallest in expected $O(n)$</span>
+<pre>Select(A, l, r, k):
+  if l = r: return A[l]
+  pick random pivot, m = Partition; q = m - l + 1       // rank of pivot in A[l..r]
+  if k = q: return A[m]
+  if k < q: return Select(A, l, m-1, k) else return Select(A, m+1, r, k-q)</pre>
+<b>Good-pivot argument</b> (reused in F25 Q3 and in the OS and probability courses): a pivot in the middle half is "good" with probability $\frac12$, and a good pivot throws away at least a quarter. Expected calls per good pivot is 2 (geometric). After $i$ good pivots the size is at most $(\frac34)^i n$. Expected total $\le \sum_i 2 (\frac34)^i n = 8n = O(n)$.<br>
+Tutorial 4 does the same with indicators: three cases for $i \lt j$ relative to $k$ give $\frac{2}{j-i+1}$, $\frac{2}{k-i+1}$, $\frac{2}{j-k+1}$, and each sums to $O(n)$.<br>
+Deterministic median-of-medians exists in $O(n)$; with a black-box linear median, selection is $T(n) = T(n/2) + O(n) = O(n)$ and the <b>weighted median</b> (Tutorial 3) is solved by halving around the median and moving weight.
+</div>
+
+<div class="card key"><span class="tag">The sorting zoo (F25 Q1d: "which is best here, and how fast")</span>
+<table>
+<tr><th>Algorithm</th><th>Worst</th><th>Best / notes</th><th>Space</th><th>Stable</th><th>Pick it when</th></tr>
+<tr><td>Insertion sort</td><td>$\Theta(n^2)$</td><td>$\Theta(n + I)$ with $I$ inversions; $\Theta(n)$ if sorted</td><td>$O(1)$</td><td>yes</td><td>nearly sorted input, few inversions, tiny $n$</td></tr>
+<tr><td>Selection sort</td><td>$\Theta(n^2)$</td><td>always $\Theta(n^2)$, only $n$ swaps</td><td>$O(1)$</td><td>no</td><td>swaps are expensive</td></tr>
+<tr><td>Mergesort</td><td>$\Theta(n \log n)$</td><td>always $\Theta(n \log n)$</td><td>$O(n)$</td><td>yes</td><td>guaranteed bound, linked lists, external sorting</td></tr>
+<tr><td>Heapsort</td><td>$\Theta(n \log n)$</td><td>always</td><td>$O(1)$</td><td>no</td><td>guaranteed bound and in place</td></tr>
+<tr><td>Quicksort</td><td>$\Theta(n^2)$</td><td>expected $\Theta(n \log n)$ randomized</td><td>$O(\log n)$ stack</td><td>no</td><td>fastest in practice, general data</td></tr>
+<tr><td>Counting sort</td><td>$\Theta(n + k)$</td><td>keys are integers in $[1, k]$</td><td>$O(n + k)$</td><td>yes</td><td>small integer range, e.g. keys in $[1, n]$</td></tr>
+<tr><td>Radix sort</td><td>$\Theta(d(n + k))$</td><td>$d$ digits in base $k$; uses counting sort per digit, least significant first</td><td>$O(n + k)$</td><td>yes</td><td>fixed-length integers or strings</td></tr>
+</table>
+F25 answers: integers in $[1, n]$: counting sort $O(n)$. Floats with $O(\sqrt{\log n})$ inversions: insertion sort $O(n + \sqrt{\log n}) = O(n)$. Arbitrary floats: mergesort or heapsort $O(n \log n)$.
+</div>
+
+<div class="card why"><span class="tag">Why it matters</span>
+Every language's built-in sort is a quicksort or mergesort hybrid; knowing why quicksort is unstable or why a database uses mergesort on disk tells you which one to call. Selection in $O(n)$ is how you get a median or a 99th-percentile latency without sorting a billion log lines.
+</div>
+
+<details><summary>Try it: trace Partition on $[2, 8, 7, 1, 3, 5, 6, 4]$</summary><div class="card">
+Pivot 4. After the loop: $[2, 1, 3, \mathbf{4}, 7, 5, 6, 8]$, pivot at index 4. Check in the playground.
+</div></details>
+<details><summary>Try it: why does randomized quicksort have expected $\Theta(n \log n)$ on a sorted array but deterministic last-pivot quicksort takes $\Theta(n^2)$?</summary><div class="card">
+With the last element as pivot on sorted input, every partition is $(n-1, 0)$. With a random pivot, the input order is irrelevant; the analysis counts comparisons by the random choice of pivots, which does not depend on the input arrangement.
+</div></details>
+
+<div class="nextbar"><button class="btn ghost" onclick="go('dc')">Back</button><button class="btn" onclick="go('rand')">Next: Randomization</button></div>
+</section>
+
+<!-- ===================== RANDOMIZATION ===================== -->
+<section class="tab" id="t-rand">
+<h2>Randomization: expectation without fear</h2>
+<p class="sub">Lecture 6, Tutorials 3 and 4, HW2 Q2. 10 to 15 points on every midterm, almost always a coupon collector or hiring variant.</p>
+
+<div class="card story"><span class="tag">Analogy</span>
+Expected value is a <b>fair price</b>. If a lottery ticket pays 100 with probability $\frac{1}{10}$, its fair price is 10. The magic tool is <b>linearity</b>: the fair price of a bundle is the sum of fair prices, even when the tickets are correlated. So to count something complicated, break it into yes/no questions (indicators), price each one, and add.
+</div>
+
+<div class="card recipe"><span class="tag">The four-step recipe that answers every randomization question</span>
+<ol>
+<li>Name the quantity $X$ you want in expectation.</li>
+<li>Write $X$ as a sum of simpler things: $X = \sum X_i$. Often $X_i \in \{0, 1\}$ (indicator) or $X_i$ is a waiting time.</li>
+<li>Compute each $E[X_i]$: indicator gives $\Pr[X_i = 1]$; waiting time with success probability $p$ gives $\frac1p$ (geometric).</li>
+<li>Add them (linearity, no independence needed). Simplify with $H_n = \Theta(\log n)$ or a geometric sum. If asked for upper and lower bounds, bound the sum both ways (max term and half trick).</li>
+</ol>
+</div>
+
+<div class="card key"><span class="tag">The six classics and their numbers</span>
+<table>
+<tr><th>Problem</th><th>Decomposition</th><th>Answer</th></tr>
+<tr><td>Hiring: hire whenever the candidate beats the best so far, random order</td><td>$X_i = 1$ if $i$-th is best among first $i$: $\Pr = \frac1i$</td><td>$H_n = \Theta(\log n)$ hires. $\Pr[\text{exactly 1 hire}] = \frac1n$, $\Pr[n \text{ hires}] = \frac{1}{n!}$</td></tr>
+<tr><td>Hat check: $n$ hats returned at random, how many people get their own</td><td>$X_i = 1$ if person $i$ gets own hat: $\Pr = \frac1n$</td><td>exactly 1</td></tr>
+<tr><td>Coupon collector: all $n$ types</td><td>$X_i$ = boxes to go from $i$ to $i+1$ types, $E = \frac{n}{n-i}$</td><td>$n H_n = \Theta(n \log n)$</td></tr>
+<tr><td>Coupon collector: first $n/2$ types (S25, S26)</td><td>$n \sum_{i=0}^{n/2-1} \frac{1}{n-i} = n(\frac1n + \dots + \frac{1}{n/2+1})$</td><td>bracket between $n \cdot \frac{n}{2} \cdot \frac1n = \frac n2$ and $n \cdot \frac n2 \cdot \frac{2}{n} = n$: $\Theta(n)$</td></tr>
+<tr><td>After $n$ boxes, how many distinct types (S25, S26)</td><td>$Y_i = 1$ if type $i$ missed: $\Pr = (1 - \frac1n)^n$</td><td>$n - n(1-\frac1n)^n \approx (1 - \frac1e) n$</td></tr>
+<tr><td>Birthday / hash collisions with $k$ keys in $n$ slots</td><td>$X_{ij} = 1$ if pair collides: $\Pr = \frac1n$</td><td>$\binom{k}{2}\frac1n$; about 1 when $k \approx \sqrt{2n}$</td></tr>
+<tr><td>Hashing with chaining, $n$ keys, $m$ slots</td><td>keys colliding with $x$: each $\frac1m$</td><td>$\frac{n}{m} = \alpha$; $O(1 + \alpha)$ per operation</td></tr>
+<tr><td>Reservoir sampling, size $k$, stream $N$ (HW2 Q2)</td><td>item $t$ ever enters with $\Pr = \min(1, \frac kt)$</td><td>$k(1 + H_N - H_k) = \Theta(k \log \frac Nk)$ items ever stored; each item is in the final sample with $\Pr = \frac kN$; events are not independent (capacity)</td></tr>
+</table>
+</div>
+
+<div class="card key"><span class="tag">Random probing with the good-pivot argument (F25 Q3)</span>
+You can only ask for a uniformly random record in a key range $(l, r)$, paying the number of records in the range. Find key $x$: start with $(-\infty, \infty)$, draw a record, shrink the range to the correct side, repeat; null means not found. Analysis: a draw lands in the middle half with probability $\frac12$ and then removes a quarter of the candidates. Cost after $i$ good draws is at most $(\frac34)^i n$ per draw, 2 draws per stage in expectation, total $\le 2n \sum (\frac34)^i = 8n = O(n)$. This is the QuickSelect argument in disguise. Expect a reskin of it.
+</div>
+
+<div class="card key"><span class="tag">Other facts that show up as short questions</span>
+<ul>
+<li>Fisher-Yates shuffle: for $i = 1..n$ swap $A[i]$ with $A[\text{Random}(1, i)]$. $O(n)$, every permutation equally likely (induction on $i$).</li>
+<li>Majority element: random pick is the majority with probability $\gt \frac12$, verify in $O(n)$, expected $\lt 2$ rounds. Boyer-Moore does it deterministically in one pass with a counter.</li>
+<li>Measure of a randomized algorithm: expected time on the <b>worst-case input</b>. The adversary picks the input, the algorithm picks the coins.</li>
+<li>$E[XY] = E[X]E[Y]$ needs independence. $E[X + Y] = E[X] + E[Y]$ never does. Variance is not linear unless independent.</li>
+<li>Tail formula for non-negative integer $X$: $E[X] = \sum_{i \ge 1} \Pr[X \ge i]$.</li>
+</ul>
+</div>
+
+<div class="card why"><span class="tag">Why it matters</span>
+Hash tables, load balancers, A/B tests, Bloom filters, and every "sample 1% of traffic" dashboard rest on exactly these calculations. The coupon collector tells you how many random probes a cache needs before it has seen every key; the birthday bound tells you how long your random IDs must be to avoid collisions.
+</div>
+
+<details><summary>Try it: $n$ people each pick a random door out of $n$. Expected number of empty doors? Expected number of doors with exactly one person?</summary><div class="card">
+Empty: $n(1 - \frac1n)^n \approx \frac ne$. Exactly one: $n \cdot n \cdot \frac1n (1 - \frac1n)^{n-1} = n(1-\frac1n)^{n-1} \approx \frac ne$.
+</div></details>
+<details><summary>Try it: expected number of boxes to collect the <i>last</i> $\log n$ coupons?</summary><div class="card">
+$n \sum_{i = n - \log n}^{n-1} \frac{1}{n-i} = n H_{\log n} = \Theta(n \log\log n)$.
+</div></details>
+
+<div class="nextbar"><button class="btn ghost" onclick="go('sort')">Back</button><button class="btn" onclick="go('heap')">Next: Heaps and linear sorts</button></div>
+</section>
+
+<!-- ===================== HEAPS ===================== -->
+<section class="tab" id="t-heap">
+<h2>Heaps, linear-time sorts, and lower bounds</h2>
+<p class="sub">Tutorial 4, HW2 Q4 and Q5, and 10 to 20 points on every recent midterm. The lecture slides for these are not in your folder; this tab is built from the tutorial, homework, and exam solutions.</p>
+
+<div class="card story"><span class="tag">Analogy</span>
+A min-heap is a <b>tournament bracket where the winner is always on top</b>. Each parent beats both children. Nothing else is promised: siblings are unordered. Inserting a player means putting them at the next empty seat and letting them climb while they beat their parent (bubble up). Removing the champion means moving the last seat to the top and letting it fall while a child beats it (bubble down). Height is $\log n$, so every move is $O(\log n)$.
+</div>
+
+<div class="card key"><span class="tag">Array heap facts</span>
+<ul>
+<li>Stored in $H[1..n]$: children of $i$ are $2i$ and $2i+1$, parent is $\lfloor i/2 \rfloor$. Complete tree, filled left to right.</li>
+<li>Insert: append, bubble up. Extract-min: swap root with last, shrink, bubble down. Both $O(\log n)$. Find-min $O(1)$.</li>
+<li>Decrease-key at a known position: bubble up, $O(\log n)$. If you need to find the position you need pointers back into the heap (S25 Q4 hint).</li>
+<li><b>Build-heap in $O(n)$</b>: bubble down every node from the last internal node to the root. A node at height $h$ costs $O(h)$ and there are at most $n / 2^{h+1}$ of them: $\sum_h h \cdot \frac{n}{2^{h+1}} = O(n)$ because $\sum h/2^h = 2$. F25 Q2c asks for this proof "from scratch": merge pairs of heaps of size $2^k - 1$ under a new root, each merge costs $O(k)$, and $\sum_k k 2^{m-k-1} \le n + 1$.</li>
+<li>Heapsort: build-heap then extract-min $n$ times: $O(n \log n)$, in place, not stable.</li>
+</ul>
+</div>
+
+<div class="card key"><span class="tag">Drawing insertions (S26 Q4a, F25 Q2a: 3 to 8 points, half a point per mistake)</span>
+Insert $5, 8, 1, 4, 7, 3, 2, 6$ into an empty min-heap, drawing after each insert:
+<pre>5          5          1          1          1          1          1          1
+          / \        / \        / \        / \        / \        / \        / \
+         8          8   5      4   5      4   5      4   3      4   2      4   2
+                               /          / \        / \ \      / \ / \    / \ / \
+                              8          8   7      8  7  5    8  7 5  3  6  7 5  3
+                                                                          /
+                                                                         8</pre>
+Method: place at the next free leaf, then swap with the parent while smaller. Write the array after each step as a check: final array $[1, 4, 2, 6, 7, 5, 3, 8]$.
+</div>
+
+<div class="card key"><span class="tag">Heap design questions and their standard answers</span>
+<ul>
+<li><b>$k$-way merge of $N$ total elements</b> (Tutorial 4): heap of the $k$ current heads, extract-min, push the next from that array. $O(N \log k)$, $O(k)$ space.</li>
+<li><b>Running median</b> (Tutorial 4): max-heap for the lower half, min-heap for the upper half, sizes differ by at most 1. Insert $O(\log n)$, median $O(1)$.</li>
+<li><b>$k$-th smallest in a heap without modifying it</b> (HW2 Q4): auxiliary min-heap of (value, index) seeded with the root; $k$ times extract-min and push its two children. $O(k \log k)$, $O(k)$ space. Why: an element cannot be among the $k$ smallest unless its parent is.</li>
+<li><b>Largest $\lceil \log n \rceil$ numbers in $O(n \log\log n)$</b> (S26 Q4b): split into $n / \log n$ blocks of size $\log n$, sort each block in $O(\log n \log\log n)$ (total $O(n \log\log n)$), then heap-merge the block tops $\log n$ times. The block sorting dominates.</li>
+<li><b>Min over $m$ sets with add in $O(\log m + \log n_i)$</b> (S25 Q4): one heap per set plus a top heap of set minima; keep a pointer from each set to its position in the top heap and update pointers on every swap.</li>
+<li><b>Priority queue with deletion of arbitrary items:</b> store positions in a dictionary, swap with last, then bubble up or down.</li>
+</ul>
+</div>
+
+<div class="card key"><span class="tag">Counting sort and radix sort</span>
+<pre>CountingSort(A, k):                 // keys in 1..k
+  C[1..k] = 0; for each a in A: C[a]++
+  prefix sums: C[v] = number of keys <= v
+  for j = n down to 1: B[C[A[j]]] = A[j]; C[A[j]]--      // backwards keeps it stable
+Θ(n + k).  Radix sort: counting sort on each digit from least significant to most, Θ(d(n+k)).</pre>
+F25 Q1c trace (4-digit numbers, sort by last digit, then third, then second, then first):<br>
+input 9341, 6275, 4194, 7819, 3532; after pass 1 (units): 9341, 3532, 4194, 6275, 7819; pass 2 (tens): 7819, 3532, 9341, 6275, 4194; pass 3 (hundreds): 4194, 6275, 9341, 3532, 7819; pass 4: 3532, 4194, 6275, 7819, 9341.<br>
+Strings of total length $n$ (HW2 Q5): padding to the max length can cost $\Omega(n^2)$ (one long string plus many short ones). Fix: bucket strings by length, then do the LSD passes from the longest position down, adding shorter strings in as their last position becomes active. Each pass costs the number of strings still active, total $O(n)$.
+</div>
+
+<div class="card key"><span class="tag">Decision trees and lower bounds</span>
+<ul>
+<li>A comparison algorithm is a binary tree: each internal node is a comparison, each leaf an output. Running time on an input is the depth of its leaf. Worst case is the height.</li>
+<li>A tree with $L$ leaves has height $\ge \log_2 L$. Sorting has $n!$ outputs, so height $\ge \log_2 n! = \Omega(n \log n)$. That is why no comparison sort beats mergesort.</li>
+<li><b>Count outputs, take the log</b> (F25 Q1b): outputting the $k$ smallest in order has at least $\binom{n}{k} k! = n(n-1)\cdots(n-k+1) \ge (n/2)^k$ outcomes for $k \le n/2$, so $\Omega(k \log n)$ comparisons.</li>
+<li>Drawing a decision tree (S25 Q1): simulate the algorithm, branch on every comparison it makes, label leaves with the output. For the recursive minimum of 4 elements: compare $a_1 : a_2$, then $a_3 : a_4$, then the two winners.</li>
+<li>Finding the minimum needs $n - 1$ comparisons (every non-minimum must lose once). Finding both min and max needs about $3n/2$.</li>
+</ul>
+</div>
+
+<div class="card key"><span class="tag">Tutorial 5 (Oct 5 to 7): the newest material, most likely to be reskinned</span>
+<ul>
+<li><b>Sliding-window maximum with a heap:</b> store (value, index) pairs in a max-heap; for each new index insert it, then while the root's index has left the window, extract it (lazy deletion). Root is the answer. Each element is inserted and extracted at most once, but with lazy deletion alone the heap can grow to $\Theta(n)$ on increasing input, so the honest bound is $O(n \log n)$ time and $O(n)$ space; with a position map you delete the outgoing element eagerly and get $O(n \log W)$ time, $O(W)$ space. The monotonic deque does it in $O(n)$ worst case. State your assumption.</li>
+<li><b>$d$-ary heaps:</b> children of $i$ are $d(i-1)+2, \dots, di+1$; parent of $j$ is $\lfloor (j-2)/d \rfloor + 1$; height $\Theta(\log_d n)$; insert $O(\log_d n)$; extract-max $O(d \log_d n)$ because sinking must find the max of $d$ children. Larger $d$ helps when decrease-keys far outnumber extractions (Dijkstra with $d \approx m/n$). $d = n$ is a sorted array: insert $O(1)$, extract $O(n)$.</li>
+<li><b>When is radix sort linear?</b> With $w$-bit keys and base $k$: $T = \Theta(\lceil w / \log k \rceil (n + k))$. Best base is $k = n$. Linear iff $w = O(\log n)$ iff the key range is polynomial in $n$. Integers in $[0, n^3)$: 3 base-$n$ digits, $\Theta(n)$. Integers in $[1, n^{\ln n}]$: $w = \Theta(\log^2 n)$ so $\Theta(\log n)$ passes, $\Theta(n \log n)$, radix cannot beat comparison sorting there. Pure counting sort with $k = n^3$ costs $\Theta(n^3)$, which is the trap.</li>
+<li><b>Why counting sort scans from the back:</b> after prefix sums $C[v]$ is the last slot for value $v$; filling from the end keeps equal keys in input order (stability), and radix sort's correctness is an induction on digit positions whose step is exactly stability.</li>
+<li><b>Sorting $n$ fractions $p_i/q_i$ with $p_i, q_i \in [1, n]$ in $O(n)$:</b> distinct fractions differ by at least $1/n^2$ (numerator of the difference is a positive integer, denominator at most $n^2$), so the integer key $K_i = \lfloor n^2 p_i / q_i \rfloor \in [n, n^3]$ preserves order; radix sort the keys in base $n$. Floats fail for large $n$ because gaps below $2^{-52}$ collapse; reducing by gcd first costs $O(n \log n)$ and is unnecessary.</li>
+<li><b>Merging two sorted $n$-arrays needs $\Omega(n)$ comparisons:</b> $\binom{2n}{n}$ possible interleavings, so decision-tree height $\ge \log_2 \binom{2n}{n} = 2n - O(\log n)$.</li>
+<li><b>Take-home from the tutorial:</b> sort a $k$-nearly-sorted array (each element at most $k$ from its place) in $O(n \log k)$ with a min-heap of size $k+1$. This is Practice Midterm B question 5(c).</li>
+</ul></div>
+<div class="card why"><span class="tag">Why it matters</span>
+Heaps are the engine of every task scheduler, Dijkstra's shortest path, and "top $k$ trending" features. Radix sort is why sorting a billion 32-bit integers is a job for seconds, not minutes. Lower bounds tell you when to stop optimizing: no one will ever write a faster general comparison sort than $n \log n$, so spend your time elsewhere.
+</div>
+
+<details><summary>Try it: design a data structure with insert in $O(\log n)$ and "delete all elements smaller than $x$" in $O(k \log n)$ for $k$ deleted elements</summary><div class="card">
+A min-heap. Insert is standard. Delete-smaller: while the root is less than $x$, extract-min. Each extraction $O(\log n)$, $k$ of them.
+</div></details>
+<details><summary>Try it: how many comparisons does it take to check whether an array of $n$ numbers has a duplicate? Lower bound by decision tree?</summary><div class="card">
+Sort and scan: $O(n \log n)$. Lower bound in the comparison model: the element-distinctness problem has $\Omega(n \log n)$ via a decision-tree argument on the $n!$ orderings that must be distinguished. With hashing: expected $O(n)$.
+</div></details>
+
+<div class="nextbar"><button class="btn ghost" onclick="go('rand')">Back</button><button class="btn" onclick="go('play')">Next: Playground</button></div>
+</section>
+
+<!-- ===================== PLAYGROUND ===================== -->
+<section class="tab" id="t-play">
+<h2>Playground</h2>
+<p class="sub">Trace by hand first, then press run and compare. Every tool prints the exact intermediate states a grader would want to see.</p>
+
+<div class="card"><span class="tag">Recurrence solver with recursion-tree table</span>
+<div class="sim">
+<div>
+<label>T(n) = a · T(n/b) + n^d · (log n)^e</label>
+<label>a</label><input id="ra" value="4">
+<label>b</label><input id="rb" value="4">
+<label>d (exponent of n)</label><input id="rd" value="1">
+<label>e (power of log n, usually 0)</label><input id="re" value="1">
+<button class="btn" onclick="solveRec()">Solve</button>
+</div>
+<div><label>Result</label><div class="trace" id="recOut"></div></div>
+</div>
+</div>
+
+<div class="card"><span class="tag">Sorting tracer</span>
+<div class="sim">
+<div>
+<label>Numbers (space separated)</label><input id="sortIn" value="2 8 7 1 3 5 6 4">
+<label>Algorithm</label>
+<select id="sortAlg"><option value="partition">Lomuto partition (one call, last element pivot)</option><option value="quick">Quicksort (last element pivot, all partitions)</option><option value="merge">Mergesort (all merges)</option><option value="insertion">Insertion sort (each pass)</option><option value="inversions">Count inversions during mergesort</option><option value="kadane">Kadane maximum subarray</option><option value="counting">Counting sort (keys 0..9)</option><option value="radix">Radix sort (base 10)</option></select>
+<button class="btn" onclick="runSort()">Run</button>
+</div>
+<div><label>Trace</label><div class="trace" id="sortOut"></div></div>
+</div>
+<div class="bars" id="bars"></div>
+</div>
+
+<div class="card"><span class="tag">Min-heap builder</span>
+<div class="sim">
+<div>
+<label>Insert in this order</label><input id="heapIn" value="5 8 1 4 7 3 2 6">
+<label>Then extract-min this many times</label><input id="heapEx" value="2">
+<button class="btn" onclick="runHeap()">Run</button>
+<button class="btn ghost" onclick="runBuild()">Build-heap in O(n) instead</button>
+</div>
+<div><label>Array and tree after each step</label><div class="trace" id="heapOut"></div></div>
+</div>
+</div>
+
+<div class="card"><span class="tag">Expectation calculator</span>
+<div class="sim">
+<div>
+<label>n (coupon types / people / slots)</label><input id="en" value="100">
+<label>k (first k coupons, or keys for birthday)</label><input id="ek" value="50">
+<button class="btn" onclick="runExp()">Compute</button>
+</div>
+<div><label>Numbers</label><div class="trace" id="expOut"></div></div>
+</div>
+</div>
+
+<div class="nextbar"><button class="btn ghost" onclick="go('heap')">Back</button><button class="btn" onclick="go('exam')">Next: Exam patterns</button></div>
+</section>
+
+<!-- ===================== EXAM PATTERNS ===================== -->
+<section class="tab" id="t-exam">
+<h2>Exam patterns and answer templates</h2>
+<p class="sub">Ten papers from 2016 to 2026 use the same dozen shapes. Learn the shape, not the question.</p>
+
+<div class="card key"><span class="tag">Template 1: compare growth (A / B / U table)</span>
+<pre>1. Reduce each side to its dominant term, logs to base 2.
+2. If either side is only O(...) or only Ω(...): check whether the bound still
+   forces an order (e.g. O(polylog) vs Ω(n^0.1) forces A). If not, write U.
+3. Both Θ: use the ladder, the swap identity a^{log_b n} = n^{log_b a},
+   and "compare exponents" for exponentials.
+Write the letter. No explanation needed on this question type.</pre>
+</div>
+
+<div class="card key"><span class="tag">Template 2: solve a recurrence from first principles</span>
+<pre>T(n) = a T(n/b) + f(n)
+Expand twice, write the general term a^k T(n/b^k) + Σ_{i<k} a^i f(n/b^i).
+Stop at k = log_b n. Leaves: a^{log_b n} = n^{log_b a} of cost T(1).
+Evaluate the sum: (i) same every level → multiply by log_b n,
+(ii) geometric decreasing → Θ(first term), (iii) geometric increasing → Θ(last term).
+Final: T(n) = Θ(n^α (log n)^β).      [If T(√n) appears: n = 2^m, S(m) = T(2^m).]</pre>
+</div>
+
+<div class="card key"><span class="tag">Template 3: expected value question</span>
+<pre>Let X = the quantity. Write X = Σ X_i where X_i is an indicator / a waiting time.
+E[X_i] = Pr[X_i = 1]  or  1/p.
+E[X] = Σ E[X_i] by linearity (no independence needed).
+Simplify: H_n = Θ(log n); Σ r^i = Θ(1) if r < 1; (1 - 1/n)^n ≈ 1/e.
+If asked for both bounds: upper = replace each term by the largest; lower = half trick.</pre>
+</div>
+
+<div class="card key"><span class="tag">Template 4: design an algorithm with target time (the 20-pointer)</span>
+<pre>Idea (one line): "binary search on ..." / "divide at the middle, combine by ..." /
+                 "a heap of size k holding ..." / "pick a random pivot and recurse one side".
+Algorithm Name(input): output.   Numbered steps or pseudocode. Define every subroutine's
+input and output. Base case first.
+Correctness (2 lines): the invariant, and why the combine step preserves it.
+Running time: recurrence or "m calls × O(log n) each" with the solution.
+Sanity check against the target bound in the question. If your bound is bigger,
+look for: presorting, reusing a known O(n) routine, or shrinking the problem by a constant factor.</pre>
+Hidden hints in the question: "$O(\log^2 n)$" means $\log n$ binary searches. "$O(\log k)$" means halve $k$ each step. "$O(n \log\log n)$" means blocks of size $\log n$. "$O(k \log k)$" means a heap of size $k$. "$O(n)$ expected" means random pivot and the good-pivot argument. "$O(n + k \log k)$" means linear scan then sort only $k$ things.
+</div>
+
+<div class="card key"><span class="tag">Template 5: heap drawing and heap operations</span>
+<pre>Insert: write the array, append, bubble up (swap with parent while smaller), draw the tree.
+Extract-min: move last to root, bubble down (swap with the smaller child while larger).
+Build-heap: from index floor(n/2) down to 1, bubble down. O(n): Σ_h (n/2^{h+1}) · O(h).
+Always show the array next to each tree; the array is the fastest way to catch mistakes.</pre>
+</div>
+
+<div class="card key"><span class="tag">Template 6: lower bound by decision tree</span>
+<pre>Count the possible outputs L (orderings, subsets × orders, positions).
+Any comparison algorithm is a binary tree with ≥ L leaves, so height ≥ log₂ L.
+Bound log₂ L from below: n! ≥ (n/2)^{n/2}; n(n-1)...(n-k+1) ≥ (n-k+1)^k ≥ (n/2)^k for k ≤ n/2.
+Conclude Ω(...).</pre>
+</div>
+
+<div class="card key"><span class="tag">Template 7: "which sort, and why"</span>
+Integers in a small range: counting sort $O(n+k)$. Fixed-digit integers or strings: radix. Few inversions: insertion $O(n + I)$. Need a guarantee: mergesort or heapsort. Need in place and a guarantee: heapsort. Default fastest: randomized quicksort. Need stability: mergesort, counting, radix, insertion.
+</div>
+
+<h3>Common ways to lose points</h3>
+<div class="card warn" style="background:var(--warn-bg)">
+<ul>
+<li>Writing $O$ when the question asks for the exact form $\Theta(n^\alpha \log^\beta n)$.</li>
+<li>Forgetting the leaf level in a recursion tree (it is what makes $2T(n/2) + \sqrt n$ linear).</li>
+<li>Using the Master Theorem when the question says not to.</li>
+<li>Assuming independence to multiply probabilities when linearity would have done it.</li>
+<li>A design answer with no running-time justification, or a subroutine with no stated input and output.</li>
+<li>Drawing only the final heap when every intermediate tree was requested.</li>
+<li>Stating a $\Theta$ bound when only one direction was argued.</li>
+</ul>
+</div>
+
+<h3>The three recent papers, every answer in one line</h3>
+<div class="card">
+<b>Spring 2025 (60 pts):</b> Q1 decision tree for recursive min of 4: $a_1{:}a_2$, then $a_3{:}a_4$, then winners. Q2 table: B, A, B, A, B. Q3 $T(n) = 2T(\sqrt n) + \log n$: substitute, mergesort shape, $\Theta(\log n \log\log n)$. Q4 heap of set minima with back pointers, findmin $O(1)$, add $O(\log m + \log n_i)$. Q5 coupon: first $n/2$ coupons $\Theta(n)$; after $n$ boxes $n - n(1-1/n)^n$ distinct. Q6 distinct values in sorted array, $O(\log^2 n)$ by repeated last-occurrence search.<br><br>
+<b>Fall 2025 (45 pts):</b> Q1a $4T(n/4) + n \log_4 n = \Theta(n \log^2 n)$ with the level table. Q1b $k$ smallest in order needs $\Omega(k \log n)$ by counting outputs. Q1c radix trace. Q1d counting / insertion / mergesort. Q2 heap insertions; merge two heaps under a new root in $O(k)$; build-heap $O(n)$ by levels with $\sum k 2^{m-k-1} \le n+1$. Q3 random-access search, $O(n)$ expected by good calls. Q4 $k$-th smallest of two sorted arrays in $O(\log k)$.<br><br>
+<b>Spring 2026 (60 pts):</b> Q1a table: B, B, U, A, B. Q1b $64T(n/4) + n^3 = \Theta(n^3 \log n)$ by expansion. Q2 same coupon pair as 2025. Q3 same distinct-values question. Q4a heap insertions of $5,8,1,4,7,3,2,6$; Q4b largest $\lceil\log n\rceil$ in $O(n \log\log n)$ by block sorting then heap merging.
+</div>
+
+<div class="card why"><span class="tag">Why these repeat</span>
+The instructors reuse shapes because the shapes are the course: one growth comparison, one recurrence, one expectation, one design, one data structure, one lower bound. Two new practice papers built from these shapes with fresh numbers are in the resources folder as PDFs. Do them under a two-hour timer.
+</div>
+
+<div class="nextbar"><button class="btn ghost" onclick="go('play')">Back</button><button class="btn" onclick="go('quiz')">Next: Quiz</button></div>
+</section>
+
+<!-- ===================== QUIZ ===================== -->
+<section class="tab" id="t-quiz">
+<h2>Quiz <span class="pill" id="scorePill">0 / 0</span></h2>
+<p class="sub">Click an answer. Wrong answers show the reason.</p>
+<div id="quizBox"></div>
+<div class="nextbar"><button class="btn ghost" onclick="go('exam')">Back</button><button class="btn" onclick="go('cards')">Next: Cards</button></div>
+</section>
+
+<!-- ===================== CARDS ===================== -->
+<section class="tab" id="t-cards">
+<h2>Flashcards and checklist</h2>
+<button class="btn" onclick="shuffleCards()">Shuffle</button>
+<div class="fc" id="cardBox"></div>
+<h3>Checklist (saved in this browser)</h3>
+<div class="card chk" id="chkBox"></div>
+<div class="nextbar"><button class="btn ghost" onclick="go('quiz')">Back</button><span></span></div>
+</section>
+
+</main>
+
+<script>
+// ---------- tabs ----------
+function go(t){document.querySelectorAll('.tab').forEach(s=>s.classList.toggle('on',s.id==='t-'+t));document.querySelectorAll('header button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));window.scrollTo(0,0);try{localStorage.setItem('alg-tab',t);}catch(e){}}
+document.querySelectorAll('header button').forEach(b=>b.onclick=()=>go(b.dataset.t));
+
+// ---------- recurrence solver ----------
+function solveRec(){
+  const a=+document.getElementById('ra').value,b=+document.getElementById('rb').value,d=+document.getElementById('rd').value,e=+document.getElementById('re').value;
+  const crit=Math.log(a)/Math.log(b); let out=`T(n) = ${a} T(n/${b}) + n^${d}${e?` (log n)^${e}`:''}\n`;
+  out+=`Leaves: a^(log_b n) = n^(log_b a) = n^${crit.toFixed(3)}\n`;
+  out+=`Level i: ${a}^i nodes, each of size n/${b}^i, each costing (n/${b}^i)^${d}${e?' (log(n/'+b+'^i))^'+e:''}\n`;
+  out+=`Level total (ignoring the log part): n^${d} · (${a}/${b}^${d})^i = n^${d} · ${(a/Math.pow(b,d)).toFixed(3)}^i\n\n`;
+  const r=a/Math.pow(b,d); let ans;
+  if(Math.abs(r-1)<1e-9){ans=`Θ(n^${d} (log n)^${e+1})`; out+=`Ratio = 1: every level costs about the same${e?' (with the log factor summing like an integral)':''}. Multiply by log n levels.\n`;}
+  else if(r<1){ans=`Θ(n^${d}${e?' (log n)^'+e:''})`; out+=`Ratio < 1: decreasing geometric series, the root dominates.\n`;}
+  else{ans=`Θ(n^${crit.toFixed(3)})`; out+=`Ratio > 1: increasing geometric series, the leaves dominate${e?' (log factor does not change the polynomial exponent)':''}.\n`;}
+  out+=`\nAnswer: T(n) = ${ans}`;
+  // level table for small n
+  const n=Math.pow(b,4); out+=`\n\nLevel table for n = ${n}:\nlevel  nodes   size   cost/node   level total`;
+  for(let i=0;i<=4;i++){const nodes=Math.pow(a,i),size=n/Math.pow(b,i);const c=Math.pow(size,d)*(e?Math.pow(Math.log(size)/Math.log(b),e):1);out+=`\n${String(i).padEnd(6)} ${String(nodes).padEnd(7)} ${String(size).padEnd(6)} ${c.toFixed(1).padEnd(11)} ${(nodes*c).toFixed(1)}`;}
+  document.getElementById('recOut').textContent=out;
+}
+
+// ---------- sorting tracer ----------
+function bars(arr,hi=[],done=[]){const box=document.getElementById('bars');box.innerHTML='';const mx=Math.max(...arr.map(Math.abs),1);arr.forEach((v,i)=>{const d=document.createElement('div');d.style.height=(Math.abs(v)/mx*100)+'%';if(hi.includes(i))d.classList.add('hi');if(done.includes(i))d.classList.add('done');d.innerHTML=`<span>${v}</span>`;box.appendChild(d);});}
+function runSort(){
+  const A=document.getElementById('sortIn').value.trim().split(/\s+/).map(Number).filter(x=>!isNaN(x));
+  const alg=document.getElementById('sortAlg').value; const L=[]; const show=a=>'['+a.join(', ')+']';
+  const a=A.slice();
+  if(alg==='partition'){const r=a.length-1,x=a[r];let i=-1;L.push(`pivot x = ${x}`);for(let j=0;j<r;j++){if(a[j]<=x){i++;[a[i],a[j]]=[a[j],a[i]];L.push(`j=${j+1}: A[j]=${A[j]} <= ${x}, i=${i+1}, swap -> ${show(a)}`);}else L.push(`j=${j+1}: A[j]=${a[j]} > ${x}, no swap`);}[a[i+1],a[r]]=[a[r],a[i+1]];L.push(`final swap pivot into position ${i+2}: ${show(a)}`);bars(a,[i+1]);}
+  else if(alg==='quick'){function qs(l,r,depth){if(l>=r)return;const x=a[r];let i=l-1;for(let j=l;j<r;j++)if(a[j]<=x){i++;[a[i],a[j]]=[a[j],a[i]];}[a[i+1],a[r]]=[a[r],a[i+1]];L.push(`${'  '.repeat(depth)}partition A[${l+1}..${r+1}] pivot ${x} -> ${show(a)} (pivot at ${i+2})`);qs(l,i,depth+1);qs(i+2,r,depth+1);}qs(0,a.length-1,0);L.push('sorted: '+show(a));bars(a,[],a.map((_,i)=>i));}
+  else if(alg==='merge'||alg==='inversions'){let inv=0;function ms(l,r,depth){if(l>=r)return;const m=Math.floor((l+r)/2);ms(l,m,depth+1);ms(m+1,r,depth+1);const Lh=a.slice(l,m+1),Rh=a.slice(m+1,r+1);let i=0,j=0,k=l;while(i<Lh.length&&j<Rh.length){if(Lh[i]<=Rh[j])a[k++]=Lh[i++];else{a[k++]=Rh[j++];inv+=Lh.length-i;}}while(i<Lh.length)a[k++]=Lh[i++];while(j<Rh.length)a[k++]=Rh[j++];L.push(`${'  '.repeat(depth)}merge ${show(Lh)} + ${show(Rh)} -> ${show(a.slice(l,r+1))}${alg==='inversions'?`  (cross inversions so far: ${inv})`:''}`);}ms(0,a.length-1,0);L.push('sorted: '+show(a)+(alg==='inversions'?`\ntotal inversions = ${inv}`:''));bars(a,[],a.map((_,i)=>i));}
+  else if(alg==='insertion'){for(let j=1;j<a.length;j++){const key=a[j];let i=j-1;while(i>=0&&a[i]>key){a[i+1]=a[i];i--;}a[i+1]=key;L.push(`pass ${j}: insert ${key} -> ${show(a)}`);}bars(a,[],a.map((_,i)=>i));}
+  else if(alg==='kadane'){let best=a[0],cur=a[0],bs=0,be=0,cs=0;L.push(`i=1: cur=${cur}, best=${best}`);for(let i=1;i<a.length;i++){if(cur+a[i]<a[i]){cur=a[i];cs=i;}else cur+=a[i];if(cur>best){best=cur;bs=cs;be=i;}L.push(`i=${i+1}: A[i]=${a[i]}, best ending here=${cur}, best so far=${best}`);}L.push(`maximum subarray sum = ${best}, elements ${bs+1}..${be+1}: ${show(a.slice(bs,be+1))}`);bars(A,[],A.map((_,i)=>i).filter(i=>i>=bs&&i<=be));}
+  else if(alg==='counting'){const k=10;const C=new Array(k).fill(0);a.forEach(v=>C[v]++);L.push('counts C[0..9] = '+show(C));for(let v=1;v<k;v++)C[v]+=C[v-1];L.push('prefix sums = '+show(C));const B=new Array(a.length);for(let j=a.length-1;j>=0;j--){B[C[a[j]]-1]=a[j];C[a[j]]--;L.push(`place A[${j+1}]=${a[j]} at position ${C[a[j]]+1}`);}L.push('output: '+show(B));bars(B,[],B.map((_,i)=>i));}
+  else if(alg==='radix'){let arr=a.slice();const digits=Math.max(...arr).toString().length;for(let dgt=0;dgt<digits;dgt++){const buckets=Array.from({length:10},()=>[]);arr.forEach(v=>buckets[Math.floor(v/Math.pow(10,dgt))%10].push(v));arr=buckets.flat();L.push(`pass ${dgt+1} (digit ${dgt+1} from the right): ${show(arr)}`);}bars(arr,[],arr.map((_,i)=>i));}
+  document.getElementById('sortOut').textContent=L.join('\n');
+}
+
+// ---------- heap ----------
+function heapTree(H){const n=H.length;if(!n)return '(empty)';const lines=[];const h=Math.floor(Math.log2(n))+1;for(let lvl=0;lvl<h;lvl++){const start=Math.pow(2,lvl)-1,end=Math.min(n,Math.pow(2,lvl+1)-1);const pad=' '.repeat(Math.pow(2,h-lvl-1)*2-1);const gap=' '.repeat(Math.pow(2,h-lvl)*2-1);lines.push(pad+H.slice(start,end).map(v=>String(v).padStart(2)).join(gap));}return lines.join('\n');}
+function up(H,i,log){while(i>0){const p=Math.floor((i-1)/2);if(H[p]>H[i]){[H[p],H[i]]=[H[i],H[p]];log.push(`  swap ${H[p]} up over ${H[i]}`);i=p;}else break;}}
+function down(H,i,log,n=H.length){while(true){let s=i;const l=2*i+1,r=2*i+2;if(l<n&&H[l]<H[s])s=l;if(r<n&&H[r]<H[s])s=r;if(s===i)break;[H[s],H[i]]=[H[i],H[s]];log.push(`  swap ${H[i]} down with ${H[s]}`);i=s;}}
+function runHeap(){const xs=document.getElementById('heapIn').value.trim().split(/\s+/).map(Number).filter(x=>!isNaN(x));const ex=+document.getElementById('heapEx').value||0;const H=[],L=[];xs.forEach(v=>{H.push(v);const log=[];up(H,H.length-1,log);L.push(`insert ${v}`+(log.length?'\n'+log.join('\n'):'')+`\narray: [${H.join(', ')}]\n${heapTree(H)}\n`);});for(let t=0;t<ex&&H.length;t++){const m=H[0];const last=H.pop();const log=[];if(H.length){H[0]=last;down(H,0,log);}L.push(`extract-min -> ${m}; move ${last} to root`+(log.length?'\n'+log.join('\n'):'')+`\narray: [${H.join(', ')}]\n${heapTree(H)}\n`);}document.getElementById('heapOut').textContent=L.join('\n');}
+function runBuild(){const H=document.getElementById('heapIn').value.trim().split(/\s+/).map(Number).filter(x=>!isNaN(x));const L=[`start array: [${H.join(', ')}]\n${heapTree(H)}\n`];for(let i=Math.floor(H.length/2)-1;i>=0;i--){const log=[];down(H,i,log);L.push(`bubble down index ${i+1} (value ${H[i]})`+(log.length?'\n'+log.join('\n'):'\n  (already fine)')+`\narray: [${H.join(', ')}]\n${heapTree(H)}\n`);}L.push('Cost: nodes at height h cost O(h); there are at most n/2^(h+1) of them; Σ h·n/2^(h+1) = O(n).');document.getElementById('heapOut').textContent=L.join('\n');}
+
+// ---------- expectation ----------
+function H(n){let s=0;for(let i=1;i<=n;i++)s+=1/i;return s;}
+function runExp(){const n=+document.getElementById('en').value,k=+document.getElementById('ek').value;let o='';o+=`Coupon collector, all ${n} types: n·H_n = ${(n*H(n)).toFixed(1)} boxes (≈ n ln n + 0.58n = ${(n*Math.log(n)+0.5772*n).toFixed(1)})\n`;let s=0;for(let i=0;i<k;i++)s+=n/(n-i);o+=`First ${k} types: Σ_{i<k} n/(n-i) = ${s.toFixed(1)} boxes\n`;o+=`Distinct types after n boxes: n − n(1−1/n)^n = ${(n-n*Math.pow(1-1/n,n)).toFixed(1)}  (≈ 0.632 n = ${(0.632*n).toFixed(1)})\n`;o+=`Hiring: expected hires H_n = ${H(n).toFixed(2)}\n`;o+=`Birthday: ${k} keys into ${n} slots: expected colliding pairs = k(k−1)/(2n) = ${(k*(k-1)/(2*n)).toFixed(2)}; Pr[no collision] ≈ ${Math.exp(-k*(k-1)/(2*n)).toFixed(3)}\n`;o+=`Hashing load factor α = k/n = ${(k/n).toFixed(2)}, expected chain length to search ${(1+k/n).toFixed(2)}\n`;o+=`Empty slots after n throws into n: n/e ≈ ${(n/Math.E).toFixed(1)}`;document.getElementById('expOut').textContent=o;}
+
+// ---------- quiz ----------
+const QUIZ=[
+["$n \\log n$ versus $n^{1.01}$: which grows faster?",["$n \\log n$","$n^{1.01}$","they are $\\Theta$ of each other"],1,"$\\log n = o(n^{\\epsilon})$ for every $\\epsilon > 0$."],
+["$3^{\\log_2 n}$ equals",["$n^{\\log_2 3} \\approx n^{1.585}$","$n^3$","$3n$"],0,"Swap identity $a^{\\log_b n} = n^{\\log_b a}$."],
+["$T_A = O(n^2)$, $T_B = \\Theta(n \\log n)$. Faster for large $n$?",["A","B","U"],2,"A is only an upper bound; A could be $\\Theta(1)$ or $\\Theta(n^2)$."],
+["$T_A = \\Theta(2^n)$, $T_B = \\Theta(2^{n/2})$",["A","B","U"],1,"$2^n = (2^{n/2})^2$, so B is always faster eventually."],
+["$T_A = O((\\log n)^{10})$, $T_B = \\Omega(n^{0.1})$",["A","B","U"],0,"Even the worst case of A (polylog) is below the best case of B (a polynomial)."],
+["$\\sum_{i=1}^{n} 1/i$ is",["$\\Theta(1)$","$\\Theta(\\log n)$","$\\Theta(\\sqrt n)$"],1,"Harmonic number, doubling-block argument."],
+["$T(n) = 2T(n/2) + \\sqrt{n}$",["$\\Theta(n)$","$\\Theta(n \\log n)$","$\\Theta(\\sqrt n \\log n)$"],0,"Level $i$ costs $\\sqrt{n}\\, (\\sqrt 2)^i$, increasing geometric; leaves ($n$ of them) dominate."],
+["$T(n) = 64T(n/4) + n^3$",["$\\Theta(n^3)$","$\\Theta(n^3 \\log n)$","$\\Theta(n^{4})$"],1,"$64 = 4^3$: every level costs $n^3$, $\\log_4 n$ levels."],
+["$T(n) = 2T(\\sqrt n) + \\log n$",["$\\Theta(\\log n)$","$\\Theta(\\log n \\log\\log n)$","$\\Theta(\\sqrt n)$"],1,"$S(m) = 2S(m/2) + m$ with $m = \\log n$."],
+["$T(n) = 3T(n/5) + 2n$",["$\\Theta(n)$","$\\Theta(n \\log n)$","$\\Theta(n^{\\log_5 3})$"],0,"$3 < 5$: root dominates."],
+["$T(n) = T(\\alpha n) + T(\\beta n) + n$ with $\\alpha + \\beta < 1$",["$\\Theta(n)$","$\\Theta(n \\log n)$","$\\Theta(n^2)$"],0,"Level $i$ costs $n(\\alpha+\\beta)^i$, a decreasing geometric series."],
+["Number of leaves of the recursion tree of $T(n) = aT(n/b) + f(n)$",["$\\log_b n$","$n^{\\log_b a}$","$a \\cdot b$"],1,"$a^{\\log_b n} = n^{\\log_b a}$."],
+["Last occurrence of $x$ in a sorted array, given one occurrence at $p$: time?",["$O(1)$","$O(\\log n)$","$O(n)$"],1,"Binary search on the boundary between $x$ and larger values."],
+["$k$-th smallest of two sorted arrays: the trick that gives $O(\\log k)$",["merge until $k$","compare the $k/2$-th elements and discard $k/2$ from one side","binary search on values"],1,"The smaller $k/2$-th element and everything before it has rank below $k$."],
+["Mergesort on an already sorted array takes",["$\\Theta(n)$","$\\Theta(n \\log n)$","$\\Theta(n^2)$"],1,"Merge is always linear; every input is worst case."],
+["Counting cross inversions during merge: when the right element is placed, add",["1","number of elements remaining in the left half","number placed so far"],1,"All remaining left elements are larger than it."],
+["Kadane's recurrence for the best subarray ending at $i$",["$\\max(A[i], best_{i-1} + A[i])$","$best_{i-1} + A[i]$","$\\max(best_{i-1}, A[i])$"],0,"Either extend or start fresh."],
+["Karatsuba's recurrence and solution",["$4T(n/2) + n = \\Theta(n^2)$","$3T(n/2) + n = \\Theta(n^{1.585})$","$2T(n/2) + n = \\Theta(n \\log n)$"],1,"Three half-size multiplications."],
+["Lomuto partition on an all-equal array produces subproblem sizes",["$n/2$ and $n/2$","$n-1$ and 0","random"],1,"Every element is $\\le$ pivot, so all go left. Fix: 3-way partition."],
+["In randomized quicksort, $z_i$ and $z_j$ are compared iff",["they are adjacent","the first pivot from $\\{z_i..z_j\\}$ is $z_i$ or $z_j$","never"],1,"Any other pivot in that range separates them. Probability $2/(j-i+1)$."],
+["Expected number of good pivots needed before the size drops below $(3/4)^i n$",["$i$","$2i$","$i^2$"],1,"Each good pivot has probability 1/2, so 2 tries each in expectation."],
+["Which is stable: heapsort, quicksort, mergesort?",["heapsort","quicksort","mergesort"],2,"Merge takes from the left on ties."],
+["Best worst-case sort for $n$ integers in $[1, n]$",["mergesort","counting sort","quicksort"],1,"$\\Theta(n + k) = \\Theta(n)$."],
+["Best sort for floats with $O(\\sqrt{\\log n})$ inversions",["insertion sort","heapsort","radix sort"],0,"Insertion sort is $O(n + I)$."],
+["Expected hires in the hiring problem",["$\\Theta(1)$","$\\Theta(\\log n)$","$\\Theta(n)$"],1,"$\\sum 1/i = H_n$."],
+["Expected boxes to collect the first $n/2$ coupon types",["$\\Theta(n)$","$\\Theta(n \\log n)$","$\\Theta(n^2)$"],0,"$n \\sum_{i<n/2} 1/(n-i)$, each term between $1/n$ and $2/n$."],
+["After $n$ boxes, expected number of coupon types never seen",["$n/2$","$n(1-1/n)^n \\approx n/e$","$\\log n$"],1,"Indicator per type."],
+["Linearity of expectation requires",["independence","nothing, it always holds","identical distributions"],1,"That is the whole point."],
+["Reservoir sampling: probability item $t > k$ ever enters the reservoir",["$1/t$","$k/t$","$k/N$"],1,"Admitted iff the random index is $\\le k$."],
+["Fisher-Yates: at step $i$, swap $A[i]$ with",["$A[\\text{Random}(1, n)]$","$A[\\text{Random}(1, i)]$","$A[i+1]$"],1,"Random index in $[1, i]$ gives a uniform permutation."],
+["Min-heap: children of index $i$ (1-based)",["$i+1, i+2$","$2i, 2i+1$","$i/2$"],1,"Parent is $\\lfloor i/2 \\rfloor$."],
+["Build-heap by bubbling down from $n/2$ to 1 costs",["$O(n \\log n)$","$O(n)$","$O(\\log n)$"],1,"$\\sum_h (n/2^{h+1}) \\cdot h = O(n)$."],
+["$k$ smallest from a read-only heap in $O(k \\log k)$ uses",["$k$ extract-mins on the original","an auxiliary heap seeded with the root, pushing children","sorting"],1,"Parents are extracted before children."],
+["Merging $k$ sorted lists with $N$ total elements using a heap",["$O(N \\log N)$","$O(N \\log k)$","$O(kN)$"],1,"Heap of size $k$, $N$ extract-mins."],
+["Comparison sorting lower bound comes from",["$\\log_2(n!) = \\Omega(n \\log n)$ leaves","the Master Theorem","Kadane"],0,"Decision tree height is at least the log of the number of outputs."],
+["Outputting the $k$ smallest in order needs at least",["$\\Omega(k)$","$\\Omega(k \\log n)$","$\\Omega(n \\log n)$"],1,"$n(n-1)\\cdots(n-k+1) \\ge (n/2)^k$ outputs."],
+["Radix sort on $d$-digit base-$k$ numbers",["$\\Theta(d(n+k))$","$\\Theta(n \\log n)$","$\\Theta(dn^2)$"],0,"One stable counting sort per digit, least significant first."],
+["Largest $\\lceil \\log n \\rceil$ elements in $O(n \\log\\log n)$: the key step",["sort everything","sort blocks of size $\\log n$, then heap-merge the tops","random pivot"],1,"$n/\\log n$ blocks times $O(\\log n \\log\\log n)$ each."],
+["Local minimum in an $n \\times n$ grid in $O(n)$",["check all cells","min of the middle row, column, and border, then recurse into the quadrant with a smaller neighbour","binary search on rows only"],1,"$T(n) = T(n/2) + O(n)$."],
+["More than $n/3$ votes: maximum number of winners",["1","2","3"],1,"Three would need more than $n$ votes."],
+];
+(function(){const box=document.getElementById('quizBox');let score=0,done=0;QUIZ.forEach((q,qi)=>{const d=document.createElement('div');d.className='q';d.innerHTML=`<div><b>${qi+1}.</b> ${q[0]}</div><div class="opts"></div><div class="why2">${q[3]}</div>`;const opts=d.querySelector('.opts');q[1].forEach((o,i)=>{const b=document.createElement('button');b.innerHTML=o;b.onclick=()=>{if(d.classList.contains('done'))return;d.classList.add('done');done++;if(i===q[2]){b.classList.add('ok');score++;}else{b.classList.add('bad');opts.children[q[2]].classList.add('ok');}document.getElementById('scorePill').textContent=`${score} / ${done}`;};opts.appendChild(b);});box.appendChild(d);});})();
+
+// ---------- cards ----------
+const CARDS=[
+["$f = O(g)$","$\\exists c, n_0: f(n) \\le c\\,g(n)$ for all $n \\ge n_0$"],
+["Growth ladder","$1 < \\log\\log n < \\log^c n < n^\\epsilon < n\\log n < n^2 < 2^n < n! < n^n$"],
+["Swap identity","$a^{\\log_b n} = n^{\\log_b a}$"],
+["Exponent constants","added: same class ($2^{n+5}$); multiplied: different ($2^{2n}$, $5^n$ vs $7^n$)"],
+["$H_n$","$\\sum 1/i = \\Theta(\\log n)$, doubling blocks"],
+["Half trick","lower-bound a sum by its top half, each term $\\ge$ the middle value"],
+["Master (simplified)","$aT(n/b)+n$: $a>b$ leaves $n^{\\log_b a}$; $a=b$: $n\\log n$; $a<b$: $n$"],
+["Master (general)","compare $a$ with $b^d$ for $+n^d$"],
+["Expansion stop","$k = \\log_b n$, $a^k = n^{\\log_b a}$"],
+["$T(\\sqrt n)$ trick","$n = 2^m$, $S(m) = T(2^m)$"],
+["$2T(n/2)+\\sqrt n$","$\\Theta(n)$, leaves win"],
+["$2T(n/2)+n\\log n$","$\\Theta(n\\log^2 n)$"],
+["$T(n-1)+n$","$\\Theta(n^2)$"],
+["Binary search","$T(n/2)+1 = \\Theta(\\log n)$"],
+["Lower bound loop","$l=1, r=n+1$; while $l<r$: $m$; if $A[m]<x$: $l=m+1$ else $r=m$"],
+["Last occurrence of $x$","if $A[r]=x$ return $r$; mid $q$: $A[q]=x$ and $A[q+1]>x$ return $q$; $A[q]=x$ go right; else left"],
+["Distinct values, $\\Theta(\\log n)$ of them","repeat last-occurrence search: $O(\\log^2 n)$"],
+["$k$-th of two sorted arrays","compare $k/2$-th elements, discard $k/2$ from the smaller side, $O(\\log k)$"],
+["Merge","two pointers, $\\infty$ sentinels, $\\Theta(n)$, stable"],
+["Inversions","count during merge: add remaining-left count when right wins"],
+["Kadane","$cur = \\max(A[i], cur + A[i])$, $O(n)$"],
+["Karatsuba","3 products: $(a_1+a_0)(b_1+b_0) - a_1b_1 - a_0b_0$; $\\Theta(n^{1.585})$"],
+["Strassen","7 products, $\\Theta(n^{2.81})$"],
+["Partition invariant","$A[l..i] \\le x$, $A[i+1..j-1] > x$, pivot at $r$"],
+["Quicksort cases","best $n\\log n$, worst $n^2$ (sorted, last pivot), randomized expected $n\\log n$"],
+["$\\Pr[z_i, z_j$ compared$]$","$2/(j-i+1)$"],
+["Expected comparisons","$\\sum_{i<j} 2/(j-i+1) \\le 2nH_n = O(n\\log n)$"],
+["3-way partition","lt, i, gt pointers; less swaps to lt, greater swaps to gt (no i++), equal i++"],
+["QuickSelect","one-sided recursion, expected $O(n)$"],
+["Good pivot","middle half, prob 1/2, removes 1/4; $\\sum 2(3/4)^i n = 8n$"],
+["Indicator","$E[X] = \\Pr[X=1]$"],
+["Geometric","success prob $p$: $E[\\text{tries}] = 1/p$"],
+["Linearity","$E[\\sum X_i] = \\sum E[X_i]$, no independence needed"],
+["Hiring","$H_n$ hires; exactly one with prob $1/n$; all $n$ with prob $1/n!$"],
+["Hat check","expected 1 own hat"],
+["Coupon all","$nH_n = \\Theta(n\\log n)$"],
+["Coupon first $n/2$","$\\Theta(n)$"],
+["Distinct after $n$ boxes","$n - n(1-1/n)^n \\approx 0.63n$"],
+["Birthday","$\\binom{k}{2}/n$ expected collisions; $k \\approx \\sqrt{2n}$"],
+["Hashing","load $\\alpha = n/m$, expected $O(1+\\alpha)$"],
+["Reservoir","item $t$ in sample with prob $k/t$ at step $t$; ever stored: $k(1+H_N-H_k)$"],
+["Fisher-Yates","swap $A[i]$ with $A[\\text{Random}(1,i)]$"],
+["Boyer-Moore","counter $c$, candidate $m$; $c=0$ adopt; equal $c++$; else $c--$; verify"],
+["Heap indices","children $2i, 2i+1$; parent $\\lfloor i/2 \\rfloor$"],
+["Heap ops","insert bubble up, extract-min bubble down, both $O(\\log n)$"],
+["Build-heap","bubble down from $n/2$ to 1, $O(n)$ via $\\sum h/2^h$"],
+["$k$-way merge","heap of $k$ heads, $O(N\\log k)$"],
+["Running median","max-heap low, min-heap high, sizes within 1"],
+["$k$-th in read-only heap","aux heap seeded with root, push children, $O(k\\log k)$"],
+["Top $\\log n$ in $n\\log\\log n$","blocks of size $\\log n$, sort each, heap-merge tops"],
+["Counting sort","$\\Theta(n+k)$, stable, place from the back"],
+["Radix sort","LSD, $\\Theta(d(n+k))$"],
+["Insertion sort","$O(n + I)$ inversions"],
+["Decision tree bound","height $\\ge \\log_2(\\#\\text{outputs})$; sorting $\\log n! = \\Omega(n\\log n)$"],
+["$k$ smallest in order","$\\Omega(k\\log n)$ via $(n/2)^k$ outputs"],
+["Local min in grid","frame + cross min, recurse into one quadrant, $O(n)$"],
+["$> n/3$ votes","at most 2; D&C with $\\le 4$ candidates, $O(n\\log n)$"],
+];
+let cardOrder=CARDS.map((_,i)=>i);
+function renderCards(){const box=document.getElementById('cardBox');box.innerHTML='';cardOrder.forEach(i=>{const c=document.createElement('div');c.className='c';c.innerHTML=`<div class="f">${CARDS[i][0]}</div><div class="b">${CARDS[i][1]}</div>`;c.onclick=()=>c.classList.toggle('flip');box.appendChild(c);});if(window.renderMathInElement)renderMathInElement(box,{delimiters:[{left:"$",right:"$",display:false}],throwOnError:false});}
+function shuffleCards(){for(let i=cardOrder.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[cardOrder[i],cardOrder[j]]=[cardOrder[j],cardOrder[i]];}renderCards();}
+renderCards();
+
+// ---------- checklist ----------
+const CHECK=["Growth ladder and swap identity from memory","Fill the A/B/U tables from S25 and S26 without looking","Solve all 16 recurrences in the table by expansion, not Master","F25 Q1a level table reproduced exactly","Write Search(last occurrence) and the distinct-values algorithm with running time","k-th smallest of two sorted arrays with the discard argument","Partition trace by hand on two arrays, checked in the playground","Quicksort comparison proof written from memory","Good-pivot argument for QuickSelect and the F25 random-access question","Coupon collector: all n, first n/2, distinct after n boxes, with upper and lower bounds","Hiring, hat check, birthday, reservoir numbers","Draw 8 heap insertions and 2 extract-mins, check in the playground","Build-heap O(n) proof","k-way merge, running median, k-th in read-only heap, top log n in n log log n","Radix trace and counting sort placement from the back","Decision tree drawing and the (n/2)^k lower bound","Practice midterm A under 2 hours, marked","Practice midterm B under 2 hours, marked","Cheat sheet printed, margins filled with your own mistakes"];
+(function(){const box=document.getElementById('chkBox');let saved={};try{saved=JSON.parse(localStorage.getItem('alg-check')||'{}');}catch(e){}CHECK.forEach((t,i)=>{const l=document.createElement('label');const c=document.createElement('input');c.type='checkbox';c.checked=!!saved[i];c.onchange=()=>{saved[i]=c.checked;try{localStorage.setItem('alg-check',JSON.stringify(saved));}catch(e){}};l.appendChild(c);l.appendChild(document.createTextNode(t));box.appendChild(l);});})();
+
+document.addEventListener('DOMContentLoaded',()=>{solveRec();runSort();runHeap();runExp();let t='start';try{t=localStorage.getItem('alg-tab')||'start';}catch(e){}go(t);if(window.renderMathInElement)renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}],throwOnError:false});});
+</script>
+</body>
+</html>

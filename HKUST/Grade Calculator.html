@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HKUST Grade Calculator</title>
+<style>
+:root{--bg:#f7f7f5;--fg:#1a1a1a;--muted:#6a6a66;--card:#fff;--line:#e2e2dc;--accent:#1f5fbf;--accent-bg:#eef3fc;--ok:#1a7f37;--bad:#b3261e;--warn-bg:#fff6d6}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15161a;--fg:#e8e8e6;--muted:#9a9a9a;--card:#1f2026;--line:#34353c;--accent:#7aa7ff;--accent-bg:#1c2a44;--ok:#5ad27a;--bad:#ff7b72;--warn-bg:#3a3214}}
+:root[data-theme="dark"]{--bg:#15161a;--fg:#e8e8e6;--muted:#9a9a9a;--card:#1f2026;--line:#34353c;--accent:#7aa7ff;--accent-bg:#1c2a44;--ok:#5ad27a;--bad:#ff7b72;--warn-bg:#3a3214}
+*{box-sizing:border-box}
+body{margin:0;padding:16px;background:var(--bg);color:var(--fg);font:14px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+h1{font-size:20px;margin:0}
+.top{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:8px 0 14px}
+.top small{color:var(--muted);flex:1 1 300px}
+.top label{display:flex;align-items:center;gap:6px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;display:flex;flex-direction:column}
+.card h2{font-size:15px;margin:0}
+.card .code{color:var(--muted);font-size:12px;font-weight:400}
+.sub{font-size:11px;color:var(--muted);margin:2px 0 8px}
+.row{display:grid;grid-template-columns:1fr 44px 56px 40px;gap:6px;align-items:center;padding:5px 0;border-top:1px solid var(--line)}
+.row .n{font-size:13px;line-height:1.2}
+.row .n small{display:block;color:var(--muted);font-size:11px}
+.row .w{color:var(--muted);font-size:12px;text-align:right}
+.row .pts{text-align:right;font-variant-numeric:tabular-nums;color:var(--muted)}
+.hdr{display:grid;grid-template-columns:1fr 44px 56px 40px;gap:6px;font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);padding-bottom:3px}
+.hdr span:not(:first-child){text-align:right}
+input{width:100%;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg);font:inherit;text-align:right}
+input:focus{outline:2px solid var(--accent);border-color:transparent}
+input.set{background:var(--accent-bg)}
+.top input{width:60px}
+.res{margin-top:auto;padding-top:8px;border-top:2px solid var(--line);font-size:13px}
+.res .big{font-size:22px;font-weight:700;line-height:1.1}
+.res .lbl{font-size:11px;color:var(--muted)}
+.ok{color:var(--ok);font-weight:600}.bad{color:var(--bad);font-weight:600}
+button{padding:5px 10px;border-radius:6px;border:1px solid var(--line);background:var(--card);color:var(--fg);cursor:pointer;font:inherit;font-size:13px}
+.note{background:var(--warn-bg);border-radius:8px;padding:8px 12px;font-size:12px;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>HKUST Fall 2026 grades</h1>
+<div class="top">
+<small>Type a score (0 to 100) to see what you need on the rest. Blank = not yet. Saved in this browser.</small>
+<label>Target <input id="target" value="85"></label>
+<label>Floor <input id="floor" value="80"></label>
+<button onclick="reset()">Reset</button>
+</div>
+<div id="courses" class="grid"></div>
+<div class="note">Only COMP3711 publishes letter cutoffs (A 85, B 70, C 50). For the others, the target is a planning number: 85 is a safe A plan, 80 the floor.</div>
+<script>
+const COURSES=[
+ {id:'algo', name:'COMP3711 Algorithms', sub:'Official cutoffs: A 85 to 100, B 70 to 85, C 50 to 70 (may be lowered slightly). Quizzes: lowest 30% dropped.', items:[
+   {n:'In-class quizzes', w:10, s:70, note:'4 recorded zeros so far; 70 assumes you attend every remaining quiz'},
+   {n:'Written assignments (4)', w:20, s:100, note:'HW1 100/100, HW2 submitted'},
+   {n:'Midterm (Fri Oct 16, LTC)', w:30, s:null},
+   {n:'Final', w:40, s:null}]},
+ {id:'os', name:'COMP3511 Operating Systems', sub:'No published cutoffs.', items:[
+   {n:'Homework (4 x 5%)', w:20, s:100, note:'HW1 100/100; HW2 due Oct 15'},
+   {n:'Projects (3 x 10%)', w:30, s:null, note:'PA1 not graded yet; PA2 due Oct 30'},
+   {n:'Midterm (Oct 29)', w:20, s:null},
+   {n:'Final', w:30, s:null}]},
+ {id:'dmt', name:'COMP2711 Discrete Math Tools', sub:'No published cutoffs.', items:[
+   {n:'Homework', w:20, s:null, note:'number of homeworks not yet known'},
+   {n:'Midterm (Oct 30, 19:00 to 22:00)', w:35, s:null},
+   {n:'Final', w:45, s:null}]},
+ {id:'dm', name:'COMP4331 Data Mining', sub:'No published cutoffs. Missing the final is an automatic fail.', items:[
+   {n:'Assignments (2)', w:20, s:null, note:'A1 due Oct 26'},
+   {n:'Quizzes (2)', w:20, s:87, note:'Quiz 1 87/100; edit once Quiz 2 is in (average of both)'},
+   {n:'Final', w:60, s:null}]},
+ {id:'toc', name:'COMP3721 Theory of Computation', sub:'No published cutoffs. Quizzes: top n minus 2 count. Midterm cannot be made up unless missed with prior notice.', items:[
+   {n:'In-class quizzes', w:10, s:null, note:'Quiz 2 missed; two lowest are dropped, so attend every lecture from now on'},
+   {n:'Assignments (4 x 3%)', w:12, s:100, note:'HW1 3/3'},
+   {n:'Midterm (Oct 14)', w:28, s:20, note:'your estimate 20/100; replace with the real mark'},
+   {n:'Final', w:50, s:null}]},
+];
+let state={};
+try{ state=JSON.parse(localStorage.getItem('hkust-grades-v2')||'{}'); }catch(e){}
+function save(){ try{ localStorage.setItem('hkust-grades-v2',JSON.stringify(state)); }catch(e){} }
+function val(cid,i,k,def){ const v=state[`${cid}.${i}.${k}`]; return v===undefined?def:v; }
+function num(v){ return v===null||v===undefined||v===''?NaN:+v; }
+
+// ponytail: build the DOM once; recalc only touches text nodes, so inputs keep focus
+function build(){
+  const box=document.getElementById('courses'); box.innerHTML='';
+  for(const c of COURSES){
+    const card=document.createElement('div'); card.className='card'; card.id='card-'+c.id;
+    let rows=`<div class="hdr"><span>Component</span><span>Wt</span><span>Score</span><span>Pts</span></div>`;
+    c.items.forEach((it,i)=>{
+      const w=val(c.id,i,'w',it.w), s=val(c.id,i,'s',it.s);
+      rows+=`<div class="row"><div class="n">${it.n}${it.note?`<small>${it.note}</small>`:''}</div>
+        <input class="wi" value="${w===null?'':w}" placeholder="?" data-c="${c.id}" data-i="${i}" data-k="w" inputmode="decimal">
+        <input class="si${s===null||s===''?'':' set'}" value="${s===null?'':s}" placeholder="?" data-c="${c.id}" data-i="${i}" data-k="s" inputmode="decimal">
+        <span class="pts" id="pts-${c.id}-${i}"></span></div>`;
+    });
+    const [code,...rest]=c.name.split(' ');
+    card.innerHTML=`<h2>${rest.join(' ')} <span class="code">${code}</span></h2><p class="sub">${c.sub}</p>${rows}<div class="res" id="res-${c.id}"></div>`;
+    box.appendChild(card);
+  }
+  box.addEventListener('input',e=>{ const d=e.target.dataset; if(!d.k) return; state[`${d.c}.${d.i}.${d.k}`]=e.target.value; e.target.classList.toggle('set',d.k==='s'&&e.target.value!==''); save(); calc(); });
+  calc();
+}
+function calc(){
+  const target=+document.getElementById('target').value||85, floor=+document.getElementById('floor').value||80;
+  for(const c of COURSES){
+    let earned=0, doneW=0, totalW=0, unknown=false, bad=false;
+    c.items.forEach((it,i)=>{
+      const wNum=num(val(c.id,i,'w',it.w)), sNum=num(val(c.id,i,'s',it.s));
+      const cell=document.getElementById(`pts-${c.id}-${i}`);
+      if(isNaN(wNum)) unknown=true; else { totalW+=wNum; if(!isNaN(sNum)){ earned+=wNum*sNum/100; doneW+=wNum; if(sNum<0||sNum>100) bad=true; } }
+      cell.textContent=isNaN(wNum)||isNaN(sNum)?'':(wNum*sNum/100).toFixed(1);
+    });
+    const res=document.getElementById('res-'+c.id); let h='';
+    if(unknown) h=`<span class="bad">Weights incomplete.</span>`;
+    else {
+      const rem=totalW-doneW;
+      h=`<div class="big">${earned.toFixed(1)}<span class="lbl"> / ${doneW} filled</span></div>`;
+      if(bad) h+=`<div class="bad">A score is outside 0 to 100.</div>`;
+      if(rem>0){
+        const needT=(target-earned)/rem*100, needF=(floor-earned)/rem*100;
+        h+=`<div class="lbl">${rem} points still blank</div>
+            <div>Need <b class="${needT>100?'bad':'ok'}">${needT.toFixed(0)}%</b> on blanks for ${target}${needT>100?' (not reachable)':''}</div>
+            <div>Need <b class="${needF>100?'bad':'ok'}">${needF.toFixed(0)}%</b> for ${floor}</div>`;
+        if(c.id==='algo'){ h+=`<div class="lbl">${((70-earned)/rem*100).toFixed(0)}% for the official B (70)</div>`; }
+      } else h+=`<div class="lbl">Nothing blank: overall ${(earned/totalW*100).toFixed(1)}% if these are all real marks</div>`;
+      if(totalW!==100) h+=`<div class="bad">Weights sum to ${totalW}, not 100.</div>`;
+    }
+    res.innerHTML=h;
+  }
+}
+function reset(){ state={}; save(); build(); }
+document.getElementById('target').oninput=calc; document.getElementById('floor').oninput=calc;
+build();
+</script>
+</body>
+</html>

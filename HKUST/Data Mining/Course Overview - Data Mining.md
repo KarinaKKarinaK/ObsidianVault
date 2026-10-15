@@ -1,42 +1,39 @@
-# COMP 4331 - Introduction to Data Mining
+# COMP 4331 - Introduction to Data Mining (Fall 2026)
+
+Updated 2026-10-15. Notes: [[Course Notes - Data Mining]].
 
 ## Logistics
 
-- **Course:** COMP 4331, Introduction to Data Mining, HKUST
-- **Instructor:** James Kwok, Department of Computer Science and Engineering
-- **TAs:**
-	- Philipp Blankenhagen, pbac@connect.ust.hk
-	- Shuhao Chen, shuhochen@gmail.com
-- **Textbook:** *Data Mining: Concepts and Techniques* by Jiawei Han and Micheline Kamber, Morgan Kaufmann Publishers, 3rd Edition, 2011 (QA769.D343 H36)
+- **Instructor:** James Kwok, CSE. Lecture L1 Mon 13:30-14:50 (Rm 6602, per calendar; confirm the second slot on Canvas).
+- **TAs:** Philipp Blankenhagen (pbac@connect.ust.hk), Shuhao Chen (shuhochen@gmail.com; runs tutorials and introduced Assignment 1 on Oct 13).
+- **Textbook:** Han and Kamber, Data Mining: Concepts and Techniques, 3rd ed.
+- **Environment:** Python with Anaconda and JupyterLab, or Google Colab. Download Colab outputs before the session ends.
 
-## Grading Scheme
+## Grading
 
-| Component | Weight |
-| --- | --- |
-| 2 assignments | 20% |
-| 2 quizzes | 20% |
-| Final examination | 60% |
+| Component | Weight | Status |
+| --- | --- | --- |
+| 2 assignments | 20% | Assignment 1 released Oct 12 (questions, dataset, notebook template on Canvas), due Mon Oct 26 23:59. |
+| 2 quizzes | 20% | Quiz 1: 87/100 (released Oct 2-5). Quiz 2: TBA. |
+| Final examination | 60% | TBA. Missing it is an automatic fail. |
 
-## Course Outline
+Plagiarism: all parties get zero on the item; second offence lowers the final grade by one sub-grade.
 
-- **Introduction** - overview of the basic data mining concepts and functionalities
-- **Data Preprocessing** - data summarization, cleaning, integration, transformation, reduction and discretization
-- **Classification and Regression** - decision trees, neural networks, Bayesian classification, rule-based classification, and various regression methods
-- **Cluster Analysis** - partitioning, hierarchical and density-based clustering algorithms, as well as outlier detection techniques
-- **Association Analysis** - popular frequent itemset mining algorithms
-- **Miscellaneous topics**
+## Key dates
 
-## General Remarks
+- Oct 26 23:59: Assignment 1 due.
+- Quiz 2, Assignment 2, final: TBA.
 
-- Missing the final exam will automatically **fail** this course.
-- Plagiarism:
-	- **All** involved parties get **zero** mark for that assignment.
-	- On the second time you cheat: your final grade will be lowered by **one sub-grade**.
+## Course outline
 
-## Practical Notes (from Tutorial 1)
+Introduction; data preprocessing (summarisation, cleaning, integration, transformation, reduction, discretisation); classification and regression (decision trees, neural networks, Bayesian, rule-based, regression); clustering (partitioning, hierarchical, density-based, outliers); association analysis (frequent itemsets); miscellaneous.
 
-- Environment: Python via Anaconda/Miniconda + JupyterLab, or Google Colab (https://colab.research.google.com/). Colab runtime files are temporary, download results before ending a session.
-- HKUST computing resources: availability not yet confirmed, depends on assignment requirements.
-- Key packages: numpy, pandas, matplotlib, scipy, scikit-learn, networkx.
+## Emails worth sending
 
-Related: [[Course Notes - Data Mining]]
+- To shuhochen@gmail.com: ask for the Quiz 2 date and format once the assignment is in, so it does not collide with the Oct 29-30 midterms.
+
+## Folder map
+
+- `resources/Lecture Slides/`: 01 introduction, 02 preprocessing (basics and LLM), 03 classification.
+- `resources/Tutorials/`: tutorial 1 environment setup.
+- `resources/Course Info/`: course website snapshot.
