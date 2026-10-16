@@ -53,6 +53,7 @@ Inside every section the boxes always come in the same order:
 - ✎ ANSWER SHAPE (green dashed): the sentence skeleton to fill in.
 - ★ REMEMBER (yellow): results to quote.
 - ⚠ PITFALLS (red).
+- Grey code cards (section colour on the left edge): pseudocode for every algorithm, one statement per line, with a plain-words header. Section 3: LowerBound, RotatedMax, Gallop, Kadane. Section 4: Partition, InsertionSort, Quicksort, Merge, Select, Mergesort. Section 6: Insert, SiftDown, ExtractMin, BuildHeap, Heapsort, max-heap note. Section 7: CountingSort, RadixSort.
 
 No past-exam answers are hardcoded any more; every row is a reusable pattern with one example. Formulas are typeset properly and section 8 lists them in four groups: logs, exponents, sums, approximations. The exam protocol section was dropped to make room.
 
