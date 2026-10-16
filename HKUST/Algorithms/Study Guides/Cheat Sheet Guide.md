@@ -47,7 +47,7 @@ Each side starts with a black-bordered router: "The question says ... → go to 
 
 Inside every section the boxes always come in the same order:
 - ◉ IN WORDS (blue): what the idea means in plain language.
-- § FORMAL (blue border): the exact definition or statement to write.
+- § FORMAL (blue border): the exact definition or statement to write. Section 2's formal box is the Master theorem in the course's form (T(n) = aT(n/b) + n, three cases by log_b a vs 1).
 - ▶ HOW TO (green): numbered steps.
 - Yellow-headed tables: "Shapes you see" or "Question says" → trick or pattern → a worked example with its answer. Match the question to a row, copy the trick.
 - ✎ ANSWER SHAPE (green dashed): the sentence skeleton to fill in.
