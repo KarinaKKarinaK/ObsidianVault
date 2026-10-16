@@ -4,7 +4,7 @@ Written 2026-10-15, updated the same evening. The sheets below live in this fold
 
 | File | Pages | Who it is for |
 | --- | --- | --- |
-| `COMP3711 Midterm Cheat Sheet CLEAR (double-sided, bring this).pdf` | 2 sides | **bring this one.** Rebuilt twice on 2026-10-15: 2 columns, keyword router at the top of each side, symbol per section, pattern tables with worked examples instead of memorised answers, answer shapes, properly typeset formulas. About 7.2pt on side A and 7.3pt on side B, which is the largest that fits two pages. |
+| `COMP3711 Midterm Cheat Sheet CLEAR (double-sided, bring this).pdf` | 2 sides | **bring this one.** Rebuilt twice on 2026-10-15: 2 columns, keyword router at the top of each side, symbol per section, pattern tables with worked examples instead of memorised answers, answer shapes, properly typeset formulas. About 7.1pt on side A and 6.7pt on side B (side B shrank on 2026-10-16 to fit extra expectation examples), the largest that fits two pages. |
 | `COMP3711 Midterm Cheat Sheet FINAL (double-sided, colour).pdf` | 2 sides | the dense version (3 columns, 7.3pt), kept as a backup. Everything: side A theory, side B randomness, heaps, lower bounds, the answer bank from all 11 past midterms, tutorials 1 to 5, lecture decks 01 to 07, and the exam protocol. Colour coded by topic. |
 | `COMP3711 Midterm Cheat Sheet (simple, from zero).pdf` | 2 sides | plain-words version: what every symbol means, the pseudocode template, how to draw heaps step by step, the classic expectations with set-ups. Same colour scheme. Read it the evening before. |
 | `COMP3711 Midterm Cheat Sheet v1 (colour, side A only).pdf` | 1 side | side A of FINAL on its own, for a single-sided print |
@@ -53,7 +53,8 @@ Inside every section the boxes always come in the same order:
 - ✎ ANSWER SHAPE (green dashed): the sentence skeleton to fill in.
 - ★ REMEMBER (yellow): results to quote.
 - ⚠ PITFALLS (red).
-- Grey code cards (section colour on the left edge): pseudocode for every algorithm, one statement per line, with a plain-words header. Section 3: LowerBound, RotatedMax, Gallop, Kadane. Section 4: Partition, InsertionSort, Quicksort, Merge, Select, Mergesort. Section 6: Insert, SiftDown, ExtractMin, BuildHeap, Heapsort, max-heap note. Section 7: CountingSort, RadixSort.
+- Grey code cards (section colour on the left edge): pseudocode for every algorithm, one statement per line, with a plain-words header. Section 3: LowerBound, RotatedMax, Gallop, Kadane. Section 4: Partition, InsertionSort, Quicksort, Merge, Select, Mergesort. Section 6: Insert, SiftDown, ExtractMin, BuildHeap, then a one-line note for max-heap and Heapsort. Section 7: CountingSort, RadixSort.
+- Section 5's pattern table (2026-10-16) also has rows for: dice and direct expected values, probability questions (hire exactly one or n, hats, birthdays), waiting times inside the coupon row, coupon collector variants (all n, n-1, n-sqrt n, n/2, cn, k much smaller than n), inversions and ascents of a random order, and balls into bins / hashing counts.
 
 No past-exam answers are hardcoded any more; every row is a reusable pattern with one example. Formulas are typeset properly and section 8 lists them in four groups: logs, exponents, sums, approximations. The exam protocol section was dropped to make room.
 
