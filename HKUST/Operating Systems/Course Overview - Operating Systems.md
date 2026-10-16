@@ -1,6 +1,6 @@
 # COMP 3511 - Operating Systems (Fall 2026)
 
-Updated 2026-10-15. Study materials: [[Study Guides/OS Midterm Cram.html]]. Notes: [[Course Notes - Operating Systems]].
+Updated 2026-10-17. Prep plan: [[Study Guides/OS Midterm Prep Plan]]. Study materials: [[Study Guides/OS Midterm Cram.html]]. Notes: [[Course Notes - Operating Systems]].
 
 ## Logistics
 
