@@ -8,407 +8,658 @@
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
 <style>
-:root{--bg:#f7f7f5;--fg:#1a1a1a;--muted:#5c5c5c;--card:#fff;--line:#dcdcd6;--accent:#1f5fbf;--accent-bg:#e8f0fc;--ok:#1a7f37;--ok-bg:#e6f4ea;--bad:#b3261e;--bad-bg:#fbe9e7;--warn-bg:#fff6d6;--code:#f0f0ec}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15161a;--fg:#e8e8e6;--muted:#a0a0a0;--card:#1f2026;--line:#34353c;--accent:#7aa7ff;--accent-bg:#1c2a44;--ok:#5ad27a;--ok-bg:#15301e;--bad:#ff7b72;--bad-bg:#3a1d1b;--warn-bg:#3a3214;--code:#2a2b32}}
-:root[data-theme="dark"]{--bg:#15161a;--fg:#e8e8e6;--muted:#a0a0a0;--card:#1f2026;--line:#34353c;--accent:#7aa7ff;--accent-bg:#1c2a44;--ok:#5ad27a;--ok-bg:#15301e;--bad:#ff7b72;--bad-bg:#3a1d1b;--warn-bg:#3a3214;--code:#2a2b32}
+:root{--bg:#f6f7fb;--fg:#15171c;--muted:#5f6472;--card:#fff;--line:#e1e4ec;--code:#eef0f5;
+ --c1:#2563eb;--c1b:#e8efff;--c2:#7c3aed;--c2b:#f1e9ff;--c3:#16a34a;--c3b:#e6f7ec;--c4:#0d9488;--c4b:#e0f5f2;--c5:#ea580c;--c5b:#fff0e6;--c6:#dc2626;--c6b:#fde9e9;--ct:#475569;--ctb:#eef1f6;--cp:#b45309;--cpb:#fff6e0;
+ --ok:#16a34a;--okb:#e6f7ec;--bad:#dc2626;--badb:#fde9e9;--warnb:#fff8db;--mark:#fff176;--accent:var(--c1)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121419;--fg:#e9eaee;--muted:#a3a8b5;--card:#1c1f27;--line:#2e323d;--code:#262a34;
+ --c1b:#1b2a4d;--c2b:#2b1f47;--c3b:#153321;--c4b:#113532;--c5b:#3d2414;--c6b:#3f1a1a;--ctb:#242a36;--cpb:#3b2d10;--okb:#153321;--badb:#3f1a1a;--warnb:#3a3214;--mark:#8a6d00}}
+:root[data-theme="dark"]{--bg:#121419;--fg:#e9eaee;--muted:#a3a8b5;--card:#1c1f27;--line:#2e323d;--code:#262a34;
+ --c1b:#1b2a4d;--c2b:#2b1f47;--c3b:#153321;--c4b:#113532;--c5b:#3d2414;--c6b:#3f1a1a;--ctb:#242a36;--cpb:#3b2d10;--okb:#153321;--badb:#3f1a1a;--warnb:#3a3214;--mark:#8a6d00}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
 a{color:var(--accent)}
-.wrap{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
-nav{position:sticky;top:0;height:100vh;overflow:auto;border-right:1px solid var(--line);padding:16px 12px;background:var(--card)}
-nav h1{font-size:15px;margin:0 0 10px}
-nav a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--fg);font-size:14px}
-nav a:hover{background:var(--accent-bg)}
-nav .grp{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:12px 8px 4px}
-main{padding:24px 32px 80px;max-width:1000px}
-section{margin-bottom:48px;scroll-margin-top:16px}
-h2{font-size:26px;border-bottom:2px solid var(--line);padding-bottom:6px;margin:0 0 16px}
-h3{font-size:19px;margin:28px 0 8px}
-h4{font-size:16px;margin:18px 0 6px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin:12px 0}
-.def{border-left:4px solid var(--accent)}
-.thm{border-left:4px solid var(--ok)}
-.warn{background:var(--warn-bg);border-left:4px solid #d9a400}
-.ex{border-left:4px solid #9a6fd8}
-.tag{display:inline-block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:4px}
-table{border-collapse:collapse;width:100%;margin:10px 0;font-size:15px}
+header{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--line);padding:8px 16px}
+.hrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;max-width:1100px;margin:0 auto}
+.hrow h1{font-size:16px;margin:0;white-space:nowrap}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tab{border:1px solid var(--line);background:var(--bg);color:var(--fg);border-radius:999px;padding:4px 11px;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font:inherit}
+.tab .ic{display:inline-flex;width:18px;height:18px;border-radius:50%;align-items:center;justify-content:center;font-size:11px;color:#fff;font-weight:700}
+.tab.on{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.tab.on .ic{outline:2px solid var(--bg)}
+main{max-width:1100px;margin:0 auto;padding:24px 16px 80px}
+section{display:none;scroll-margin-top:70px}
+section.on{display:block}
+.sec-head{display:flex;align-items:center;gap:14px;margin:4px 0 18px}
+.sec-head .big{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;color:#fff;flex:none}
+.sec-head h2{margin:0;font-size:26px;line-height:1.15}
+.sec-head p{margin:2px 0 0;color:var(--muted);font-size:14px}
+h3{font-size:19px;margin:30px 0 10px;display:flex;align-items:center;gap:8px}
+h3 .n{display:inline-flex;width:24px;height:24px;border-radius:7px;align-items:center;justify-content:center;font-size:12px;color:#fff;font-weight:700;flex:none}
+h4{font-size:15px;margin:16px 0 6px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 18px;margin:12px 0}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:0}
+.tile b{display:block;margin-bottom:3px}
+.tile .em{font-size:20px;margin-right:6px}
+.lbl{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;padding:2px 8px;border-radius:999px;color:#fff}
+.say{border-left:5px solid var(--sec,var(--accent));background:var(--secb,var(--c1b))}
+.say .lbl{background:var(--sec,var(--accent))}
+.say p{margin:6px 0}
+.paper{border:1.5px dashed var(--sec,var(--accent));background:var(--card)}
+.paper .lbl{background:var(--sec,var(--accent))}
+.paper pre{margin:6px 0 0;background:var(--code);white-space:pre-wrap}
+.recipe{border-left:5px solid var(--ok)}
+.recipe .lbl{background:var(--ok)}
+.warn{background:var(--warnb);border-left:5px solid #d9a400}
+.warn .lbl{background:#b58900}
+.why{background:var(--ctb);border-left:5px solid var(--ct)}
+.why .lbl{background:var(--ct)}
+mark{background:var(--mark);padding:0 3px;border-radius:3px;color:inherit}
+.kw{font-weight:700;color:var(--sec,var(--accent))}
+table{border-collapse:collapse;width:100%;margin:8px 0;font-size:14.5px}
 th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}
-th{background:var(--accent-bg)}
-code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:14px}
+th{background:var(--secb,var(--c1b))}
+code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13.5px}
 code{background:var(--code);padding:1px 5px;border-radius:4px}
-pre{background:var(--code);padding:10px 14px;border-radius:8px;overflow:auto;line-height:1.45}
-details{margin:8px 0}
-summary{cursor:pointer;font-weight:600;color:var(--accent)}
-details .card{margin-top:8px}
+pre{background:var(--code);padding:10px 14px;border-radius:10px;overflow:auto;line-height:1.45}
+details{margin:8px 0;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+summary{cursor:pointer;font-weight:600;padding:9px 14px;color:var(--sec,var(--accent))}
+details > div{padding:0 14px 12px}
 ul,ol{padding-left:22px}
 li{margin:3px 0}
-.banner{background:var(--accent-bg);border:1px solid var(--accent);border-radius:10px;padding:14px 18px;margin-bottom:24px}
-.banner b{color:var(--accent)}
-.q{margin:10px 0;padding:12px 14px;border:1px solid var(--line);border-radius:8px;background:var(--card)}
-.q .opts button{display:block;width:100%;text-align:left;margin:4px 0;padding:7px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg);cursor:pointer;font:inherit}
+.btn{padding:7px 13px;border-radius:8px;border:1px solid var(--sec,var(--accent));background:var(--sec,var(--accent));color:#fff;cursor:pointer;font:inherit;font-size:14px}
+.btn.ghost{background:transparent;color:var(--sec,var(--accent))}
+.btn.sm{padding:4px 9px;font-size:13px}
+.cloze{display:inline-block;min-width:70px;border-bottom:2px solid var(--sec,var(--accent));background:var(--secb,var(--c1b));color:transparent;cursor:pointer;border-radius:4px;padding:0 6px;user-select:none}
+.cloze.show{color:inherit;background:var(--mark)}
+.cloze::selection{color:transparent}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:10px 0}
+.flow .box{border:1.5px solid var(--sec,var(--accent));background:var(--secb,var(--c1b));border-radius:10px;padding:8px 12px;font-size:14px;text-align:center;min-width:90px}
+.flow .arr{color:var(--muted);font-size:20px}
+.pyr{display:flex;flex-direction:column;align-items:center;gap:3px;margin:10px 0}
+.pyr div{background:var(--c1);color:#fff;text-align:center;border-radius:6px;padding:4px 10px;font-size:13px}
+.mem{display:flex;flex-direction:column;width:200px;flex:none;border:1.5px solid var(--c3);border-radius:10px;overflow:hidden;font-size:13px;text-align:center}
+.mem div{padding:7px 6px;border-bottom:1px solid var(--line)}
+.mem div:last-child{border-bottom:0}
+.sim{display:grid;grid-template-columns:1fr 1.4fr;gap:16px}
+.sim label{display:block;font-size:13px;color:var(--muted);margin-top:8px}
+.sim input,.sim select,.sim textarea{width:100%;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg);font:inherit}
+.sim textarea{font-family:ui-monospace,Menlo,monospace;font-size:13px;min-height:120px}
+.trace{font-family:ui-monospace,Menlo,monospace;font-size:13px;white-space:pre-wrap;background:var(--code);padding:10px;border-radius:10px;min-height:50px;overflow:auto}
+.gantt{display:flex;margin:10px 0 22px;position:relative;height:42px;border-radius:6px;overflow:visible}
+.gantt div{position:relative;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700;border-right:1px solid rgba(255,255,255,.6);min-width:0;overflow:hidden}
+.gantt div.idle{background:var(--line);color:var(--muted)}
+.gantt div span{position:absolute;left:-2px;bottom:-18px;font-size:10px;color:var(--muted);font-weight:400}
+.gantt div i{position:absolute;right:-2px;bottom:-18px;font-size:10px;color:var(--muted);font-style:normal;font-weight:400}
+.legend{display:flex;flex-wrap:wrap;gap:8px;font-size:12px;margin:4px 0}
+.legend span{display:inline-flex;align-items:center;gap:4px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px}
+.rtrow{display:grid;grid-template-columns:50px 1fr;align-items:center;gap:8px;margin:4px 0;font-size:12px}
+.rtbar{display:flex;height:22px;border:1px solid var(--line);border-radius:4px;overflow:visible;position:relative}
+.rtbar div{flex:1;border-right:1px solid var(--line);position:relative}
+.rtbar div.run{background:var(--c5)}
+.rtbar div.dl::after{content:"▼";position:absolute;right:-6px;top:-16px;font-size:10px;color:var(--bad)}
+.q{margin:10px 0;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+.q .opts button{display:block;width:100%;text-align:left;margin:4px 0;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg);cursor:pointer;font:inherit}
 .q .opts button:hover{border-color:var(--accent)}
-.q .opts button.ok{background:var(--ok-bg);border-color:var(--ok)}
-.q .opts button.bad{background:var(--bad-bg);border-color:var(--bad)}
+.q .opts button.ok{background:var(--okb);border-color:var(--ok)}
+.q .opts button.bad{background:var(--badb);border-color:var(--bad)}
 .q .why{display:none;margin-top:8px;font-size:14px;color:var(--muted)}
 .q.done .why{display:block}
-.fc{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
-.fc .c{min-height:120px;border:1px solid var(--line);border-radius:10px;background:var(--card);padding:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;text-align:center}
-.fc .c .b{display:none;color:var(--accent)}
+.fc{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.fc .c{min-height:110px;border:1px solid var(--line);border-radius:12px;background:var(--card);padding:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;text-align:center}
+.fc .c .b{display:none;color:var(--c1)}
 .fc .c.flip .f{display:none}.fc .c.flip .b{display:block}
-.sim{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.sim label{display:block;font-size:13px;color:var(--muted);margin-top:8px}
-.sim input,.sim select,.sim textarea{width:100%;padding:7px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg);font:inherit}
-.sim textarea{font-family:ui-monospace,Menlo,monospace;font-size:13px;min-height:110px}
-.sim button,.btn{margin-top:10px;padding:8px 14px;border-radius:6px;border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer;font:inherit}
-.trace{font-family:ui-monospace,Menlo,monospace;font-size:13px;white-space:pre-wrap;background:var(--code);padding:10px;border-radius:8px;min-height:60px;overflow:auto}
-.gantt{display:flex;flex-wrap:wrap;margin:8px 0;font-size:12px;font-family:ui-monospace,Menlo,monospace}
-.gantt div{border:1px solid var(--line);padding:4px 0;text-align:center;min-width:26px;position:relative;background:var(--accent-bg)}
-.gantt div.idle{background:var(--code);color:var(--muted)}
-.gantt div span{position:absolute;left:-1px;bottom:-16px;font-size:10px;color:var(--muted)}
-.acc{color:var(--ok);font-weight:700}.rej{color:var(--bad);font-weight:700}
 .chk label{display:block;padding:5px 0;cursor:pointer}
 .chk input{margin-right:8px}
-.pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;background:var(--accent-bg);color:var(--accent);margin-left:6px}
-@media (max-width:860px){.wrap{grid-template-columns:1fr}nav{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line)}main{padding:16px}.sim{grid-template-columns:1fr}}
-nav a.on{background:var(--accent);color:#fff}
-.btn{padding:8px 14px;border-radius:6px;border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer;font:inherit}
-main{font-size:17px}
-.card{padding:18px 22px;border-radius:14px}
+.pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:12px;background:var(--c1b);color:var(--c1);margin-left:6px}
+.marks{display:flex;height:34px;border-radius:10px;overflow:hidden;margin:10px 0 4px}
+.marks a{display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;text-decoration:none}
+.states{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:10px 0}
+.state{border:2px solid var(--c3);border-radius:999px;padding:8px 4px;text-align:center;font-weight:700;cursor:pointer;background:var(--card);font-size:14px}
+.state.lit{background:var(--c3);color:#fff}
+.tr{display:flex;flex-wrap:wrap;gap:6px}
+.tr button{font:inherit;font-size:13px;border:1px solid var(--c3);color:var(--c3);background:var(--card);border-radius:8px;padding:4px 9px;cursor:pointer}
+.tr button.lit{background:var(--c3);color:#fff}
+.tree{font-family:ui-monospace,Menlo,monospace;font-size:13px;white-space:pre;overflow:auto;background:var(--code);padding:10px;border-radius:10px}
+.sem{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+.sem .th{border:1.5px solid var(--c6);border-radius:10px;padding:8px;background:var(--card)}
+.sem .th b{display:block}
+.sem .th .line{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;padding:2px 4px;border-radius:4px}
+.sem .th .line.cur{background:var(--mark)}
+.sem .th .line.done{color:var(--muted);text-decoration:line-through}
+.semval{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}
+.semval div{border:1px solid var(--line);border-radius:8px;padding:4px 10px;background:var(--code);font-family:ui-monospace,Menlo,monospace;font-size:13px}
+.range{width:100%}
+.navbar{display:flex;justify-content:space-between;margin-top:34px;gap:10px}
+.s1{--sec:var(--c1);--secb:var(--c1b)}.s2{--sec:var(--c2);--secb:var(--c2b)}.s3{--sec:var(--c3);--secb:var(--c3b)}.s4{--sec:var(--c4);--secb:var(--c4b)}.s5{--sec:var(--c5);--secb:var(--c5b)}.s6{--sec:var(--c6);--secb:var(--c6b)}.st{--sec:var(--ct);--secb:var(--ctb)}.sp{--sec:var(--cp);--secb:var(--cpb)}
+.bg1{background:var(--c1)}.bg2{background:var(--c2)}.bg3{background:var(--c3)}.bg4{background:var(--c4)}.bg5{background:var(--c5)}.bg6{background:var(--c6)}.bgt{background:var(--ct)}.bgp{background:var(--cp)}
+.toprow{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 14px}
+.chip{font-size:12px;border-radius:999px;padding:3px 9px;background:var(--secb,var(--c1b));color:var(--sec,var(--c1));font-weight:600}
+@media (max-width:760px){.sim{grid-template-columns:1fr}.states{grid-template-columns:repeat(2,1fr)}.sec-head h2{font-size:21px}}
 </style>
 </head>
 <body>
-<div class="wrap">
-<nav>
+<header>
+<div class="hrow">
 <h1>COMP3511 Midterm</h1>
-<a href="#exam">Exam info and format</a>
-<a href="#zero">Start from zero</a>
-<div class="grp">Chapters</div>
-<a href="#c1">1 Introduction</a>
-<a href="#c2">2 OS structures</a>
-<a href="#c3">3 Processes</a>
-<a href="#c4">4 Threads</a>
-<a href="#c5">5 CPU scheduling</a>
-<a href="#c6">6 Synchronization</a>
-<div class="grp">Tools</div>
-<a href="#sched">Scheduling simulator</a>
-<a href="#rt">RM / EDF simulator</a>
-<a href="#calc">Amdahl, Little, cache calculators</a>
-<div class="grp">Exam prep</div>
-<a href="#lab">Lab APIs (pipe, fork, exec, pthread)</a>
-<a href="#templates">Answer templates</a>
-<a href="#past">S2026 midterm solved</a>
-<a href="#quiz">Practice quiz</a>
-<a href="#cards">Flashcards</a>
-<a href="#check">Checklist</a>
-</nav>
+<div class="tabs" id="tabs"></div>
+</div>
+</header>
 <main>
 
-<section id="exam">
-<div class="banner">
-<b>Midterm: Thursday Oct 29, 8:00 to 10:00pm. L1 students: LTD. L2: LSKG012. L3: LTB. Coverage: Chapters 1 to 6 (up to Synchronization tools).</b><br>
-Open book, open notes, printed material only. Calculator allowed, no phone. Bring your own rough paper. Lab API questions possible (print lab notes). Worth 20% of the course grade.
+<section id="exam" class="sp on">
+<div class="sec-head"><div class="big bgp">🎯</div><div><h2>The exam, mapped</h2><p>Thu Oct 29, 20:00 to 22:00. L1 LTD, L2 LSKG012, L3 LTB. Chapters 1 to 6. Open book, printed only, calculator OK, no phone. Worth 20%.</p></div></div>
+
+<div class="card">
+<b>Where the 100 marks are (Spring 2026 paper). Click a block to jump.</b>
+<div class="marks">
+<a href="#c1" class="bg1" style="flex:25" title="Q1 multiple choice">MC 25</a>
+<a href="#templates" class="bg2" style="flex:16" title="Q2 short questions">Short 16</a>
+<a href="#c3" class="bg3" style="flex:24" title="Q3 process and thread">Fork 24</a>
+<a href="#c5" class="bg5" style="flex:27" title="Q4 CPU scheduling">Gantt 27</a>
+<a href="#c6" class="bg6" style="flex:8" title="Q5 synchronization">Sem 8</a>
 </div>
-<h2>What the midterm looks like (from the Spring 2026 paper, with solutions)</h2>
+<div class="legend"><span><i class="bg1"></i>Q1 slide facts, all chapters</span><span><i class="bg2"></i>Q2 define + example + reason</span><span><i class="bg3"></i>Q3 fork tree, fork/exec outputs, pipe blanks</span><span><i class="bg5"></i>Q4 MLFQ, RM/EDF, dynamic priority</span><span><i class="bg6"></i>Q5 semaphore blanks</span></div>
+</div>
+
+<div class="grid">
+<div class="tile"><span class="em">🧭</span><b>Order to attack</b>MC first with slides open (25 marks, 25 min). Then Q5 (8 quick marks). Then Q3. Q4 last, charts eat time.</div>
+<div class="tile"><span class="em">🧩</span><b>Partial credit</b>Per 4 correct Gantt blocks, per blank, per process row. Never leave a blank empty.</div>
+<div class="tile"><span class="em">📏</span><b>Read rules literally</b>The MLFQ rules and tiebreaks are stated in the question. Follow them, not the textbook, when they differ.</div>
+<div class="tile"><span class="em">🖨️</span><b>Print and bring</b>Chapter 5 and 6 handouts, Lab 3 part 2 and Lab 4 slides, the Spring 2026 paper with solutions, the Templates tab of this page.</div>
+</div>
+
+<h3><span class="n bgp">?</span>How this page is written</h3>
+<div class="card">
+<ul>
+<li><b>🗣️ Say it like this</b> boxes hold the exact sentence to write on the paper. The <mark>highlighted words</mark> are the ones markers look for.</li>
+<li><b>📝 On the paper</b> boxes show a complete model answer in the exam's format: definition, example, reason, or chart, table, averages.</li>
+<li><b>🛠️ Recipe</b> boxes are step lists for the mechanical questions. <b>🧠 Recall</b> lines hide the key word: tap to reveal, say it first.</li>
+<li>Every chapter has one interactive thing to play with. The Tools tab has the simulators that check your hand-drawn charts.</li>
+</ul>
+</div>
+</section>
+
+<section id="zero" class="sp">
+<div class="sec-head"><div class="big bgp">🌱</div><div><h2>Start from zero</h2><p>The whole midterm in plain words. Read this once before anything else.</p></div></div>
+
+<div class="flow"><div class="box">You (apps)</div><div class="arr">→</div><div class="box">System calls</div><div class="arr">→</div><div class="box"><b>Kernel</b><br>schedules, protects, abstracts</div><div class="arr">→</div><div class="box">Hardware<br>CPU, memory, disk</div></div>
+
+<div class="grid">
+<div class="tile"><span class="em">🧑‍⚖️</span><b>The OS is the referee and the butler</b>Dozens of programs want one CPU, some memory, a disk. The OS decides who runs when (<span class="kw">scheduling</span>), keeps programs out of each other's memory (<span class="kw">protection</span>), hides the hardware behind simple calls (<span class="kw">abstraction</span>), and does it efficiently and fairly (<span class="kw">resource allocation</span>). The part always running is the <span class="kw">kernel</span>.</div>
+<div class="tile"><span class="em">🔐</span><b>Two modes</b>Programs run in <span class="kw">user mode</span>, where dangerous instructions are forbidden. To do something dangerous they make a <span class="kw">system call</span>: the CPU flips to <span class="kw">kernel mode</span>, the kernel does it, flips back. An <span class="kw">interrupt</span> is hardware tapping the kernel on the shoulder. A <span class="kw">trap</span> is the program itself causing the switch.</div>
+<div class="tile"><span class="em">🏃</span><b>Process = a running program</b>Code plus memory plus "where am I" (program counter, registers). The kernel's record card for it is the <span class="kw">PCB</span>. Five states: new, ready, running, waiting, terminated. Swapping the CPU between processes is a <span class="kw">context switch</span>, pure overhead.</div>
+<div class="tile"><span class="em">🧬</span><b>fork, exec, wait</b><span class="kw">fork</span> clones you; parent gets the child's pid, child gets 0. <span class="kw">exec</span> replaces your code with another program and never returns on success. <span class="kw">wait</span> pauses until a child finishes. A finished child nobody waited for is a <span class="kw">zombie</span>.</div>
+<div class="tile"><span class="em">🧵</span><b>Threads</b>Workers inside one process. They share code, globals, heap, open files; each has its own stack, program counter, registers. <span class="kw">Concurrency</span> = taking turns on one core. <span class="kw">Parallelism</span> = really at the same time on several cores. <span class="kw">Amdahl</span>: the serial part caps your speedup.</div>
+<div class="tile"><span class="em">🗓️</span><b>Scheduling</b>Who gets the CPU next. FCFS (queue), SJF (shortest first, optimal but needs the future), RR (take turns with a quantum), priority (highest first, aging fixes starvation), <span class="kw">MLFQ</span> (several queues, CPU hogs sink), RM and EDF (real-time deadlines).</div>
+<div class="tile"><span class="em">🔢</span><b>Three numbers you always compute</b><span class="kw">Turnaround</span> = finish − arrival. <span class="kw">Waiting</span> = turnaround − burst. <span class="kw">Response</span> = first run − arrival. Average over all processes, show the division.</div>
+<div class="tile"><span class="em">🚦</span><b>Synchronization</b><code>counter++</code> is three instructions, so two threads can interleave and lose an update: a <span class="kw">race condition</span>. Fix: a <span class="kw">critical section</span> only one thread enters at a time, built from atomic instructions, <span class="kw">mutex locks</span>, or <span class="kw">semaphores</span>. A semaphore at 0 is a "you may go" ticket.</div>
+</div>
+
+<div class="card why"><span class="lbl">Why this is easy</span>The MC questions are slide facts and the exam is open book. The long questions are four mechanical procedures: count forks, draw a Gantt chart under stated rules, fill a C skeleton with pipe and dup, place wait and signal to force an order. Each has a recipe and a simulator here.</div>
+</section>
+
+<section id="c1" class="s1">
+<div class="sec-head"><div class="big bg1">1</div><div><h2>Introduction</h2><p>What an OS is, how hardware talks to it, storage and caching, modes, multiprocessors. Source of about 6 MC and one short question.</p></div></div>
+<div class="toprow"><span class="chip">interrupt vs trap</span><span class="chip">DMA</span><span class="chip">storage hierarchy</span><span class="chip">caching formula</span><span class="chip">dual mode + timer</span><span class="chip">SMP, NUMA</span></div>
+
+<h3><span class="n bg1">A</span>Big picture</h3>
+<div class="grid">
+<div class="card" style="margin:0"><b>Storage hierarchy (fast and small on top)</b>
+<div class="pyr"><div style="width:90px">registers</div><div style="width:130px">cache</div><div style="width:180px">main memory (DRAM)</div><div style="width:230px">SSD / NVM</div><div style="width:280px">hard disk</div><div style="width:330px">optical, tape</div></div>
+<p style="font-size:13px;color:var(--muted);margin:4px 0 0">Down the pyramid: slower, bigger, cheaper, and from main memory down it is <b>nonvolatile</b> (except that main memory itself is volatile). Main memory is the only big store the CPU reads directly, <b>byte addressable</b>.</p></div>
+<div class="card" style="margin:0"><b>How a system call happens</b>
+<div class="flow"><div class="box">user program<br><code>printf()</code></div><div class="arr">→</div><div class="box">library<br><code>write()</code> stub</div><div class="arr">→</div><div class="box">trap<br>mode bit → 0</div><div class="arr">→</div><div class="box">kernel handler<br>(table by number)</div><div class="arr">→</div><div class="box">return<br>mode bit → 1</div></div>
+<p style="font-size:13px;color:var(--muted);margin:4px 0 0">Interrupt: hardware, asynchronous, "disk finished". Trap: software, synchronous, "divide by zero" or a system call. Both enter the kernel.</p></div>
+</div>
+
+<h3><span class="n bg1">B</span>Say it like this</h3>
+<div class="card say"><span class="lbl">🗣️ Operating system</span>
+<p>An OS is a <mark>resource allocator</mark>: it manages all resources and decides between conflicting requests for <mark>efficient and fair</mark> use. It is also a <mark>control program</mark>: it controls the execution of programs to <mark>prevent errors and improper use</mark> of the computer. The <mark>kernel</mark> is the one program running at all times.</p></div>
+<div class="card say"><span class="lbl">🗣️ Interrupt, trap, system call</span>
+<p>An <mark>interrupt</mark> is an <mark>external, asynchronous</mark> hardware event (timer, I/O completion) that transfers control to the kernel through the interrupt vector. A <mark>trap or exception</mark> is an <mark>internal, synchronous</mark> software event (division by zero, protection violation, or a system call request). Interrupts have priorities and are not all serviced the same way.</p></div>
+<div class="card say"><span class="lbl">🗣️ DMA</span>
+<p>With <mark>direct memory access</mark>, the device controller transfers <mark>blocks of data</mark> between its buffer and main memory <mark>without CPU intervention</mark>, raising <mark>one interrupt per block</mark> instead of one per byte. It reduces CPU involvement; it does not remove interrupts.</p></div>
+<div class="card say"><span class="lbl">🗣️ Caching</span>
+<p>Caching <mark>temporarily copies a subset of data</mark> from a slower, larger storage to a faster, smaller one. Average access time $= h \cdot t_{hit} + (1-h) \cdot t_{miss}$, so a <mark>high hit ratio alone does not guarantee</mark> good performance: hit time and miss penalty matter too. It works because of <mark>temporal locality</mark> (recently used data is used again) and <mark>spatial locality</mark> (neighbouring data is used soon).</p></div>
+<div class="card say"><span class="lbl">🗣️ Dual mode</span>
+<p>A <mark>mode bit</mark> distinguishes kernel mode (0) from user mode (1). <mark>Privileged instructions</mark> (I/O, timer, interrupt control) execute only in kernel mode. A <mark>timer interrupt</mark> guarantees the OS regains control of the CPU from a user program.</p></div>
+<div class="card say"><span class="lbl">🗣️ Multiprocessors</span>
+<p>Speedup with $N$ processors is <mark>less than $N$</mark> because of contention on the shared bus and memory and coordination overhead. <mark>Asymmetric</mark>: a master processor schedules and does I/O. <mark>SMP</mark>: every processor performs all tasks, each with its own registers and cache, sharing memory. <mark>NUMA</mark>: each CPU has fast local memory and slower access to remote memory in one shared address space. Multicore: several cores on one chip, private L1, shared L2.</p></div>
+
+<h3><span class="n bg1">C</span>Facts the MC questions are built from</h3>
+<div class="grid3">
+<div class="tile"><b>Von Neumann</b>Instructions and data in the same memory. Fetch, decode, fetch operands, execute, write back. CU has IR and PC.</div>
+<div class="tile"><b>Common bus</b>CPUs and device controllers share one bus to memory; controllers have local buffers and signal completion by interrupt.</div>
+<div class="tile"><b>Bootstrap</b>Lives in EEPROM/firmware, loads the kernel.</div>
+<div class="tile"><b>Multiprogramming vs timesharing</b>Keep the CPU busy with several jobs in memory, versus switch so often that users interact. Needs scheduling, swapping, virtual memory.</div>
+<div class="tile"><b>Virtualization, cloud</b>A VMM runs guest OSes on one host. Cloud = virtualization over the network, pay per use: SaaS, PaaS, IaaS.</div>
+<div class="tile"><b>Units</b>KB, MB, GB are powers of 1024 for memory. Network speeds are in bits per second.</div>
+</div>
+
+<h3><span class="n bg1">D</span>On the paper</h3>
+<div class="card paper"><span class="lbl">📝 Short question: "What is caching? Is a high hit ratio enough?"</span>
+<pre>Caching temporarily copies a subset of data from a slower, larger storage to a faster, smaller storage.
+Average access time = h · t_hit + (1 − h) · t_miss.
+No. Example: h = 0.99, t_hit = 1 ns, t_miss = 1000 ns gives 10.99 ns, worse than
+h = 0.95 with t_miss = 100 ns, which gives 5.95 ns. Hit time and miss penalty matter too.</pre></div>
+<div class="card" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:end">
+<div><label style="font-size:13px;color:var(--muted)">Hit ratio h</label><input id="chH" value="0.95" class="range" type="range" min="0.5" max="1" step="0.01" oninput="cache()"><label style="font-size:13px;color:var(--muted)">Hit time (ns)</label><input id="chT" value="1" style="width:100%" oninput="cache()"><label style="font-size:13px;color:var(--muted)">Miss time (ns, total)</label><input id="chM" value="100" style="width:100%" oninput="cache()"></div>
+<div class="trace" id="chOut"></div>
+</div>
+
+<h3><span class="n bg1">E</span>Recall (tap to reveal)</h3>
+<div class="card">
+<p>Hardware, asynchronous event: <span class="cloze">interrupt</span>. Software, synchronous event: <span class="cloze">trap</span>. One interrupt per block: <span class="cloze">DMA</span>. The instruction that forces the OS to get control back: <span class="cloze">timer interrupt</span>. Each CPU has local memory: <span class="cloze">NUMA</span>. Locality that says "neighbours are used soon": <span class="cloze">spatial</span>.</p>
+</div>
+<div class="card why"><span class="lbl">Why it matters</span>Interrupts, DMA, and the memory hierarchy are why the same code is fast on one machine and slow on another, and why database engineers obsess over cache lines.</div>
+</section>
+
+<section id="c2" class="s2">
+<div class="sec-head"><div class="big bg2">2</div><div><h2>OS structures</h2><p>Services, system calls and APIs, how a call reaches the kernel, kernel designs. Source of about 5 MC.</p></div></div>
+<div class="toprow"><span class="chip">API vs syscall</span><span class="chip">syscall table</span><span class="chip">parameter passing</span><span class="chip">monolithic vs microkernel</span><span class="chip">policy vs mechanism</span></div>
+
+<h3><span class="n bg2">A</span>Big picture</h3>
+<div class="card"><b>Who does what</b>
+<div class="flow"><div class="box">User interface<br>CLI, GUI, touch</div><div class="arr">→</div><div class="box">System programs<br>compilers, shells</div><div class="arr">→</div><div class="box">API<br>POSIX, Win32, Java</div><div class="arr">→</div><div class="box">System call<br>interface</div><div class="arr">→</div><div class="box">Kernel<br>services</div></div>
+<p style="font-size:13px;color:var(--muted);margin:4px 0 0">Services for the user: UI, program execution, I/O, file systems, communication, error detection. Services for the system: resource allocation, logging and accounting, protection and security.</p></div>
+
+<h3><span class="n bg2">B</span>Say it like this</h3>
+<div class="card say"><span class="lbl">🗣️ System call and API</span>
+<p>A <mark>system call</mark> is the programming interface to the services provided by the OS. Programmers use an <mark>API</mark> through a run-time library (libc) instead of raw system calls for <mark>convenience, portability and hiding implementation details</mark>. An API is <mark>not faster</mark> and cannot bypass protection. <code>printf()</code> is a library function that invokes the <code>write()</code> system call.</p></div>
+<div class="card say"><span class="lbl">🗣️ Implementation</span>
+<p>Each system call has a <mark>number</mark>; the system-call interface keeps a <mark>table indexed by that number</mark>, traps into the kernel, runs the handler and returns the status. Parameters pass in <mark>registers</mark> (limited count), in a <mark>block or table in memory</mark> whose address is in a register, or <mark>pushed on the stack</mark>. Block and stack place no limit on the number or length of parameters.</p></div>
+<div class="card say"><span class="lbl">🗣️ Policy and mechanism</span>
+<p><mark>Policy</mark> is what will be done; <mark>mechanism</mark> is how it is done. The timer is a mechanism; how long to set it is policy. Separating them gives <mark>flexibility</mark> when policies change.</p></div>
+
+<h3><span class="n bg2">C</span>Kernel designs (a compare question every year)</h3>
 <div class="card">
 <table>
-<tr><th>Part</th><th>Points</th><th>What it is</th><th>Drill</th></tr>
-<tr><td>Q1 Multiple choice, 25 questions</td><td>25</td><td>One per slide topic: interrupts, DMA, storage hierarchy, von Neumann, OS services, API vs syscall, microkernel, printf/write, layered design, fork counting, context switch, pipes, zombies, process states, threads, concurrency vs parallelism, Amdahl, signals, scheduling criteria, MLFQ, EDF, multiprocessor scheduling, semaphore output, test_and_set, bounded waiting code</td><td><a href="#quiz">Quiz</a></td></tr>
-<tr><td>Q2 Short questions</td><td>16</td><td>Define race condition with example; caching and why hit ratio alone is not enough; reason about a new scheduling policy (yes/no with one sentence); write a spinlock acquire with swap; pros and cons of spinlocks</td><td><a href="#templates">Templates</a></td></tr>
-<tr><td>Q3 Process and thread</td><td>24</td><td>Fork tree and counting with a formula in $n$; all possible outputs when fork/exec can fail; fill-in-the-blank C program with pipe, dup, read, write, waitpid</td><td><a href="#c3">Ch 3</a></td></tr>
-<tr><td>Q4 CPU scheduling</td><td>27</td><td>MLFQ Gantt chart with precise rules, average waiting and response time; RM vs EDF Gantt for 16 slots and count missed deadlines; dynamic priority with $\alpha$ and $\beta$</td><td><a href="#sched">Simulator</a></td></tr>
-<tr><td>Q5 Synchronization</td><td>8</td><td>Fill semaphore wait/signal blanks to enforce an ordering between threads</td><td><a href="#c6">Ch 6</a></td></tr>
+<tr><th>Structure</th><th>Idea</th><th>👍</th><th>👎</th></tr>
+<tr><td><b>Monolithic</b> (UNIX, Linux)</td><td>All kernel functions in one binary and one address space</td><td>Fast: little overhead in system calls and communication</td><td>Hard to implement, debug, maintain</td></tr>
+<tr><td><b>Layered</b></td><td>Layer $N$ uses only the services of layer $N-1$; information hiding</td><td>Construct and debug one layer at a time</td><td>Hard to define layers; passing through many layers costs time</td></tr>
+<tr><td><b>Microkernel</b> (Mach)</td><td>Minimal kernel: process and memory management, IPC. Everything else in user space, talking by <mark>message passing</mark></td><td>Easy to extend and port, more <mark>secure and reliable</mark> (a crashed service does not crash the kernel)</td><td><mark>Worse performance</mark>: message-passing overhead</td></tr>
+<tr><td><b>Loadable modules</b> (Linux, Solaris)</td><td>Core kernel plus modules loaded at boot or run time</td><td>Modular, yet modules call each other directly, so monolithic speed</td><td></td></tr>
+<tr><td><b>Hybrid</b></td><td>Linux = monolithic + modules. macOS = Darwin (Mach + BSD). Android = Linux kernel + ART + Bionic</td><td>Practical</td><td></td></tr>
 </table>
-<b>Strategy.</b> Points per minute: MC is 25 points in about 25 minutes, do it first with the printed slides open (answers cite slide numbers). Then Q5 (8 easy points), then Q3, then Q4 last because Gantt charts eat time. Partial credit is given per 4 correct Gantt blocks and per blank, so never leave a blank empty. Read every scheduling rule literally; the exam clarified tiebreaks mid-exam last time.
+<p style="font-size:13px;color:var(--muted)">Classic false MC options: "microkernels are faster", "layered systems are the dominant design today", "APIs are faster than system calls".</p></div>
+
+<h3><span class="n bg2">D</span>Facts the MC questions are built from</h3>
+<div class="grid3">
+<div class="tile"><b>Six syscall types</b>process control, file management, device management, information maintenance, communications, protection.</div>
+<div class="tile"><b>read(fd, buf, n)</b>returns bytes read, 0 at end of file, −1 on error.</div>
+<div class="tile"><b>Linker, loader</b>Linker combines object files and libraries into an executable. Loader puts it in memory and relocates. DLLs loaded once, shared.</div>
+<div class="tile"><b>Error detection</b>Errors can occur in the CPU, memory, I/O devices and user programs, not only memory and I/O.</div>
+<div class="tile"><b>MS-DOS vs FreeBSD</b>MS-DOS: single task, no process created, no dual mode. FreeBSD: multitasking; the shell forks then execs.</div>
+<div class="tile"><b>Communication models</b>Shared memory (fast, kernel only at setup) vs message passing (through the kernel, safer, slower).</div>
 </div>
-<h3>How to use this page</h3>
-<ul>
-<li>"Start from zero" explains every concept in plain words first. Then each chapter has the facts the MC questions are pulled from, with slide references.</li>
-<li>The simulators let you check any Gantt chart you draw by hand: FCFS, SJF, SRTF, RR, priority, the exam's MLFQ rules, and RM/EDF.</li>
-<li>The S2026 midterm is fully solved with explanations. The quiz has new questions in the same style, extrapolated from the slides.</li>
-</ul>
+
+<h3><span class="n bg2">E</span>On the paper</h3>
+<div class="card paper"><span class="lbl">📝 "List the system calls behind cp a.txt b.txt"</span>
+<pre>1. Read the two file names (from arguments).        2. open(a.txt) for reading; error if missing.
+3. open/creat(b.txt) for writing; if it exists, decide: abort or truncate.
+4. Loop: read(a) → write(b) until read returns 0.     5. close both.   6. write a message.   7. exit.</pre></div>
+
+<h3><span class="n bg2">F</span>Recall</h3>
+<div class="card"><p>The kernel finds the handler by a table indexed by the <span class="cloze">system call number</span>. The parameter method with a size limit: <span class="cloze">registers</span>. Microkernel services communicate by <span class="cloze">message passing</span>. "What" vs "how" = <span class="cloze">policy vs mechanism</span>. printf eventually calls <span class="cloze">write</span>.</p></div>
+<div class="card why"><span class="lbl">Why it matters</span>System calls are the only door between your program and the hardware. Monolithic versus microkernel is the same trade-off as monolith versus microservices.</div>
 </section>
 
-<section id="zero">
-<h2>Start from zero: the whole midterm in plain words</h2>
-<div class="card ex">
-<b>What an OS is.</b> Your laptop has one CPU (or a few), some memory, a disk, a keyboard. Dozens of programs want to use them at once. The operating system is the referee and the butler: it decides who gets the CPU and when (scheduling), gives each program its own memory and keeps them from trampling each other (protection), hides messy hardware behind simple calls like "read this file" (abstraction), and does it all efficiently and fairly (resource allocation). The part of the OS that is always running is the <b>kernel</b>.
-</div>
-<div class="card ex">
-<b>User mode and kernel mode.</b> Ordinary programs run in user mode, a restricted mode where dangerous instructions (talk to the disk directly, change the timer) are forbidden. When a program needs something dangerous, it asks the kernel through a <b>system call</b>: the CPU flips to kernel mode, the kernel does the work, flips back. <code>printf</code> is a library function that eventually makes the <code>write</code> system call. An <b>interrupt</b> is the hardware tapping the kernel on the shoulder ("disk finished"). A <b>trap</b> is the program itself causing the switch (divide by zero, or a system call).
-</div>
-<div class="card ex">
-<b>Process.</b> A program sitting on disk is a file. A program running is a <b>process</b>: the code plus its memory (globals, heap, stack) plus where it is right now (program counter, registers). The kernel keeps a record card for every process, the <b>PCB</b>. A process is in one of five states: new, ready (wants the CPU), running (has it), waiting (blocked on I/O), terminated. Switching the CPU from one process to another means saving one record card and loading another: a <b>context switch</b>, pure overhead.
-</div>
-<div class="card ex">
-<b>fork, exec, wait.</b> On Unix you make a new process by cloning yourself: <code>fork()</code> makes an identical copy. Both copies continue from the same line. The only difference is the return value: the parent gets the child's pid, the child gets 0. To run a different program, the child calls <code>exec()</code>, which throws away its own code and loads the new program (so lines after exec never run unless exec failed). The parent calls <code>wait()</code> to pause until the child finishes. A child that finished but whose parent has not called wait yet is a <b>zombie</b>. Exam questions count how many processes a loop of forks creates: each fork doubles the number of processes that reach it.
-</div>
-<div class="card ex">
-<b>Pipes.</b> A pipe is a one-way tube between two related processes. <code>pipe(fd)</code> gives two file descriptors: <code>fd[0]</code> to read, <code>fd[1]</code> to write. After fork both processes have both ends, so each closes the end it does not use. <code>close(0); dup(fin);</code> makes a file become standard input so that <code>scanf</code> reads from the file.
-</div>
-<div class="card ex">
-<b>Threads.</b> A thread is a worker inside a process. All threads of a process share the code, globals, heap, and open files, but each has its own stack, program counter, and registers. Creating or switching threads is cheap because the memory map does not change. <b>Concurrency</b> means making progress on several tasks by taking turns on one core. <b>Parallelism</b> means several cores really working at the same instant. Amdahl's law says the part of a program that cannot be parallelised caps your speedup: if 25% is serial you never beat $4\times$ no matter how many cores.
-</div>
-<div class="card ex">
-<b>Scheduling.</b> When several processes are ready, which one gets the CPU? FCFS: first come first served, simple but a long job makes everyone wait (convoy). SJF: shortest job first, optimal for average waiting time but you cannot know the future. SRTF: SJF with preemption. RR: everyone gets a time slice $q$ in turn, good response time. Priority: highest priority first, risk of starvation, fixed by aging. MLFQ: several queues; new jobs start in the top queue with a short slice, a job that uses its whole slice is demoted. Short interactive jobs stay on top, CPU hogs sink. Real-time: RM gives fixed priority to the task with the shortest period; EDF always runs the task whose deadline is soonest and misses fewer deadlines.
-</div>
-<div class="card ex">
-<b>Three numbers you always compute.</b> Turnaround = finish time minus arrival time. Waiting = turnaround minus CPU burst (time spent in the ready queue). Response = time of first run minus arrival. Average them over all processes.
-</div>
-<div class="card ex">
-<b>Synchronization.</b> Two threads doing <code>counter++</code> at the same time can lose an update because <code>counter++</code> is really three instructions (load, add, store) and they can interleave. That is a <b>race condition</b>. The fix is to make the dangerous part a <b>critical section</b> that only one thread enters at a time. Tools: hardware atomic instructions (<code>test_and_set</code>, <code>compare_and_swap</code>), a <b>mutex lock</b> built on them (a spinlock busy-waits, no context switch, wastes CPU), and <b>semaphores</b>, an integer with <code>wait</code> (decrement, block if it would go negative) and <code>signal</code> (increment, wake one). A semaphore initialised to 0 is a "you may go" ticket: thread B does <code>wait(s)</code> before its work, thread A does <code>signal(s)</code> after its work, so A's work always happens before B's.
-</div>
-<div class="card ex">
-<b>Why this is easy.</b> The MC questions are slide facts, and the exam is open book. The long questions are four mechanical procedures: count forks, draw a Gantt chart under stated rules, fill a C skeleton with pipe/dup/read/write, and place wait/signal to enforce an order. Each has a template below and a simulator to check yourself.
-</div>
-</section>
+<section id="c3" class="s3">
+<div class="sec-head"><div class="big bg3">3</div><div><h2>Processes</h2><p>States, PCB, context switch, fork/exec/wait, zombies, pipes and IPC. Q3 is 24 marks of this plus 4 MC.</p></div></div>
+<div class="toprow"><span class="chip">5 states</span><span class="chip">PCB</span><span class="chip">fork returns</span><span class="chip">fork tree counting</span><span class="chip">3 exec scenarios</span><span class="chip">pipe + dup</span><span class="chip">zombie, orphan</span></div>
 
-<section id="c1">
-<h2>Chapter 1. Introduction</h2>
-<div class="card def"><span class="tag">Must-know facts (MC come straight from these)</span>
-<ul>
-<li>OS = <b>resource allocator</b> (efficient and fair use of CPU, memory, I/O) and <b>control program</b> (prevents errors and improper use). Kernel = the one program running at all times. System programs ship with the OS but are not the kernel. Middleware = frameworks like databases.</li>
-<li><b>Von Neumann</b>: instructions and data in the <b>same memory</b>, accessed by address. CPU has control unit (IR, PC), ALU, registers. Cycle: fetch, decode, fetch operands, execute, write back.</li>
-<li>Devices and CPU share a <b>common bus</b> to memory. Device controllers have local buffers and signal completion with an <b>interrupt</b>. Interrupts have <b>priorities</b>; they are not all serviced the same way. The kernel handles them.</li>
-<li><b>Interrupt</b> (hardware, asynchronous) vs <b>trap / exception</b> (software: error or system call, synchronous). Interrupt-driven I/O: the CPU checks for interrupts between instructions, saves state, runs the handler, restores.</li>
-<li><b>DMA</b>: for fast devices. The controller moves blocks between device and memory directly, one interrupt per block, <b>less CPU involvement</b>. It does not remove interrupts; CPU and DMA run concurrently.</li>
-<li><b>Storage hierarchy</b>: registers, cache, main memory (volatile, DRAM, <b>byte addressable</b>, the only big store the CPU accesses directly), SSD/NVM, HDD, tape. Faster means smaller and more expensive. Bootstrap program lives in EEPROM/firmware.</li>
-<li><b>Caching</b>: copy a hot subset from a slower bigger store to a faster smaller one. Average access time $= h \cdot t_{hit} + (1-h) \cdot t_{miss}$. A high hit ratio alone does not guarantee performance: hit time and miss penalty matter too. Works because of temporal and spatial locality.</li>
-<li><b>Dual mode</b>: mode bit, kernel 0, user 1. Privileged instructions (I/O, timer, interrupt control) only in kernel mode. A <b>timer</b> interrupt guarantees the OS regains control. Intel has rings 0 to 3.</li>
-<li><b>Multiprocessors</b>: speedup with $N$ processors is less than $N$ (bus and memory contention). Benefits: throughput, economy of scale, reliability. Asymmetric (master/slave) vs SMP (each processor does everything). Multicore = several cores on one chip with private L1 and shared L2. NUMA = each CPU has fast local memory and slower remote memory.</li>
-<li><b>Multiprogramming</b>: keep the CPU busy by holding several jobs in memory. <b>Timesharing</b>: switch so often that users can interact. Needs process management, CPU scheduling, swapping, virtual memory.</li>
-<li><b>Virtualization</b>: a VMM/hypervisor runs guest OSes on one host. <b>Cloud</b>: virtualization delivered over the network, pay per use; SaaS, PaaS, IaaS.</li>
-<li>Units: KB, MB, GB are powers of 1024 for memory; networking speeds are in bits per second.</li>
-</ul></div>
-<details><summary>Try it: a cache has hit time 1 ns, miss penalty 100 ns, hit ratio 0.95. Average access time? Would a 0.99 hit ratio with a 400 ns miss penalty be better?</summary><div class="card">
-$0.95 \cdot 1 + 0.05 \cdot 100 = 5.95$ ns. Second: $0.99 \cdot 1 + 0.01 \cdot 400 = 4.99$ ns, better. But with a 1000 ns miss penalty it would be $10.99$ ns, worse despite the higher hit ratio. That is the point of the short question.
-</div></details>
-<div class="card why" style="border-left:4px solid #8e5fd0;background:var(--accent-bg)"><span class="tag">Why it matters</span>An OS is the referee for every program you will ever ship. Interrupts, DMA, and caching explain why your code is fast on one machine and slow on another, and why a database engineer cares about memory hierarchy.</div>
-</section>
+<h3><span class="n bg3">A</span>Big picture: a process in memory and in time</h3>
+<div class="grid">
+<div class="card" style="margin:0;display:flex;gap:16px;align-items:flex-start"><div class="mem"><div style="background:var(--c3b)"><b>stack</b> ↓ grows down<br>parameters, return addresses, locals</div><div style="color:var(--muted)">free</div><div style="background:var(--c3b)"><b>heap</b> ↑ grows up<br>malloc</div><div><b>data</b><br>globals</div><div><b>text</b><br>code</div></div><div style="font-size:13.5px"><b>Program vs process.</b> A program is a passive file on disk. A process is a program <b>in execution</b>: text, data, heap, stack, plus the program counter and registers. The kernel's record for it is the <b>PCB</b>: state, PC, registers, scheduling info, memory info, accounting, I/O status (open files). Linux: <code>task_struct</code>.</div></div>
+<div class="card" style="margin:0"><b>Process states. Click a transition to light up where it goes.</b>
+<div class="states" id="states"><div class="state" data-s="new">new</div><div class="state" data-s="ready">ready</div><div class="state" data-s="running">running</div><div class="state" data-s="waiting">waiting</div><div class="state" data-s="terminated">terminated</div></div>
+<div class="tr" id="trans"></div>
+<p id="transWhy" style="font-size:13.5px;margin:8px 0 0;color:var(--muted)">A process leaves <b>running</b> only when it issues an I/O request, is preempted (interrupt or time slice over), or exits. Calling a function or reading the cache does not change its state.</p></div>
+</div>
 
-<section id="c2">
-<h2>Chapter 2. OS structures</h2>
-<div class="card def"><span class="tag">Must-know facts</span>
-<ul>
-<li><b>Services for the user</b>: user interface (CLI, GUI, touch), program execution, I/O operations, file-system manipulation, communication (shared memory or message passing), error detection (errors can occur in CPU, memory, I/O devices, and user programs, not only memory and I/O). <b>Services for the system</b>: resource allocation, logging/accounting, protection and security.</li>
-<li><b>System call</b> = the programming interface to OS services. Programmers use an <b>API</b> (POSIX, Win32, Java) through a library like libc. Why API instead of raw syscalls: convenience, portability, hides implementation details. APIs are not faster and cannot bypass protection.</li>
-<li>Implementation: each syscall has a number; the kernel keeps a <b>table indexed by number</b>; the library stub traps into the kernel, which runs the handler and returns status. <code>printf()</code> (library) calls <code>write()</code> (system call). Entering printf does not immediately enter kernel mode.</li>
-<li><b>Parameter passing</b>: in registers (limited), in a memory block whose address is in a register, or on the stack. Block and stack have no limit on count or length.</li>
-<li>Six syscall categories: process control, file management, device management, information maintenance, communications, protection. <code>read(fd, buf, count)</code> returns bytes read, 0 at end of file, -1 on error.</li>
-<li><b>Linker</b> combines object files and libraries into an executable; <b>loader</b> puts it in memory and does relocation. DLLs are loaded once and shared.</li>
-<li><b>Policy vs mechanism</b>: policy = what will be done, mechanism = how. The timer is a mechanism; how long to set it is policy. Separating them gives flexibility.</li>
-<li>MS-DOS: single task, no process created when running a program, no dual mode. FreeBSD: multitasking, the shell forks then execs.</li>
-</ul></div>
-<div class="card thm"><span class="tag">OS structures table (compare/contrast question every year)</span>
-<table>
-<tr><th>Structure</th><th>Idea</th><th>Pros</th><th>Cons</th></tr>
-<tr><td>Monolithic (UNIX, Linux)</td><td>All kernel functions in one binary and address space</td><td>Fast, little overhead in syscalls and communication</td><td>Hard to implement, debug, maintain</td></tr>
-<tr><td>Layered</td><td>Layer $N$ uses only layer $N-1$; information hiding; interfaces between adjacent layers well defined</td><td>Easy to construct and debug one layer at a time</td><td>Hard to define layers; passing through many layers costs time; pure layering is not dominant today</td></tr>
-<tr><td>Microkernel (Mach, Darwin core)</td><td>Minimal kernel: process management, memory management, IPC. Other services (file system, memory management policy, device drivers) in user space, communicate by <b>message passing</b></td><td>Easy to extend, easy to port, more secure and reliable (a crashed service does not crash the kernel)</td><td><b>Worse performance</b> because of message passing overhead</td></tr>
-<tr><td>Loadable kernel modules (Linux, Solaris)</td><td>Core kernel plus modules loaded at boot or run time</td><td>Flexible like layered or microkernel but modules call each other directly, no message passing, monolithic speed</td><td></td></tr>
-<tr><td>Hybrid</td><td>Combinations: Linux is monolithic plus modules, Windows monolithic plus personalities, macOS is Darwin (Mach plus BSD)</td><td>Practical</td><td></td></tr>
-</table>
-Android: Linux kernel, HAL, Bionic libc, ART runtime, JNI to bypass the VM. iOS is closed source, Android open.
-</div>
-<details><summary>Try it: list the system calls behind <code>cp a.txt b.txt</code></summary><div class="card">
-Get file names (read arguments), open input (open), create output (open with create flag, or creat), loop read and write, close both, write a message, exit. If the output exists: possibly a prompt and a decision to abort or truncate.
-</div></details>
-<div class="card why" style="border-left:4px solid #8e5fd0;background:var(--accent-bg)"><span class="tag">Why it matters</span>System calls are the only door between your program and the hardware. Knowing the monolithic versus microkernel trade-off is the same reasoning you use when choosing a monolith versus microservices at work.</div>
-</section>
+<h3><span class="n bg3">B</span>Say it like this</h3>
+<div class="card say"><span class="lbl">🗣️ Process and PCB</span>
+<p>A <mark>process</mark> is an instance of an executing program, consisting of an <mark>address space</mark> and one or more <mark>threads of control</mark>. The <mark>process control block</mark> stores its state, program counter, CPU registers, scheduling information, memory-management information, accounting information and I/O status.</p></div>
+<div class="card say"><span class="lbl">🗣️ Context switch</span>
+<p>A <mark>context switch</mark> saves the state of the running process into its PCB and loads the saved state of the next process. It is <mark>pure overhead</mark>; its cost depends on hardware support such as multiple register sets. It is not the same as a user-to-kernel mode switch.</p></div>
+<div class="card say"><span class="lbl">🗣️ fork, exec, wait</span>
+<p><mark>fork()</mark> creates a child that is a copy of the parent; it returns the <mark>child's pid to the parent, 0 to the child</mark>, and a negative value on failure. Both continue from the instruction after fork. <mark>exec()</mark> replaces the process image with a new program and <mark>does not return on success</mark>. <mark>wait()</mark> blocks the parent until a child terminates and returns that child's pid and status. Linux implements fork with <mark>copy-on-write</mark> pages, so the address space is shared until written.</p></div>
+<div class="card say"><span class="lbl">🗣️ Zombie and orphan</span>
+<p>A <mark>zombie</mark> is a process that has terminated but whose parent has <mark>not yet called wait()</mark>, so its PCB entry and exit status remain. An <mark>orphan</mark> is a process whose parent terminated first; <mark>init / systemd adopts</mark> it and reaps it.</p></div>
+<div class="card say"><span class="lbl">🗣️ Ordinary pipe</span>
+<p>An <mark>ordinary pipe</mark> is <mark>unidirectional</mark>, usable only between a <mark>parent and child</mark> (inherited across fork), accessed through file descriptors <code>fd[0]</code> (read end) and <code>fd[1]</code> (write end), and ceases to exist when the processes finish. A <mark>named pipe (FIFO)</mark> needs no parent-child relation and persists after use.</p></div>
+<div class="card say"><span class="lbl">🗣️ Three types of mode transfer</span>
+<p><mark>System call</mark>: a user process requests a service, like a function call outside the process. <mark>Interrupt</mark>: an external asynchronous event, independent of the process. <mark>Trap or exception</mark>: an internal synchronous event in the process (segmentation fault, divide by zero).</p></div>
 
-<section id="c3">
-<h2>Chapter 3. Processes</h2>
-<div class="card def"><span class="tag">Must-know facts</span>
-<ul>
-<li><b>Process</b> = program in execution: text (code), data (globals), heap (grows up, malloc), stack (grows down: parameters, return addresses, locals), PC and registers. Program = passive file; process = active.</li>
-<li><b>States</b>: new, ready, running, waiting, terminated. Transitions: admitted (new to ready), scheduler dispatch (ready to running), interrupt or time slice over (running to ready), I/O or event wait (running to waiting), I/O or event completion (waiting to ready), exit (running to terminated). A process leaves running when it issues an I/O request, is preempted, or exits. Calling a function or reading cache does not.</li>
-<li><b>PCB</b> holds: state, PC, registers, scheduling info (priority, queue pointers), memory-management info, accounting, I/O status (open files). Linux: <code>task_struct</code>.</li>
-<li><b>Context switch</b>: save the state of the running process into its PCB, load the next one. Pure overhead, depends on hardware (register sets). Not the same as user-to-kernel mode switch.</li>
-<li><b>Queues</b>: ready queue and device wait queues. Long-term scheduler controls the degree of multiprogramming (I/O-bound vs CPU-bound mix). Short-term (CPU) scheduler runs every few milliseconds. Medium-term: swapping.</li>
-<li><b>Creation</b>: parent creates children, forming a tree. Child may share all, some, or none of the parent's resources. <code>fork()</code> returns child pid to parent, 0 to child, negative on failure. Copy-on-write: pages are shared until written. <code>exec()</code> replaces the image and does not return on success. <code>wait()</code> returns the pid of a terminated child and its status. <code>exit()</code> ends the process.</li>
-<li><b>Zombie</b>: terminated, but the parent has not called wait, so its PCB entry (with exit status) remains. It still has a pid. <b>Orphan</b>: parent exited first; init/systemd adopts it. Cascading termination: some systems kill all children when the parent dies.</li>
-<li><b>IPC</b>: shared memory (fast, kernel only at setup, producer-consumer with a bounded buffer; buffer of size $N$ holds $N-1$ items, empty when in == out, full when (in+1) % N == out) vs message passing (send/receive through the kernel; direct vs indirect via mailboxes; blocking vs non-blocking; rendezvous when both block; zero, bounded, unbounded buffering).</li>
-<li><b>Ordinary pipes</b>: unidirectional, parent-child only (inherited through fork), accessed like file descriptors, disappear when the processes end, <b>not</b> accessible by arbitrary processes. <code>fd[0]</code> read end, <code>fd[1]</code> write end. <b>Named pipes (FIFO)</b>: no parent-child relation needed, persist after use, bidirectional on Windows. <b>Sockets</b>: IP plus port; ports below 1024 are well known.</li>
-</ul></div>
-<div class="card thm"><span class="tag">Fork counting recipe (Q3.1 and an MC every year)</span>
-<ol>
-<li>Walk the code line by line. At each <code>fork()</code>, every process that reaches it becomes two: parent (return value pid, nonzero) and child (return value 0).</li>
-<li>Track who continues the loop and who leaves (<code>break</code>, <code>return</code>, <code>exit</code>, or an exec that succeeds).</li>
-<li>If each iteration turns one active process into $k$ active ones, after $n$ iterations there are $k^n$ active. Count stopped processes separately and add.</li>
-<li>Count outputs per process: each process prints whatever it reaches.</li>
-</ol>
-<table>
-<tr><th>Code per iteration</th><th>Active after $n$</th><th>Total processes</th></tr>
-<tr><td><code>fork();</code></td><td>$2^n$</td><td>$2^n$</td></tr>
-<tr><td><code>fork(); fork();</code></td><td>$4^n$</td><td>$4^n$</td></tr>
-<tr><td><code>if (fork()) fork();</code> (child continues too)</td><td>$3^n$</td><td>$3^n$</td></tr>
-<tr><td><code>if (fork()) fork(); else break;</code> (S2026 Q3.1)</td><td>$2^n$</td><td>$2^{n+1}-1$ (stopped: $1+2+\dots+2^{n-1} = 2^n - 1$)</td></tr>
-<tr><td><code>if (fork()==0) { fork(); print X; return; }</code> for 3 iterations (S2026 MC10)</td><td>1 (only the original finishes the loop)</td><td>7 total; 6 print X, 1 prints Y</td></tr>
-</table>
-Worked S2026 Q3.1 with $n=2$: iteration 0: P0 forks P1 (P1 breaks), P0 forks P2 (continues). Iteration 1: P0 forks P3 (breaks), P0 forks P4; P2 forks P5 (breaks), P2 forks P6. Tree: P0 has children P1, P2, P3, P4; P2 has children P5, P6. Total 7, breaks 3.
-</div>
-<div class="card thm"><span class="tag">fork / exec failure cases (Q3.2)</span>
-Always list three scenarios: (1) fork and exec succeed: child prints up to exec only, parent prints after wait. (2) fork succeeds, exec fails: child also prints the lines after exec. (3) fork fails: only the else branch runs. If there is no <code>wait</code>, say the parent and child output can interleave in any order.
-</div>
-<div class="card thm"><span class="tag">Pipe skeleton (Q3.3, lab API)</span>
-<pre>int fd[2]; pipe(fd);              // fd[0] read end, fd[1] write end
-pid_t pid = fork();
-int fin = open(file, O_RDONLY);
-close(0); dup(fin);               // now scanf reads from the file
-scanf("%d", &x);
-if (pid == 0) {                   // child
-    close(fd[0]);                 // not reading
-    write(fd[1], &cnt, sizeof(int));
-    exit(0);
-}
-waitpid(pid, &status, 0);         // parent waits for that child
-close(fd[1]);                     // not writing
-read(fd[0], &child_cnt, sizeof(int));</pre>
-Remember: <code>dup(fin)</code> returns the lowest free descriptor, which is 0 after <code>close(0)</code>. Write the address of the variable, not the value. <code>sizeof(int)</code> for one integer. Every blank is a separate point.
-</div>
-<details><summary>Try it: how many processes does this create? <code>for (i=0;i&lt;3;i++) { if (fork()==0) continue; else break; }</code></summary><div class="card">
-Iteration 0: P0 forks C1; C1 continues, P0 breaks. Iteration 1: C1 forks C2; C1 breaks, C2 continues. Iteration 2: C2 forks C3; C2 breaks, C3 continues and the loop ends. Total 4 processes, a chain (each child of the previous), not a tree with fan-out.
-</div></details>
-<details><summary>Try it: process A forks B, B terminates immediately, A runs for an hour without wait. What is B? What if A also exits?</summary><div class="card">
-B is a zombie for the hour: terminated, pid and PCB kept for the exit status. When A exits without waiting, init adopts B and reaps it. If instead B were still running when A exited, B would be an orphan adopted by init.
-</div></details>
-<div class="card why" style="border-left:4px solid #8e5fd0;background:var(--accent-bg)"><span class="tag">Why it matters</span>fork, exec, wait, and pipes are the primitives behind shells, CI runners, and process supervisors. Zombies and orphans are real bugs in production services that spawn workers.</div>
-</section>
-
-<section id="c4">
-<h2>Chapter 4. Threads and concurrency</h2>
-<div class="card def"><span class="tag">Must-know facts</span>
-<ul>
-<li><b>Thread</b> = basic unit of CPU utilization: thread id, program counter, register set, stack. Threads of one process share code, data, heap, open files, signals. They do <b>not</b> each have their own address space or file descriptors.</li>
-<li><b>Benefits</b>: responsiveness, resource sharing, economy (creating and switching threads is cheaper than processes), scalability (use multiple cores). Threads of the same process can run on different cores at the same time.</li>
-<li><b>Concurrency</b>: more than one task makes progress, possible on a single core by time multiplexing. <b>Parallelism</b>: tasks run at exactly the same time, needs multiple cores. Debugging multicore programs is harder, not easier.</li>
-<li>Multicore programming challenges: identifying tasks, balance, data splitting, data dependency, testing and debugging. <b>Data parallelism</b> (same operation, data split) vs <b>task parallelism</b> (different operations).</li>
-<li><b>Amdahl's law</b>: $speedup \le \dfrac{1}{S + \frac{1-S}{N}}$ with $S$ the serial fraction and $N$ cores. Limit as $N \to \infty$ is $1/S$. Example: $S=0.25$, $N=2$: $1/(0.25+0.375)=1.6$. S2026 MC17: 61% parallel ($S=0.39$) on 3 cores: $1/(0.39+0.61/3)=1.69$.</li>
-<li><b>User threads</b> (library: Pthreads, Windows, Java) vs <b>kernel threads</b> (scheduled by the OS). Models: many-to-one (one block blocks all, no parallelism), one-to-one (Linux, Windows; more concurrency, kernel cost per thread), many-to-many, two-level.</li>
-<li><b>Implicit threading</b>: thread pools (bounded number of threads, reuse), fork-join, OpenMP, Grand Central Dispatch.</li>
-<li><b>fork with threads</b>: some systems have two versions, duplicate all threads or only the caller. exec replaces all threads.</li>
-<li><b>Signals</b>: synchronous (caused by the thread itself: illegal memory, divide by zero) go to the causing thread; asynchronous (Ctrl-C, timer) may go to all or to a chosen thread. Users can define handlers; different signals can have different handlers; <b>not</b> every signal goes to every thread. <code>kill(pid, sig)</code> vs <code>pthread_kill(tid, sig)</code>.</li>
-<li><b>Cancellation</b>: asynchronous (immediate) vs deferred (default; target checks at cancellation points). <code>pthread_create</code>, <code>pthread_join</code>, <code>pthread_cancel</code>.</li>
-<li>Linux: threads and processes are both tasks created with <code>clone()</code>; flags CLONE_VM, CLONE_FS, CLONE_FILES, CLONE_SIGHAND decide what is shared. Windows: one-to-one, ETHREAD, KTHREAD, TEB.</li>
-</ul></div>
-<details><summary>Try it: a program is 90% parallel. Speedup on 4 cores? On infinitely many?</summary><div class="card">
-$S=0.1$. $1/(0.1 + 0.9/4) = 1/0.325 = 3.08$. Infinite cores: $1/0.1 = 10$.
-</div></details>
-<details><summary>Try it: which of these is per thread, which per process: stack, heap, open files, program counter, global variables, signal handlers</summary><div class="card">
-Per thread: stack, program counter (and registers). Per process, shared by all threads: heap, open files, globals, signal handlers.
-</div></details>
-<div class="card why" style="border-left:4px solid #8e5fd0;background:var(--accent-bg)"><span class="tag">Why it matters</span>Threads and Amdahl's law decide whether buying a 64-core machine helps. Every performance review of a service starts with "what fraction is serial".</div>
-</section>
-
-<section id="c5">
-<h2>Chapter 5. CPU scheduling</h2>
-<div class="card def"><span class="tag">Must-know facts</span>
-<ul>
-<li>Execution alternates <b>CPU bursts</b> and <b>I/O bursts</b>. Many short bursts, few long ones. I/O-bound: many short CPU bursts. CPU-bound: few long ones.</li>
-<li>Scheduling decisions happen when a process: (1) goes running to waiting, (2) terminates, (3) running to ready (interrupt), (4) waiting to ready or new arrival. 1 and 2: <b>non-preemptive</b>. 3 and 4: <b>preemptive</b>.</li>
-<li><b>Dispatcher</b>: context switch, switch to user mode, jump to the right place. <b>Dispatch latency</b> = time to stop one and start another.</li>
-<li><b>Metrics</b>: CPU utilization (fraction busy), throughput (processes per unit time), turnaround (completion minus arrival), waiting (time in ready queue = turnaround minus burst), response (first run minus arrival).</li>
-<li><b>FCFS</b>: non-preemptive, convoy effect (short jobs stuck behind a long one). Slide example bursts 24, 3, 3: average wait 17 in order P1 P2 P3, but 3 in order P2 P3 P1.</li>
-<li><b>RR</b>: quantum $q$, preempted job goes to the tail. No process waits more than $(n-1)q$. Large $q$ becomes FCFS; small $q$ needs $q \gg$ context switch time. Rule of thumb: 80% of bursts shorter than $q$. RR has better response, often worse turnaround than FCFS when jobs are equal length. Slide example $q=4$ on 24, 3, 3: wait 6, 4, 7, average 5.67; response 4, 7, 10.</li>
-<li><b>SJF</b>: pick the shortest next CPU burst. Optimal average waiting time. Problem: predicting the burst. Exponential averaging $\tau_{n+1} = \alpha t_n + (1-\alpha)\tau_n$, usually $\alpha = 1/2$; $\alpha=0$ ignores recent history, $\alpha=1$ uses only the last burst. Preemptive version = <b>SRTF</b>; slide example (0,8),(1,4),(2,9),(3,5): P1 P2 P4 P1 P3, average wait 6.5. Starvation of long jobs possible.</li>
-<li><b>Priority</b>: smallest number = highest priority in the textbook convention (the exam may say the opposite, read it). Preemptive or not. Equal priority: FCFS. Starvation, fixed by <b>aging</b>. SJF is priority scheduling with priority = predicted burst. Priority with RR: same priority share RR.</li>
-<li><b>Multilevel queue</b>: fixed queue per process type, each queue its own algorithm, fixed-priority preemptive scheduling between queues or time slicing (60/20/10/10).</li>
-<li><b>MLFQ</b>: processes move between queues. Parameters: number of queues, algorithm per queue, when to upgrade, when to demote, which queue a process enters. Textbook example: Q0 RR 8 ms, Q1 RR 16 ms, Q2 FCFS. New job enters Q0 and preempts Q1/Q2 jobs; using the whole quantum demotes; a preempted Q1/Q2 job rejoins the <b>head</b> of its queue with its remaining quantum. Approximates SRTF without knowing bursts, good response time, "fair" to CPU-bound jobs. Starvation handled by periodically moving everyone to the top queue. Slide example average wait 16.8.</li>
-<li><b>Thread scheduling</b>: PCS (process contention scope, library schedules user threads onto LWPs by programmer priority) vs SCS (system contention scope, kernel schedules kernel threads). One-to-one systems use only SCS.</li>
-<li><b>Multiprocessor</b>: asymmetric (one master does all scheduling and I/O, can bottleneck) vs SMP (each processor self-schedules from a common or private ready queue). Multicore puts several cores on one chip for speed and power, it <b>complicates</b> scheduling. <b>Memory stall</b>: waiting on memory; hardware threads per core (chip multithreading, hyperthreading) let the core switch to another thread. Two levels of scheduling: OS picks a software thread for a logical CPU, the core picks which hardware thread runs. <b>Processor affinity</b>: keep a thread on the same CPU for cache reasons; soft vs hard (<code>sched_setaffinity</code>). <b>Load balancing</b>: push migration (periodic task moves work off busy CPUs) and pull migration (idle CPU pulls); conflicts with affinity.</li>
-<li><b>Real time</b>: hard (deadline miss = failure) vs soft (just preference). Periodic task: processing time $t$, deadline $d$, period $p$, $0 \le t \le d \le p$, rate $1/p$. Admission control. <b>RM</b>: static priority, shorter period = higher priority; optimal among static-priority schemes; utilization $\sum t_i/p_i$. Slide example 25/50 + 35/80 = 94%, P2 misses its deadline at 80 (finishes at 85). <b>EDF</b>: dynamic priority, earliest deadline first; does not need periodic tasks; theoretically can reach 100% utilization; same example meets all deadlines.</li>
-<li><b>Evaluation</b>: deterministic modeling (exact numbers for a given workload), queueing models (Little's formula $n = \lambda W$: 7 arrivals per second and 14 in queue means 2 s wait), simulation (trace tapes), implementation.</li>
-</ul></div>
-<div class="card thm"><span class="tag">Gantt chart procedure (write it down, follow it mechanically)</span>
-<ol>
-<li>Make a table: process, arrival, burst, remaining, queue (for MLFQ), remaining quantum.</li>
-<li>Keep a time cursor. At every event time (arrival, quantum expiry, completion) decide who runs next using the stated rule and tiebreak.</li>
-<li>For preemptive schemes, an arrival can interrupt the running process immediately. Note what happens to the preempted process (tail of queue in RR, head of queue in the exam MLFQ rules, keeps remaining quantum).</li>
-<li>Write the chart as "0 P1 4 P2 8 P3 12 ..." with boundary times.</li>
-<li>Waiting time per process = completion minus arrival minus burst. Response = first start minus arrival. Average over processes. Show the per-process numbers; they carry partial credit.</li>
-</ol>
-</div>
-<div class="card thm"><span class="tag">The exam's MLFQ rules (S2026 Q4.1), worked</span>
-Q0 RR 4 ms, Q1 RR 8 ms, Q2 FCFS. New arrivals enter Q0 and preempt lower queues immediately. Full quantum used means demotion. Preemption alone does not demote. A preempted Q1/Q2 job goes to the <b>head</b> of its queue.<br>
-Processes (arrival, burst): P1 (0, 9), P2 (2, 25), P3 (6, 7), P4 (14, 18), P5 (45, 15), P6 (58, 6).<br>
-Chart: 0 P1 4 P2 8 P3 12 P1 14 P4 18 P1 21 P2 29 P3 32 P4 40 P2 45 P5 57 P2 58 P6 64 P2 71 P4 77 P5 80.<br>
-Explanation of the tricky moments: at 4, P1 used its full quantum and drops to Q1; P2 (arrived at 2) is in Q0 so it runs. At 12, Q0 is empty, so Q1 runs P1 (it has 5 left, gets up to 8). At 14, P4 arrives in Q0 and preempts P1, which goes to the head of Q1 with 3 left and quantum remaining. At 18, P4 drops to Q1 (behind P1, P2, P3? No: Q1 order is by when they joined: P1 at the head because it was preempted, then P2, P3; P4 joins the tail). At 45 P5 arrives and preempts P2 which is in Q2 by then. At 58 P6 preempts P5 (Q1). Waiting: P1 12, P2 44, P3 19, P4 45, P5 20, P6 0; average 23.33. Response: 4, 6, 6, 4, 4, 4; average 4.67.<br>
-Check your own attempt with the simulator below (it implements exactly these rules).
-</div>
-<div class="card thm"><span class="tag">RM vs EDF procedure (S2026 Q4.2)</span>
-Tasks (time, deadline, period): P1 (1, 3, 4), P2 (2, 4, 5), P3 (2, 6, 7), P4 (1, 5, 8). All arrive at 0. Deadlines are relative to each release: P1 deadlines 3, 7, 11, 15; P2: 4, 9, 14; P3: 6, 13; P4: 5, 13. Tie: smaller process id.<br>
-<b>RM</b>: priority order by period, P1 > P2 > P3 > P4. Fill the chart task by task: place every P1 instance first at its release, then fit P2 around it, then P3, then P4. In the official answer P4 never gets the CPU in 0 to 16 and misses both deadlines; P3 misses both of its deadlines too. <b>4 missed deadlines.</b> Chart from the official answer: 0 P1 1 P2 3 P3 4 P1 5 P2 7 P3 8 P1 9 P3 10 P2 12 P1 13 P3 14 P2 15 P1 16.<br>
-<b>EDF</b>: at every slot run the released task with the earliest absolute deadline. Official chart: 0 P1 1 P2 3 P4 4 P3 6 P1 7 P2 9 P1 10 P3 12 P4 13 P2 15 P1 16. P1 misses its 4th deadline (15, finishes 16) and P2 its 3rd (14, finishes 15). <b>2 missed deadlines.</b> EDF misses fewer, which is the expected conclusion.<br>
-Method tip: write a column of absolute deadlines per task before drawing anything. For EDF, at each release re-sort by deadline.
-</div>
-<div class="card thm"><span class="tag">Dynamic priority with $\alpha$ and $\beta$ (S2026 Q4.3)</span>
-Priority = initial + $\alpha \times$ (time waited) + $\beta \times$ (time run). Larger value wins; tie goes to the larger id (as stated). "Checks every 3 units" means decisions only at multiples of 3.<br>
-(a) $\alpha=0$, $\beta=3$: a running process keeps gaining, so no preemption ever; among waiting processes all have priority 0, tie to larger id. Order: P1 (0 to 7), then P3 (id larger than P2, 7 to 13), P4 (13 to 17), P2 (17 to 22).<br>
-(b) $\alpha=1$, $\beta=0$, P1 and P2 only, checks every 3: waiting raises priority, running does not, so they alternate at checkpoints: 0 P1 3 P2 6 P1 9 P2 11 P1 12.<br>
-(c) $\alpha=1$, $\beta=-2$, start 30, checks every 3: running loses 2 per unit while waiters gain 1, so at each check the CPU rotates: 0 P1 3 P2 6 P3 9 P4 12 P1 15 P2 17 P3 20 P4 21 P1 22.<br>
-Procedure: keep a table of priorities, recompute at every check time, pick the max with the stated tiebreak, run until the next check or completion.
-</div>
-<details><summary>Try it: SRTF on P1 (0, 8), P2 (1, 4), P3 (2, 9), P4 (3, 5). Chart and average waiting time?</summary><div class="card">
-0 P1 1 P2 5 P4 10 P1 17 P3 26. Waiting: P1 $17-0-8=9$, P2 $5-1-4=0$, P3 $26-2-9=15$, P4 $10-3-5=2$. Average 6.5. Check it in the simulator.
-</div></details>
-<details><summary>Try it: exponential averaging with $\alpha = 0.5$, $\tau_0 = 10$, bursts 6, 4, 6, 4. Predictions?</summary><div class="card">
-$\tau_1 = 0.5\cdot6+0.5\cdot10 = 8$, $\tau_2 = 0.5\cdot4+0.5\cdot8 = 6$, $\tau_3 = 0.5\cdot6+0.5\cdot6=6$, $\tau_4 = 0.5\cdot4+0.5\cdot6 = 5$.
-</div></details>
-<details><summary>Try it: RM with P1 (20, period 50) and P2 (35, period 100). Utilization and schedulable?</summary><div class="card">
-$20/50 + 35/100 = 0.75$. P1 runs 0 to 20, P2 20 to 55 but P1 is released at 50 and preempts: P2 runs 20 to 50, P1 50 to 70, P2 70 to 75. All deadlines met.
-</div></details>
-<div class="card why" style="border-left:4px solid #8e5fd0;background:var(--accent-bg)"><span class="tag">Why it matters</span>Scheduling is the heart of Kubernetes, of your laptop staying responsive while compiling, and of real-time control in cars and drones. MLFQ is what Windows and BSD actually run.</div>
-</section>
-
-<section id="c6">
-<h2>Chapter 6. Synchronization tools</h2>
-<div class="card def"><span class="tag">Must-know facts</span>
-<ul>
-<li><b>Race condition</b>: several processes access and manipulate shared data concurrently and the outcome depends on the particular order of access. Example: <code>counter++</code> and <code>counter--</code> are each three machine instructions (load into register, add, store); interleaving with counter = 5 can leave 4 or 6 instead of 5. Kernel example: two forks racing on <code>next_available_pid</code> can hand out the same pid.</li>
-<li><b>Critical section</b>: code that touches shared data. Structure: entry section, critical section, exit section, remainder section. A solution must give: (1) <b>mutual exclusion</b>, (2) <b>progress</b> (if nobody is inside, the choice of who enters cannot be postponed forever), (3) <b>bounded waiting</b> (a limit on how many times others enter before a waiting process gets in).</li>
-<li>Kernel: <b>preemptive kernel</b> allows preemption in kernel mode, so race conditions are possible and harder on SMP. <b>Non-preemptive kernel</b> runs until it exits kernel mode, blocks, or yields, so it is essentially race-free on a single processor.</li>
-<li>Uniprocessor trick: disable interrupts. Inefficient on multiprocessors.</li>
-<li><b>Atomic hardware instructions</b> (non-interruptible):<br>
-<code>test_and_set(&amp;target)</code>: returns the old value and sets target to TRUE. Lock: <code>while (test_and_set(&amp;lock)); /* CS */ lock = false;</code><br>
-<code>compare_and_swap(&amp;value, expected, new)</code>: if value == expected set value = new; always returns the old value. Lock: <code>while (compare_and_swap(&amp;lock, 0, 1) != 0); /* CS */ lock = 0;</code><br>
-Atomic variables: <code>increment</code> built on a compare_and_swap loop.</li>
-<li><b>Bounded-waiting mutual exclusion with test_and_set</b>: <code>waiting[i] = true; key = true; while (waiting[i] &amp;&amp; key) key = test_and_set(&amp;lock); waiting[i] = false;</code> critical section; then scan <code>j = (i+1) % n</code> cyclically for the first <code>waiting[j]</code>; if none, <code>lock = false</code>, else <code>waiting[j] = false</code> (hand the lock directly to j). Mutual exclusion: only the first test_and_set sees false. Progress: exit sets lock false or frees a waiter. Bounded waiting: at most $n-1$ turns. test_and_set does <b>not</b> release the lock.</li>
-<li><b>Mutex lock</b>: <code>acquire()</code> (busy wait while not available, then take) and <code>release()</code>, both atomic. A busy-waiting lock is a <b>spinlock</b>: wastes CPU cycles, but no context switch, so good when the lock is held briefly and on multiprocessors (spin on one core while the holder runs on another). With the atomic <code>swap(x, v)</code>: <code>while (swap(locked, 1) == 1);</code></li>
-<li><b>Semaphore</b> (Dijkstra, P and V): integer with atomic <code>wait(S)</code> (while S &le; 0 busy wait; S--) and <code>signal(S)</code> (S++). <b>Counting</b> semaphore: initialised to the number of resource instances. <b>Binary</b>: 0 or 1, like a mutex. <b>Ordering</b>: semaphore synch = 0; P1 does S1 then <code>signal(synch)</code>; P2 does <code>wait(synch)</code> then S2. Guarantees S1 before S2.</li>
-<li><b>Semaphore without busy waiting</b>: struct with value and a waiting list. <code>wait</code>: value--; if value &lt; 0, add to list and <code>block()</code>. <code>signal</code>: value++; if value &le; 0, remove one process and <code>wakeup(P)</code>. A negative value's magnitude = number of waiting processes.</li>
-<li><b>Deadlock</b>: two processes each wait for a signal only the other can give (P0: wait(S), wait(Q); P1: wait(Q), wait(S)). <b>Starvation</b>: indefinite blocking, e.g. LIFO semaphore queue.</li>
-</ul></div>
-<div class="card thm"><span class="tag">Semaphore ordering recipe (Q5, 8 points, and MC23)</span>
-<ol>
-<li>Write the required order as arrows: "C before B", "B before A", "C before A".</li>
-<li>One semaphore per arrow, all initialised to 0.</li>
-<li>The earlier thread does <code>signal(sem)</code> <b>after</b> its work. The later thread does <code>wait(sem)</code> <b>before</b> its work.</li>
-<li>If an arrow is implied by others (C before A follows from C before B before A) you can still use the given semaphore; the exam told you which semaphores exist. Fill every blank, writing <code>/* Nothing */</code> where nothing is needed.</li>
-</ol>
-S2026 Q5: A depends on B and C, B depends on C. Given: A does <code>wait(&amp;s1)</code>, B ends with <code>signal(&amp;s2)</code>, C ends with <code>signal(&amp;s1)</code>. Blanks: A also <code>wait(&amp;s2)</code> (B before A); B starts with <code>wait(&amp;s0)</code> (C before B); C starts with nothing; C also does <code>signal(&amp;s0)</code> after printing. Output always C, B, A.<br>
-MC23 pattern: sem = 0, worker2 waits on it first, worker1 posts after its update, so worker1 always goes first: "A 2; B 5;".
-</div>
-<div class="card thm"><span class="tag">Reading a semaphore program for output</span>
-Track the value. Initial 0 means the first <code>wait</code> blocks until a <code>signal</code>. Initial 1 means one thread passes, the rest queue. A mutex around the shared update does not decide the order, only prevents interleaving inside the update. The order comes from semaphores and from which thread can pass first.
-</div>
-<details><summary>Try it: three threads must print "1", "2", "3" in that order. They start in random order. Semaphores and placement?</summary><div class="card">
-s12 = 0, s23 = 0. T1: print 1; signal(s12). T2: wait(s12); print 2; signal(s23). T3: wait(s23); print 3.
-</div></details>
-<details><summary>Try it: a semaphore has value $-3$ in the blocking implementation. What does that mean? What happens on signal?</summary><div class="card">
-Three processes are blocked on it. <code>signal</code> makes the value $-2$, which is still $\le 0$, so one blocked process is woken and moved to the ready queue.
-</div></details>
-<details><summary>Try it: why is <code>while (test_and_set(&amp;lock));</code> alone not bounded waiting?</summary><div class="card">
-A fast process can leave the critical section and re-acquire the lock before a spinning process gets its test_and_set in, repeatedly. Nothing limits how many times that can happen. The waiting[] array version fixes it by handing the lock to the next waiter in cyclic order.
-</div></details>
-<div class="card why" style="border-left:4px solid #8e5fd0;background:var(--accent-bg)"><span class="tag">Why it matters</span>Race conditions are the most expensive bug class in concurrent systems, from bank transfers to multiplayer games. Mutexes and semaphores are the tools you will use in every language.</div>
-</section>
-
-<section id="sched">
-<h2>Scheduling simulator</h2>
-<p>One process per line: <code>name arrival burst [priority]</code>. Pick an algorithm, run, compare with your hand-drawn chart. Ties: earlier arrival first, then input order. MLFQ uses the S2026 exam rules (new arrivals preempt lower queues, demotion only on full quantum, preempted jobs rejoin the head with remaining quantum).</p>
+<h3><span class="n bg3">C</span>Fork tree builder (play with it, then do it by hand)</h3>
 <div class="card">
 <div class="sim">
 <div>
-<label>Processes</label>
+<label>Code inside the loop body</label>
+<select id="ftPat" onchange="forkTree()">
+<option value="f">fork();</option>
+<option value="ff">fork(); fork();</option>
+<option value="iff">if (fork()) fork();   (child continues the loop too)</option>
+<option value="ifb" selected>if (fork()) fork(); else break;   (S2026 Q3.1)</option>
+<option value="chain">if (fork()==0) continue; else break;   (chain)</option>
+<option value="mc10">if (fork()==0) { fork(); print X; return; }   (S2026 MC10)</option>
+</select>
+<label>Iterations n</label><input id="ftN" type="range" min="1" max="4" value="2" class="range" oninput="forkTree()">
+<div class="trace" id="ftStats"></div>
+</div>
+<div><label>Process tree (P0 is the original; children listed under their parent)</label><div class="tree" id="ftOut"></div></div>
+</div>
+</div>
+
+<div class="card recipe"><span class="lbl">🛠️ Fork counting recipe</span>
+<ol>
+<li>Walk the code line by line. At each <code>fork()</code>, every process that reaches it becomes two: parent (nonzero return) and child (0).</li>
+<li>Track who continues the loop and who leaves (<code>break</code>, <code>return</code>, <code>exit</code>, a successful exec).</li>
+<li>If each iteration turns one active process into $k$ active ones, after $n$ iterations there are $k^n$ active. Count stopped processes separately and add.</li>
+<li>Outputs: each process prints whatever lines it reaches.</li>
+</ol>
+<table>
+<tr><th>Loop body</th><th>Active after $n$</th><th>Total processes</th></tr>
+<tr><td><code>fork();</code></td><td>$2^n$</td><td>$2^n$</td></tr>
+<tr><td><code>fork(); fork();</code></td><td>$4^n$</td><td>$4^n$</td></tr>
+<tr><td><code>if (fork()) fork();</code></td><td>$3^n$</td><td>$3^n$</td></tr>
+<tr><td><code>if (fork()) fork(); else break;</code></td><td>$2^n$</td><td>$2^{n+1}-1$ (stopped $1+2+\dots+2^{n-1} = 2^n-1$)</td></tr>
+<tr><td><code>if (fork()==0) continue; else break;</code></td><td>1</td><td>$n+1$, a chain</td></tr>
+</table></div>
+
+<div class="card paper"><span class="lbl">📝 Q3.1 model answer, S2026, n = 2</span>
+<pre>Tree: P0 → {P1 (breaks), P2, P3 (breaks), P4};  P2 → {P5 (breaks), P6}.      7 processes, 3 break.
+Each iteration: one active process becomes 2 active + 1 stopped.
+Active A(i) = 2^i, stopped S(n) = 1 + 2 + … + 2^(n−1) = 2^n − 1.
+Total T(n) = 2^n + 2^n − 1 = 2^(n+1) − 1.   Check n = 2: 7 ✓</pre></div>
+
+<div class="card paper"><span class="lbl">📝 Q3.2 model answer: all possible outputs when fork and exec can fail</span>
+<pre>Case 1, fork and exec succeed: child prints lines before exec only, then runs the new program;
+        parent prints after wait().                           Output: Hello1 Hello3
+Case 2, fork succeeds, exec fails: exec returns −1, so the child also prints the lines after exec.
+                                                              Output: Hello1 Hello2 Hello3
+Case 3, fork fails: only the else branch runs.                Output: Hello4
+Without wait(), parent and child lines may interleave in any order.</pre></div>
+
+<div class="card paper"><span class="lbl">📝 Q3.3 pipe skeleton (every blank is a mark)</span>
+<pre>int fd[2]; <mark>pipe(fd);</mark>                      // fd[0] read end, fd[1] write end
+pid_t pid = fork();
+int fin = open(file, O_RDONLY);
+<mark>close(0); dup(fin);</mark>                       // dup takes the lowest free fd, which is 0: scanf now reads the file
+scanf("%d", &x);
+if (pid == 0) {                             // child
+    close(fd[0]);                           // not reading
+    write(<mark>fd[1]</mark>, <mark>&cnt</mark>, sizeof(int));          // the ADDRESS, one int
+    exit(0);
+}
+<mark>waitpid(pid, &status, 0);</mark>                 // parent waits for that child
+close(fd[1]);                               // not writing
+read(<mark>fd[0]</mark>, <mark>&child_cnt</mark>, sizeof(int));</pre></div>
+
+<h3><span class="n bg3">D</span>Facts the MC questions are built from</h3>
+<div class="grid3">
+<div class="tile"><b>Schedulers</b>Long-term: admits jobs, controls the degree of multiprogramming (I/O-bound vs CPU-bound mix). Short-term: picks who runs, every few ms. Medium-term: swapping.</div>
+<div class="tile"><b>Steps in fork</b>Create and initialise the PCB; create a new address space; copy the parent's contents (slow, hence copy-on-write); inherit the execution context (open files); tell the scheduler the child is ready.</div>
+<div class="tile"><b>Bounded buffer</b>Size $N$ holds $N-1$ items. Empty when <code>in == out</code>; full when <code>(in+1) % N == out</code>.</div>
+<div class="tile"><b>Message passing</b>Direct vs indirect (mailboxes). Blocking vs non-blocking. Both blocking = <b>rendezvous</b>. Zero, bounded, unbounded buffering.</div>
+<div class="tile"><b>Sockets</b>IP address plus port. Ports below 1024 are well known.</div>
+<div class="tile"><b>Cascading termination</b>Some systems kill all children when a parent exits. Unix instead re-parents to init.</div>
+</div>
+
+<h3><span class="n bg3">E</span>Try it</h3>
+<details><summary>How many processes: <code>for (i=0;i&lt;3;i++) { if (fork()==0) continue; else break; }</code></summary><div>Iteration 0: P0 forks C1; C1 continues, P0 breaks. Iteration 1: C1 forks C2; C1 breaks. Iteration 2: C2 forks C3; C2 breaks, C3 finishes the loop. 4 processes in a chain. Check it in the builder above.</div></details>
+<details><summary>A forks B, B exits at once, A runs an hour without wait. What is B? What if A then exits?</summary><div>B is a zombie for the hour: terminated, pid and PCB kept for the exit status. When A exits, init adopts B and reaps it. If B were still running when A exited, B would be an orphan adopted by init.</div></details>
+
+<h3><span class="n bg3">F</span>Recall</h3>
+<div class="card"><p>fork returns <span class="cloze">0</span> in the child and the <span class="cloze">child's pid</span> in the parent. exec returns <span class="cloze">only on failure (−1)</span>. Terminated but not waited for: <span class="cloze">zombie</span>. Read end of a pipe: <span class="cloze">fd[0]</span>. After close(0), dup(fin) returns <span class="cloze">0</span>. Running → ready happens on <span class="cloze">interrupt or time slice over</span>.</p></div>
+<div class="card why"><span class="lbl">Why it matters</span>fork, exec, wait and pipes are the primitives behind every shell, CI runner and container runtime. Zombies are real production bugs.</div>
+</section>
+
+<section id="c4" class="s4">
+<div class="sec-head"><div class="big bg4">4</div><div><h2>Threads and concurrency</h2><p>What a thread owns, benefits, concurrency vs parallelism, Amdahl, thread models, signals, cancellation. About 4 MC.</p></div></div>
+<div class="toprow"><span class="chip">per-thread vs shared</span><span class="chip">Amdahl</span><span class="chip">many-to-one, one-to-one</span><span class="chip">signals</span><span class="chip">cancellation</span></div>
+
+<h3><span class="n bg4">A</span>Big picture</h3>
+<div class="grid">
+<div class="card" style="margin:0"><b>One process, three threads</b>
+<div style="border:2px solid var(--c4);border-radius:12px;padding:10px;margin-top:8px">
+<div style="display:flex;gap:8px;justify-content:space-around;flex-wrap:wrap;margin-bottom:8px"><div class="tile" style="border-color:var(--c4);background:var(--c4b);text-align:center;font-size:12.5px"><b>T1</b>stack<br>PC<br>registers</div><div class="tile" style="border-color:var(--c4);background:var(--c4b);text-align:center;font-size:12.5px"><b>T2</b>stack<br>PC<br>registers</div><div class="tile" style="border-color:var(--c4);background:var(--c4b);text-align:center;font-size:12.5px"><b>T3</b>stack<br>PC<br>registers</div></div>
+<div style="background:var(--code);border-radius:8px;padding:6px;text-align:center;font-size:13px"><b>shared</b>: code, data (globals), heap, open files, signal handlers</div></div></div>
+<div class="card" style="margin:0"><b>Amdahl's law, live</b>
+<label style="font-size:13px;color:var(--muted)">Parallel fraction P</label><input id="amP" type="range" min="0" max="1" step="0.01" value="0.61" class="range" oninput="amdahl()">
+<label style="font-size:13px;color:var(--muted)">Cores N</label><input id="amN" type="range" min="1" max="64" value="3" class="range" oninput="amdahl()">
+<div class="trace" id="amOut"></div></div>
+</div>
+
+<h3><span class="n bg4">B</span>Say it like this</h3>
+<div class="card say"><span class="lbl">🗣️ Thread</span>
+<p>A <mark>thread</mark> is the basic unit of CPU utilisation: a thread ID, a <mark>program counter, a register set and a stack</mark>. Threads of the same process <mark>share the code section, data section, heap, open files and signals</mark>. Benefits: <mark>responsiveness, resource sharing, economy, scalability</mark>.</p></div>
+<div class="card say"><span class="lbl">🗣️ Concurrency vs parallelism</span>
+<p><mark>Concurrency</mark>: more than one task makes progress, possible on a single core by interleaving. <mark>Parallelism</mark>: tasks execute simultaneously, which requires multiple cores. <mark>Data parallelism</mark> splits the data and applies the same operation; <mark>task parallelism</mark> runs different operations.</p></div>
+<div class="card say"><span class="lbl">🗣️ Amdahl's law</span>
+<p>With serial fraction $S$ and $N$ cores, $\text{speedup} \le \dfrac{1}{S + \frac{1-S}{N}}$, which tends to $1/S$ as $N \to \infty$. The <mark>serial portion caps the speedup</mark>.</p></div>
+<div class="card say"><span class="lbl">🗣️ Thread models</span>
+<p><mark>Many-to-one</mark>: many user threads on one kernel thread; one blocking call blocks all, no parallelism on multicore. <mark>One-to-one</mark> (Linux, Windows): more concurrency, but each user thread costs a kernel thread. <mark>Many-to-many</mark> and <mark>two-level</mark>: multiplex with optional binding.</p></div>
+<div class="card say"><span class="lbl">🗣️ Signals and cancellation</span>
+<p>A <mark>synchronous signal</mark> (illegal memory access, divide by zero) is delivered to the <mark>thread that caused it</mark>; an <mark>asynchronous signal</mark> (Ctrl-C, timer) goes to every thread or to a designated thread. Not every signal goes to every thread. <mark>Asynchronous cancellation</mark> terminates the target at once; <mark>deferred cancellation</mark> (default) lets the target check at cancellation points.</p></div>
+
+<h3><span class="n bg4">C</span>Facts the MC questions are built from</h3>
+<div class="grid3">
+<div class="tile"><b>Multicore challenges</b>Identify tasks, balance, split data, data dependency, testing and debugging (harder, not easier).</div>
+<div class="tile"><b>Implicit threading</b>Thread pools (bounded number, reused), fork-join, OpenMP, Grand Central Dispatch.</div>
+<div class="tile"><b>fork and exec with threads</b>Some systems have two forks: copy all threads or only the caller. exec replaces all threads.</div>
+<div class="tile"><b>Linux</b>Threads and processes are tasks made with <code>clone()</code>; flags CLONE_VM, CLONE_FS, CLONE_FILES, CLONE_SIGHAND pick what is shared.</div>
+<div class="tile"><b>Pthreads</b><code>pthread_create(&amp;tid, &amp;attr, fn, arg)</code>, <code>pthread_join(tid, NULL)</code>, <code>pthread_exit</code>, <code>pthread_cancel</code>. Compile with <code>-lpthread</code>.</div>
+<div class="tile"><b>kill vs pthread_kill</b><code>kill(pid, sig)</code> targets a process; <code>pthread_kill(tid, sig)</code> one thread.</div>
+</div>
+
+<h3><span class="n bg4">D</span>On the paper</h3>
+<div class="card paper"><span class="lbl">📝 MC-style: 61% parallel on 3 cores</span>
+<pre>S = 1 − 0.61 = 0.39.   speedup = 1 / (0.39 + 0.61/3) = 1 / (0.39 + 0.2033) = 1 / 0.5933 ≈ 1.69</pre></div>
+<details><summary>Which is per thread, which per process: stack, heap, open files, PC, globals, signal handlers?</summary><div>Per thread: stack, program counter, registers. Per process, shared: heap, open files, globals, signal handlers.</div></details>
+
+<h3><span class="n bg4">E</span>Recall</h3>
+<div class="card"><p>Each thread has its own <span class="cloze">stack, PC, registers</span>. Threads share <span class="cloze">code, data, heap, files</span>. Speedup limit as N → ∞: <span class="cloze">1/S</span>. One blocking call blocks the whole process in the <span class="cloze">many-to-one</span> model. Divide-by-zero signal goes to <span class="cloze">the causing thread</span>. Default cancellation: <span class="cloze">deferred</span>.</p></div>
+<div class="card why"><span class="lbl">Why it matters</span>Amdahl decides whether a 64-core machine is worth buying. Every performance review starts with "what fraction is serial".</div>
+</section>
+
+<section id="c5" class="s5">
+<div class="sec-head"><div class="big bg5">5</div><div><h2>CPU scheduling</h2><p>The 27-mark question. Metrics, FCFS, RR, SJF, SRTF, priority, MLFQ, multiprocessor, real-time RM and EDF, evaluation.</p></div></div>
+<div class="toprow"><span class="chip">turnaround, waiting, response</span><span class="chip">RR quantum</span><span class="chip">exponential averaging</span><span class="chip">MLFQ rules</span><span class="chip">RM vs EDF</span><span class="chip">affinity, migration</span></div>
+
+<h3><span class="n bg5">A</span>Big picture</h3>
+<div class="card"><b>Where scheduling decisions happen</b>
+<div class="flow"><div class="box">running → waiting<br><small>I/O request</small></div><div class="box">running → terminated</div><div class="arr" style="font-size:13px;color:var(--c5)"><b>non-preemptive</b></div><div class="box">running → ready<br><small>interrupt, quantum over</small></div><div class="box">waiting → ready<br>new arrival</div><div class="arr" style="font-size:13px;color:var(--c5)"><b>preemptive</b></div></div>
+<p style="font-size:13.5px;margin:4px 0 0">Execution alternates <b>CPU bursts</b> and <b>I/O bursts</b>: many short bursts, few long ones. I/O-bound = many short CPU bursts; CPU-bound = few long ones. The <b>dispatcher</b> does the context switch, switches to user mode, jumps to the right place; <b>dispatch latency</b> is the time it takes.</p></div>
+
+<div class="card"><b>The algorithms in one table</b>
+<table>
+<tr><th>Algorithm</th><th>Rule</th><th>Preemptive?</th><th>Good</th><th>Bad</th></tr>
+<tr><td><b>FCFS</b></td><td>queue order</td><td>no</td><td>simple</td><td><b>convoy effect</b>: short jobs stuck behind a long one. Bursts 24, 3, 3: average wait 17; as 3, 3, 24 it is 3</td></tr>
+<tr><td><b>SJF</b></td><td>shortest next burst</td><td>no</td><td><b>optimal</b> average waiting time</td><td>must predict bursts; long jobs can starve</td></tr>
+<tr><td><b>SRTF</b></td><td>shortest remaining</td><td>yes</td><td>even better waiting</td><td>same, more switches</td></tr>
+<tr><td><b>RR</b></td><td>quantum $q$, back to tail</td><td>yes</td><td>good response; nobody waits more than $(n-1)q$</td><td>large $q$ = FCFS; small $q$ = switch overhead. Rule: 80% of bursts shorter than $q$</td></tr>
+<tr><td><b>Priority</b></td><td>highest priority first; equal = FCFS</td><td>either</td><td>flexible; SJF is priority with priority = predicted burst</td><td><b>starvation</b>, fixed by <b>aging</b></td></tr>
+<tr><td><b>Multilevel queue</b></td><td>fixed queue per class, each with its own algorithm</td><td>between queues: fixed priority or time slicing</td><td>separates interactive from batch</td><td>no movement between queues</td></tr>
+<tr><td><b>MLFQ</b></td><td>queues with growing quanta; use a full quantum → demoted</td><td>yes</td><td>approximates SRTF without knowing bursts; good response</td><td>needs parameters: number of queues, algorithm per queue, upgrade and demote rules, entry queue</td></tr>
+</table></div>
+
+<h3><span class="n bg5">B</span>Say it like this</h3>
+<div class="card say"><span class="lbl">🗣️ Metrics</span>
+<p><mark>CPU utilisation</mark>: fraction of time the CPU is busy. <mark>Throughput</mark>: processes completed per unit time. <mark>Turnaround</mark>: completion time minus arrival time. <mark>Waiting</mark>: time in the ready queue, which equals turnaround minus total CPU burst. <mark>Response</mark>: time from arrival to the first run.</p></div>
+<div class="card say"><span class="lbl">🗣️ Exponential averaging</span>
+<p>Predict the next burst as $\tau_{n+1} = \alpha\, t_n + (1-\alpha)\,\tau_n$. With $\alpha = 0$ recent history is ignored; with $\alpha = 1$ only the <mark>last actual burst</mark> counts; usually $\alpha = 1/2$.</p></div>
+<div class="card say"><span class="lbl">🗣️ MLFQ</span>
+<p>A <mark>multilevel feedback queue</mark> lets processes <mark>move between queues</mark>. A new process enters the top queue with a short quantum; a process that <mark>uses its whole quantum is demoted</mark>, so CPU-bound jobs sink and short interactive jobs stay on top. It <mark>approximates SRTF</mark> without knowing burst lengths, and <mark>aging</mark> (periodically moving jobs up) prevents starvation.</p></div>
+<div class="card say"><span class="lbl">🗣️ Multiprocessor</span>
+<p><mark>Processor affinity</mark>: keep a thread on the same processor so its cache stays warm; <mark>soft</mark> affinity attempts it, <mark>hard</mark> affinity guarantees it. <mark>Load balancing</mark>: <mark>push migration</mark> (a periodic task moves work off busy CPUs) and <mark>pull migration</mark> (an idle CPU pulls work). Balancing conflicts with affinity. A <mark>memory stall</mark> is time spent waiting for memory; hardware threads per core (chip multithreading) let the core switch to another thread meanwhile.</p></div>
+<div class="card say"><span class="lbl">🗣️ Real time</span>
+<p>A periodic task has processing time $t$, deadline $d$ and period $p$ with $0 \le t \le d \le p$, rate $1/p$. <mark>Rate-monotonic</mark>: <mark>static priority, shorter period = higher priority</mark>; optimal among static-priority schemes. <mark>Earliest-deadline-first</mark>: <mark>dynamic priority, earliest deadline runs</mark>; does not require periodic tasks and can in theory reach 100% utilisation. Utilisation $= \sum t_i / p_i$. Hard real time: a missed deadline is a failure; soft: only a preference.</p></div>
+<div class="card say"><span class="lbl">🗣️ Evaluation</span>
+<p><mark>Deterministic modelling</mark>: a fixed workload, exact numbers, valid only for that workload. <mark>Queueing models</mark>: Little's formula $n = \lambda W$. <mark>Simulation</mark> with trace tapes. <mark>Implementation</mark>: most accurate, most expensive.</p></div>
+
+<h3><span class="n bg5">C</span>Recipe: any Gantt question</h3>
+<div class="card recipe"><span class="lbl">🛠️ Do it mechanically</span>
+<ol>
+<li>Table: process, arrival, burst, remaining, and for MLFQ: queue, quantum left.</li>
+<li>Time cursor. At every event (arrival, quantum expiry, completion) pick who runs by the <b>stated rule and tiebreak</b>.</li>
+<li>Preemptive schemes: an arrival can interrupt at once. Write down what happens to the preempted job (RR: tail; the exam's MLFQ: <b>head</b> of its queue with the <b>remaining quantum</b>, no demotion).</li>
+<li>Chart as <code>0 P1 4 P2 8 P3 12 …</code> with boundary times.</li>
+<li>Per process: completion, turnaround = completion − arrival, waiting = turnaround − burst, response = first start − arrival. Averages with the division written out.</li>
+</ol></div>
+
+<div class="card paper"><span class="lbl">📝 Q4.1 MLFQ, S2026, in exam format</span>
+<pre>Rules: Q0 RR 4, Q1 RR 8, Q2 FCFS. New arrival enters Q0 and preempts lower queues at once.
+Full quantum used → demote. Preempted (not finished quantum) → head of its queue, keeps remaining quantum.
+P1 (0,9)  P2 (2,25)  P3 (6,7)  P4 (14,18)  P5 (45,15)  P6 (58,6)
+
+Gantt: 0 P1 4 P2 8 P3 12 P1 14 P4 18 P1 21 P2 29 P3 32 P4 40 P2 45 P5 57 P2 58 P6 64 P2 71 P4 77 P5 80
+
+Key moments: t=4 P1 used full quantum → Q1; P2 in Q0 runs.   t=12 Q0 empty → Q1 runs P1 (5 left, up to 8).
+t=14 P4 arrives in Q0, preempts P1 → head of Q1 with 3 left.   t=45 P5 preempts P2 (now in Q2).   t=58 P6 preempts P5.
+
+Process   completion  turnaround  waiting  response
+P1          21          21          12        4
+P2          71          69          44        6
+P3          32          26          19        6
+P4          77          63          45        4
+P5          80          35          20        4
+P6          64           6           0        4
+average waiting 140/6 = 23.33      average response 28/6 = 4.67</pre></div>
+
+<div class="card paper"><span class="lbl">📝 Q4.2 RM vs EDF, S2026</span>
+<pre>Tasks (t, d, p): P1 (1,3,4)  P2 (2,4,5)  P3 (2,6,7)  P4 (1,5,8), all released at 0, tie → smaller id.
+Step 1, absolute deadlines:  P1: 3, 7, 11, 15   P2: 4, 9, 14   P3: 6, 13   P4: 5, 13
+RM (shorter period = higher priority: P1 > P2 > P3 > P4):
+  0 P1 1 P2 3 P3 4 P1 5 P2 7 P3 8 P1 9 P3 10 P2 12 P1 13 P3 14 P2 15 P1 16
+  P4 never runs in 0..16 (misses 2), P3 misses both → 4 missed deadlines
+EDF (earliest absolute deadline runs; re-sort at every release):
+  0 P1 1 P2 3 P4 4 P3 6 P1 7 P2 9 P1 10 P3 12 P4 13 P2 15 P1 16
+  P1 4th instance (deadline 15, finishes 16), P2 3rd (deadline 14, finishes 15) → 2 missed
+Conclusion: EDF misses fewer deadlines, as expected (dynamic priority).</pre></div>
+
+<div class="card paper"><span class="lbl">📝 Q4.3 dynamic priority, S2026</span>
+<pre>priority = initial + α·(time waited) + β·(time run); larger wins; tie → larger id; "checks every 3 units".
+(a) α=0, β=3: the running process keeps gaining, never preempted. Waiting ones tie at 0 → larger id.
+    0 P1 7 P3 13 P4 17 P2 22
+(b) α=1, β=0, P1 and P2, checks every 3: waiting raises priority, running does not → they alternate.
+    0 P1 3 P2 6 P1 9 P2 11 P1 12
+(c) α=1, β=−2, start 30, checks every 3: runner loses 2 per unit, waiters gain 1 → rotate every check.
+    0 P1 3 P2 6 P3 9 P4 12 P1 15 P2 17 P3 20 P4 21 P1 22
+Method: a table of priorities, recompute at every check, pick the max with the stated tiebreak.</pre></div>
+
+<div class="card paper"><span class="lbl">📝 Short question: "A new policy gives priority f_i = 1 / (CPU burst). I/O-bound favoured? Starvation?"</span>
+<pre>Yes. I/O-bound processes have short CPU bursts, so their f_i is large and they are picked first.
+Yes. A CPU-bound process with a long burst has a small f_i; if short jobs keep arriving it never runs (starvation).
+Fix: aging, raise priority with waiting time.</pre></div>
+
+<h3><span class="n bg5">D</span>Facts the MC questions are built from</h3>
+<div class="grid3">
+<div class="tile"><b>RR on 24, 3, 3 with q = 4</b>Waits 6, 4, 7, average 5.67. Response 4, 7, 10. Better response than FCFS, often worse turnaround.</div>
+<div class="tile"><b>SRTF slide example</b>(0,8) (1,4) (2,9) (3,5): chart 0 P1 1 P2 5 P4 10 P1 17 P3 26, average wait 6.5.</div>
+<div class="tile"><b>Textbook MLFQ</b>Q0 RR 8, Q1 RR 16, Q2 FCFS. Slide example average wait 16.8.</div>
+<div class="tile"><b>PCS vs SCS</b>Process contention scope: the library schedules user threads onto LWPs. System contention scope: the kernel schedules kernel threads. One-to-one systems use only SCS.</div>
+<div class="tile"><b>Asymmetric vs SMP scheduling</b>One master does all scheduling and I/O (bottleneck) vs each processor self-schedules from a common or private ready queue.</div>
+<div class="tile"><b>RM slide example</b>P1 (25, p 50), P2 (35, p 80): utilisation 94%, P2 misses its deadline at 80, finishing at 85. EDF meets both.</div>
+<div class="tile"><b>Little</b>7 arrivals per second, 14 in queue: W = 14/7 = 2 s.</div>
+<div class="tile"><b>Multicore</b>Several cores per chip for speed and power; it <b>complicates</b> scheduling. Two levels: OS picks a software thread per logical CPU, the core picks which hardware thread runs.</div>
+</div>
+
+<h3><span class="n bg5">E</span>Try it</h3>
+<details><summary>SRTF on P1 (0,8) P2 (1,4) P3 (2,9) P4 (3,5): chart and average waiting?</summary><div>0 P1 1 P2 5 P4 10 P1 17 P3 26. Waiting 9, 0, 15, 2, average 6.5. Check in the Tools tab.</div></details>
+<details><summary>Exponential averaging, α = 0.5, τ₀ = 10, bursts 6, 4, 6, 4. Predictions?</summary><div>τ₁ = 8, τ₂ = 6, τ₃ = 6, τ₄ = 5.</div></details>
+<details><summary>RM with P1 (20, period 50) and P2 (35, period 100). Schedulable?</summary><div>Utilisation 0.75. P1 0..20, P2 20..50, P1 50..70 (released at 50, preempts), P2 70..75. All deadlines met.</div></details>
+
+<h3><span class="n bg5">F</span>Recall</h3>
+<div class="card"><p>Waiting = turnaround − <span class="cloze">burst</span>. Response = <span class="cloze">first start − arrival</span>. FCFS problem: <span class="cloze">convoy effect</span>. Optimal average waiting: <span class="cloze">SJF</span>. Starvation fix: <span class="cloze">aging</span>. Shorter period = higher priority: <span class="cloze">rate monotonic</span>. A preempted MLFQ job rejoins at the <span class="cloze">head</span> of its queue. Idle CPU takes work: <span class="cloze">pull migration</span>.</p></div>
+<div class="card why"><span class="lbl">Why it matters</span>Scheduling is the heart of Kubernetes, of a laptop staying responsive while compiling, and of real-time control in cars and drones. MLFQ is what Windows and BSD actually run.</div>
+</section>
+
+<section id="c6" class="s6">
+<div class="sec-head"><div class="big bg6">6</div><div><h2>Synchronization tools</h2><p>Race conditions, the critical-section problem, atomic instructions, mutex and spinlocks, semaphores. Q5 plus two short questions plus 3 MC.</p></div></div>
+<div class="toprow"><span class="chip">race condition</span><span class="chip">3 requirements</span><span class="chip">test_and_set</span><span class="chip">compare_and_swap</span><span class="chip">spinlock</span><span class="chip">semaphore wait/signal</span><span class="chip">ordering with 0</span></div>
+
+<h3><span class="n bg6">A</span>Big picture: why counter++ breaks</h3>
+<div class="card">
+<table><tr><th>Time</th><th>T1 (counter++)</th><th>T2 (counter−−)</th><th>register / memory</th></tr>
+<tr><td>1</td><td>load counter → r1 (5)</td><td></td><td>r1 = 5</td></tr>
+<tr><td>2</td><td>r1 = r1 + 1</td><td></td><td>r1 = 6</td></tr>
+<tr><td>3</td><td></td><td>load counter → r2 (5)</td><td>r2 = 5</td></tr>
+<tr><td>4</td><td></td><td>r2 = r2 − 1</td><td>r2 = 4</td></tr>
+<tr><td>5</td><td>store r1 → counter</td><td></td><td>counter = 6</td></tr>
+<tr><td>6</td><td></td><td>store r2 → counter</td><td><b>counter = 4</b>, should be 5</td></tr></table>
+<div class="flow"><div class="box">entry section<br><small>acquire</small></div><div class="arr">→</div><div class="box"><b>critical section</b><br><small>touch shared data</small></div><div class="arr">→</div><div class="box">exit section<br><small>release</small></div><div class="arr">→</div><div class="box">remainder</div></div></div>
+
+<h3><span class="n bg6">B</span>Say it like this</h3>
+<div class="card say"><span class="lbl">🗣️ Race condition (a short question last time)</span>
+<p>A <mark>race condition</mark> occurs when <mark>several processes access and manipulate shared data concurrently</mark> and the <mark>outcome depends on the particular order</mark> in which the accesses take place. Example: two threads execute <code>counter++</code> on <code>counter = 5</code>; each is load, add, store; both load 5 and both store 6, so one increment is lost.</p></div>
+<div class="card say"><span class="lbl">🗣️ Critical-section problem</span>
+<p>A solution must satisfy <mark>mutual exclusion</mark> (only one process in its critical section at a time), <mark>progress</mark> (if no process is inside and some want in, the selection cannot be postponed indefinitely), and <mark>bounded waiting</mark> (a bound on how many times others may enter before a waiting process gets its turn).</p></div>
+<div class="card say"><span class="lbl">🗣️ Kernels and interrupts</span>
+<p>A <mark>preemptive kernel</mark> allows a process to be preempted while in kernel mode, so kernel data can race, especially on SMP. A <mark>non-preemptive kernel</mark> runs until it exits kernel mode, blocks or yields, so it is essentially free of kernel race conditions on a single processor. <mark>Disabling interrupts</mark> protects a critical section on a uniprocessor but is <mark>inefficient on multiprocessors</mark>.</p></div>
+<div class="card say"><span class="lbl">🗣️ Atomic instructions</span>
+<p><code>test_and_set(&amp;target)</code> <mark>returns the old value and sets target to true</mark>, atomically. Lock: <code>while (test_and_set(&amp;lock)); /* CS */ lock = false;</code>. <code>compare_and_swap(&amp;v, expected, new)</code> sets <code>v = new</code> only if <code>v == expected</code> and <mark>always returns the old value</mark>. Lock: <code>while (compare_and_swap(&amp;lock, 0, 1) != 0);</code>.</p></div>
+<div class="card say"><span class="lbl">🗣️ Mutex lock and spinlock</span>
+<p>A <mark>mutex lock</mark> has atomic <code>acquire()</code> and <code>release()</code>. A mutex whose acquire <mark>busy-waits</mark> is a <mark>spinlock</mark>: it <mark>wastes CPU cycles</mark> while spinning, but needs <mark>no context switch</mark>, so it is good when the lock is held briefly and on multiprocessors, where the holder runs on another core. With <code>swap</code>: <code>while (swap(locked, 1) == 1);</code>, release with <code>locked = 0;</code>.</p></div>
+<div class="card say"><span class="lbl">🗣️ Semaphore</span>
+<p>A <mark>semaphore</mark> is an integer accessed only through two atomic operations: <code>wait(S)</code> (while <code>S &le; 0</code> wait; then <code>S--</code>) and <code>signal(S)</code> (<code>S++</code>). A <mark>counting</mark> semaphore is initialised to the number of resource instances; a <mark>binary</mark> semaphore behaves like a mutex. In the <mark>blocking implementation</mark>, wait decrements and <mark>blocks if the value is negative</mark>, signal increments and <mark>wakes one</mark> if the value is still &le; 0; a negative value's magnitude is the number of waiting processes.</p></div>
+<div class="card say"><span class="lbl">🗣️ Deadlock and starvation</span>
+<p><mark>Deadlock</mark>: two or more processes wait indefinitely for an event that only one of the waiting processes can cause (P0: wait(S), wait(Q); P1: wait(Q), wait(S)). <mark>Starvation</mark>: indefinite blocking, for example a process never removed from a LIFO semaphore queue.</p></div>
+
+<h3><span class="n bg6">C</span>Semaphore stepper: force the order C, B, A</h3>
+<div class="card">
+<p style="font-size:13.5px;margin:0 0 8px">S2026 Q5: A needs B and C done; B needs C done. Semaphores s0 = s1 = s2 = 0. Click a thread to run its next line; a blocked line will not advance. Try every interleaving: the output is always C, B, A.</p>
+<div class="semval" id="semVals"></div>
+<div class="sem" id="semBox"></div>
+<div style="margin-top:8px"><button class="btn sm ghost" onclick="semReset()">Reset</button> <span id="semLog" style="font-family:ui-monospace,Menlo,monospace;font-size:13px;margin-left:8px"></span></div>
+</div>
+
+<div class="card recipe"><span class="lbl">🛠️ Semaphore ordering recipe (Q5 and MC23)</span>
+<ol>
+<li>Write the required order as arrows: "C before B", "B before A".</li>
+<li>One semaphore per arrow, all initialised to 0.</li>
+<li>The earlier thread does <code>signal(sem)</code> <b>after</b> its work. The later thread does <code>wait(sem)</code> <b>before</b> its work.</li>
+<li>Fill every blank; write <code>/* Nothing */</code> where nothing is needed. Then trace one bad interleaving and confirm it blocks.</li>
+</ol></div>
+<div class="card paper"><span class="lbl">📝 Q5 model answer, S2026</span>
+<pre>A: wait(&s1); <mark>wait(&s2);</mark> print A;            (C before A, B before A)
+B: <mark>wait(&s0);</mark> print B; signal(&s2);           (C before B; then release A)
+C: <mark>/* Nothing */</mark> print C; signal(&s1); <mark>signal(&s0);</mark>   (release A and B)
+Output is always C B A.</pre></div>
+<div class="card paper"><span class="lbl">📝 Reading a semaphore program for its output (MC23 pattern)</span>
+<pre>sem = 0. worker2 begins with sem_wait(&sem) → blocks. worker1 updates, then sem_post(&sem) → worker2 runs.
+A mutex around the update only prevents interleaving inside it; it does not decide the order.
+The order comes from the semaphore. Output: "A 2; B 5;" every time.</pre></div>
+<div class="card paper"><span class="lbl">📝 Bounded-waiting mutual exclusion with test_and_set (the MC favourite)</span>
+<pre>entry:  waiting[i] = true; key = true;
+        while (waiting[i] && key) key = test_and_set(&lock);
+        waiting[i] = false;
+exit:   j = (i + 1) % n; while (j != i && !waiting[j]) j = (j + 1) % n;
+        if (j == i) lock = false; else waiting[j] = false;   // hand the lock straight to j
+Mutual exclusion: only the first test_and_set sees false. Progress: exit frees the lock or a waiter.
+Bounded waiting: the cyclic scan gives everyone a turn within n − 1 entries.</pre></div>
+
+<h3><span class="n bg6">D</span>Try it</h3>
+<details><summary>Three threads must print 1, 2, 3 in order. Semaphores and placement?</summary><div>s12 = 0, s23 = 0. T1: print 1; signal(s12). T2: wait(s12); print 2; signal(s23). T3: wait(s23); print 3.</div></details>
+<details><summary>A blocking semaphore has value −3. Meaning? What happens on signal?</summary><div>Three processes are blocked on it. signal makes it −2, still ≤ 0, so one blocked process is woken.</div></details>
+<details><summary>Why is <code>while (test_and_set(&amp;lock));</code> alone not bounded waiting?</summary><div>A fast process can leave and re-acquire before a spinning process gets its test_and_set in, any number of times. The waiting[] version hands the lock to the next waiter in cyclic order.</div></details>
+
+<h3><span class="n bg6">E</span>Recall</h3>
+<div class="card"><p>Outcome depends on access order: <span class="cloze">race condition</span>. The three requirements: <span class="cloze">mutual exclusion, progress, bounded waiting</span>. test_and_set returns the <span class="cloze">old value</span>. Busy-waiting mutex: <span class="cloze">spinlock</span>. Spinlock plus: <span class="cloze">no context switch</span>; minus: <span class="cloze">wastes CPU cycles</span>. Semaphore at −2 means <span class="cloze">two waiting</span>. To force A before B: A does <span class="cloze">signal after</span>, B does <span class="cloze">wait before</span>.</p></div>
+<div class="card why"><span class="lbl">Why it matters</span>Race conditions are the most expensive bug class in concurrent systems, from bank transfers to multiplayer games. Mutexes and semaphores are the tools in every language.</div>
+</section>
+
+<section id="tools" class="st">
+<div class="sec-head"><div class="big bgt">🛠️</div><div><h2>Simulators and calculators</h2><p>Draw the chart by hand first, then check it here. The MLFQ engine implements the Spring 2026 exam rules exactly.</p></div></div>
+
+<h3><span class="n bgt">1</span>Scheduling simulator</h3>
+<div class="card">
+<div class="sim">
+<div>
+<label>Processes, one per line: <code>name arrival burst [priority]</code></label>
 <textarea id="procs">P1 0 9
 P2 2 25
 P3 6 7
@@ -425,25 +676,24 @@ P6 58 6</textarea>
 <option value="priop">Priority, preemptive (smaller number = higher)</option>
 <option value="mlfq" selected>MLFQ (exam rules)</option>
 </select>
-<label>RR quantum / MLFQ Q0 quantum</label>
-<input id="q0" value="4">
-<label>MLFQ Q1 quantum (Q2 is FCFS)</label>
-<input id="q1" value="8">
-<button onclick="runSched()">Run</button>
+<label>RR quantum / MLFQ Q0 quantum</label><input id="q0" value="4">
+<label>MLFQ Q1 quantum (Q2 is FCFS)</label><input id="q1" value="8">
+<button class="btn" onclick="runSched()">Run</button>
 <div style="font-size:13px;color:var(--muted);margin-top:8px">Presets: <a href="#" onclick="preset('exam');return false">S2026 MLFQ</a> · <a href="#" onclick="preset('srtf');return false">slide SRTF</a> · <a href="#" onclick="preset('rr');return false">slide RR q=4</a> · <a href="#" onclick="preset('prio');return false">slide priority</a></div>
 </div>
 <div>
-<label>Result</label>
+<label>Gantt chart</label>
+<div id="ganttBox"></div>
+<div class="legend" id="ganttLegend"></div>
+<label>Per-process numbers</label>
 <div class="trace" id="schedOut"></div>
 </div>
 </div>
 </div>
-</section>
 
-<section id="rt">
-<h2>RM / EDF simulator</h2>
-<p>One task per line: <code>name time deadline period</code>. Deadline is relative to each release. All released at 0. Tie: smaller id. Jobs keep running after a missed deadline (as in the official answer).</p>
+<h3><span class="n bgt">2</span>RM / EDF simulator</h3>
 <div class="card">
+<p style="font-size:13.5px;margin:0 0 6px">One task per line: <code>name time deadline period</code>. Deadline is relative to each release. All released at 0. Tie: smaller id. Red markers are deadlines; a job keeps running after a miss, as in the official answer.</p>
 <div class="sim">
 <div>
 <label>Tasks</label>
@@ -451,177 +701,140 @@ P6 58 6</textarea>
 P2 2 4 5
 P3 2 6 7
 P4 1 5 8</textarea>
-<label>Horizon (time slots)</label>
-<input id="horizon" value="16">
-<button onclick="runRT()">Run RM and EDF</button>
+<label>Horizon (time slots)</label><input id="horizon" value="16">
+<button class="btn" onclick="runRT()">Run RM and EDF</button>
 </div>
-<div><label>Result</label><div class="trace" id="rtOut"></div></div>
+<div><div id="rtVis"></div><div class="trace" id="rtOut"></div></div>
 </div>
 </div>
-</section>
 
-<section id="calc">
-<h2>Calculators</h2>
-<div class="card">
-<div class="sim">
-<div>
-<label>Amdahl: parallel fraction (0 to 1)</label><input id="amP" value="0.61">
-<label>Cores N</label><input id="amN" value="3">
-<button onclick="amdahl()">Speedup</button>
-<div class="trace" id="amOut"></div>
-</div>
-<div>
-<label>Cache: hit ratio</label><input id="chH" value="0.95">
-<label>Hit time</label><input id="chT" value="1">
-<label>Miss time (total, not extra)</label><input id="chM" value="100">
-<button onclick="cache()">Average access time</button>
-<div class="trace" id="chOut"></div>
-<label>Little: arrival rate λ</label><input id="liL" value="7">
-<label>Average in queue n</label><input id="liN" value="14">
-<button onclick="little()">W = n / λ</button>
+<h3><span class="n bgt">3</span>Little's formula</h3>
+<div class="card" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;align-items:end">
+<div><label style="font-size:13px;color:var(--muted)">Arrival rate λ</label><input id="liL" value="7" style="width:100%" oninput="little()"></div>
+<div><label style="font-size:13px;color:var(--muted)">Average in queue n</label><input id="liN" value="14" style="width:100%" oninput="little()"></div>
 <div class="trace" id="liOut"></div>
 </div>
-</div>
-</div>
+<p style="font-size:13px;color:var(--muted)">The caching and Amdahl calculators live in chapters 1 and 4.</p>
 </section>
 
-<section id="lab">
-<h2>Lab APIs: what the "coding questions" draw on</h2>
-<div class="card ex"><span class="tag">Analogy</span>
-A process is a running program with its own memory. The lab syscalls are the five verbs you need to run a small shell: <b>fork</b> (clone me), <b>exec</b> (become another program), <b>wait</b> (pause until my child finishes), <b>pipe</b> (a one-way tube between parent and child), <b>dup</b> (point a file descriptor somewhere else). PA1 is exactly a shell built from these; the exam's fill-in-the-blank question is a stripped version of the lab examples.
-</div>
-<div class="card def"><span class="tag">Lab 3: process and file syscalls (Peter Chung)</span>
+<section id="lab" class="st">
+<div class="sec-head"><div class="big bgt">🧪</div><div><h2>Lab APIs</h2><p>What the coding blanks draw on: fork, exec, wait, pipe, dup, pthreads. Print Lab 3 part 2 and Lab 4.</p></div></div>
+<div class="card say"><span class="lbl">🗣️ The five verbs</span>
+<p><mark>fork</mark> (clone me), <mark>exec</mark> (become another program), <mark>wait</mark> (pause until my child finishes), <mark>pipe</mark> (a one-way tube between parent and child), <mark>dup</mark> (point a file descriptor somewhere else). PA1 is a shell built from exactly these.</p></div>
+<div class="card">
 <table>
 <tr><th>Call</th><th>Signature</th><th>Facts the exam uses</th></tr>
 <tr><td>getpid, getppid</td><td><code>pid_t getpid(void); pid_t getppid(void);</code></td><td>own pid, parent's pid</td></tr>
-<tr><td>sleep</td><td><code>unsigned sleep(unsigned seconds);</code></td><td>usleep for sub-second; nanosleep finer</td></tr>
-<tr><td>fork</td><td><code>pid_t fork(void);</code></td><td>child gets 0, parent gets child pid, -1 on error (sets errno). Child is an almost exact copy; both continue after the fork. Custom signal handlers are inherited.</td></tr>
-<tr><td>wait</td><td><code>pid_t wait(int *status);</code></td><td>blocks until a child changes state; status pointer may be NULL (0). Returns the child's pid. <code>waitpid(pid, &amp;status, 0)</code> waits for one specific child (used in the S2026 exam, not in the lab).</td></tr>
-<tr><td>exit status</td><td><code>wait(&amp;child_status)</code></td><td>0 means normal exit; child's open files are flushed and closed, resources freed, parent notified by a signal</td></tr>
-<tr><td>open, read, write, close</td><td><code>int open(path, flags, mode); ssize_t read(fd, buf, n); ssize_t write(fd, buf, n); int close(fd);</code></td><td>low-level, return file descriptors; use these (not fopen/fread) because FILE* cannot be used with pipes. <code>open("hello.txt", O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR)</code>. read returns bytes read, 0 at EOF, -1 on error.</td></tr>
-<tr><td>pipe</td><td><code>int pipe(int pfds[2]);</code></td><td>pfds[0] read end, pfds[1] write end. Unidirectional, FIFO order, kernel enforces one writer at a time, processes must share a parent. read and write block.</td></tr>
-<tr><td>dup, dup2</td><td><code>int dup(int fd); int dup2(int old, int new);</code></td><td>dup returns the lowest free descriptor, so <code>close(0); dup(fin);</code> makes fin the new stdin. dup2(fd, 1) redirects stdout.</td></tr>
-<tr><td>exec family</td><td><code>execl, execlp, execle, execv, execvp, execvpe</code></td><td>replace the current process image; never return on success, -1 on error. <code>execlp("ls", "ls", "-l", "-h", NULL)</code>: first argument is the program, then argv[0], args, NULL. The p variants search PATH; v variants take an array.</td></tr>
-<tr><td>signal</td><td><code>signal(SIGINT, handler)</code></td><td>software interrupt; Ctrl-C sends SIGINT; handlers can be overridden; children inherit them</td></tr>
-</table>
-</div>
-<div class="card thm"><span class="tag">The lab's own "exam example": two pipes for two-way talk (Lab 4)</span>
+<tr><td>fork</td><td><code>pid_t fork(void);</code></td><td>child gets 0, parent gets child pid, −1 on error. Both continue after the fork. Signal handlers inherited.</td></tr>
+<tr><td>wait, waitpid</td><td><code>pid_t wait(int *status); waitpid(pid, &amp;status, 0)</code></td><td>blocks until a child changes state; returns the child's pid; status may be NULL. waitpid waits for one specific child (used in the S2026 paper).</td></tr>
+<tr><td>open, read, write, close</td><td><code>open(path, flags, mode); read(fd, buf, n); write(fd, buf, n); close(fd)</code></td><td>low level, file descriptors, usable with pipes (FILE* is not). <code>open("hello.txt", O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR)</code>. read returns bytes, 0 at EOF, −1 on error.</td></tr>
+<tr><td>pipe</td><td><code>int pipe(int pfds[2]);</code></td><td>pfds[0] read end, pfds[1] write end. One way, FIFO, parent-child. read and write block.</td></tr>
+<tr><td>dup, dup2</td><td><code>int dup(int fd); int dup2(int old, int new);</code></td><td>dup returns the lowest free descriptor: <code>close(0); dup(fin);</code> makes fin the new stdin. <code>dup2(fd, 1)</code> redirects stdout.</td></tr>
+<tr><td>exec family</td><td><code>execl, execlp, execv, execvp …</code></td><td>replace the process image; never return on success, −1 on error. <code>execlp("ls", "ls", "-l", NULL)</code>: program, then argv[0], args, NULL. p variants search PATH, v variants take an array.</td></tr>
+<tr><td>signal</td><td><code>signal(SIGINT, handler)</code></td><td>Ctrl-C sends SIGINT; handlers can be overridden; children inherit them.</td></tr>
+<tr><td>named pipe</td><td><code>mkfifo(name, 0777); open(name, O_RDONLY)</code></td><td>unrelated processes; persists until deleted; open blocks until both ends are open; data read is consumed.</td></tr>
+<tr><td>popen, pclose</td><td><code>FILE *fp = popen("ls", "r"); pclose(fp);</code></td><td>forks a child running the command, stream to its stdout ("w": its stdin); pclose waits.</td></tr>
+<tr><td>pthreads</td><td><code>pthread_create(&amp;tid, &amp;attr, fn, arg); pthread_join(tid, NULL); pthread_exit(0);</code></td><td>compile with <code>-lpthread</code>; threads share globals; join in a loop. main creates T1, T2 then joins: "main: begin", then A and B in either order, then "main: end".</td></tr>
+</table></div>
+<div class="card paper"><span class="lbl">📝 Lab 4's own exam example: two pipes for two-way talk</span>
 <pre>char buffer[10] = {};  int p2c[2], c2p[2];
-pipe(p2c);  pipe(c2p);                      // BLANK1, BLANK2
+<mark>pipe(p2c);  pipe(c2p);</mark>
 pid_t pid = fork();
-if (pid == 0) {                             // child
+if (pid == 0) {                                   // child
     const char msg[] = "Child";
-    close(c2p[0]);  write(c2p[1], msg, 6);  // BLANK3: send "Child" (6 bytes with the null; 5 accepted)
-    close(p2c[1]);  read(p2c[0], buffer, 7); // BLANK4: receive "Parent" (7 bytes; 6 accepted)
+    close(c2p[0]);  <mark>write(c2p[1], msg, 6);</mark>          // send "Child" with its null
+    close(p2c[1]);  <mark>read(p2c[0], buffer, 7);</mark>         // receive "Parent"
     printf("Child received the message: %s\n", buffer);
-} else {                                    // parent
+} else {                                          // parent
     const char msg[] = "Parent";
-    close(c2p[1]);  read(c2p[0], buffer, 6); // BLANK5
-    close(p2c[0]);  write(p2c[1], msg, 7);   // BLANK6
+    close(c2p[1]);  <mark>read(c2p[0], buffer, 6);</mark>
+    close(p2c[0]);  <mark>write(p2c[1], msg, 7);</mark>
     printf("Parent received the message: %s\n", buffer);
-}</pre>
-Pattern: name pipes by direction (p2c, c2p), each side closes the end it does not use, write the whole string including the terminating null, read the same count. A single pipe is one-way; a process that writes then reads the same pipe may read its own message.
-</div>
-<div class="card def"><span class="tag">Lab 4: named pipes, popen, pthreads</span>
-<ul>
-<li><b>Named pipe (FIFO):</b> <code>mkfifo(name, 0777)</code> creates it as a file; unrelated processes open it with <code>open(name, O_WRONLY)</code> or <code>O_RDONLY</code>, then read and write as usual; it persists until deleted. open blocks until both ends are open (use O_NONBLOCK to avoid). Data read is consumed, so no broadcasting; writes up to PIPE_BUF bytes are atomic. Check existence with <code>access(name, F_OK)</code>.</li>
-<li><b>popen / pclose:</b> <code>FILE *fp = popen("ls", "r")</code> forks a child running the command and returns a stream connected to its stdout ("w" connects to its stdin); <code>pclose(fp)</code> waits for it and returns its status.</li>
-<li><b>Pthreads:</b> <code>pthread_create(&amp;tid, &amp;attr, runner, arg)</code>, <code>pthread_join(tid, NULL)</code>, <code>pthread_exit(0)</code>, <code>pthread_attr_init(&amp;attr)</code>. Compile with <code>-lpthread</code>. Threads share globals (the lab's <code>sum</code>). Join ten threads with a for loop.</li>
-<li><b>Thread-order trace questions:</b> main creates T1 and T2 then joins both: outputs "main: begin", then A and B in either order (T2 can run before T1, or both before main reaches the joins), then "main: end". Without a join, main may finish first.</li>
-</ul>
-</div>
-<div class="card def"><span class="tag">Lab 5: PA2 MLFQ rules (likely to be reused in a question)</span>
-N-level feedback queue, N from 1 to 4, at most 10 processes, last queue is FCFS, input sorted by arrival, first arrival at 0, no equal arrival times, CPU never idle, at most 300 Gantt steps. Walkthrough: a new arrival goes to the end of Q0 and preempts a lower-queue process; a process that uses its full quantum moves to the end of the next queue; a finished process leaves. Run <code>./mlfq &lt; input.txt &gt; output.txt</code> and compare with <code>diff --side-by-side</code>.
-</div>
-<div class="card why"><span class="tag">Why it matters</span>
-These seven calls are how every shell, web server, and container runtime starts programs and wires their inputs and outputs together. Docker, systemd, and your terminal are fork, exec, pipe, and dup in a loop. Understanding them is the difference between using a computer and running one.
-</div>
+}
+Pattern: name pipes by direction, each side closes the end it does not use, write the whole string with its null, read the same count.</pre></div>
+<div class="card"><b>Lab 5 / PA2 MLFQ rules (likely reused in a question)</b>
+<p style="font-size:14px;margin:4px 0">N queues (1 to 4), last queue FCFS, input sorted by arrival, first arrival at 0, no equal arrivals, CPU never idle. A new arrival goes to the end of Q0 and preempts a lower-queue process; a process that uses its full quantum moves to the end of the next queue; a finished process leaves. Test with <code>./mlfq &lt; input.txt &gt; output.txt</code> and <code>diff --side-by-side</code>.</p></div>
 </section>
 
-<section id="templates">
-<h2>Answer templates for each question type</h2>
-<div class="card thm"><span class="tag">Short question: "What is X? Give an example."</span>
-<pre>X is [one-sentence definition using the slide wording].
-It happens when [condition]. Example: [concrete two-line scenario with numbers].
-Consequence: [what goes wrong / why it matters].</pre>
-Race condition: "several processes access and manipulate shared data concurrently and the outcome depends on the order of execution. Example: two threads do counter++ on counter = 5; both load 5, both store 6, one increment is lost."<br>
-Caching: "temporarily copy a subset of data from a slower larger storage to a faster smaller one. Hit ratio alone is not enough: average access time = h · hit time + (1 − h) · miss time, so hit time and miss penalty also matter."
-</div>
-<div class="card thm"><span class="tag">Short question: "Here is a new scheduling policy. Yes or no, with one sentence."</span>
-Ask three things: who gets high priority (I/O-bound have short bursts; CPU-bound long), can someone wait forever (starvation when higher-priority work keeps arriving), is it preemptive (does it re-decide at arrivals or timer). Answer "Yes/No. Because [the one mechanism that decides it]."
-</div>
-<div class="card thm"><span class="tag">Code snippet questions</span>
-Spinlock acquire with swap: <code>while (swap(locked, 1) == 1);</code>. With test_and_set: <code>while (test_and_set(&amp;lock));</code>. With compare_and_swap: <code>while (compare_and_swap(&amp;lock, 0, 1) != 0);</code>. Release: <code>lock = 0;</code> or <code>locked = 0;</code>.<br>
-Spinlock trade-off: wastes CPU cycles busy waiting, but no context switch, so good for short holds and multiprocessors.
-</div>
-<div class="card thm"><span class="tag">Fork question</span>
-<pre>1. Draw the tree: label the original P0; number children in creation order.
-2. State per iteration: "one active process becomes k active plus m stopped".
-3. Recurrence A(k+1) = ... , A(0) = 1, closed form.
-4. Total = active + stopped (geometric sum). Give the final formula in n.
-5. Outputs: each process prints what it reaches; count per line.</pre>
-</div>
-<div class="card thm"><span class="tag">Gantt question</span>
+<section id="templates" class="sp">
+<div class="sec-head"><div class="big bgp">📝</div><div><h2>Answer templates</h2><p>One skeleton per question type. Print this tab.</p></div></div>
+<div class="grid">
+<div class="card paper" style="margin:0"><span class="lbl">Short question: "What is X? Give an example."</span>
+<pre>X is [one sentence, slide wording].
+It happens when [condition].
+Example: [two lines with numbers].
+Consequence / why it matters: [one line].</pre></div>
+<div class="card paper" style="margin:0"><span class="lbl">Short question: "New scheduling policy. Yes or no?"</span>
+<pre>Ask: who gets high priority (I/O-bound = short bursts)?
+Can someone wait forever (starvation)?
+Is it preemptive (re-decides at arrivals / timer)?
+Answer: "Yes/No, because [the one mechanism]."</pre></div>
+<div class="card paper" style="margin:0"><span class="lbl">Code snippet questions</span>
+<pre>Spinlock with swap:   while (swap(locked, 1) == 1);   release: locked = 0;
+With test_and_set:    while (test_and_set(&lock));     release: lock = false;
+With compare_and_swap: while (compare_and_swap(&lock, 0, 1) != 0);
+Trade-off: wastes CPU cycles spinning, but no context switch:
+good for short holds and multiprocessors.</pre></div>
+<div class="card paper" style="margin:0"><span class="lbl">Fork question</span>
+<pre>1. Draw the tree, P0 original, children in creation order.
+2. "Each iteration: one active becomes k active + m stopped."
+3. Recurrence A(i+1) = …, A(0) = 1, closed form.
+4. Total = active + stopped (geometric sum), formula in n.
+5. Outputs: each process prints what it reaches.</pre></div>
+<div class="card paper" style="margin:0"><span class="lbl">Gantt question</span>
 <pre>1. Table: process, arrival, burst, remaining, (queue, quantum left).
-2. Timeline with every event: arrival, quantum end, completion.
-3. Chart: 0 Pa t1 Pb t2 ...
+2. Timeline of events: arrival, quantum end, completion.
+3. Chart: 0 Pa t1 Pb t2 …
 4. Per process: completion, turnaround = completion − arrival,
    waiting = turnaround − burst, response = first start − arrival.
-5. Averages with the division written out (e.g. 140/6 = 23.33).</pre>
-</div>
-<div class="card thm"><span class="tag">Semaphore blanks</span>
+5. Averages with the division written (140/6 = 23.33).</pre></div>
+<div class="card paper" style="margin:0"><span class="lbl">Semaphore blanks</span>
 <pre>1. List the "before" arrows.
 2. One semaphore per arrow, initial 0 (or as given).
-3. signal after the earlier work, wait before the later work.
-4. Every blank filled; write /* Nothing */ where no operation is needed.
-5. Check: trace one bad interleaving and confirm it blocks.</pre>
+3. signal AFTER the earlier work, wait BEFORE the later work.
+4. Every blank filled; /* Nothing */ where none is needed.
+5. Trace one bad interleaving, confirm it blocks.</pre></div>
 </div>
-<div class="card warn"><span class="tag">Mistakes that cost points last time</span>
+<div class="card warn"><span class="lbl">⚠️ Mistakes that cost marks last time</span>
 <ul>
-<li>Forgetting the first waiting gap equals first start minus arrival, not minus 0.</li>
-<li>Demoting a process that was merely preempted (rule 7), or putting a preempted job at the tail instead of the head (rule 8).</li>
-<li>Combining split blocks in the Gantt chart and then computing response time from the combined block. Keep the first-run time.</li>
-<li>Writing <code>cnt</code> instead of <code>&amp;cnt</code> in <code>write</code>/<code>read</code>; using <code>fd[1]</code> to read.</li>
+<li>Response time is first start minus <b>arrival</b>, not minus 0.</li>
+<li>Demoting a process that was merely preempted, or putting a preempted job at the tail instead of the head.</li>
+<li>Merging split Gantt blocks and then computing response from the merged block. Keep the first-run time.</li>
+<li>Writing <code>cnt</code> instead of <code>&amp;cnt</code> in read and write; reading from <code>fd[1]</code>.</li>
 <li>Only one scenario in the fork/exec output question. There are three.</li>
-<li>Choosing "microkernel has better performance" or "all interrupts handled the same way". Both are classic false options.</li>
-</ul>
-</div>
+<li>Picking "microkernels have better performance" or "all interrupts are handled the same way". Both are classic false options.</li>
+</ul></div>
 </section>
 
-<section id="past">
-<h2>S2026 midterm: all answers in one place</h2>
+<section id="past" class="sp">
+<div class="sec-head"><div class="big bgp">📄</div><div><h2>Spring 2026 midterm: all answers</h2><p>The full paper with solutions is in resources/Past Exams. Print it and bring it.</p></div></div>
 <div class="card">
-<b>MC</b>: 1 C, 2 B, 3 D, 4 B, 5 C, 6 A, 7 B (C also accepted), 8 B, 9 B, 10 C, 11 B, 12 B, 13 B, 14 A, 15 C, 16 C, 17 C, 18 C, 19 C, 20 B, 21 B, 22 C, 23 A, 24 B, 25 A.<br>
-<b>Short</b>: race condition definition plus lost update example; caching definition plus average access time argument; new policy: yes it favours I/O-bound (small burst gives large $f_i$), yes it can starve CPU-bound; spinlock <code>while(swap(locked,1)==1);</code>, wastes cycles but no context switch.<br>
-<b>Process</b>: tree with 7 processes and 3 breaks; $T(n) = 2^{n+1}-1$; three fork/exec scenarios (Hello1 Hello3; Hello1 Hello2 Hello3; Hello4); pipe blanks close(0), dup(fin), if (number % 2 == 0) cnt++, fd[1], &amp;cnt, fd[0], &amp;child_cnt.<br>
-<b>Scheduling</b>: MLFQ chart above, average waiting 23.33, average response 4.67; RM 4 misses vs EDF 2 misses; dynamic priority charts in the Chapter 5 card.<br>
-<b>Synchronization</b>: wait(&amp;s2), wait(&amp;s0), /* Nothing */, signal(&amp;s0).<br>
-The full paper with solutions is in the resources folder: <code>COMP3511 S2026 Midterm Solution.pdf</code>. Print it and bring it.
+<p><b>MC</b>: 1 C, 2 B, 3 D, 4 B, 5 C, 6 A, 7 B (C also accepted), 8 B, 9 B, 10 C, 11 B, 12 B, 13 B, 14 A, 15 C, 16 C, 17 C, 18 C, 19 C, 20 B, 21 B, 22 C, 23 A, 24 B, 25 A.</p>
+<p><b>Short</b>: race condition definition plus lost update; caching definition plus the average access time argument; new policy: yes it favours I/O-bound (short burst gives large $f_i$), yes it can starve CPU-bound; spinlock <code>while(swap(locked,1)==1);</code>, wastes cycles but no context switch.</p>
+<p><b>Process</b>: tree with 7 processes and 3 breaks; $T(n) = 2^{n+1}-1$; three fork/exec scenarios (Hello1 Hello3; Hello1 Hello2 Hello3; Hello4); pipe blanks close(0), dup(fin), <code>if (number % 2 == 0) cnt++</code>, fd[1], &amp;cnt, fd[0], &amp;child_cnt.</p>
+<p><b>Scheduling</b>: MLFQ chart in chapter 5, average waiting 23.33, response 4.67; RM 4 misses vs EDF 2; dynamic priority charts in chapter 5.</p>
+<p><b>Synchronization</b>: wait(&amp;s2), wait(&amp;s0), /* Nothing */, signal(&amp;s0).</p>
 </div>
 </section>
 
-<section id="quiz">
-<h2>Practice quiz <span class="pill" id="scorePill">0 / 0</span></h2>
-<p>New questions in the exam's style, extrapolated from the slides. Click an answer; wrong answers show the reason and the slide area.</p>
+<section id="quiz" class="sp">
+<div class="sec-head"><div class="big bgp">❓</div><div><h2>Practice quiz <span class="pill" id="scorePill">0 / 0</span></h2><p>New questions in the exam's style, built from the slides. Wrong answers show the reason.</p></div></div>
 <div id="quizBox"></div>
 </section>
 
-<section id="cards">
-<h2>Flashcards</h2>
+<section id="cards" class="sp">
+<div class="sec-head"><div class="big bgp">🃏</div><div><h2>Flashcards</h2><p>Tap to flip. Say the answer out loud before flipping.</p></div></div>
 <button class="btn" onclick="shuffleCards()">Shuffle</button>
-<div class="fc" id="cardBox"></div>
+<div class="fc" id="cardBox" style="margin-top:12px"></div>
 </section>
 
-<section id="check">
-<h2>Checklist (saved in this browser)</h2>
+<section id="check" class="sp">
+<div class="sec-head"><div class="big bgp">✅</div><div><h2>Checklist</h2><p>Saved in this browser.</p></div></div>
 <div class="card chk" id="chkBox"></div>
 </section>
 
 </main>
-</div>
-
 <script>
-// ---------- helpers ----------
 function parseProcs(txt){
   return txt.trim().split('\n').map((l,i)=>{const p=l.trim().split(/\s+/); return {name:p[0], arr:+p[1], burst:+p[2], prio:p[3]!==undefined?+p[3]:0, idx:i};}).filter(p=>p.name&&!isNaN(p.arr)&&!isNaN(p.burst));
 }
@@ -688,43 +901,6 @@ function schedule(procs, alg, q0, q1){
   }
   return blocks.filter(b=>b.name!=='idle' || true);
 }
-function runSched(){
-  const procs=parseProcs(document.getElementById('procs').value);
-  const alg=document.getElementById('alg').value, q0=+document.getElementById('q0').value||4, q1=+document.getElementById('q1').value||8;
-  const blocks=schedule(procs,alg,q0,q1);
-  const nonidle=blocks.filter(b=>b.name!=='idle');
-  document.getElementById('schedOut').textContent='Gantt: '+chartStr(blocks)+'\n\n'+stats(procs,nonidle);
-}
-function preset(k){
-  const T={exam:'P1 0 9\nP2 2 25\nP3 6 7\nP4 14 18\nP5 45 15\nP6 58 6', srtf:'P1 0 8\nP2 1 4\nP3 2 9\nP4 3 5', rr:'P1 0 24\nP2 0 3\nP3 0 3', prio:'P1 0 10 3\nP2 0 1 1\nP3 0 2 4\nP4 0 1 5\nP5 0 5 2'};
-  const A={exam:'mlfq',srtf:'srtf',rr:'rr',prio:'prio'};
-  document.getElementById('procs').value=T[k]; document.getElementById('alg').value=A[k]; runSched();
-}
-// ---------- RM / EDF ----------
-function simRT(tasks,H,mode){
-    const jobs=[]; const blocks=[]; let missed=[];
-    for(let t=0;t<H;t++){
-      for(const k of tasks) if(t%k.p===0) jobs.push({task:k,rel:t,dl:t+k.d,rem:k.t,n:Math.floor(t/k.p)+1});
-      const ready=jobs.filter(j=>j.rem>0);
-      if(!ready.length){ blocks.push({name:'idle',start:t,end:t+1}); continue; }
-      ready.sort(mode==='rm' ? (a,b)=>a.task.p-b.task.p||a.task.idx-b.task.idx||a.rel-b.rel : (a,b)=>a.dl-b.dl||a.task.idx-b.task.idx||a.rel-b.rel);
-      const j=ready[0]; blocks.push({name:j.task.name,start:t,end:t+1}); j.rem--; if(j.rem===0) j.fin=t+1;
-    }
-    for(const j of jobs){ if(j.dl<=H && (j.fin===undefined || j.fin>j.dl)) missed.push(`${j.task.name} instance ${j.n} (deadline ${j.dl}${j.fin!==undefined?', finished '+j.fin:', unfinished'})`); }
-    return `${mode.toUpperCase()}: ${chartStr(blocks)}\nmissed ${missed.length}: ${missed.join('; ')||'none'}`;
-}
-function parseTasks(txt){ return txt.trim().split('\n').map((l,i)=>{const p=l.trim().split(/\s+/);return {name:p[0],t:+p[1],d:+p[2],p:+p[3],idx:i};}); }
-function runRT(){
-  const tasks=parseTasks(document.getElementById('rtasks').value);
-  const H=+document.getElementById('horizon').value||16;
-  const dls=tasks.map(k=>`${k.name}: `+Array.from({length:Math.ceil(H/k.p)},(_,i)=>i*k.p+k.d).join(', ')).join('\n');
-  document.getElementById('rtOut').textContent='Absolute deadlines\n'+dls+'\n\n'+simRT(tasks,H,'rm')+'\n\n'+simRT(tasks,H,'edf');
-}
-// ---------- calculators ----------
-function amdahl(){const p=+document.getElementById('amP').value,n=+document.getElementById('amN').value;const s=1-p;document.getElementById('amOut').textContent=`speedup = 1 / (${s.toFixed(2)} + ${p.toFixed(2)}/${n}) = ${(1/(s+p/n)).toFixed(3)}\nlimit as N→∞ = ${(1/s).toFixed(2)}`;}
-function cache(){const h=+document.getElementById('chH').value,t=+document.getElementById('chT').value,m=+document.getElementById('chM').value;document.getElementById('chOut').textContent=`${h}·${t} + ${(1-h).toFixed(3)}·${m} = ${(h*t+(1-h)*m).toFixed(3)}`;}
-function little(){const l=+document.getElementById('liL').value,n=+document.getElementById('liN').value;document.getElementById('liOut').textContent=`W = ${n}/${l} = ${(n/l).toFixed(3)}`;}
-
 // ---------- quiz ----------
 const QUIZ=[
 ["[Ch1] Which statement about traps is true?",["A trap is generated by an external hardware device","A trap is a software-generated interrupt caused by an error or a system call request","Traps cannot be handled by the kernel","Traps are asynchronous with respect to the running instruction"],1,"Slides 1.40 area: trap = software-generated, synchronous (error or syscall). Interrupts are hardware and asynchronous."],
@@ -798,7 +974,6 @@ const QUIZ=[
     box.appendChild(d);
   });
 })();
-
 // ---------- flashcards ----------
 const CARDS=[
 ["OS two roles","resource allocator (efficient, fair) and control program (prevents errors and improper use)"],
@@ -882,35 +1057,152 @@ const CHECK=[
 (function(){const box=document.getElementById('chkBox');let saved={};try{saved=JSON.parse(localStorage.getItem('os-check')||'{}');}catch(e){}
 CHECK.forEach((t,i)=>{const l=document.createElement('label');const c=document.createElement('input');c.type='checkbox';c.checked=!!saved[i];c.onchange=()=>{saved[i]=c.checked;try{localStorage.setItem('os-check',JSON.stringify(saved));}catch(e){}};l.appendChild(c);l.appendChild(document.createTextNode(t));box.appendChild(l);});})();
 
+// ---------- colours per process ----------
+const PCOL=['#2563eb','#ea580c','#16a34a','#7c3aed','#dc2626','#0d9488','#b45309','#db2777','#4b5563'];
+function colorOf(name,map){ if(!(name in map)) map[name]=PCOL[Object.keys(map).length%PCOL.length]; return map[name]; }
+function mergeBlocks(blocks){ const m=[]; for(const b of blocks){ if(m.length&&m[m.length-1].name===b.name&&m[m.length-1].end===b.start) m[m.length-1].end=b.end; else m.push({...b}); } return m; }
+function renderGantt(el, legendEl, blocks){
+  const m=mergeBlocks(blocks), total=m[m.length-1].end, map={};
+  el.innerHTML=''; const g=document.createElement('div'); g.className='gantt';
+  m.forEach((b,i)=>{ const d=document.createElement('div'); d.style.flex=String(b.end-b.start); d.textContent=b.name==='idle'?'':b.name;
+    if(b.name==='idle') d.classList.add('idle'); else d.style.background=colorOf(b.name,map);
+    d.title=`${b.name}: ${b.start} to ${b.end}`; d.innerHTML+=`<span>${b.start}</span>`+(i===m.length-1?`<i>${b.end}</i>`:''); g.appendChild(d); });
+  el.appendChild(g);
+  if(legendEl){ legendEl.innerHTML=Object.entries(map).map(([n,c])=>`<span><i style="background:${c}"></i>${n}</span>`).join(''); }
+}
+// ---------- scheduler ----------
+function runSched(){
+  const procs=parseProcs(document.getElementById('procs').value);
+  const alg=document.getElementById('alg').value, q0=+document.getElementById('q0').value||4, q1=+document.getElementById('q1').value||8;
+  const blocks=schedule(procs,alg,q0,q1);
+  const nonidle=blocks.filter(b=>b.name!=='idle');
+  renderGantt(document.getElementById('ganttBox'),document.getElementById('ganttLegend'),blocks);
+  document.getElementById('schedOut').textContent='Gantt: '+chartStr(blocks)+'\n\n'+stats(procs,nonidle);
+}
+function preset(k){
+  const T={exam:'P1 0 9\nP2 2 25\nP3 6 7\nP4 14 18\nP5 45 15\nP6 58 6', srtf:'P1 0 8\nP2 1 4\nP3 2 9\nP4 3 5', rr:'P1 0 24\nP2 0 3\nP3 0 3', prio:'P1 0 10 3\nP2 0 1 1\nP3 0 2 4\nP4 0 1 5\nP5 0 5 2'};
+  const A={exam:'mlfq',srtf:'srtf',rr:'rr',prio:'prio'};
+  document.getElementById('procs').value=T[k]; document.getElementById('alg').value=A[k]; runSched();
+}
+// ---------- RM / EDF with visual rows ----------
+function simRT(tasks,H,mode){
+  const jobs=[]; const blocks=[]; let missed=[];
+  for(let t=0;t<H;t++){
+    for(const k of tasks) if(t%k.p===0) jobs.push({task:k,rel:t,dl:t+k.d,rem:k.t,n:Math.floor(t/k.p)+1});
+    const ready=jobs.filter(j=>j.rem>0);
+    if(!ready.length){ blocks.push({name:'idle',start:t,end:t+1}); continue; }
+    ready.sort(mode==='rm' ? (a,b)=>a.task.p-b.task.p||a.task.idx-b.task.idx||a.rel-b.rel : (a,b)=>a.dl-b.dl||a.task.idx-b.task.idx||a.rel-b.rel);
+    const j=ready[0]; blocks.push({name:j.task.name,start:t,end:t+1}); j.rem--; if(j.rem===0) j.fin=t+1;
+  }
+  for(const j of jobs){ if(j.dl<=H && (j.fin===undefined || j.fin>j.dl)) missed.push(`${j.task.name} instance ${j.n} (deadline ${j.dl}${j.fin!==undefined?', finished '+j.fin:', unfinished'})`); }
+  return {text:`${mode.toUpperCase()}: ${chartStr(blocks)}\nmissed ${missed.length}: ${missed.join('; ')||'none'}`, blocks};
+}
+function parseTasks(txt){ return txt.trim().split('\n').map((l,i)=>{const p=l.trim().split(/\s+/);return {name:p[0],t:+p[1],d:+p[2],p:+p[3],idx:i};}).filter(k=>k.name&&!isNaN(k.p)); }
+function rtRows(title,tasks,blocks,H){
+  let h=`<div style="font-size:13px;font-weight:700;margin:8px 0 2px">${title}</div>`;
+  for(const k of tasks){
+    h+=`<div class="rtrow"><div>${k.name}</div><div class="rtbar">`;
+    for(let t=0;t<H;t++){ const run=blocks.some(b=>b.name===k.name&&b.start===t); const dl=((t+1)-k.d)%k.p===0 && (t+1)>=k.d; h+=`<div class="${run?'run':''}${dl?' dl':''}" title="t=${t}"></div>`; }
+    h+=`</div></div>`;
+  }
+  return h+`<div class="rtrow"><div></div><div style="display:flex;font-size:10px;color:var(--muted)">${Array.from({length:H},(_,i)=>`<div style="flex:1">${i}</div>`).join('')}</div></div>`;
+}
+function runRT(){
+  const tasks=parseTasks(document.getElementById('rtasks').value);
+  const H=+document.getElementById('horizon').value||16;
+  const dls=tasks.map(k=>`${k.name}: `+Array.from({length:Math.ceil(H/k.p)},(_,i)=>i*k.p+k.d).join(', ')).join('\n');
+  const rm=simRT(tasks,H,'rm'), edf=simRT(tasks,H,'edf');
+  document.getElementById('rtVis').innerHTML=rtRows('RM',tasks,rm.blocks,H)+rtRows('EDF',tasks,edf.blocks,H);
+  document.getElementById('rtOut').textContent='Absolute deadlines\n'+dls+'\n\n'+rm.text+'\n\n'+edf.text;
+}
+// ---------- calculators ----------
+function amdahl(){const p=+document.getElementById('amP').value,n=+document.getElementById('amN').value;const s=1-p;document.getElementById('amOut').textContent=`P = ${p.toFixed(2)}, S = ${s.toFixed(2)}, N = ${n}\nspeedup = 1 / (${s.toFixed(2)} + ${p.toFixed(2)}/${n}) = ${(1/(s+p/n)).toFixed(3)}\nlimit as N → ∞ = 1/S = ${s>0?(1/s).toFixed(2):'∞'}`;}
+function cache(){const h=+document.getElementById('chH').value,t=+document.getElementById('chT').value,m=+document.getElementById('chM').value;document.getElementById('chOut').textContent=`h = ${h}\n${h}·${t} + ${(1-h).toFixed(2)}·${m} = ${(h*t+(1-h)*m).toFixed(2)} ns`;}
+function little(){const l=+document.getElementById('liL').value,n=+document.getElementById('liN').value;document.getElementById('liOut').textContent=`n = λ W  →  W = ${n}/${l} = ${(n/l).toFixed(3)}`;}
+// ---------- process state diagram ----------
+const TRANS=[['admitted','new','ready','The long-term scheduler admits the process into the ready queue.'],['scheduler dispatch','ready','running','The short-term scheduler picks it; the dispatcher does the context switch.'],['interrupt / time slice over','running','ready','Preempted. It still wants the CPU, so it goes back to the ready queue.'],['I/O or event wait','running','waiting','It asked for I/O or a resource it must wait for. It cannot use the CPU now.'],['I/O or event completion','waiting','ready','The thing it waited for happened; it is ready again, not running.'],['exit','running','terminated','It finished. Its PCB stays until the parent calls wait (zombie).']];
+(function(){
+  const tr=document.getElementById('trans'), why=document.getElementById('transWhy'); if(!tr) return;
+  TRANS.forEach((t,i)=>{ const b=document.createElement('button'); b.textContent=`${t[1]} → ${t[2]}: ${t[0]}`; b.onclick=()=>{
+    document.querySelectorAll('#trans button').forEach(x=>x.classList.remove('lit')); b.classList.add('lit');
+    document.querySelectorAll('#states .state').forEach(s=>s.classList.toggle('lit',s.dataset.s===t[1]||s.dataset.s===t[2]));
+    why.innerHTML=`<b>${t[1]} → ${t[2]}</b> on <b>${t[0]}</b>. ${t[3]}`; }; tr.appendChild(b); });
+})();
+// ---------- fork tree builder ----------
+function forkTree(){
+  const pat=document.getElementById('ftPat').value, n=+document.getElementById('ftN').value;
+  let next=1; const nodes=[{id:'P0',kids:[],stopped:false,prints:[]}];
+  // each process: {id, kids, active}
+  let active=[nodes[0]];
+  const mk=(parent)=>{ const c={id:'P'+(next++),kids:[],stopped:false,prints:[]}; parent.kids.push(c); return c; };
+  if(pat==='mc10'){
+    for(let i=0;i<3;i++){ const nxt=[]; for(const p of active){ const c=mk(p); const g=mk(c); c.stopped=true; g.stopped=true; c.prints.push('X'); g.prints.push('X'); nxt.push(p); } active=nxt; }
+    active.forEach(p=>p.prints.push('Y'));
+  } else {
+    for(let i=0;i<n;i++){ const nxt=[];
+      for(const p of active){
+        if(pat==='f'){ nxt.push(p, mk(p)); }
+        else if(pat==='ff'){ const c1=mk(p); nxt.push(p, c1); nxt.push(mk(p), mk(c1)); }
+        else if(pat==='iff'){ const c1=mk(p); const c2=mk(p); nxt.push(p,c1,c2); }
+        else if(pat==='ifb'){ const c1=mk(p); c1.stopped=true; const c2=mk(p); nxt.push(p,c2); }
+        else if(pat==='chain'){ const c1=mk(p); p.stopped=true; nxt.push(c1); }
+      }
+      active=nxt; }
+  }
+  let total=0, stopped=0, out='';
+  (function walk(nd,pre,last){ total++; if(nd.stopped) stopped++;
+    out+=pre+(pre?(last?'└─ ':'├─ '):'')+nd.id+(nd.stopped?'  ✕ stops':'')+(nd.prints.length?'  prints '+nd.prints.join(','):'')+'\n';
+    nd.kids.forEach((k,i)=>walk(k,pre+(pre?(last?'   ':'│  '):''),i===nd.kids.length-1)); })(nodes[0],'',true);
+  document.getElementById('ftOut').textContent=out;
+  const formula={f:'2^n',ff:'4^n',iff:'3^n',ifb:'2^(n+1) − 1',chain:'n + 1',mc10:'7 (fixed, 3 iterations)'}[pat];
+  document.getElementById('ftStats').textContent=`n = ${pat==='mc10'?3:n}\ntotal processes = ${total}\nstill in the loop at the end = ${active.length}\nstopped early = ${stopped}\nformula: ${formula}`;
+}
+// ---------- semaphore stepper ----------
+const SEM_PROG={A:[['wait','s1'],['wait','s2'],['print','A']],B:[['wait','s0'],['print','B'],['signal','s2']],C:[['print','C'],['signal','s1'],['signal','s0']]};
+let semS, semPC, semOut;
+function semReset(){ semS={s0:0,s1:0,s2:0}; semPC={A:0,B:0,C:0}; semOut=[]; semRender(''); }
+function semStep(th){
+  const prog=SEM_PROG[th], pc=semPC[th]; if(pc>=prog.length) return semRender(th+' is finished');
+  const [op,arg]=prog[pc];
+  if(op==='wait'){ if(semS[arg]<=0) return semRender(`${th} blocks on wait(${arg}) because ${arg} = ${semS[arg]}`); semS[arg]--; }
+  else if(op==='signal'){ semS[arg]++; }
+  else semOut.push(arg);
+  semPC[th]++; semRender(`${th} ran ${op}(${arg})`);
+}
+function semRender(msg){
+  document.getElementById('semVals').innerHTML=Object.entries(semS).map(([k,v])=>`<div>${k} = ${v}</div>`).join('')+`<div>output: ${semOut.join(' ')||'(none)'}</div>`;
+  document.getElementById('semBox').innerHTML=Object.entries(SEM_PROG).map(([th,prog])=>`<div class="th"><b>Thread ${th} <button class="btn sm" style="margin-left:6px" onclick="semStep('${th}')">run next line</button></b>`+prog.map((l,i)=>`<div class="line ${i<semPC[th]?'done':i===semPC[th]?'cur':''}">${l[0]==='print'?'print '+l[1]:l[0]+'(&'+l[1]+')'}</div>`).join('')+`</div>`).join('');
+  document.getElementById('semLog').textContent=msg;
+}
+// ---------- cloze ----------
+document.querySelectorAll('.cloze').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('show')));
+// ---------- tabs ----------
+(function(){
+  const secs=[...document.querySelectorAll('main > section')];
+  const meta={exam:['🎯','Exam','bgp'],zero:['🌱','Zero','bgp'],c1:['1','Intro','bg1'],c2:['2','Structures','bg2'],c3:['3','Processes','bg3'],c4:['4','Threads','bg4'],c5:['5','Scheduling','bg5'],c6:['6','Sync','bg6'],tools:['⚙','Tools','bgt'],lab:['⌘','Lab APIs','bgt'],templates:['✎','Templates','bgp'],past:['📄','S2026','bgp'],quiz:['?','Quiz','bgp'],cards:['♣','Cards','bgp'],check:['✓','Checklist','bgp']};
+  const tabs=document.getElementById('tabs');
+  secs.forEach(s=>{ const m=meta[s.id]||['•',s.id,'bgt']; const b=document.createElement('button'); b.className='tab'; b.dataset.id=s.id; b.innerHTML=`<span class="ic ${m[2]}">${m[0]}</span>${m[1]}`; b.onclick=()=>show(s.id); tabs.appendChild(b); });
+  function show(id){
+    secs.forEach(s=>s.classList.toggle('on',s.id===id));
+    tabs.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.dataset.id===id));
+    window.scrollTo(0,0); try{localStorage.setItem('os-cram-sec',id);}catch(e){}
+  }
+  secs.forEach((s,i)=>{
+    const bar=document.createElement('div'); bar.className='navbar';
+    const mk=(t,j)=>{const b=document.createElement('button');b.textContent=t;b.className='btn ghost';b.onclick=()=>show(secs[j].id);return b;};
+    bar.appendChild(i>0?mk('← '+(meta[secs[i-1].id]||[,secs[i-1].id])[1],i-1):document.createElement('span'));
+    if(i<secs.length-1) bar.appendChild(mk((meta[secs[i+1].id]||[,secs[i+1].id])[1]+' →',i+1));
+    s.appendChild(bar);
+  });
+  document.querySelectorAll('main a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{const id=a.getAttribute('href').slice(1);if(secs.some(s=>s.id===id)){e.preventDefault();show(id);}}));
+  let start='exam'; try{start=localStorage.getItem('os-cram-sec')||start;}catch(e){}
+  if(location.hash && secs.some(s=>s.id===location.hash.slice(1))) start=location.hash.slice(1);
+  show(start);
+  window.showSec=show;
+})();
 document.addEventListener('DOMContentLoaded',()=>{
-  runSched(); runRT(); amdahl(); cache(); little();
+  runSched(); runRT(); amdahl(); cache(); little(); forkTree(); semReset();
   if(window.renderMathInElement) renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}],throwOnError:false});
 });
 </script>
-
-<script>
-// ponytail: show one section at a time, nav links become tabs, prev/next buttons at the bottom of each section
-(function(){
-  const secs=[...document.querySelectorAll('main > section')];
-  const links=[...document.querySelectorAll('nav a[href^="#"]')];
-  function show(id){
-    secs.forEach(s=>s.style.display=(s.id===id?'block':'none'));
-    links.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+id));
-    window.scrollTo(0,0); try{localStorage.setItem(location.pathname+'-sec',id);}catch(e){}
-  }
-  secs.forEach((s,i)=>{
-    const bar=document.createElement('div'); bar.style.cssText='display:flex;justify-content:space-between;margin-top:30px';
-    const mk=(t,j)=>{const b=document.createElement('button');b.textContent=t;b.className='btn';b.onclick=()=>show(secs[j].id);return b;};
-    bar.appendChild(i>0?mk('Back: '+secs[i-1].querySelector('h2').textContent.slice(0,28),i-1):document.createElement('span'));
-    if(i<secs.length-1) bar.appendChild(mk('Next: '+secs[i+1].querySelector('h2').textContent.slice(0,28),i+1));
-    s.appendChild(bar);
-  });
-  links.forEach(a=>a.addEventListener('click',e=>{e.preventDefault();show(a.getAttribute('href').slice(1));}));
-  document.querySelectorAll('main a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{const id=a.getAttribute('href').slice(1);if(document.getElementById(id)&&secs.some(s=>s.id===id)){e.preventDefault();show(id);}}));
-  let start=secs[0].id; try{start=localStorage.getItem(location.pathname+'-sec')||start;}catch(e){}
-  if(location.hash && secs.some(s=>s.id===location.hash.slice(1))) start=location.hash.slice(1);
-  show(start);
-})();
-</script>
-</body>
-</html>
+</body></html>
